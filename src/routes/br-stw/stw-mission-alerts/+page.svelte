@@ -152,7 +152,7 @@
     const timeUntilReset = getResetDate().getTime() - Date.now();
     const timeout = setTimeout(() => {
       refreshWorldInfo();
-    }, timeUntilReset);
+    }, timeUntilReset + 5000);
 
     return () => clearTimeout(timeout);
   });
