@@ -59,10 +59,7 @@ const tauriKy = ky.create({
           throw error;
         }
 
-        accessTokenCache.update((cache) => {
-          delete cache[account.accountId];
-          return cache;
-        });
+        accessTokenCache.delete(account.accountId);
 
         const accessData = await Authentication.getAccessTokenUsingDeviceAuth(account, false);
         request.headers.set('Authorization', `Bearer ${accessData.access_token}`);
@@ -82,9 +79,8 @@ const tauriKy = ky.create({
 });
 
 function getAccountFromToken(token: string) {
-  const tokenCache = get(accessTokenCache);
   const accounts = get(accountsStorage).accounts;
-  const accountId = Object.keys(tokenCache).find((accountId) => tokenCache[accountId]?.access_token === token);
+  const accountId = accessTokenCache.entries().find(([, accessData]) => accessData.access_token === token)?.[0];
   return accounts.find((account) => account.accountId === accountId);
 }
 

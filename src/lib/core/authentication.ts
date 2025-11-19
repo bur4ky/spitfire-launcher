@@ -161,19 +161,13 @@ export default class Authentication {
   }
 
   private static getAccessTokenFromCache(accountId: string) {
-    const accessTokenData = get(accessTokenCache)?.[accountId];
+    const accessTokenData = accessTokenCache.get(accountId);
     const isExpired = !accessTokenData || new Date(accessTokenData.expires_at).getTime() < Date.now();
     return isExpired ? null : accessTokenData;
   }
 
   private static updateAccessTokenCache(accountId: string, response: EpicOAuthData) {
     if (!response.account_id || !response.access_token || !response.expires_in) return;
-
-    accessTokenCache.update((cache) => {
-      return {
-        ...cache,
-        [accountId]: response
-      };
-    });
+    accessTokenCache.set(accountId, response);
   }
 }
