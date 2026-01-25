@@ -473,7 +473,8 @@
       },
       "discordStatus": "Statut Discord",
       "hideToTray": "Masquer dans la barre d'état système",
-      "checkForUpdates": "Vérifier les mises à jour"
+      "checkForUpdates": "Vérifier les mises à jour",
+      "debugLogs": "Activer les journaux de débogage"
     },
     "downloaderSettings": {
       "downloadPath": {
@@ -670,6 +671,7 @@
     "queued": "En file d'attente",
     "completed": "Terminés",
     "clearAll": "Tout supprimer",
+    "downloadFailed": "Échec du téléchargement",
     "cancelDownloadConfirmation": {
       "title": "Annuler la confirmation du téléchargement",
       "description": "Êtes-vous sûr de vouloir annuler le téléchargement ? Les fichiers téléchargés seront conservés."

@@ -473,7 +473,8 @@
       },
       "discordStatus": "Discord Durumu",
       "hideToTray": "Sistem Tepsisine Gizle",
-      "checkForUpdates": "Güncellemeleri Kontrol Et"
+      "checkForUpdates": "Güncellemeleri Kontrol Et",
+      "debugLogs": "Hata ayıklama günlüklerini etkinleştir"
     },
     "downloaderSettings": {
       "downloadPath": {
@@ -670,6 +671,7 @@
     "queued": "Kuyrukta",
     "completed": "Tamamlandı",
     "clearAll": "Tümünü Temizle",
+    "downloadFailed": "İndirme başarısız",
     "cancelDownloadConfirmation": {
       "title": "İndirmeyi İptal Etme Onayı",
       "description": "İndirmeyi iptal etmek istediğinizden emin misiniz? İndirilen dosyalar silinmeyecektir."

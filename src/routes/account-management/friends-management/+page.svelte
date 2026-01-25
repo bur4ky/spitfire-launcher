@@ -4,24 +4,24 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import FriendsList, { type ListType } from '$components/friends/FriendsList.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import Tabs from '$components/ui/Tabs.svelte';
-  import { activeAccountStore } from '$lib/core/data-storage';
-  import FriendsManager from '$lib/core/managers/friends';
-  import LookupManager from '$lib/core/managers/lookup';
-  import XMPPManager from '$lib/core/managers/xmpp';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import FriendsList, { type ListType } from '$components/features/friends/FriendsList.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Tabs from '$components/ui/tabs';
+  import FriendsManager from '$lib/managers/friends';
+  import LookupManager from '$lib/managers/lookup';
+  import XMPPManager from '$lib/managers/xmpp';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import { friendsStore } from '$lib/stores';
-  import InputWithAutocomplete from '$components/ui/Input/InputWithAutocomplete.svelte';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
+  import { handleError, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
   import { untrack } from 'svelte';
-  import SkeletonFriendCard from '$components/friends/SkeletonFriendCard.svelte';
+  import SkeletonFriendCard from '$components/features/friends/SkeletonFriendCard.svelte';
+  import { accountStore } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  const activeAccount = accountStore.getActiveStore();
 
   const tabs = $derived([
     { id: 'friends', name: $t('friendsManagement.lists.friends'), disabled: !hasFriendsInList('friends') },
@@ -35,7 +35,7 @@
   let searchQuery = $state<string>();
 
   function hasFriendsInList(listType: ListType) {
-    return !!$friendsStore[activeAccount.accountId]?.[listType]?.size;
+    return !!friendsStore.get($activeAccount.accountId)?.[listType]?.size;
   }
 
   async function searchAndAdd(event: SubmitEvent) {
@@ -46,17 +46,17 @@
     isSendingRequest = true;
 
     try {
-      const lookupData = await LookupManager.fetchByNameOrId(activeAccount, searchQuery);
+      const lookupData = await LookupManager.fetchByNameOrId($activeAccount, searchQuery);
 
       try {
-        await FriendsManager.addFriend(activeAccount, lookupData.accountId);
+        await FriendsManager.addFriend($activeAccount, lookupData.accountId);
         searchQuery = '';
         toast.success($t('friendsManagement.sentFriendRequest'));
       } catch (error) {
-        handleError(error, $t('friendsManagement.failedToAdd'));
+        handleError({ error, message: $t('friendsManagement.failedToAdd'), account: $activeAccount });
       }
     } catch (error) {
-      handleError(error, $t('lookupPlayers.notFound'));
+      handleError({ error, message: $t('lookupPlayers.notFound'), account: $activeAccount });
     } finally {
       isSendingRequest = false;
     }
@@ -69,15 +69,27 @@
       }
     });
 
-    FriendsManager.getSummary(activeAccount).finally(() => {
+    FriendsManager.getSummary($activeAccount).finally(() => {
       isLoading = false;
     });
 
-    XMPPManager.create(activeAccount, 'friendsManagement').then((xmpp) => {
+    XMPPManager.new($activeAccount, 'friendsManagement').then((xmpp) => {
       xmpp.connect();
     });
   });
 </script>
+
+<svelte:window
+  onkeydown={(event) => {
+    if (event.key === 'F5') {
+      event.preventDefault();
+      isLoading = true;
+      FriendsManager.getSummary($activeAccount).finally(() => {
+        isLoading = false;
+      });
+    }
+  }}
+/>
 
 <PageContent title={$t('friendsManagement.page.title')}>
   <form class="flex items-center gap-x-2" onsubmit={searchAndAdd}>
@@ -93,7 +105,6 @@
       disabled={isLoading || isSendingRequest || !searchQuery || searchQuery.length < 3}
       title={$t('friendsManagement.sendFriendRequest')}
       type="submit"
-      variant="epic"
     >
       {#if isSendingRequest}
         <LoaderCircleIcon class="size-5 animate-spin"/>
@@ -104,7 +115,15 @@
   </form>
 
   <div>
-    <Tabs {tabs} bind:activeTab/>
+    <Tabs.Root class="mb-4" bind:value={activeTab}>
+      <Tabs.List>
+        {#each tabs as tab (tab.id)}
+          <Tabs.Trigger disabled={tab.disabled} value={tab.id}>
+            {tab.name}
+          </Tabs.Trigger>
+        {/each}
+      </Tabs.List>
+    </Tabs.Root>
 
     {#if isLoading}
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">

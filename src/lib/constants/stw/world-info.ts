@@ -1,6 +1,6 @@
 import { missions, theaters } from '$lib/constants/stw/resources';
-import { language } from '$lib/core/data-storage';
-import { t } from '$lib/utils/util';
+import { language } from '$lib/storage';
+import { t } from '$lib/utils';
 import { derived } from 'svelte/store';
 
 export const Theaters = Object.freeze({

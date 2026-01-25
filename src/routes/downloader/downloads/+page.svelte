@@ -1,12 +1,11 @@
 <script lang="ts">
-  import CancelDownloadDialog from '$components/downloader/CancelDownloadDialog.svelte';
-  import PageContent from '$components/PageContent.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import Tooltip from '$components/ui/Tooltip.svelte';
-  import { language } from '$lib/core/data-storage';
-  import DownloadManager, { type DownloadProgress } from '$lib/core/managers/download.svelte';
-  import { bytesToSize, formatRemainingDuration, t } from '$lib/utils/util';
-  import { Progress } from 'bits-ui';
+  import CancelDownloadDialog from '$components/features/downloader/modals/CancelDownloadDialog.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Tooltip from '$components/ui/tooltip';
+  import DownloadManager, { type DownloadProgress } from '$lib/managers/download.svelte';
+  import { bytesToSize, formatRemainingDuration, t } from '$lib/utils';
+  import { Progress } from '$components/ui/progress';
   import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
   import ClockIcon from '@lucide/svelte/icons/clock';
   import DownloadIcon from '@lucide/svelte/icons/download';
@@ -17,6 +16,8 @@
   import XIcon from '@lucide/svelte/icons/x';
   import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+  import logger from '$lib/utils/logger';
+  import { language } from '$lib/storage';
 
   let showCancelDialog = $state(false);
   let isCancelling = $state(false);
@@ -39,7 +40,7 @@
         await DownloadManager.pauseDownload();
       }
     } catch (error) {
-      console.error(error);
+      logger.error('Failed to toggle pause state', { error });
     } finally {
       isTogglingPause = false;
     }
@@ -53,7 +54,7 @@
     try {
       await DownloadManager.removeFromQueue(currentDownload.item.id);
     } catch (error) {
-      console.error(error);
+      logger.error('Failed to cancel download', { error });
     } finally {
       isCancelling = false;
     }
@@ -61,7 +62,7 @@
 </script>
 
 <PageContent title={$t('downloads.page.title')}>
-  <div class="w-full border rounded-md p-3 relative h-36 {!currentDownload && 'bg-surface-alt'}">
+  <div class="w-full border rounded-md p-3 relative h-36 {!currentDownload && 'bg-card'}">
     {#if currentDownload}
       <img
         class="absolute inset-0 size-full object-cover rounded-md opacity-10 pointer-events-none"
@@ -101,12 +102,7 @@
             <span>{(progress.percent || 0).toFixed(2)}%</span>
           </div>
 
-          <Progress.Root class="h-2 bg-accent rounded-full overflow-hidden" value={progress.percent || 0}>
-            <div
-              style:transform={`translateX(-${100 - (100 * (progress.percent || 0)) / 100}%)`}
-              class="bg-epic flex-1 size-full rounded-full transition-all duration-1000 ease-in-out"
-            ></div>
-          </Progress.Root>
+          <Progress class="bg-accent" value={progress.percent || 0}/>
 
           <div class="flex items-center justify-between text-sm text-muted-foreground">
             <div class="flex items-center gap-2">
@@ -140,12 +136,12 @@
     {/if}
   </div>
 
-  {#if queue.length > 0}
+  {#if queue.length}
     <div class="w-full border rounded-md p-4 mt-2">
       <h3 class="font-semibold text-2xl mb-4">{$t('downloads.queued')}</h3>
       <div class="space-y-4">
         {#each queue as { item }, index (item.id)}
-          <div class="flex items-center gap-4 p-3 rounded-lg border bg-surface-alt">
+          <div class="flex items-center gap-4 p-3 rounded-lg border bg-card">
             <img
               class="w-12 h-16 object-cover rounded"
               alt={item.title}
@@ -193,7 +189,7 @@
     </div>
   {/if}
 
-  {#if completed.length > 0}
+  {#if completed.length}
     <div class="w-full border rounded-md p-4 mt-2">
       <div class="flex items-center gap-2 mb-4">
         <h3 class="font-semibold text-2xl">{$t('downloads.completed')}</h3>
@@ -203,7 +199,7 @@
       </div>
       <div class="space-y-4">
         {#each completed as { status, item, completedAt } (item.id)}
-          <div class="flex items-center gap-4 p-3 rounded-lg border bg-surface-alt">
+          <div class="flex items-center gap-4 p-3 rounded-lg border bg-card">
             <img
               class="w-12 h-16 object-cover rounded"
               alt={item.title}
@@ -214,9 +210,15 @@
               <div class="flex items-center gap-2">
                 <h4 class="font-medium">{item.title}</h4>
                 {#if status === 'failed'}
-                  <Tooltip message="Download failed">
-                    <TriangleAlertIcon class="size-4 text-red-500"/>
-                  </Tooltip>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger>
+                      <TriangleAlertIcon class="size-4 text-red-500"/>
+                    </Tooltip.Trigger>
+
+                    <Tooltip.Content>
+                      {$t('downloads.downloadFailed')}
+                    </Tooltip.Content>
+                  </Tooltip.Root>
                 {/if}
               </div>
               <p class="text-sm text-muted-foreground">{new Date(completedAt || 0).toLocaleString($language)}</p>

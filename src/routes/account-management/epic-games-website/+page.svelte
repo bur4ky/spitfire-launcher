@@ -4,18 +4,18 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import Authentication from '$lib/core/authentication';
-  import { activeAccountStore } from '$lib/core/data-storage';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import Authentication from '$lib/utils/epic/authentication';
   import { openUrl } from '@tauri-apps/plugin-opener';
   import { toast } from 'svelte-sonner';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import { handleError, t } from '$lib/utils';
   import CopyIcon from '@lucide/svelte/icons/copy';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { accountStore } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  const activeAccount = accountStore.getActiveStore();
 
   async function openEpicGamesWebsite() {
     isLoggingIn = true;
@@ -26,7 +26,7 @@
 
       toast.success($t('epicGamesWebsite.openedWebsite'));
     } catch (error) {
-      handleError(error, $t('epicGamesWebsite.failedToOpenWebsite'));
+      handleError({ error, message: $t('epicGamesWebsite.failedToOpenWebsite'), account: $activeAccount });
     } finally {
       isLoggingIn = false;
     }
@@ -41,32 +41,31 @@
 
       toast.success($t('epicGamesWebsite.copied'));
     } catch (error) {
-      handleError(error, $t('epicGamesWebsite.failedToCopy'));
+      handleError({ error, message: $t('epicGamesWebsite.failedToCopy'), account: $activeAccount });
     } finally {
       isCopying = false;
     }
   }
 
   async function generateLoginURL() {
-    const accessToken = await Authentication.verifyOrRefreshAccessToken(activeAccount);
-    const exchangeCodeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
+    const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth($activeAccount);
+    const exchangeCodeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
     return `https://www.epicgames.com/id/exchange?exchangeCode=${exchangeCodeData.code}`;
   }
 </script>
 
 <PageContent
+  center={true}
   description={$t('epicGamesWebsite.page.description')}
-  small={true}
   title={$t('epicGamesWebsite.page.title')}
 >
   <div class="flex items-center gap-2">
     <Button
-      class="w-full"
+      class="flex-1"
       disabled={isLoggingIn || isCopying}
       loading={isLoggingIn}
       loadingText={$t('epicGamesWebsite.loggingIn')}
       onclick={openEpicGamesWebsite}
-      variant="epic"
     >
       {$t('epicGamesWebsite.login')}
     </Button>
@@ -74,12 +73,13 @@
     <Button
       disabled={isLoggingIn || isCopying}
       onclick={copyWebsiteLink}
-      variant="accent"
+      size="icon"
+      variant="secondary"
     >
       {#if isCopying}
-        <LoaderCircleIcon class="size-5 animate-spin my-1"/>
+        <LoaderCircleIcon class="size-4 animate-spin"/>
       {:else}
-        <CopyIcon class="size-5 my-1"/>
+        <CopyIcon class="size-4"/>
       {/if}
     </Button>
   </div>

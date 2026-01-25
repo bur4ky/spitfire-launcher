@@ -473,7 +473,8 @@
       },
       "discordStatus": "Discord-Status",
       "hideToTray": "In Systemleiste Ausblenden",
-      "checkForUpdates": "Auf Updates Prüfen"
+      "checkForUpdates": "Auf Updates Prüfen",
+      "debugLogs": "Debug-Protokolle aktivieren"
     },
     "downloaderSettings": {
       "downloadPath": {
@@ -670,6 +671,7 @@
     "queued": "In Warteschlange",
     "completed": "Abgeschlossen",
     "clearAll": "Alle Löschen",
+    "downloadFailed": "Download fehlgeschlagen",
     "cancelDownloadConfirmation": {
       "title": "Download Abbrechen Bestätigen",
       "description": "Bist du sicher, dass du den Download abbrechen möchtest? Heruntergeladene Dateien werden beibehalten."

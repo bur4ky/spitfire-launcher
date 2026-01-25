@@ -1,51 +1,51 @@
 <script lang="ts" module>
-  import TaxiManager from '$lib/core/managers/taxi.svelte.js';
+  import TaxiManager from '$lib/managers/taxi.svelte.js';
   import { SvelteMap } from 'svelte/reactivity';
 
   const taxiManagers = new SvelteMap<string, TaxiManager>();
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import Alert from '$components/ui/Alert.svelte';
-  import Label from '$components/ui/Label.svelte';
-  import { activeAccountStore, taxiStorage } from '$lib/core/data-storage';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Alert } from '$components/ui/alert';
+  import { Label } from '$components/ui/label';
   import { accountPartiesStore } from '$lib/stores';
-  import { handleError, nonNull, t } from '$lib/utils/util';
-  import Button from '$components/ui/Button.svelte';
-  import { Separator } from 'bits-ui';
-  import Switch from '$components/ui/Switch.svelte';
-  import Input from '$components/ui/Input/Input.svelte';
+  import { handleError, t } from '$lib/utils';
+  import { Button } from '$components/ui/button';
+  import { Separator } from '$components/ui/separator';
+  import { Switch } from '$components/ui/switch';
+  import { Input } from '$components/ui/input';
   import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
   import XIcon from '@lucide/svelte/icons/x';
   import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
-  import TaxiServiceTutorial from '$components/docs/tutorials/TaxiService.svelte';
+  import TaxiServiceTutorial from '$components/features/docs/tutorials/TaxiService.svelte';
+  import { accountStore, taxiStore } from '$lib/storage';
 
   const MIN_POWER_LEVEL = 1;
   const MAX_POWER_LEVEL = 145;
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  const activeAccount = accountStore.getActiveStore();
 
   $effect(() => {
-    if (!taxiManagers.has(activeAccount.accountId)) {
-      taxiManagers.set(activeAccount.accountId, new TaxiManager(activeAccount));
+    if (!taxiManagers.has($activeAccount.accountId)) {
+      taxiManagers.set($activeAccount.accountId, new TaxiManager($activeAccount));
     }
 
-    const taxiManager = taxiManagers.get(activeAccount.accountId);
-    const accountSettings = $taxiStorage.find((settings) => settings.accountId === activeAccount.accountId);
+    const taxiManager = taxiManagers.get($activeAccount.accountId);
+    const accountSettings = $taxiStore.find((settings) => settings.accountId === $activeAccount.accountId);
     if (!taxiManager || !accountSettings) return;
 
     taxiManager.availableStatus = accountSettings.availableStatus || taxiManager.availableStatus;
     taxiManager.busyStatus = accountSettings.busyStatus || taxiManager.busyStatus;
   });
 
-  const taxiManager = $derived(taxiManagers.get(activeAccount.accountId) || new TaxiManager(activeAccount));
+  const taxiManager = $derived(taxiManagers.get($activeAccount.accountId) || new TaxiManager($activeAccount));
 
   async function startTaxiService() {
     try {
       await taxiManager.start();
     } catch (error) {
-      handleError(error, $t('taxiService.failedToStart'));
+      handleError({ error, message: $t('taxiService.failedToStart'), account: $activeAccount });
     }
   }
 
@@ -53,7 +53,7 @@
     try {
       await taxiManager.stop();
     } catch (error) {
-      handleError(error, $t('taxiService.failedToStop'));
+      handleError({ error, message: $t('taxiService.failedToStop'), account: $activeAccount });
     }
   }
 
@@ -73,7 +73,7 @@
 
     if (taxiManager.level === oldLevel) return;
 
-    const party = accountPartiesStore.get(activeAccount.accountId);
+    const party = accountPartiesStore.get($activeAccount.accountId);
     if (!party) return;
 
     taxiManager.setPowerLevel(party.id, party.revision);
@@ -86,11 +86,8 @@
     const oldStatus = statusType === 'available' ? taxiManager.availableStatus : taxiManager.busyStatus;
     if (value === oldStatus) return;
 
-    let settings = $taxiStorage.find((s) => s.accountId === activeAccount.accountId);
-
-    if (!settings) {
-      settings = { accountId: activeAccount.accountId };
-    }
+    let settings = $taxiStore.find((s) => s.accountId === $activeAccount.accountId)
+      || { accountId: $activeAccount.accountId };
 
     if (statusType === 'available') {
       taxiManager.availableStatus = value;
@@ -103,8 +100,8 @@
     event.currentTarget.value = value;
     taxiManager.setIsAvailable(taxiManager.isAvailable);
 
-    taxiStorage.update((data) => {
-      const index = data.findIndex((s) => s.accountId === activeAccount.accountId);
+    taxiStore.set((data) => {
+      const index = data.findIndex((s) => s.accountId === $activeAccount.accountId);
       if (index !== -1) {
         data[index] = settings;
       } else {
@@ -162,17 +159,16 @@
     </div>
 
     <div class="flex items-center justify-between">
-      <div class="font-medium">
-        {$t('taxiService.settings.autoAcceptFriendRequests')}
-      </div>
+      <Label for="autoAcceptFriendRequests">{$t('taxiService.settings.autoAcceptFriendRequests')}</Label>
       <Switch
+        id="autoAcceptFriendRequests"
         onCheckedChange={toggleAutoAccept}
         bind:checked={taxiManager.autoAcceptFriendRequests}
       />
     </div>
   </div>
 
-  <Separator.Root class="bg-border h-px"/>
+  <Separator orientation="horizontal"/>
 
   <div class="flex justify-end">
     <Button
@@ -183,7 +179,7 @@
         ? $t('taxiService.starting')
         : $t('taxiService.stopping')}
       onclick={() => taxiManager.active ? stopTaxiService() : startTaxiService()}
-      variant={taxiManager.active ? 'danger' : 'epic'}
+      variant={taxiManager.active ? 'destructive' : 'default'}
     >
       {#if taxiManager.active}
         <XIcon class="size-5"/>

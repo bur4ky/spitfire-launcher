@@ -12,20 +12,18 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import { language } from '$lib/core/data-storage';
-  import { doingBulkOperations } from '$lib/stores';
-  import MCPManager from '$lib/core/managers/mcp';
-  import { calculateVbucks, getAccountsFromSelection, t } from '$lib/utils/util';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
+  import MCPManager from '$lib/managers/mcp';
+  import { calculateVbucks, getAccountsFromSelection, handleError, t } from '$lib/utils';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { language } from '$lib/storage';
 
   async function fetchVbucksData(event: SubmitEvent) {
     event.preventDefault();
 
     isFetching = true;
-    doingBulkOperations.set(true);
     vbucksStatuses = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
@@ -37,23 +35,24 @@
         const queryProfile = await MCPManager.queryProfile(account, 'common_core');
         status.data.vbucksAmount = calculateVbucks(queryProfile);
       } catch (error) {
+        handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });
+
         status.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
           ? $t('vbucksInformation.loginExpired')
           : $t('vbucksInformation.unknownError');
       }
     }));
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 </script>
 
-<PageContent small={true} title={$t('vbucksInformation.page.title')}>
+<PageContent center={true} title={$t('vbucksInformation.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={fetchVbucksData}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -62,7 +61,6 @@
       loading={isFetching}
       loadingText={$t('vbucksInformation.loading')}
       type="submit"
-      variant="epic"
     >
       {$t('vbucksInformation.getInformation')}
     </Button>
@@ -82,7 +80,7 @@
               <img
                 class="size-5"
                 alt="V-Bucks"
-                src="/assets/resources/currency_mtxswap.png"
+                src="/resources/currency_mtxswap.png"
               />
             </div>
           {/if}

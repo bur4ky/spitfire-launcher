@@ -10,21 +10,21 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import CustomStatusTutorial from '$components/docs/tutorials/CustomStatus.svelte';
-  import { activeAccountStore } from '$lib/core/data-storage';
-  import TaxiManager from '$lib/core/managers/taxi.svelte.js';
-  import Button from '$components/ui/Button.svelte';
-  import Input from '$components/ui/Input/Input.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import CustomStatusTutorial from '$components/features/docs/tutorials/CustomStatus.svelte';
+  import TaxiManager from '$lib/managers/taxi.svelte.js';
+  import { Button } from '$components/ui/button';
+  import { Input } from '$components/ui/input';
   import { toast } from 'svelte-sonner';
-  import { handleError, nonNull, t } from '$lib/utils/util';
-  import XMPPManager from '$lib/core/managers/xmpp';
+  import { handleError, t } from '$lib/utils';
+  import XMPPManager from '$lib/managers/xmpp';
   import MoonIcon from '@lucide/svelte/icons/moon';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import XIcon from '@lucide/svelte/icons/x';
+  import { accountStore } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
-  const isCustomStatusInUse = $derived(TaxiManager.taxiAccountIds.has(activeAccount.accountId));
+  const activeAccount = accountStore.getActiveStore();
+  const isCustomStatusInUse = $derived(TaxiManager.taxiAccountIds.has($activeAccount.accountId));
 
   async function setCustomStatus(event: SubmitEvent) {
     event.preventDefault();
@@ -34,15 +34,15 @@
     isSettingStatus = true;
 
     try {
-      const connection = await XMPPManager.create(activeAccount, 'customStatus');
+      const connection = await XMPPManager.new($activeAccount, 'customStatus');
       await connection.connect();
 
       connection.setStatus(customStatus, onlineType);
-      statusSetAccounts.add(activeAccount.accountId);
+      statusSetAccounts.add($activeAccount.accountId);
 
       toast.success($t('customStatus.statusSet'));
     } catch (error) {
-      handleError(error, $t('customStatus.failedToSetStatus'));
+      handleError({ error, message: $t('customStatus.failedToSetStatus'), account: $activeAccount });
     } finally {
       isSettingStatus = false;
     }
@@ -52,15 +52,15 @@
     isResettingStatus = true;
 
     try {
-      const connection = await XMPPManager.create(activeAccount, 'customStatus');
+      const connection = await XMPPManager.new($activeAccount, 'customStatus');
 
       connection.resetStatus();
       connection.removePurpose('customStatus');
-      statusSetAccounts.delete(activeAccount.accountId);
+      statusSetAccounts.delete($activeAccount.accountId);
 
       toast.success($t('customStatus.statusReset'));
     } catch (error) {
-      handleError(error, $t('customStatus.failedToResetStatus'));
+      handleError({ error, message: $t('customStatus.failedToResetStatus'), account: $activeAccount });
     } finally {
       isResettingStatus = false;
     }
@@ -68,9 +68,9 @@
 </script>
 
 <PageContent
+  center={true}
   description={$t('customStatus.page.description')}
   docsComponent={CustomStatusTutorial}
-  small={true}
   title={$t('customStatus.page.title')}
 >
   <form class="flex flex-col gap-y-4" onsubmit={setCustomStatus}>
@@ -82,25 +82,25 @@
         bind:value={customStatus}
       />
 
-      <button
-        class="absolute top-1/2 right-10 -translate-y-1/2 p-1.25 {onlineType === 'online' && 'bg-accent'} rounded-sm"
-        aria-label={$t('customStatus.onlineTypes.online')}
+      <Button
+        class="absolute top-1/2 right-10 -translate-y-1/2 !p-1.5 h-auto {onlineType === 'online' && 'bg-accent'} rounded-sm"
         onclick={() => onlineType = 'online'}
         title={$t('customStatus.onlineTypes.online')}
         type="button"
+        variant="ghost"
       >
-        <span class="block size-4 bg-[#43a25a] rounded-full p-2"></span>
-      </button>
+        <span class="block size-4 bg-[#43a25a] rounded-full"></span>
+      </Button>
 
-      <button
-        class="absolute top-1/2 right-2 -translate-y-1/2 p-1 {onlineType === 'away' && 'bg-accent'} rounded-sm"
-        aria-label={$t('customStatus.onlineTypes.away')}
+      <Button
+        class="absolute top-1/2 right-2 -translate-y-1/2 !p-1.5 h-auto {onlineType === 'away' && 'bg-accent'} rounded-sm"
         onclick={() => onlineType = 'away'}
         title={$t('customStatus.onlineTypes.away')}
         type="button"
+        variant="ghost"
       >
-        <MoonIcon class="size-4.5 text-orange-400 fill-orange-400 fill-orange-40"/>
-      </button>
+        <MoonIcon class="size-4 text-orange-400 fill-orange-400 fill-orange-40"/>
+      </Button>
     </div>
 
     <div class="flex items-center gap-2">
@@ -110,22 +110,22 @@
         loading={isSettingStatus}
         loadingText={$t('customStatus.settingStatus')}
         type="submit"
-        variant="epic"
       >
         {$t('customStatus.setStatus')}
       </Button>
 
       <Button
-        disabled={isResettingStatus || !statusSetAccounts.has(activeAccount.accountId)}
+        disabled={isResettingStatus || !statusSetAccounts.has($activeAccount.accountId)}
         onclick={resetStatus}
+        size="icon"
         title={$t('customStatus.resetStatus')}
         type="button"
-        variant="accent"
+        variant="secondary"
       >
         {#if isResettingStatus}
-          <LoaderCircleIcon class="size-5 animate-spin my-1"/>
+          <LoaderCircleIcon class="size-4 animate-spin"/>
         {:else}
-          <XIcon class="size-5 my-1"/>
+          <XIcon class="size-4"/>
         {/if}
       </Button>
     </div>

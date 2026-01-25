@@ -12,7 +12,8 @@ export const appSettingsSchema = z.object({
   startingPage: z.enum(['autoKick', 'itemShop', 'stwMissionAlerts', 'taxiService', 'dailyQuests', 'library'] satisfies SidebarItem[]),
   discordStatus: z.boolean(),
   hideToTray: z.boolean(),
-  checkForUpdates: z.boolean()
+  checkForUpdates: z.boolean(),
+  debugLogs: z.boolean()
 }).partial();
 
 export const deviceAuthsSettingsSchema = z.array(z.object({

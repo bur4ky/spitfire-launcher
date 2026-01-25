@@ -1,19 +1,20 @@
+import { fileURLToPath } from 'node:url';
 import { includeIgnoreFile } from '@eslint/compat';
+import js from '@eslint/js';
 import svelte from 'eslint-plugin-svelte';
-import eslintJs from '@eslint/js';
-import tsEslint from 'typescript-eslint';
-import { fileURLToPath, URL } from 'node:url';
-import stylistic from '@stylistic/eslint-plugin';
-import svelteConfig from './svelte.config.js';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
+import ts from 'typescript-eslint';
+import svelteConfig from './svelte.config.js';
+import stylistic from '@stylistic/eslint-plugin';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
-export default tsEslint.config(
-  eslintJs.configs.recommended,
-  ...tsEslint.configs.recommended,
-  ...svelte.configs.recommended,
+export default defineConfig(
   includeIgnoreFile(gitignorePath),
+  js.configs.recommended,
+  ...ts.configs.recommended,
+  ...svelte.configs.recommended,
   {
     plugins: {
       '@stylistic': stylistic
@@ -30,7 +31,7 @@ export default tsEslint.config(
       parserOptions: {
         projectService: true,
         extraFileExtensions: ['.svelte'],
-        parser: tsEslint.parser,
+        parser: ts.parser,
         svelteConfig
       }
     }
@@ -39,7 +40,9 @@ export default tsEslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'svelte/no-navigation-without-resolve': 'off',
-      '@stylistic/arrow-parens': ['error', 'always']
+      '@stylistic/arrow-parens': ['error', 'always'],
+      'no-console': 'error',
+      'no-undef': 'off'
     }
   },
   {

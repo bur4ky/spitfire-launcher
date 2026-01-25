@@ -20,26 +20,27 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import MemberCard, { type PartyMember } from '$components/party/MemberCard.svelte';
-  import PartyAccountSelection from '$components/party/PartyAccountSelection.svelte';
-  import Label from '$components/ui/Label.svelte';
-  import Switch from '$components/ui/Switch.svelte';
-  import Tabs from '$components/ui/Tabs.svelte';
-  import { accountsStorage, activeAccountStore, language } from '$lib/core/data-storage';
-  import { Separator } from 'bits-ui';
-  import FriendsManager from '$lib/core/managers/friends';
-  import XMPPManager from '$lib/core/managers/xmpp';
-  import PartyManager from '$lib/core/managers/party';
-  import AutoKickBase from '$lib/core/managers/autokick/base';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import MemberCard, { type PartyMember } from '$components/features/party/MemberCard.svelte';
+  import PartyAccountSelection from '$components/features/party/PartyAccountSelection.svelte';
+  import { Label } from '$components/ui/label';
+  import { Switch } from '$components/ui/switch';
+  import * as Tabs from '$components/ui/tabs';
+  import { Separator } from '$components/ui/separator';
+  import FriendsManager from '$lib/managers/friends';
+  import XMPPManager from '$lib/managers/xmpp';
+  import PartyManager from '$lib/managers/party';
+  import AutoKickBase from '$lib/managers/autokick/base';
   import { accountPartiesStore, friendsStore } from '$lib/stores';
-  import transferBuildingMaterials from '$lib/core/managers/autokick/transfer-building-materials';
-  import claimRewards from '$lib/core/managers/autokick/claim-rewards';
-  import { getResolvedResults, handleError, nonNull, sleep, t } from '$lib/utils/util';
+  import transferBuildingMaterials from '$lib/managers/autokick/transfer-building-materials';
+  import claimRewards from '$lib/managers/autokick/claim-rewards';
+  import { handleError, sleep, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
   import type { AccountData } from '$types/accounts';
   import type { PartyData } from '$types/game/party';
   import { EpicEvents } from '$lib/constants/events';
+  import logger from '$lib/utils/logger';
+  import { accountStore, language } from '$lib/storage';
 
   type Party = {
     maxSize: number;
@@ -47,9 +48,9 @@
     createdAt: Date;
   };
 
-  const allAccounts = $derived(nonNull($accountsStorage.accounts));
-  const activeAccount = $derived(nonNull($activeAccountStore));
-  const currentAccountParty = $derived(accountPartiesStore.get(activeAccount.accountId));
+  const allAccounts = $derived($accountStore.accounts);
+  const activeAccount = accountStore.getActiveStore();
+  const currentAccountParty = $derived(accountPartiesStore.get($activeAccount.accountId));
   const isDoingSomething = $derived(isKicking || isLeaving || isClaiming);
 
   const partyData = $derived<Party | undefined>(currentAccountParty && {
@@ -91,11 +92,6 @@
 
   const partyLeaderAccount = $derived(allAccounts.find((account) => partyMembers?.some((member) => member.accountId === account.accountId && member.isLeader)));
 
-  const tabs = $derived([
-    { id: 'stwActions', name: $t('partyManagement.tabs.stwActions'), component: STWActions },
-    { id: 'partyMembers', name: $t('partyManagement.tabs.partyMembers'), component: PartyMembers, disabled: !partyData && !partyMembers?.length }
-  ]);
-
   function parseJson(string?: string) {
     try {
       return string ? JSON.parse(string) : {};
@@ -116,11 +112,10 @@
     if (!kickAllSelectedAccount) return;
 
     isKicking = true;
+    const kickerAccount = allAccounts.find((account) => account.accountId === kickAllSelectedAccount);
+    if (!kickerAccount) return;
 
     try {
-      const kickerAccount = allAccounts.find((account) => account.accountId === kickAllSelectedAccount);
-      if (!kickerAccount) return;
-
       const partyData = await fetchPartyData(kickerAccount);
       if (!partyData) {
         toast.error($t('partyManagement.stwActions.notInParty'));
@@ -143,10 +138,12 @@
 
       const members = partyData.members.filter((x) => x.account_id !== kickerAccount.accountId);
       if (shouldInvite) {
-        inviteMembers(kickerAccount, members).catch(console.error);
+        inviteMembers(kickerAccount, members).catch((error) => {
+          logger.error('Failed to invite members back after kicking them', { error });
+        });
       }
     } catch (error) {
-      handleError(error, $t('partyManagement.stwActions.failedToKickAll'));
+      handleError({ error, message: $t('partyManagement.stwActions.failedToKickAll'), account: kickerAccount });
     } finally {
       isKicking = false;
     }
@@ -161,7 +158,7 @@
       await PartyManager.kick(kicker, partyId, memberId);
       afterKickActions(memberId).catch(() => null);
     } catch (error) {
-      handleError(error, $t('partyManagement.stwActions.failedToKickMember'));
+      handleError({ error, message: $t('partyManagement.stwActions.failedToKickMember'), account: kicker });
     } finally {
       kickingMemberIds.delete(memberId);
     }
@@ -178,7 +175,7 @@
     }
 
     try {
-      // eslint-disable-next-line svelte/prefer-svelte-reactivity -- This is not a reactive store
+      // eslint-disable-next-line svelte/prefer-svelte-reactivity
       const accountParties = new Map<string, string>();
       const accounts = allAccounts.filter((account) => selectedAccounts.includes(account.accountId));
       const registeredAccounts = allAccounts.map((account) => account.accountId);
@@ -197,7 +194,7 @@
         }
       }
 
-      await Promise.allSettled(Array.from(accountParties).map(async ([accountId, partyId]) => {
+      await Promise.allSettled(accountParties.entries().map(async ([accountId, partyId]) => {
         const account = allAccounts.find((account) => account.accountId === accountId)!;
 
         if (!claimOnly) {
@@ -208,7 +205,9 @@
           if (shouldInvite && !claimOnly) {
             fetchPartyData(account).then((partyData) => {
               if (partyData) {
-                inviteMembers(account, oldMembers).catch(console.error);
+                inviteMembers(account, oldMembers).catch((error) => {
+                  logger.error('Failed to invite members back after leaving party', { error });
+                });
               }
             });
           }
@@ -222,9 +221,12 @@
         : claimOnly ? $t('partyManagement.stwActions.claimedRewards') : $t('partyManagement.stwActions.leftParties')
       );
     } catch (error) {
-      handleError(error, claimOnly
-        ? $t('partyManagement.stwActions.failedToClaimRewards')
-        : $t('partyManagement.stwActions.failedToLeaveParties'));
+      handleError({
+        error,
+        message: claimOnly
+          ? $t('partyManagement.stwActions.failedToClaimRewards')
+          : $t('partyManagement.stwActions.failedToLeaveParties')
+      });
     } finally {
       if (claimOnly) {
         isClaiming = false;
@@ -237,26 +239,23 @@
   async function inviteMembers(account: AccountData, members: PartyData['members']) {
     if (!members?.length) return;
 
-    const xmpp = await XMPPManager.create(account, 'partyManagement');
+    const xmpp = await XMPPManager.new(account, 'partyManagement');
 
     await xmpp.waitForEvent(EpicEvents.MemberJoined, (data) => data.account_id === account.accountId, 20000);
     await sleep(1000);
 
-    const [partyData, friends] = await getResolvedResults([
+    const [partyData, friends] = await Promise.allSettled([
       PartyManager.get(account),
       FriendsManager.getFriends(account)
     ]);
 
-    const party = partyData?.current[0];
-
-    if (!party || !friends?.length) return;
+    const party = partyData.status === 'fulfilled' ? partyData?.value.current[0] : null;
+    if (!party || friends.status === 'rejected' || !friends.value.length) return;
 
     const partyMemberIds = members.map((x) => x.account_id).filter((x) => x !== account.accountId);
-    const friendsInParty = friends.filter((friend) => partyMemberIds.includes(friend.accountId));
+    const friendsInParty = friends.value.filter((friend) => partyMemberIds.includes(friend.accountId));
 
-    await Promise.allSettled(friendsInParty.map(async (friend) => {
-      await PartyManager.invite(account, party.id, friend.accountId);
-    }));
+    await Promise.allSettled(friendsInParty.map((friend) => PartyManager.invite(account, party.id, friend.accountId)));
   }
 
   async function afterKickActions(memberId: string, claim = false) {
@@ -277,7 +276,13 @@
     return Promise.allSettled(promises).then((results) => {
       const rejected = results.filter((p) => p.status === 'rejected');
       for (const result of rejected) {
-        console.error(result.reason);
+        logger.error(
+          'Failed to perform post-kick action',
+          {
+            accountId: account.accountId,
+            error: (result as PromiseRejectedResult).reason
+          }
+        );
       }
     });
   }
@@ -292,7 +297,7 @@
       await PartyManager.promote(partyLeaderAccount!, currentAccountParty!.id, memberId);
       toast.success($t('partyManagement.stwActions.promotedMember', { name: member.displayName }));
     } catch (error) {
-      handleError(error, $t('partyManagement.stwActions.failedToPromoteMember'));
+      handleError({ error, message: $t('partyManagement.stwActions.failedToPromoteMember'), account: $activeAccount });
     } finally {
       promotingMemberId = undefined;
     }
@@ -302,9 +307,9 @@
     isAddingFriend = true;
 
     try {
-      await FriendsManager.addFriend(activeAccount, memberId);
+      await FriendsManager.addFriend($activeAccount, memberId);
     } catch (error) {
-      handleError(error, $t('partyManagement.partyMembers.failedToSendFriendRequest'));
+      handleError({ error, message: $t('partyManagement.partyMembers.failedToSendFriendRequest'), account: $activeAccount });
     } finally {
       isAddingFriend = false;
     }
@@ -314,28 +319,45 @@
     isRemovingFriend = true;
 
     try {
-      await FriendsManager.removeFriend(activeAccount, memberId);
+      await FriendsManager.removeFriend($activeAccount, memberId);
     } catch (error) {
-      handleError(error, $t('partyManagement.partyMembers.failedToRemoveFriend'));
+      handleError({ error, message: $t('partyManagement.partyMembers.failedToRemoveFriend'), account: $activeAccount });
     } finally {
       isRemovingFriend = false;
     }
   }
 
   $effect(() => {
-    fetchPartyData(activeAccount);
-    XMPPManager.create(activeAccount, 'partyManagement').then((xmpp) => {
+    fetchPartyData($activeAccount);
+    XMPPManager.new($activeAccount, 'partyManagement').then((xmpp) => {
       xmpp.connect();
     });
 
-    if (!$friendsStore[activeAccount.accountId]) {
-      FriendsManager.getSummary(activeAccount);
+    if (!friendsStore.has($activeAccount.accountId)) {
+      FriendsManager.getSummary($activeAccount);
     }
   });
 </script>
 
 <PageContent class="mt-2" title={$t('partyManagement.page.title')}>
-  <Tabs {tabs}/>
+  <Tabs.Root class="mb-2" value="stwActions">
+    <Tabs.List>
+      <Tabs.Trigger value="stwActions">
+        {$t('partyManagement.tabs.stwActions')}
+      </Tabs.Trigger>
+      <Tabs.Trigger disabled={!partyData && !partyMembers?.length} value="partyMembers">
+        {$t('partyManagement.tabs.partyMembers')}
+      </Tabs.Trigger>
+    </Tabs.List>
+
+    <Tabs.Content value="stwActions">
+      {@render STWActions()}
+    </Tabs.Content>
+
+    <Tabs.Content value="partyMembers">
+      {@render PartyMembers()}
+    </Tabs.Content>
+  </Tabs.Root>
 </PageContent>
 
 {#snippet STWActions()}
@@ -346,14 +368,14 @@
         <Switch id="shouldClaimRewards" bind:checked={shouldClaimRewards}/>
       </div>
 
-      <Separator.Root class="bg-border h-6 w-px not-sm:hidden"/>
+      <Separator class="h-6 not-sm:hidden" orientation="vertical"/>
 
       <div class="flex items-center justify-between gap-x-2">
         <Label for="shouldTransferMaterials">{$t('partyManagement.stwActions.transferMaterialsAfterLeaving')}</Label>
         <Switch id="shouldTransferMaterials" bind:checked={shouldTransferMaterials}/>
       </div>
 
-      <Separator.Root class="bg-border h-6 w-px not-sm:hidden"/>
+      <Separator class="h-6 not-sm:hidden" orientation="vertical"/>
 
       <div class="flex items-center justify-between gap-x-2">
         <Label for="inviteAfterLeaving">{$t('partyManagement.stwActions.inviteAfterLeaving')}</Label>
@@ -366,31 +388,31 @@
       loading={isKicking}
       onclick={kickAll}
       type="single"
-      bind:selected={kickAllSelectedAccount}
+      bind:value={kickAllSelectedAccount}
     >
       {$t('partyManagement.stwActions.kickAll')}
     </PartyAccountSelection>
 
-    <Separator.Root class="bg-border h-px"/>
+    <Separator orientation="horizontal"/>
 
     <PartyAccountSelection
       disabled={isDoingSomething || !leavePartySelectedAccounts.length}
       loading={isLeaving}
       onclick={() => leaveParty()}
       type="multiple"
-      bind:selected={leavePartySelectedAccounts}
+      bind:value={leavePartySelectedAccounts}
     >
       {$t('partyManagement.stwActions.leaveParty')}
     </PartyAccountSelection>
 
-    <Separator.Root class="bg-border h-px"/>
+    <Separator orientation="horizontal"/>
 
     <PartyAccountSelection
       disabled={isDoingSomething || !claimRewardsPartySelectedAccounts.length}
       loading={isClaiming}
       onclick={() => leaveParty(true)}
       type="multiple"
-      bind:selected={claimRewardsPartySelectedAccounts}
+      bind:value={claimRewardsPartySelectedAccounts}
     >
       {$t('partyManagement.stwActions.claimRewards')}
     </PartyAccountSelection>
@@ -425,7 +447,7 @@
           {@const canLeave = isRegisteredAccount && !member.isLeader}
           {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
           {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
-          {@const accountFriends = $friendsStore[activeAccount.accountId]}
+          {@const accountFriends = friendsStore.get($activeAccount.accountId)}
           {@const canAddFriend = !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
 
           <!-- Maybe this wasn't a good idea -->

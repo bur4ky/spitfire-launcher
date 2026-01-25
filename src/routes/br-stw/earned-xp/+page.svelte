@@ -13,18 +13,16 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import { language } from '$lib/core/data-storage';
-  import { doingBulkOperations } from '$lib/stores';
-  import Button from '$components/ui/Button.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import { getAccountsFromSelection, getResolvedResults, t } from '$lib/utils/util';
-  import MCPManager from '$lib/core/managers/mcp';
-  import BulkResultAccordion from '$components/ui/Accordion/BulkResultAccordion.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import MCPManager from '$lib/managers/mcp';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
+  import { language } from '$lib/storage';
 
   async function fetchXPData() {
     isFetching = true;
-    doingBulkOperations.set(true);
     xpStatuses = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
@@ -32,27 +30,30 @@
       const status: XPStatus = { accountId: account.accountId, displayName: account.displayName, data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 } };
       xpStatuses.push(status);
 
-      const [athenaProfile, campaignProfile] = await getResolvedResults([
+      const [athena, campaign] = await Promise.allSettled([
         MCPManager.queryProfile(account, 'athena'),
         MCPManager.queryProfile(account, 'campaign')
       ]);
 
-      if (athenaProfile) {
-        const attributes = athenaProfile.profileChanges[0].profile.stats.attributes;
+      if (athena.status === 'fulfilled') {
+        const attributes = athena.value.profileChanges[0].profile.stats.attributes;
         status.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
         status.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
+      } else {
+        handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false })
       }
 
-      if (campaignProfile) {
-        const items = Object.values(campaignProfile.profileChanges[0].profile.items);
+      if (campaign.status === 'fulfilled') {
+        const items = Object.values(campaign.value.profileChanges[0].profile.items);
         const xpItem = items.find((item) => item.templateId === 'Token:stw_accolade_tracker');
         if (xpItem) {
           status.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
         }
+      } else {
+        handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false })
       }
     }));
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 
@@ -61,7 +62,7 @@
     const currentDay = now.getDay();
     const daysUntilTarget = (7 + dayIndex - currentDay) % 7;
 
-    // eslint-disable-next-line svelte/prefer-svelte-reactivity -- This is not a reactive store
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const nextDay = new Date();
     nextDay.setUTCDate(now.getDate() + (daysUntilTarget === 0 ? 7 : daysUntilTarget));
     nextDay.setUTCHours(hours, 0, 0, 0);
@@ -71,15 +72,15 @@
 </script>
 
 <PageContent
+  center={true}
   description={$t('earnedXP.page.description')}
-  small={true}
   title={$t('earnedXP.page.title')}
 >
   <form class="flex flex-col gap-y-4" onsubmit={fetchXPData}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -87,7 +88,6 @@
       loading={isFetching}
       loadingText={$t('earnedXP.loading')}
       onclick={fetchXPData}
-      variant="epic"
     >
       {$t('earnedXP.check')}
     </Button>
@@ -127,7 +127,7 @@
                   <img
                     class="size-4"
                     alt="XP Icon"
-                    src="/assets/misc/battle-royale-xp.png"
+                    src="/misc/battle-royale-xp.png"
                   />
                   <span class="font-medium">{gamemode.name}</span>
                 </div>
@@ -144,7 +144,7 @@
               <div class="h-2 w-full bg-muted rounded-full overflow-hidden">
                 <div
                   style="width: {Math.min(100, (gamemode.value / gamemode.limit) * 100)}%"
-                  class="h-full bg-epic"
+                  class="h-full bg-primary"
                 ></div>
               </div>
 

@@ -1,0 +1,35 @@
+<script lang="ts">
+  import { openUrl } from '@tauri-apps/plugin-opener';
+  import type { Snippet } from 'svelte';
+  import type { HTMLAnchorAttributes } from 'svelte/elements';
+  import type { WithElementRef } from '$lib/utils';
+
+  type ExternalLinkProps = WithElementRef<Omit<HTMLAnchorAttributes, 'onclick'>> & {
+    children: Snippet;
+  };
+
+  let {
+    ref = $bindable(null),
+    href,
+    children,
+    ...restProps
+  }: ExternalLinkProps = $props();
+</script>
+
+{#if href?.startsWith('/')}
+  <a
+    bind:this={ref}
+    {href}
+    {...restProps}
+  >
+    {@render children()}
+  </a>
+{:else}
+  <a
+    bind:this={ref}
+    onclick={() => href ? openUrl(href) : null}
+    {...restProps}
+  >
+    {@render children()}
+  </a>
+{/if}

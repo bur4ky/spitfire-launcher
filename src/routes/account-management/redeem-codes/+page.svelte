@@ -13,15 +13,14 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import TagInput from '$components/ui/TagInput.svelte';
-  import { doingBulkOperations } from '$lib/stores';
-  import CodeManager from '$lib/core/managers/code';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
+  import { TagInput } from '$components/ui/tag-input';
+  import CodeManager from '$lib/managers/code';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import BulkResultAccordion from '$components/ui/Accordion/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, t } from '$lib/utils/util';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
+  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
 
   const humanizedErrors: Record<string, string> = {
     'errors.com.epicgames.coderedemption.code_not_found': $t('redeemCodes.redeemErrors.notFound'),
@@ -34,7 +33,6 @@
     event.preventDefault();
 
     isRedeeming = true;
-    doingBulkOperations.set(true);
     codeStatuses = [];
 
     const nonExistentCodes: string[] = [];
@@ -60,10 +58,12 @@
           await CodeManager.redeem(account, code);
           status.data.push({ code });
         } catch (error) {
+          handleError({ error, message: 'Failed to redeem code', account, toastId: false });
+
           let errorString = $t('redeemCodes.redeemErrors.unknownError');
 
           if (error instanceof EpicAPIError) {
-            errorString = humanizedErrors[error.errorCode] || error.message;
+            errorString = humanizedErrors[error.errorCode] || error.errorMessage;
 
             switch (error.errorCode) {
               case 'errors.com.epicgames.coderedemption.code_not_found': {
@@ -89,17 +89,16 @@
     }
 
     codesToRedeem = [];
-    doingBulkOperations.set(false);
     isRedeeming = false;
   }
 </script>
 
-<PageContent small={true} title={$t('redeemCodes.page.title')}>
+<PageContent center={true} title={$t('redeemCodes.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={redeemCodes}>
     <AccountCombobox
       disabled={isRedeeming}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <TagInput
@@ -113,7 +112,6 @@
       loading={isRedeeming}
       loadingText={$t('redeemCodes.redeeming')}
       type="submit"
-      variant="epic"
     >
       {$t('redeemCodes.redeemCodes')}
     </Button>

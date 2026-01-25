@@ -20,21 +20,20 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import { accountsStorage, language } from '$lib/core/data-storage';
-  import { doingBulkOperations } from '$lib/stores';
-  import Button from '$components/ui/Button.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import MCPManager from '$lib/core/managers/mcp';
+  import MCPManager from '$lib/managers/mcp';
   import { dailyQuests } from '$lib/constants/stw/resources';
   import type { FullQueryProfile } from '$types/game/mcp';
-  import BulkResultAccordion from '$components/ui/Accordion/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, t } from '$lib/utils/util';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
+  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import logger from '$lib/utils/logger';
+  import { language } from '$lib/storage';
 
   async function fetchDailyQuests() {
     isFetching = true;
-    doingBulkOperations.set(true);
     questStatuses = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
@@ -45,15 +44,14 @@
         const campaignProfile = await MCPManager.clientQuestLogin(account, 'campaign');
         handleQueryProfile(campaignProfile, status);
 
-        if (status.data.quests.length > 0) {
+        if (status.data.quests.length) {
           questStatuses.push(status);
         }
       } catch (error) {
-        console.error(error);
+        handleError({ error, message: 'Failed to fetch daily quests', account, toastId: false });
       }
     }));
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 
@@ -89,7 +87,7 @@
   async function rerollQuest(accountId: string, questId: string) {
     rerollingQuestId = questId;
 
-    const account = $accountsStorage.accounts.find((account) => account.accountId === accountId);
+    const account = getAccountsFromSelection([accountId])[0];
     if (!account) {
       rerollingQuestId = null;
       return;
@@ -102,18 +100,18 @@
         handleQueryProfile(rerollResponse, status);
       }
     } catch (error) {
-      console.error(error);
+      logger.warn('Failed to reroll daily quest', { accountId, questId, error });
     } finally {
       rerollingQuestId = null;
     }
   }
 </script>
 
-<PageContent small={true} title={$t('dailyQuests.page.title')}>
+<PageContent center={true} title={$t('dailyQuests.page.title')}>
   <AccountCombobox
     disabled={isFetching}
     type="multiple"
-    bind:selected={selectedAccounts}
+    bind:value={selectedAccounts}
   />
 
   <Button
@@ -123,7 +121,6 @@
     loadingText={$t('dailyQuests.loading')}
     onclick={fetchDailyQuests}
     type="submit"
-    variant="epic"
   >
     {$t('dailyQuests.getQuests')}
   </Button>
@@ -136,17 +133,17 @@
             {@const rewards = [
               {
                 name: $t('stw.gold'),
-                icon: '/assets/resources/eventcurrency_scaling.png',
+                icon: '/resources/eventcurrency_scaling.png',
                 amount: quest.rewards.gold
               },
               {
                 name: status.data.hasFounder ? $t('vbucks') : $t('stw.xrayTickets'),
-                icon: status.data.hasFounder ? '/assets/resources/currency_mtxswap.png' : '/assets/resources/currency_xrayllama.png',
+                icon: status.data.hasFounder ? '/resources/currency_mtxswap.png' : '/resources/currency_xrayllama.png',
                 amount: quest.rewards.mtx
               },
               {
                 name: $t('xp'),
-                icon: '/assets/misc/battle-royale-xp.png',
+                icon: '/misc/battle-royale-xp.png',
                 amount: quest.rewards.xp
               }
             ]}
@@ -174,7 +171,7 @@
               <div class="flex justify-around">
                 {#each rewards as reward (reward.name)}
                   {#if reward.amount > 0}
-                    <div class="flex items-center gap-2 bg-muted/50 p-2 rounded">
+                    <div class="flex items-center gap-2 bg-accent/50 p-2 rounded">
                       <img class="size-6" alt={reward.name} src={reward.icon}/>
                       <span class="font-medium">{reward.amount.toLocaleString($language)}</span>
                     </div>

@@ -1,22 +1,22 @@
 <script lang="ts" module>
-  // eslint-disable-next-line svelte/prefer-svelte-reactivity -- This is not a reactive store
+  // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const claimedMissionAlerts = new Map<string, Set<string>>();
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AlertsOverviewItem from '$components/mission-alerts/AlertsOverviewItem.svelte';
-  import AlertsSection from '$components/mission-alerts/AlertsSection.svelte';
-  import { activeAccountStore } from '$lib/core/data-storage';
-  import MCPManager from '$lib/core/managers/mcp';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AlertsOverviewItem from '$components/features/mission-alerts/AlertsOverviewItem.svelte';
+  import AlertsSection from '$components/features/mission-alerts/AlertsSection.svelte';
+  import MCPManager from '$lib/managers/mcp';
   import type { WorldParsedMission } from '$types/game/stw/world-info';
   import { worldInfoCache } from '$lib/stores';
   import { WorldPowerLevels, Theaters } from '$lib/constants/stw/world-info';
-  import { isLegendaryOrMythicSurvivor, nonNull, t } from '$lib/utils/util';
-  import WorldInfoManager from '$lib/core/managers/world-info';
+  import { isLegendaryOrMythicSurvivor, t } from '$lib/utils';
+  import WorldInfoManager from '$lib/managers/world-info';
   import { onMount } from 'svelte';
+  import { accountStore } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  const activeAccount = accountStore.getActiveStore();
 
   const filteredMissions = $derived.by(() => {
     if (!$worldInfoCache) return null;
@@ -138,13 +138,13 @@
   }
 
   $effect(() => {
-    if (!activeAccount || claimedMissionAlerts.has(activeAccount.accountId)) return;
+    if (!$activeAccount || claimedMissionAlerts.has($activeAccount.accountId)) return;
 
-    MCPManager.queryProfile(activeAccount, 'campaign').then((queryProfile) => {
+    MCPManager.queryProfile($activeAccount, 'campaign').then((queryProfile) => {
       const attributes = queryProfile.profileChanges[0].profile.stats.attributes;
       const doneMissionAlerts = attributes.mission_alert_redemption_record?.claimData?.map((claimData) => claimData.missionAlertId) || [];
 
-      claimedMissionAlerts.set(activeAccount.accountId, new Set(doneMissionAlerts));
+      claimedMissionAlerts.set($activeAccount.accountId, new Set(doneMissionAlerts));
     });
   });
 
@@ -169,26 +169,26 @@
 
 <PageContent title={$t('stwMissionAlerts.page.title')}>
   <div class="flex flex-col">
-    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 p-4 pt-0 bg-muted/5">
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 p-4 pt-0">
       <AlertsOverviewItem
         name={$t('vbucks')}
         amount={countMissionReward(filteredMissions?.vbucks, 'currency_mtxswap')}
-        icon="/assets/resources/currency_mtxswap.png"
+        icon="/resources/currency_mtxswap.png"
       />
       <AlertsOverviewItem
         name={$t('stwMissionAlerts.sections.survivors')}
         amount={countMissionReward(filteredMissions?.survivors, isLegendaryOrMythicSurvivor)}
-        icon="/assets/resources/voucher_generic_worker_sr.png"
+        icon="/resources/voucher_generic_worker_sr.png"
       />
       <AlertsOverviewItem
         name={$t('stwMissionAlerts.sections.upgradeLlamaTokens')}
         amount={countMissionReward(filteredMissions?.upgradeLlamaTokens, 'voucher_cardpack_bronze')}
-        icon="/assets/resources/voucher_cardpack_bronze.png"
+        icon="/resources/voucher_cardpack_bronze.png"
       />
       <AlertsOverviewItem
         name={$t('stwMissionAlerts.sections.perkup')}
         amount={countMissionReward(filteredMissions?.perkUp, 'alteration_upgrade_sr')}
-        icon="/assets/resources/reagent_alteration_upgrade_sr.png"
+        icon="/resources/reagent_alteration_upgrade_sr.png"
       />
     </div>
 

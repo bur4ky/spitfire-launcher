@@ -12,18 +12,17 @@
 
 <script lang="ts">
   import { page } from '$app/state';
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import ExternalLink from '$components/ui/ExternalLink.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
+  import { ExternalLink } from '$components/ui/external-link';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import EULAManager from '$lib/core/managers/eula';
+  import EULAManager from '$lib/managers/eula';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import { doingBulkOperations } from '$lib/stores';
   import { toast } from 'svelte-sonner';
-  import Authentication from '$lib/core/authentication';
+  import Authentication from '$lib/utils/epic/authentication';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { getAccountsFromSelection, t } from '$lib/utils/util';
+  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
 
   type PageState = {
     selectedAccounts?: string[];
@@ -40,7 +39,6 @@
     event.preventDefault();
 
     isFetching = true;
-    doingBulkOperations.set(true);
     eulaStatuses = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
@@ -50,11 +48,13 @@
 
       try {
         // TODO: Shortest way I could find. Might change later
-        const accessToken = await Authentication.verifyOrRefreshAccessToken(account);
-        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
+        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
+        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
         const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(exchangeData.code, launcherAppClient2);
         await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
       } catch (error) {
+        handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
+
         if (!(error instanceof EpicAPIError)) return;
 
         if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' && error.continuationUrl) {
@@ -72,17 +72,16 @@
       toast.info($t('eula.allAccountsAlreadyAccepted'));
     }
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 </script>
 
-<PageContent small={true} title={$t('eula.page.title')}>
+<PageContent center={true} title={$t('eula.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={checkEULA}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -91,7 +90,6 @@
       loading={isFetching}
       loadingText={$t('eula.checking')}
       type="submit"
-      variant="epic"
     >
       {$t('eula.check')}
     </Button>

@@ -6,7 +6,6 @@ export type EpicAPIErrorData = {
   continuation?: string;
   continuationUrl?: string;
   correctiveAction?: string;
-  validationFailures?: Record<string, any>;
 };
 
 export type EpicTokenType = 'eg1' | 'bearer';

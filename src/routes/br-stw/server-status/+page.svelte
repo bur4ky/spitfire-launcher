@@ -6,7 +6,7 @@
       | 'MAJOR_OUTAGE'
       | 'PARTIAL_OUTAGE'
       | 'UNDER_MAINTENANCE';
-    message?: string;
+    message: string;
   };
 
   type StatusPageStatus = {
@@ -29,22 +29,22 @@
 </script>
 
 <script lang="ts">
-  import ExternalLink from '$components/ui/ExternalLink.svelte';
-  import Switch from '$components/ui/Switch.svelte';
-  import Tooltip from '$components/ui/Tooltip.svelte';
-  import StatusCard from '$components/ui/StatusCard.svelte';
-  import { activeAccountStore, language } from '$lib/core/data-storage';
-  import NotificationManager from '$lib/core/managers/notification';
-  import ServerStatusManager from '$lib/core/managers/server-status';
+  import { ExternalLink } from '$components/ui/external-link';
+  import { Switch } from '$components/ui/switch';
+  import * as Tooltip from '$components/ui/tooltip';
+  import NotificationManager from '$lib/managers/notification';
+  import ServerStatusManager from '$lib/managers/server-status';
   import type { LightswitchData } from '$types/game/server-status';
-  import { Separator } from 'bits-ui';
+  import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { onMount } from 'svelte';
-  import PageContent from '$components/PageContent.svelte';
-  import Button from '$components/ui/Button.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import { formatRemainingDuration, getResolvedResults, handleError, t } from '$lib/utils/util';
+  import { formatRemainingDuration, handleError, t } from '$lib/utils';
+  import { Alert } from '$components/ui/alert';
+  import { accountStore, language } from '$lib/storage';
 
   $effect(() => {
     if (notifyUser) {
@@ -69,37 +69,32 @@
   async function fetchServerStatus() {
     isLoading = true;
 
+    const activeAccount = accountStore.getActive() || undefined;
+
     try {
-      const [lightswitchData, queueData, statusPageData] = await getResolvedResults([
-        ServerStatusManager.getLightswitch($activeAccountStore || undefined),
+      const [lightswitchData, queueData, statusPageData] = await Promise.all([
+        ServerStatusManager.getLightswitch(activeAccount),
         ServerStatusManager.getWaitingRoom(),
         ServerStatusManager.getStatusPage()
       ]);
 
       lastUpdated = new Date();
-
-      if (lightswitchData) {
-        serviceStatus = {
-          status: getStatusFromLightswitch(lightswitchData),
-          message: lightswitchData.message
-        };
-      }
-
       expectedWait = queueData?.expectedWait || 0;
+      serviceStatus = {
+        status: getStatusFromLightswitch(lightswitchData),
+        message: lightswitchData.message
+      };
 
-      if (statusPageData?.components) {
-        const fortniteComponentIds = statusPageData.components.find((x) => x.name === 'Fortnite')!.components;
-
-        statusPageServices = fortniteComponentIds.map((id) => {
-          const component = statusPageData.components.find((x) => x.id === id);
-          return {
-            name: component!.name,
-            status: component!.status as StatusPageStatus['status']
-          };
-        });
-      }
+      const fnComponentIds = statusPageData.components?.find((x) => x.name === 'Fortnite')?.components || [];
+      statusPageServices = fnComponentIds.map((id) => {
+        const component = statusPageData.components.find((x) => x.id === id);
+        return {
+          name: component!.name,
+          status: component!.status as StatusPageStatus['status']
+        };
+      });
     } catch (error) {
-      handleError(error, $t('serverStatus.failedToFetch'));
+      handleError({ error, message: $t('serverStatus.failedToFetch'), account: activeAccount });
     } finally {
       isLoading = false;
     }
@@ -179,11 +174,17 @@
 
     {#if serviceStatus && serviceStatus.status !== 'UP'}
       <div class="flex items-center justify-between">
-        <Tooltip message={$t('serverStatus.notifyMe.description')}>
-          <p class="flex-1 text-sm font-medium">
+        <Tooltip.Root>
+          <Tooltip.Trigger>
             {$t('serverStatus.notifyMe.title')}
-          </p>
-        </Tooltip>
+          </Tooltip.Trigger>
+
+          <Tooltip.Content>
+            <p class="text-sm max-w-xs">
+              {$t('serverStatus.notifyMe.description')}
+            </p>
+          </Tooltip.Content>
+        </Tooltip.Root>
 
         <Switch
           onCheckedChange={() => {
@@ -196,7 +197,7 @@
   </div>
 
   {#if serviceStatus}
-    <StatusCard
+    <Alert
       color={getStatusData(serviceStatus.status).color}
       message={serviceStatus.message}
       title={$t('serverStatus.status', { status: getStatusData(serviceStatus.status).text })}
@@ -213,14 +214,14 @@
   {/if}
 
   {#if expectedWait}
-    <StatusCard
+    <Alert
       color="yellow"
       message={$t('serverStatus.queue.description', { time: formatRemainingDuration(expectedWait * 1000) })}
       title={$t('serverStatus.queue.title')}
     />
   {/if}
 
-  <Separator.Root class="bg-border h-px"/>
+  <Separator orientation="horizontal"/>
 
   {#if isLoading && !statusPageServices.length}
     <div class="space-y-3">
@@ -244,7 +245,7 @@
         {/each}
       </div>
     </div>
-  {:else if statusPageServices.length > 0}
+  {:else if statusPageServices.length}
     <div class="space-y-2">
       <div class="flex items-center gap-2 text-muted-foreground">
         <ExternalLinkIcon class="size-4"/>
@@ -258,15 +259,14 @@
 
       <div class="space-y-3">
         {#each statusPageServices as service (service.name)}
-          <div class="bg-muted/30 p-4 rounded-lg">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3 truncate">
-                <div class="size-3 rounded-full bg-{getStatusData(service.status).color}-500"></div>
-                <span class="font-medium truncate max-xs:text-sm">{service.name}</span>
-              </div>
-              <div class="text-sm">
-                {getStatusData(service.status).text}
-              </div>
+          <div class="bg-card p-4 rounded-lg flex justify-between items-center">
+            <div class="flex items-center gap-3 truncate">
+              <div class="size-3 rounded-full bg-{getStatusData(service.status).color}-500"></div>
+              <span class="font-medium truncate max-xs:text-sm">{service.name}</span>
+            </div>
+
+            <div class="text-sm">
+              {getStatusData(service.status).text}
             </div>
           </div>
         {/each}

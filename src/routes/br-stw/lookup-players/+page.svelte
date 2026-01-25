@@ -1,6 +1,6 @@
 <script lang="ts" module>
-  import type { DailyQuest } from '$components/lookup-players/DailyQuestAccordion.svelte';
-  import type { LoadoutData, MissionData, MissionPlayers } from '$components/lookup-players/STWDetails.svelte';
+  import type { DailyQuest } from '$components/features/lookup-players/DailyQuestAccordion.svelte';
+  import type { LoadoutData, MissionData, MissionPlayers } from '$components/features/lookup-players/STWDetails.svelte';
   import { FounderEditions, gadgets, heroes, teamPerks } from '$lib/constants/stw/resources';
 
   type FounderEdition = typeof FounderEditions[keyof typeof FounderEditions];
@@ -29,28 +29,29 @@
 </script>
 
 <script lang="ts">
-  import DailyQuestAccordion from '$components/lookup-players/DailyQuestAccordion.svelte';
-  import STWDetails from '$components/lookup-players/STWDetails.svelte';
-  import ExternalLink from '$components/ui/ExternalLink.svelte';
-  import AlertsSectionAccordion from '$components/mission-alerts/AlertsSectionAccordion.svelte';
-  import { activeAccountStore, language } from '$lib/core/data-storage';
-  import MatchmakingManager from '$lib/core/managers/matchmaking';
+  import DailyQuestAccordion from '$components/features/lookup-players/DailyQuestAccordion.svelte';
+  import STWDetails from '$components/features/lookup-players/STWDetails.svelte';
+  import { ExternalLink } from '$components/ui/external-link';
+  import AlertsSectionAccordion from '$components/features/mission-alerts/AlertsSectionAccordion.svelte';
+  import MatchmakingManager from '$lib/managers/matchmaking';
   import { avatarCache, worldInfoCache } from '$lib/stores';
   import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';
-  import Button from '$components/ui/Button.svelte';
-  import InputWithAutocomplete from '$components/ui/Input/InputWithAutocomplete.svelte';
-  import { Separator } from 'bits-ui';
+  import { Button } from '$components/ui/button';
+  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
+  import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import SearchIcon from '@lucide/svelte/icons/search';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import LookupManager from '$lib/core/managers/lookup';
+  import LookupManager from '$lib/managers/lookup';
   import { toast } from 'svelte-sonner';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import { handleError, t } from '$lib/utils';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
-  import MCPManager from '$lib/core/managers/mcp';
+  import MCPManager from '$lib/managers/mcp';
   import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
+  import logger from '$lib/utils/logger';
+  import { accountStore, language } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  const activeAccount = accountStore.getActiveStore();
   const claimedMissionAlerts = $derived.by(() => {
     if (!$worldInfoCache.size || !stwData?.claimedMissionAlertIds?.size) {
       return [];
@@ -80,7 +81,7 @@
     resetData();
 
     try {
-      const internalLookupData = await LookupManager.fetchByNameOrId(activeAccount, searchQuery);
+      const internalLookupData = await LookupManager.fetchByNameOrId($activeAccount, searchQuery);
 
       const [stwDataResult, matchmakingDataResult] = await Promise.allSettled([
         getSTWData(internalLookupData.accountId),
@@ -88,24 +89,24 @@
       ]);
 
       if (stwDataResult.status === 'rejected') {
-        console.error(stwDataResult.reason);
+        logger.warn('Failed to fetch STW data', { accountId: internalLookupData.accountId, error: stwDataResult.reason });
         toast.error($t('lookupPlayers.stwStatsPrivate'));
       }
 
       if (matchmakingDataResult.status === 'rejected') {
-        console.error(matchmakingDataResult.reason);
+        logger.warn('Failed to fetch Matchmaking data', { accountId: internalLookupData.accountId, error: matchmakingDataResult.reason });
       }
 
       lookupData = internalLookupData;
     } catch (error) {
-      handleError(error, $t('lookupPlayers.notFound'));
+      handleError({ error, message: $t('lookupPlayers.notFound'), account: $activeAccount });
     } finally {
       isLoading = false;
     }
   }
 
   async function getSTWData(accountId: string) {
-    const queryPublicProfile = await MCPManager.queryPublicProfile(activeAccount, accountId, 'campaign');
+    const queryPublicProfile = await MCPManager.queryPublicProfile($activeAccount, accountId, 'campaign');
     const profile = queryPublicProfile.profileChanges[0].profile;
     const items = Object.entries(profile.items);
     const attributes = profile.stats.attributes;
@@ -159,12 +160,12 @@
       index: itemData.attributes.loadout_index,
       commander: heroes[heroId] ? {
         name: heroes[heroId].name,
-        icon: `/assets/heroes/${heroId}.png`,
+        icon: `/heroes/${heroId}.png`,
         rarity: Object.values(RarityTypes).find((rarity) => selectedCommander.templateId.toLowerCase().includes(`_${rarity}_`))!
       } : undefined,
       teamPerk: teamPerkId && teamPerks[teamPerkId] ? {
         name: teamPerks[teamPerkId].name,
-        icon: `/assets/perks/${teamPerks[teamPerkId].icon}`
+        icon: `/perks/${teamPerks[teamPerkId].icon}`
       } : undefined,
       supportTeam: supportTeam.map((id) => {
         const heroId = id.replace('Hero:', '').split('_').slice(0, -2).join('_').toLowerCase();
@@ -172,7 +173,7 @@
 
         return {
           name: heroes[heroId].name,
-          icon: `/assets/heroes/${heroId}.png`,
+          icon: `/heroes/${heroId}.png`,
           rarity
         };
       }),
@@ -184,7 +185,7 @@
 
           return {
             name: gadgets[id].name,
-            icon: `/assets/gadgets/${gadgets[id].icon}`
+            icon: `/gadgets/${gadgets[id].icon}`
           };
         })
     });
@@ -210,7 +211,7 @@
   }
 
   async function getMatchmakingData(accountId: string) {
-    const [matchmakingData] = await MatchmakingManager.findPlayer(activeAccount, accountId);
+    const [matchmakingData] = await MatchmakingManager.findPlayer($activeAccount, accountId);
     if (!matchmakingData) return;
 
     const zoneData = matchmakingData.attributes.ZONEINSTANCEID_s && JSON.parse(matchmakingData.attributes.ZONEINSTANCEID_s);
@@ -221,14 +222,14 @@
 
       mission = {
         nameId: isStormShield ? 'storm-shield' : missionData?.zone.type.id,
-        icon: isStormShield ? '/assets/world/storm-shield.png' : missionData?.zone.type.imageUrl,
+        icon: isStormShield ? '/world/storm-shield.png' : missionData?.zone.type.imageUrl,
         powerLevel: missionData?.powerLevel,
         zone: zoneThemes[missionData?.zone.theme?.split('.')[1].toLowerCase() as never],
         theaterId: zoneData.theaterId
       };
     }
 
-    const playerNames = await LookupManager.fetchByIds(activeAccount, matchmakingData.publicPlayers);
+    const playerNames = await LookupManager.fetchByIds($activeAccount, matchmakingData.publicPlayers);
     missionPlayers = playerNames.map((player) => ({
       accountId: player.id,
       name: player.displayName
@@ -280,7 +281,6 @@
       disabled={isLoading || !searchQuery || searchQuery.length < 3}
       size="sm"
       type="submit"
-      variant="epic"
     >
       {#if isLoading}
         <LoaderCircleIcon class="size-5 animate-spin"/>
@@ -318,7 +318,7 @@
       }
     ]}
 
-    <div class="space-y-4 text-sm relative border p-5 rounded-md min-w-72 sm:min-w-80 xs:min-w-96 bg-surface-alt">
+    <div class="space-y-4 text-sm relative border p-5 rounded-md min-w-72 sm:min-w-80 xs:min-w-96 bg-card">
       <div class="flex gap-4 items-start">
         {#if avatarCache.has(lookupData.accountId)}
           <img class="hidden xs:block size-20 rounded-md self-center" alt={lookupData.displayName} src={avatarCache.get(lookupData.accountId)}/>
@@ -346,8 +346,8 @@
 
       <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers}/>
 
-      {#if stwData && stwData?.claimedMissionAlertIds.size > 0 && claimedMissionAlerts && claimedMissionAlerts.length > 0}
-        <Separator.Root class="bg-border h-px"/>
+      {#if stwData && stwData?.claimedMissionAlertIds.size > 0 && claimedMissionAlerts && claimedMissionAlerts.length}
+        <Separator orientation="horizontal"/>
 
         <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.claimedAlerts.title')}</h3>
 
@@ -358,8 +358,8 @@
         />
       {/if}
 
-      {#if stwData && dailyQuests.length > 0}
-        <Separator.Root class="bg-border h-px"/>
+      {#if stwData && dailyQuests.length}
+        <Separator orientation="horizontal"/>
 
         <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.dailyQuests.title')}</h3>
 

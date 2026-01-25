@@ -1,22 +1,20 @@
 <script lang="ts">
-  import AppCard from '$components/downloader/AppCard.svelte';
-  import AppFilter from '$components/downloader/AppFilter.svelte';
-  import InstallDialog from '$components/downloader/InstallDialog.svelte';
-  import SkeletonAppCard from '$components/downloader/SkeletonAppCard.svelte';
-  import UninstallDialog from '$components/downloader/UninstallDialog.svelte';
-  import PageContent from '$components/PageContent.svelte';
-  import Input from '$components/ui/Input/Input.svelte';
-  import { activeAccountStore, downloaderStorage } from '$lib/core/data-storage';
+  import AppCard from '$components/features/downloader/AppCard.svelte';
+  import AppFilter from '$components/features/downloader/AppFilter.svelte';
+  import InstallDialog from '$components/features/downloader/modals/InstallDialog.svelte';
+  import SkeletonAppCard from '$components/features/downloader/skeletons/SkeletonAppCard.svelte';
+  import UninstallDialog from '$components/features/downloader/modals/UninstallDialog.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Input } from '$components/ui/input';
   import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/core/legendary';
-  import DownloadManager from '$lib/core/managers/download.svelte';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import Legendary from '$lib/utils/epic/legendary';
+  import DownloadManager from '$lib/managers/download.svelte';
+  import { handleError, t } from '$lib/utils';
   import type { AppFilterValue } from '$types/legendary';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
-
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  import { accountStore, downloaderStore } from '$lib/storage';
 
   let isRefreshing = $state(false);
   let searchQuery = $state<string>('');
@@ -29,7 +27,7 @@
     const query = searchQuery.trim().toLowerCase();
 
     let filtered = Object.values($ownedApps).filter((app) => {
-      if (!filters.includes('hidden') && $downloaderStorage.hiddenApps?.includes(app.id)) return false;
+      if (!filters.includes('hidden') && $downloaderStore.hiddenApps?.includes(app.id)) return false;
       if (filters.includes('installed') && !app.installed) return false;
       if (filters.includes('updatesAvailable') && !app.hasUpdate) return false;
       return true;
@@ -45,8 +43,8 @@
     }
 
     return filtered.sort((a, b) => {
-      const favoriteA = $downloaderStorage.favoriteApps?.includes(a.id) ? 0 : 1;
-      const favoriteB = $downloaderStorage.favoriteApps?.includes(b.id) ? 0 : 1;
+      const favoriteA = $downloaderStore.favoriteApps?.includes(a.id) ? 0 : 1;
+      const favoriteB = $downloaderStore.favoriteApps?.includes(b.id) ? 0 : 1;
 
       const installedA = a.installed ? 0 : 1;
       const installedB = b.installed ? 0 : 1;
@@ -73,11 +71,11 @@
       const toastId = toast.loading($t('library.loggingIn'), { duration: Number.POSITIVE_INFINITY });
 
       try {
-        await Legendary.login(activeAccount);
+        await Legendary.login(accountStore.getActive()!);
         toast.success($t('library.loggedIn'), { id: toastId, duration: 3000 });
       } catch (error) {
         isRefreshing = false;
-        handleError(error, $t('library.failedToLogin'), toastId);
+        handleError({ error, message: $t('library.failedToLogin'), toastId });
         return;
       }
     }
@@ -108,7 +106,7 @@
       type="search"
       bind:value={searchQuery}
     />
-    <AppFilter bind:selected={filters}/>
+    <AppFilter bind:value={filters}/>
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

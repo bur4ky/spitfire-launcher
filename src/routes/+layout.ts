@@ -1,18 +1,19 @@
-import { settingsStorage } from '$lib/core/data-storage';
-import { changeLocale } from '$lib/utils/util';
+import { changeLocale } from '$lib/utils';
 import { baseLocale, locales } from '$lib/paraglide/runtime';
-import { invoke } from '@tauri-apps/api/core';
-import { get } from 'svelte/store';
+import Tauri from '$lib/utils/tauri';
+import { setLogLevel } from '$lib/utils/logger';
+import { settingsStore } from '$lib/storage';
 
 export const prerender = true;
 export const ssr = false;
 
 export async function load() {
-  const settings = get(settingsStorage);
+  const settings = settingsStore.get();
+  // Set the initial log level before anything else
+  setLogLevel(settings.app?.debugLogs ? 'debug' : 'info');
 
-  const systemLocale = await invoke<string>('get_locale');
+  const systemLocale = await Tauri.getLocale();
   let locale = settings.app?.language || systemLocale || baseLocale;
-
   if (!locales.includes(locale as any)) {
     locale = baseLocale;
   }

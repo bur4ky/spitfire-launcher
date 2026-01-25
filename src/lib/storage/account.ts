@@ -1,0 +1,86 @@
+import FileStore from '$lib/storage/file-store';
+import AutoKickBase from '$lib/managers/autokick/base';
+import XMPPManager from '$lib/managers/xmpp';
+import { derived, type Readable } from 'svelte/store';
+import type { AccountData, AccountDataFile } from '$types/accounts';
+import { accountDataFileSchema } from '$lib/validations/accounts';
+import DeviceAuthManager from '$lib/managers/device-auth';
+import Legendary from '$lib/utils/epic/legendary';
+import { getChildLogger } from '$lib/utils/logger';
+
+const logger = getChildLogger('AccountStore');
+
+export default class AccountStore extends FileStore<AccountDataFile> {
+  constructor() {
+    super('accounts', { accounts: [] }, accountDataFileSchema);
+  }
+
+  add(account: AccountData, setActive = true) {
+    this.set((state) => {
+      state.accounts.push(account);
+
+      if (setActive) {
+        state.activeAccountId = account.accountId;
+      }
+
+      return state;
+    });
+  }
+
+  remove(id: string) {
+    const account = this.get().accounts.find((x) => x.accountId === id);
+
+    this.set((state) => {
+      state.accounts = state.accounts.filter((x) => x.accountId !== id);
+
+      if (state.activeAccountId === id) {
+        state.activeAccountId = state.accounts[0]?.accountId ?? null;
+      }
+
+      return state;
+    });
+
+    AutoKickBase.removeAccount(id);
+    XMPPManager.instances.get(id)?.disconnect();
+
+    if (account) {
+      DeviceAuthManager.delete(account, account.deviceId).catch((error) => {
+        logger.error('Failed to delete device auth', { error });
+      });
+
+      Legendary.getAccount().then((legAccount) => {
+        if (legAccount === account.accountId) {
+          Legendary.logout().catch((error) => {
+            logger.error('Failed to logout from Legendary', { error });
+          });
+        }
+      });
+    }
+  }
+
+  getActive() {
+    const data = this.get();
+    return data.accounts.find((x) => x.accountId === data.activeAccountId) || null;
+  }
+
+  // The nullable parameter is useful when the component is behind authentication
+  getActiveStore(nullable?: false): Readable<AccountData>;
+  getActiveStore(nullable: true): Readable<AccountData | null>;
+  getActiveStore(nullable = false): Readable<AccountData | null> {
+    return derived(this, ($state) => {
+      const account = $state.accounts.find((x) => x.accountId === $state.activeAccountId) ?? null;
+      if (!nullable && !account) {
+        throw new Error('Active account is required');
+      }
+
+      return account;
+    });
+  }
+
+  setActive(id: string) {
+    this.set((state) => {
+      state.activeAccountId = id;
+      return state;
+    });
+  }
+}

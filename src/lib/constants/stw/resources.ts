@@ -27,7 +27,7 @@ import zoneThemesJson from '$lib/data/zone-themes.json';
 import theatersJson from '$lib/data/theaters.json';
 import missionsJson from '$lib/data/missions.json';
 import { derived } from 'svelte/store';
-import { t } from '$lib/utils/util';
+import { t } from '$lib/utils';
 
 export const RarityTypes = Object.freeze({
   Common: 'c',
