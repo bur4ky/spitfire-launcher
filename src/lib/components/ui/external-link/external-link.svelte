@@ -27,7 +27,11 @@
 {:else}
   <a
     bind:this={ref}
-    onclick={() => href ? openUrl(href) : null}
+    {href}
+    onclick={(event) => {
+      event.preventDefault();
+      if (href) openUrl(href);
+    }}
     {...restProps}
   >
     {@render children()}
