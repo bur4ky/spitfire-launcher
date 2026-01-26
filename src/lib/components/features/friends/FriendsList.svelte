@@ -34,7 +34,7 @@
         accountId: data.accountId,
         displayName: displayNamesCache.get(data.accountId) || data.accountId,
         nickname: 'alias' in data ? data.alias : undefined,
-        avatarUrl: avatarCache.get(data.accountId) || '/misc/defaultOutfitIcon.png',
+        avatarUrl: avatarCache.get(data.accountId) || '/misc/default-outfit-icon.png',
         createdAt: new Date(data.created)
       }))
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

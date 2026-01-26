@@ -86,7 +86,7 @@
       <img
         class="size-8 rounded-full"
         alt={$activeAccount.displayName}
-        src={avatarCache.get($activeAccount.accountId) || '/misc/defaultOutfitIcon.png'}
+        src={avatarCache.get($activeAccount.accountId) || '/misc/default-outfit-icon.png'}
       />
 
       <span class="text-base font-medium truncate">
@@ -122,7 +122,7 @@
             <img
               class="size-7 rounded-full"
               alt={account.displayName}
-              src={avatarCache.get(account.accountId) || '/misc/defaultOutfitIcon.png'}
+              src={avatarCache.get(account.accountId) || '/misc/default-outfit-icon.png'}
             />
 
             <span class="truncate">{account.displayName}</span>

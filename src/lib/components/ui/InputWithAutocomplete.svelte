@@ -81,7 +81,7 @@
           <img
             class="size-6 rounded-full mr-2"
             alt={name}
-            src={avatarCache.get(accountId) || '/misc/defaultOutfitIcon.png'}
+            src={avatarCache.get(accountId) || '/misc/default-outfit-icon.png'}
           />
           <span class="text-sm">{name}</span>
         </DropdownMenu.Item>
