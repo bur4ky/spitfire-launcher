@@ -23,14 +23,13 @@
 
 </script>
 
-<div class="flex gap-2">
+<div class="flex flex-col gap-4 border rounded-md p-4">
   <AccountCombobox
     type={type as never}
     bind:value={value as never}
   />
 
   <Button
-    class="shrink-0"
     {disabled}
     {loading}
     {onclick}

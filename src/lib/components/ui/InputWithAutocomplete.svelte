@@ -22,8 +22,8 @@
   const autocompleteData = $derived.by(() => {
     if (!value) return [];
 
-    return Array.from(displayNamesCache.entries())
-      .filter(([id, name]) => name.toLowerCase().includes(value.toLowerCase()) || id === value)
+    return displayNamesCache.entries().toArray()
+      .filter(([id, name]) => name?.toLowerCase().includes(value.toLowerCase()) || id === value)
       .sort(([idA, nameA], [idB, nameB]) => {
         const isFriendA = avatarCache.has(idA);
         const isFriendB = avatarCache.has(idB);
