@@ -7,20 +7,16 @@ import { getVersion } from '@tauri-apps/api/app';
 import { platform, arch } from '@tauri-apps/plugin-os';
 import type { EpicAPIErrorData } from '$types/game/authorizations';
 
+const manifest = await Manifest.getFortniteManifest().catch(() => null);
+const userAgent = manifest?.appVersionString
+  ? `Fortnite/${manifest.appVersionString}`
+  : 'Fortnite/++Fortnite+Release-39.30-CL-49874243-Windows';
+
 export const epicService = tauriKy.extend({
+  headers: {
+    'X-User-Agent': userAgent
+  },
   hooks: {
-    beforeRequest: [
-      async (request) => {
-        if (request.headers.has('User-Agent')) return;
-
-        const manifest = await Manifest.getFortniteManifest().catch(() => null);
-        const userAgent = manifest?.appVersionString
-          ? `Fortnite/${manifest.appVersionString}`
-          : 'Fortnite/++Fortnite+Release-39.30-CL-49874243-Windows';
-
-        request.headers.set('User-Agent', userAgent);
-      }
-    ],
     beforeError: [
       async (error) => {
         if (!isHTTPError(error) || !(new URL(error.request.url).hostname.endsWith('epicgames.com'))) return error;
@@ -92,7 +88,7 @@ export const avatarService = epicService.extend({
 export const spitfireService = tauriKy.extend({
   prefixUrl: 'https://api.rookie-spitfire.xyz',
   headers: {
-    'User-Agent': `SpitfireLauncher/${await getVersion()} (${platform()}; ${arch()})`
+    'X-User-Agent': `SpitfireLauncher/${await getVersion()} (${platform()}; ${arch()})`
   }
 });
 
