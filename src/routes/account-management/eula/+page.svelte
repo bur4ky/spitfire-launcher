@@ -32,7 +32,6 @@
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
       const state: EULAState = { accountId: account.accountId, displayName: account.displayName, data: {} };
-      eulaStates.push(state);
 
       try {
         // TODO: Shortest way I could find. Might change later
@@ -47,6 +46,7 @@
           && error.continuationUrl
         ) {
           state.data.acceptLink = error.continuationUrl;
+          eulaStates.push(state);
         } else {
           handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
         }
@@ -61,8 +61,6 @@
         }
       }
     }));
-
-    eulaStates = eulaStates.filter((x) => x.data.acceptLink);
 
     if (!eulaStates.length) {
       toast.info($t('eula.allAccountsAlreadyAccepted'));

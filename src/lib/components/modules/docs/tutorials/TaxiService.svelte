@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BaseModal from '$components/features/docs/BaseModal.svelte';
-  import YoutubeVideoEmbed from '$components/features/docs/YoutubeVideoEmbed.svelte';
+  import BaseModal from '$components/modules/docs/BaseModal.svelte';
+  import YoutubeVideoEmbed from '$components/modules/docs/YoutubeVideoEmbed.svelte';
   import { t } from '$lib/utils';
 </script>
 

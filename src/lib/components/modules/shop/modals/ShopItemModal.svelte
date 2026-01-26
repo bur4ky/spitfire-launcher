@@ -10,8 +10,8 @@
   import CheckIcon from '@lucide/svelte/icons/check';
   import { ItemColors } from '$lib/constants/item-colors';
   import { accountDataStore, brShopStore, ownedItemsStore } from '$lib/stores';
-  import ShopPurchaseConfirmation from '$components/features/shop/modals/ShopPurchaseConfirmation.svelte';
-  import ShopGiftFriendSelection from '$components/features/shop/modals/ShopGiftFriendSelection.svelte';
+  import ShopPurchaseConfirmation from '$components/modules/shop/modals/ShopPurchaseConfirmation.svelte';
+  import ShopGiftFriendSelection from '$components/modules/shop/modals/ShopGiftFriendSelection.svelte';
   import type { AccountStoreData } from '$types/accounts';
   import { derived as jsDerived } from 'svelte/store';
   import { accountStore, language } from '$lib/storage';

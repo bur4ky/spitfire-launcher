@@ -11,7 +11,7 @@
 
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import CustomStatusTutorial from '$components/features/docs/tutorials/CustomStatus.svelte';
+  import CustomStatusTutorial from '$components/modules/docs/tutorials/CustomStatus.svelte';
   import TaxiManager from '$lib/modules/taxi.svelte.js';
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';

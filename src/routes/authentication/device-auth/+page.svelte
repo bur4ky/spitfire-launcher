@@ -7,8 +7,8 @@
 </script>
 
 <script lang="ts">
-  import DeviceAuthCard from '$components/features/device-auth/DeviceAuthCard.svelte';
-  import SkeletonDeviceAuthCard from '$components/features/device-auth/SkeletonDeviceAuthCard.svelte';
+  import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
+  import SkeletonDeviceAuthCard from '$components/modules/device-auth/SkeletonDeviceAuthCard.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Separator } from '$components/ui/separator';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';

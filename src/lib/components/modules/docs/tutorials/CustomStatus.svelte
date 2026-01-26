@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BaseModal from '$components/features/docs/BaseModal.svelte';
+  import BaseModal from '$components/modules/docs/BaseModal.svelte';
   import { avatarCache } from '$lib/stores';
   import { t } from '$lib/utils';
   import { accountStore } from '$lib/storage';

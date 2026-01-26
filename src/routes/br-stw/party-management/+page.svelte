@@ -21,8 +21,8 @@
 
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import MemberCard, { type PartyMember } from '$components/features/party/MemberCard.svelte';
-  import PartyAccountSelection from '$components/features/party/PartyAccountSelection.svelte';
+  import MemberCard, { type PartyMember } from '$components/modules/party/MemberCard.svelte';
+  import PartyAccountSelection from '$components/modules/party/PartyAccountSelection.svelte';
   import { Label } from '$components/ui/label';
   import { Switch } from '$components/ui/switch';
   import * as Tabs from '$components/ui/tabs';

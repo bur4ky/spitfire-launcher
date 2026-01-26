@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { SpitfireShopSection } from '$types/game/shop';
-  import ShopItemCard from '$components/features/shop/ShopItemCard.svelte';
+  import ShopItemCard from '$components/modules/shop/ShopItemCard.svelte';
 
   type ShopSectionProps = {
     section: SpitfireShopSection;

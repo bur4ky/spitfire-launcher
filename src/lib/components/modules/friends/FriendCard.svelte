@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import type { Friend, ListType } from '$components/features/friends/FriendsList.svelte';
+  import type { Friend, ListType } from '$components/modules/friends/FriendsList.svelte';
   import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   import CopyIcon from '@lucide/svelte/icons/copy';

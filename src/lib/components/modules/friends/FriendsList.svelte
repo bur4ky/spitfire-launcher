@@ -15,7 +15,7 @@
   import { avatarCache, displayNamesCache, friendsStore } from '$lib/stores';
   import { t } from '$lib/utils';
   import type { BlockedAccountData, FriendData, IncomingFriendRequestData, OutgoingFriendRequestData } from '$types/game/friends';
-  import FriendCard from '$components/features/friends/FriendCard.svelte';
+  import FriendCard from '$components/modules/friends/FriendCard.svelte';
   import { accountStore } from '$lib/storage';
 
   type Props = {

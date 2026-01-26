@@ -1,9 +1,9 @@
 <script lang="ts">
-  import AppCard from '$components/features/downloader/AppCard.svelte';
-  import AppFilter from '$components/features/downloader/AppFilter.svelte';
-  import InstallDialog from '$components/features/downloader/modals/InstallDialog.svelte';
-  import SkeletonAppCard from '$components/features/downloader/skeletons/SkeletonAppCard.svelte';
-  import UninstallDialog from '$components/features/downloader/modals/UninstallDialog.svelte';
+  import AppCard from '$components/modules/downloader/AppCard.svelte';
+  import AppFilter from '$components/modules/downloader/AppFilter.svelte';
+  import InstallDialog from '$components/modules/downloader/modals/InstallDialog.svelte';
+  import SkeletonAppCard from '$components/modules/downloader/skeletons/SkeletonAppCard.svelte';
+  import UninstallDialog from '$components/modules/downloader/modals/UninstallDialog.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Input } from '$components/ui/input';
   import { ownedApps } from '$lib/stores';

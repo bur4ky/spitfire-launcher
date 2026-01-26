@@ -7,10 +7,10 @@
 
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import ShopItemModal from '$components/features/shop/modals/ShopItemModal.svelte';
-  import ShopFilter from '$components/features/shop/ShopFilter.svelte';
-  import ShopSection from '$components/features/shop/ShopSection.svelte';
-  import SkeletonShopSection from '$components/features/shop/skeletons/SkeletonShopSection.svelte';
+  import ShopItemModal from '$components/modules/shop/modals/ShopItemModal.svelte';
+  import ShopFilter from '$components/modules/shop/ShopFilter.svelte';
+  import ShopSection from '$components/modules/shop/ShopSection.svelte';
+  import SkeletonShopSection from '$components/modules/shop/skeletons/SkeletonShopSection.svelte';
   import { Input } from '$components/ui/input';
   import Friends from '$lib/modules/friends';
   import Lookup from '$lib/modules/lookup';

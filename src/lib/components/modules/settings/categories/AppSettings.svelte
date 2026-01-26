@@ -1,9 +1,9 @@
 <script lang="ts">
-  import SettingItem from '$components/features/settings/SettingItem.svelte';
+  import SettingItem from '$components/modules/settings/SettingItem.svelte';
   import { Input } from '$components/ui/input';
   import * as Select from '$components/ui/select';
   import { Switch } from '$components/ui/switch';
-  import SettingsFolderPicker from '$components/features/settings/SettingsFolderPicker.svelte';
+  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
   import { SidebarCategories } from '$lib/constants/sidebar';
   import { changeLocale, t } from '$lib/utils';
   import { allSettingsSchema, appSettingsSchema } from '$lib/validations/settings';

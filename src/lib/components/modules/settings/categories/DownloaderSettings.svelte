@@ -1,7 +1,7 @@
 <script lang="ts">
-  import SettingItem from '$components/features/settings/SettingItem.svelte';
+  import SettingItem from '$components/modules/settings/SettingItem.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import SettingsFolderPicker from '$components/features/settings/SettingsFolderPicker.svelte';
+  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
   import { Switch } from '$components/ui/switch';
   import DownloadManager from '$lib/modules/download.svelte.js';
   import Legendary from '$lib/modules/legendary';

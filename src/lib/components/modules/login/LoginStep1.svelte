@@ -11,7 +11,7 @@
   import { openUrl } from '@tauri-apps/plugin-opener';
   import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import type { LoginMethod } from '$components/features/login/LoginStep0.svelte';
+  import type { LoginMethod } from '$components/modules/login/LoginStep0.svelte';
   import { toast } from 'svelte-sonner';
   import { tick } from 'svelte';
   import { accountStore } from '$lib/storage';

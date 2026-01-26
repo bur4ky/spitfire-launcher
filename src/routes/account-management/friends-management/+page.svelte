@@ -5,7 +5,7 @@
 
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import FriendsList, { type ListType } from '$components/features/friends/FriendsList.svelte';
+  import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
   import { Button } from '$components/ui/button';
   import * as Tabs from '$components/ui/tabs';
   import Friends from '$lib/modules/friends';
@@ -18,7 +18,7 @@
   import { handleError, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
   import { untrack } from 'svelte';
-  import SkeletonFriendCard from '$components/features/friends/SkeletonFriendCard.svelte';
+  import SkeletonFriendCard from '$components/modules/friends/SkeletonFriendCard.svelte';
   import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();

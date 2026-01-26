@@ -9,7 +9,7 @@
   import type { AccountData } from '$types/accounts';
   import { avatarCache } from '$lib/stores';
   import { toast } from 'svelte-sonner';
-  import LoginModal from '$components/features/login/LoginModal.svelte';
+  import LoginModal from '$components/modules/login/LoginModal.svelte';
   import { cn, handleError, t } from '$lib/utils';
   import { Button } from '$components/ui/button';
   import { accountStore } from '$lib/storage';

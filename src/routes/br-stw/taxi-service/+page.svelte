@@ -18,7 +18,7 @@
   import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
   import XIcon from '@lucide/svelte/icons/x';
   import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
-  import TaxiServiceTutorial from '$components/features/docs/tutorials/TaxiService.svelte';
+  import TaxiServiceTutorial from '$components/modules/docs/tutorials/TaxiService.svelte';
   import { accountStore, taxiStore } from '$lib/storage';
 
   const MIN_POWER_LEVEL = 1;

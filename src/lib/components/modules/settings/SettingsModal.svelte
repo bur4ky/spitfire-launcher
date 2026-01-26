@@ -1,9 +1,9 @@
 <script lang="ts">
   import * as Dialog from '$components/ui/dialog';
   import { Button } from '$components/ui/button';
-  import DownloaderSettings from '$components/features/settings/categories/DownloaderSettings.svelte';
-  import AppSettings from '$components/features/settings/categories/AppSettings.svelte';
-  import CustomizableMenu from '$components/features/settings/categories/CustomizableMenu.svelte';
+  import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
+  import AppSettings from '$components/modules/settings/categories/AppSettings.svelte';
+  import CustomizableMenu from '$components/modules/settings/categories/CustomizableMenu.svelte';
   import { platform as getPlatform } from '@tauri-apps/plugin-os';
   import SettingsIcon from '@lucide/svelte/icons/settings';
   import { cn, t } from '$lib/utils';

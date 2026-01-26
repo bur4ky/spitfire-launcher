@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SkeletonShopItemCard from '$components/features/shop/skeletons/SkeletonShopItemCard.svelte';
+  import SkeletonShopItemCard from '$components/modules/shop/skeletons/SkeletonShopItemCard.svelte';
 
   const mininumItemCount = 2;
   const maximumItemCount = 4;

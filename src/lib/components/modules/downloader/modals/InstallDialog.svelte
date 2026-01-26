@@ -18,7 +18,7 @@
   import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import DownloadStartedToast from '$components/features/downloader/DownloadStartedToast.svelte';
+  import DownloadStartedToast from '$components/modules/downloader/DownloadStartedToast.svelte';
   import logger from '$lib/logger';
   import { Button, buttonVariants } from '$components/ui/button';
   import { downloaderStore } from '$lib/storage';

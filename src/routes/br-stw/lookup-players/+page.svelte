@@ -1,6 +1,6 @@
 <script lang="ts" module>
-  import type { DailyQuest } from '$components/features/lookup-players/DailyQuestAccordion.svelte';
-  import type { LoadoutData, MissionData, MissionPlayers } from '$components/features/lookup-players/STWDetails.svelte';
+  import type { DailyQuest } from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
+  import type { LoadoutData, MissionData, MissionPlayers } from '$components/modules/lookup-players/STWDetails.svelte';
   import { FounderEditions, gadgets, heroes, teamPerks } from '$lib/constants/stw/resources';
 
   type FounderEdition = typeof FounderEditions[keyof typeof FounderEditions];
@@ -29,10 +29,10 @@
 </script>
 
 <script lang="ts">
-  import DailyQuestAccordion from '$components/features/lookup-players/DailyQuestAccordion.svelte';
-  import STWDetails from '$components/features/lookup-players/STWDetails.svelte';
+  import DailyQuestAccordion from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
+  import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
-  import AlertsSectionAccordion from '$components/features/mission-alerts/AlertsSectionAccordion.svelte';
+  import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
   import Matchmaking from '$lib/modules/matchmaking';
   import { avatarCache, worldInfoCache } from '$lib/stores';
   import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';

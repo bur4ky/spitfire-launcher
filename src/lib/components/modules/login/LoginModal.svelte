@@ -1,9 +1,9 @@
 <script lang="ts">
   import * as Dialog from '$components/ui/dialog';
-  import LoginStep0, { type LoginMethod } from '$components/features/login/LoginStep0.svelte';
-  import LoginStep1 from '$components/features/login/LoginStep1.svelte';
-  import LoginStep2 from '$components/features/login/LoginStep2.svelte';
-  import LoginSteps from '$components/features/login/LoginSteps.svelte';
+  import LoginStep0, { type LoginMethod } from '$components/modules/login/LoginStep0.svelte';
+  import LoginStep1 from '$components/modules/login/LoginStep1.svelte';
+  import LoginStep2 from '$components/modules/login/LoginStep2.svelte';
+  import LoginSteps from '$components/modules/login/LoginSteps.svelte';
   import { t } from '$lib/utils';
 
   type Props = {

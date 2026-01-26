@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CancelDownloadDialog from '$components/features/downloader/modals/CancelDownloadDialog.svelte';
+  import CancelDownloadDialog from '$components/modules/downloader/modals/CancelDownloadDialog.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';

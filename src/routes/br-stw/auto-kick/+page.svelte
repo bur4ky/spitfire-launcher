@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AutoKickTutorial from '$components/features/docs/tutorials/AutoKick.svelte';
+  import AutoKickTutorial from '$components/modules/docs/tutorials/AutoKick.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
