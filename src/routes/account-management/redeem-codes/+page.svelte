@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkStatus } from '$types/accounts';
+  import type { BulkState } from '$types/accounts';
 
-  type CodeStatus = BulkStatus<Array<{
+  type CodeState = BulkState<Array<{
     code: string;
     error?: string;
   }>>;
@@ -9,7 +9,7 @@
   let selectedAccounts = $state<string[]>([]);
   let codesToRedeem = $state<string[]>([]);
   let isRedeeming = $state(false);
-  let codeStatuses = $state<CodeStatus[]>([]);
+  let codeStates = $state<CodeState[]>([]);
 </script>
 
 <script lang="ts">
@@ -33,30 +33,30 @@
     event.preventDefault();
 
     isRedeeming = true;
-    codeStatuses = [];
+    codeStates = [];
 
     const nonExistentCodes: string[] = [];
     const invalidCredentialsAccounts: string[] = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: CodeStatus = { accountId: account.accountId, displayName: account.displayName, data: [] };
-      codeStatuses.push(status);
+      const state: CodeState = { accountId: account.accountId, displayName: account.displayName, data: [] };
+      codeStates.push(state);
 
       await Promise.allSettled(codesToRedeem.map(async (code) => {
         if (nonExistentCodes.includes(code)) {
-          status.data.push({ code, error: $t('redeemCodes.redeemErrors.notFound') });
+          state.data.push({ code, error: $t('redeemCodes.redeemErrors.notFound') });
           return;
         }
 
         if (invalidCredentialsAccounts.includes(account.accountId)) {
-          status.data.push({ code, error: $t('redeemCodes.loginExpired') });
+          state.data.push({ code, error: $t('redeemCodes.loginExpired') });
           return;
         }
 
         try {
           await Code.redeem(account, code);
-          status.data.push({ code });
+          state.data.push({ code });
         } catch (error) {
           handleError({ error, message: 'Failed to redeem code', account, toastId: false });
 
@@ -78,14 +78,14 @@
             }
           }
 
-          status.data.push({ code, error: errorString });
+          state.data.push({ code, error: errorString });
         }
       }));
     }));
 
-    for (const status of codeStatuses) {
-      const successCount = status.data.filter(({ error }) => !error).length;
-      status.displayName = `${status.displayName} - ${successCount}/${status.data.length}`;
+    for (const state of codeStates) {
+      const successCount = state.data.filter(({ error }) => !error).length;
+      state.displayName = `${state.displayName} - ${successCount}/${state.data.length}`;
     }
 
     codesToRedeem = [];
@@ -117,11 +117,11 @@
     </Button>
   </form>
 
-  {#if !isRedeeming && codeStatuses.length}
-    <BulkResultAccordion statuses={codeStatuses}>
-      {#snippet content(status)}
+  {#if !isRedeeming && codeStates.length}
+    <BulkResultAccordion states={codeStates}>
+      {#snippet content(state)}
         <div class="p-3 space-y-2 text-sm">
-          {#each status.data as { code, error } (code)}
+          {#each state.data as { code, error } (code)}
             <div class="flex items-center gap-1 truncate">
               <span class="font-medium">{code}:</span>
               <span class="truncate" class:text-green-500={!error} class:text-red-500={error}>

@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkStatus } from '$types/accounts';
+  import type { BulkState } from '$types/accounts';
 
-  type XPStatus = BulkStatus<{
+  type XPState = BulkState<{
     battleRoyale: number;
     creative: number;
     saveTheWorld: number;
@@ -9,7 +9,7 @@
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let xpStatuses = $state<XPStatus[]>([]);
+  let xpStates = $state<XPState[]>([]);
 </script>
 
 <script lang="ts">
@@ -23,12 +23,12 @@
 
   async function fetchXPData() {
     isFetching = true;
-    xpStatuses = [];
+    xpStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: XPStatus = { accountId: account.accountId, displayName: account.displayName, data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 } };
-      xpStatuses.push(status);
+      const state: XPState = { accountId: account.accountId, displayName: account.displayName, data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 } };
+      xpStates.push(state);
 
       const [athena, campaign] = await Promise.allSettled([
         MCP.queryProfile(account, 'athena'),
@@ -37,8 +37,8 @@
 
       if (athena.status === 'fulfilled') {
         const attributes = athena.value.profileChanges[0].profile.stats.attributes;
-        status.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
-        status.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
+        state.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
+        state.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
       } else {
         handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false })
       }
@@ -47,7 +47,7 @@
         const items = Object.values(campaign.value.profileChanges[0].profile.items);
         const xpItem = items.find((item) => item.templateId === 'Token:stw_accolade_tracker');
         if (xpItem) {
-          status.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
+          state.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
         }
       } else {
         handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false })
@@ -93,26 +93,26 @@
     </Button>
   </form>
 
-  {#if !isFetching && xpStatuses.length}
-    <BulkResultAccordion statuses={xpStatuses}>
-      {#snippet content(status)}
+  {#if !isFetching && xpStates.length}
+    <BulkResultAccordion states={xpStates}>
+      {#snippet content(state)}
         {@const gamemodes = [
           {
             id: 'battleRoyale',
             name: $t('gameModes.battleRoyale'),
-            value: status.data.battleRoyale || 0,
+            value: state.data.battleRoyale || 0,
             limit: 4_000_000
           },
           {
             id: 'creative',
             name: $t('gameModes.creative'),
-            value: status.data.creative || 0,
+            value: state.data.creative || 0,
             limit: 4_000_000
           },
           {
             id: 'saveTheWorld',
             name: $t('gameModes.saveTheWorld'),
-            value: status.data.saveTheWorld || 0,
+            value: state.data.saveTheWorld || 0,
             limit: 3_400_000
           }
         ]}

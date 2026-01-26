@@ -5,7 +5,7 @@ import { accountDataFileSchema, accountDataSchema } from '$lib/validations/accou
 export type AccountData = z.infer<typeof accountDataSchema>;
 export type AccountDataFile = z.infer<typeof accountDataFileSchema>;
 
-export type BulkStatus<T> = {
+export type BulkState<T> = {
   accountId: string;
   displayName: string;
   data: T;

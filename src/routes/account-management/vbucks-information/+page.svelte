@@ -1,14 +1,14 @@
 <script lang="ts" module>
-  import type { BulkStatus } from '$types/accounts';
+  import type { BulkState } from '$types/accounts';
 
-  type VBucksStatus = BulkStatus<{
+  type VBucksState = BulkState<{
     vbucksAmount?: number;
     error?: string;
   }>;
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let vbucksStatuses = $state<VBucksStatus[]>([]);
+  let vbucksStates = $state<VBucksState[]>([]);
 </script>
 
 <script lang="ts">
@@ -24,20 +24,20 @@
     event.preventDefault();
 
     isFetching = true;
-    vbucksStatuses = [];
+    vbucksStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: VBucksStatus = { accountId: account.accountId, displayName: account.displayName, data: { vbucksAmount: 0 } };
-      vbucksStatuses.push(status);
+      const state: VBucksState = { accountId: account.accountId, displayName: account.displayName, data: { vbucksAmount: 0 } };
+      vbucksStates.push(state);
 
       try {
         const queryProfile = await MCP.queryProfile(account, 'common_core');
-        status.data.vbucksAmount = calculateVbucks(queryProfile);
+        state.data.vbucksAmount = calculateVbucks(queryProfile);
       } catch (error) {
         handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });
 
-        status.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
+        state.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
           ? $t('vbucksInformation.loginExpired')
           : $t('vbucksInformation.unknownError');
       }
@@ -66,17 +66,17 @@
     </Button>
   </form>
 
-  {#if !isFetching && vbucksStatuses.length}
+  {#if !isFetching && vbucksStates.length}
     <div class="flex flex-col p-2 border rounded-md">
-      {#each vbucksStatuses as status (status.accountId)}
+      {#each vbucksStates as state (state.accountId)}
         <div class="flex gap-x-2">
-          <p class="font-medium">{status.displayName}:</p>
+          <p class="font-medium">{state.displayName}:</p>
 
-          {#if status.data.error}
-            <p class="text-red-500">{status.data.error}</p>
+          {#if state.data.error}
+            <p class="text-red-500">{state.data.error}</p>
           {:else}
             <div class="flex items-center gap-x-1">
-              <p>{status.data.vbucksAmount!.toLocaleString($language)}</p>
+              <p>{state.data.vbucksAmount!.toLocaleString($language)}</p>
               <img
                 class="size-5"
                 alt="V-Bucks"

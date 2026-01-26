@@ -1,13 +1,13 @@
 <script lang="ts" module>
-  import type { BulkStatus } from '$types/accounts';
+  import type { BulkState } from '$types/accounts';
 
-  type EULAStatus = BulkStatus<{
+  type EULAState = BulkState<{
     acceptLink?: string;
   }>;
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let eulaStatuses = $state<EULAStatus[]>([]);
+  let eulaStates = $state<EULAState[]>([]);
 </script>
 
 <script lang="ts">
@@ -27,12 +27,12 @@
     event.preventDefault();
 
     isFetching = true;
-    eulaStatuses = [];
+    eulaStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: EULAStatus = { accountId: account.accountId, displayName: account.displayName, data: {} };
-      eulaStatuses.push(status);
+      const state: EULAState = { accountId: account.accountId, displayName: account.displayName, data: {} };
+      eulaStates.push(state);
 
       try {
         // TODO: Shortest way I could find. Might change later
@@ -46,7 +46,7 @@
           && error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required'
           && error.continuationUrl
         ) {
-          status.data.acceptLink = error.continuationUrl;
+          state.data.acceptLink = error.continuationUrl;
         } else {
           handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
         }
@@ -62,9 +62,9 @@
       }
     }));
 
-    eulaStatuses = eulaStatuses.filter((status) => status.data.acceptLink);
+    eulaStates = eulaStates.filter((x) => x.data.acceptLink);
 
-    if (!eulaStatuses.length) {
+    if (!eulaStates.length) {
       toast.info($t('eula.allAccountsAlreadyAccepted'));
     }
 
@@ -91,15 +91,15 @@
     </Button>
   </form>
 
-  {#if !isFetching && eulaStatuses.length}
+  {#if !isFetching && eulaStates.length}
     <div class="mt-4 space-y-4">
-      {#each eulaStatuses as status (status.accountId)}
+      {#each eulaStates as state (state.accountId)}
         <div class="flex items-center justify-between px-3 py-2 bg-muted border rounded-lg">
-          <span class="font-semibold truncate">{status.displayName}</span>
+          <span class="font-semibold truncate">{state.displayName}</span>
 
           <ExternalLink
             class="hover:bg-muted-foreground/10 flex size-8 items-center justify-center rounded-md"
-            href={status.data.acceptLink!}
+            href={state.data.acceptLink!}
           >
             <ExternalLinkIcon class="size-5"/>
           </ExternalLink>
