@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkStatus } from '$types/accounts';
   import type { DailyQuestData } from '$types/game/stw/resources';
 
   type DailyQuest = DailyQuestData & {
@@ -7,7 +7,7 @@
     completionProgress: number;
   };
 
-  type QuestStatus = BulkActionStatus<{
+  type QuestStatus = BulkStatus<{
     hasFounder: boolean;
     quests: DailyQuest[];
   }>;

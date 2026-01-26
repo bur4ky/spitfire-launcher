@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkStatus } from '$types/accounts';
 
-  type EULAStatus = BulkActionStatus<{
+  type EULAStatus = BulkStatus<{
     acceptLink?: string;
   }>;
 
@@ -11,7 +11,6 @@
 </script>
 
 <script lang="ts">
-  import AuthSession from '$lib/modules/auth-session';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
@@ -37,21 +36,29 @@
 
       try {
         // TODO: Shortest way I could find. Might change later
-        const accessToken = await AuthSession.new(account).getAccessToken();
-        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
+        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
+        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
         const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(exchangeData.code, launcherAppClient2);
         await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
       } catch (error) {
-        handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
-
-        if (!(error instanceof EpicAPIError)) return;
-
-        if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' && error.continuationUrl) {
+        if (
+          error instanceof EpicAPIError
+          && error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required'
+          && error.continuationUrl
+        ) {
           status.data.acceptLink = error.continuationUrl;
+        } else {
+          handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
         }
-      } finally {
-        const gameEULAData = await EULA.check(account).catch(() => null);
-        if (gameEULAData) await EULA.accept(account, gameEULAData.version).catch(() => null);
+      }
+      
+      const gameEULAData = await EULA.check(account).catch(() => null);
+      if (gameEULAData) {
+        try {
+          await EULA.accept(account, gameEULAData.version)
+        } catch (error) {
+          handleError({ error, message: 'Failed to accept EULA', account, toastId: false });
+        }
       }
     }));
 

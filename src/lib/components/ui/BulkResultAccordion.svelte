@@ -1,11 +1,11 @@
 <script generics="T" lang="ts">
   import * as Accordion from '$components/ui/accordion';
   import type { Snippet } from 'svelte';
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkStatus } from '$types/accounts';
 
   type Props = {
-    statuses: BulkActionStatus<T>[];
-    content: Snippet<[BulkActionStatus<T>]>;
+    statuses: BulkStatus<T>[];
+    content: Snippet<[BulkStatus<T>]>;
   };
 
   const { statuses, content: accordionContent }: Props = $props();

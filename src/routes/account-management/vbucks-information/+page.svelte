@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkStatus } from '$types/accounts';
 
-  type VBucksStatus = BulkActionStatus<{
+  type VBucksStatus = BulkStatus<{
     vbucksAmount?: number;
     error?: string;
   }>;
