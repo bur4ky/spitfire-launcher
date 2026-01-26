@@ -5,7 +5,6 @@
   import Avatar from '$lib/modules/avatar';
   import Lookup from '$lib/modules/lookup';
   import DownloadManager from '$lib/modules/download.svelte';
-  import SystemTray from '$lib/system-tray';
   import Legendary from '$lib/modules/legendary';
   import { getVersion } from '@tauri-apps/api/app';
   import { listen } from '@tauri-apps/api/event';
@@ -85,10 +84,7 @@
     let previousDcStatus = false;
     settingsStore.subscribe(async (data) => {
       setLogLevel(data.app?.debugLogs ? 'debug' : 'info');
-
-      SystemTray.setVisibility(data.app?.hideToTray || false).catch((error) => {
-        logger.error('Failed to set tray visibility', { error });
-      });
+      Tauri.setTrayVisibility({ visible: !!data.app?.hideToTray });
 
       const dcStatusEnabled = data.app!.discordStatus!;
       if (dcStatusEnabled !== previousDcStatus) {

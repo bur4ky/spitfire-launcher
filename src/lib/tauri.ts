@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { type } from '@tauri-apps/plugin-os';
 import type { LegendaryLaunchData } from '$types/legendary';
 
 export type GetDiskSpaceOptions = {
@@ -8,6 +9,10 @@ export type GetDiskSpaceOptions = {
 export type GetDiskSpaceResult = {
   total: number;
   available: number;
+};
+
+export type SetTrayVisibilityOptions = {
+  visible: boolean;
 };
 
 export type RunLegendaryOptions = {
@@ -77,6 +82,13 @@ export default class Tauri {
 
   static getDiskSpace(options: GetDiskSpaceOptions) {
     return invoke<GetDiskSpaceResult>('get_disk_space', options);
+  }
+
+  static setTrayVisibility(options: SetTrayVisibilityOptions) {
+    const isMobile = type() === 'android' || type() === 'ios';
+    if (isMobile) return;
+
+    return invoke<void>('set_tray_visibility', options);
   }
 
   static runLegendary(options: RunLegendaryOptions) {
