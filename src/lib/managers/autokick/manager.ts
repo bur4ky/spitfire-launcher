@@ -9,7 +9,7 @@ import PartyManager from '$lib/managers/party';
 import claimRewards from '$lib/managers/autokick/claim-rewards';
 import transferBuildingMaterials from '$lib/managers/autokick/transfer-building-materials';
 import type { PartyData } from '$types/game/party';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import { accountStore, settingsStore } from '$lib/storage';
 
 const logger = getChildLogger('AutoKickManager');

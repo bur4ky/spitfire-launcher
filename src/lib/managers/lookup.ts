@@ -3,7 +3,7 @@ import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { displayNamesCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 import type { EpicAccountById, EpicAccountByName, EpicAccountSearch } from '$types/game/lookup';
 
 export default class LookupManager {

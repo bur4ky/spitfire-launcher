@@ -4,7 +4,7 @@
   import SettingsFolderPicker from '$components/features/settings/SettingsFolderPicker.svelte';
   import { Switch } from '$components/ui/switch';
   import DownloadManager from '$lib/managers/download.svelte.js';
-  import Legendary from '$lib/utils/epic/legendary';
+  import Legendary from '$lib/epic/legendary';
   import { handleError, t } from '$lib/utils';
   import { downloaderSettingsSchema } from '$lib/validations/settings';
   import type { DownloaderSettings } from '$types/settings';

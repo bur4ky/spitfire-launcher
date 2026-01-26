@@ -5,8 +5,8 @@
   import AvatarManager from '$lib/managers/avatar';
   import LookupManager from '$lib/managers/lookup';
   import DownloadManager from '$lib/managers/download.svelte';
-  import SystemTray from '$lib/utils/system-tray';
-  import Legendary from '$lib/utils/epic/legendary';
+  import SystemTray from '$lib/system-tray';
+  import Legendary from '$lib/epic/legendary';
   import { getVersion } from '@tauri-apps/api/app';
   import { listen } from '@tauri-apps/api/event';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
@@ -23,8 +23,8 @@
   import AutoKickBase from '$lib/managers/autokick/base';
   import { handleError, t } from '$lib/utils';
   import { platform } from '@tauri-apps/plugin-os';
-  import logger, { setLogLevel } from '$lib/utils/logger';
-  import Tauri from '$lib/utils/tauri';
+  import logger, { setLogLevel } from '$lib/logger';
+  import Tauri from '$lib/tauri';
   import { accountStore, settingsStore } from '$lib/storage';
   import { on } from 'svelte/events';
 

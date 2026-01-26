@@ -1,7 +1,7 @@
 import { publicAccountService } from '$lib/services/epic';
 import type { EpicDeviceAuthData } from '$types/game/authorizations';
 import type { AccountData } from '$types/accounts';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 
 export default class DeviceAuthManager {
   static create(account: AccountData | { accountId: string; accessToken: string }) {

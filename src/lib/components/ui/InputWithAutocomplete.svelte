@@ -2,7 +2,7 @@
   import { avatarCache, displayNamesCache } from '$lib/stores';
   import { Input, type InputProps } from '$components/ui/input';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import debounce from '$lib/utils/debounce';
+  import debounce from '$lib/debounce';
   import LookupManager from '$lib/managers/lookup';
   import { accountStore } from '$lib/storage';
 

@@ -1,8 +1,8 @@
 import type { KyInstance } from 'ky';
-import AsyncLock from '$lib/utils/async-lock';
-import Authentication from '$lib/utils/epic/authentication';
+import AsyncLock from '$lib/async-lock';
+import Authentication from '$lib/epic/authentication';
 import type { AccountData } from '$types/accounts';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 
 const logger = getChildLogger('AuthSession');

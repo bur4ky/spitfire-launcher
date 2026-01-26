@@ -3,7 +3,7 @@
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import DownloadManager from '$lib/managers/download.svelte.js';
   import { ownedApps, runningAppIds } from '$lib/stores';
-  import Legendary from '$lib/utils/epic/legendary';
+  import Legendary from '$lib/epic/legendary';
   import { bytesToSize, handleError, sleep, t } from '$lib/utils';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
@@ -20,7 +20,7 @@
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import XIcon from '@lucide/svelte/icons/x';
   import { toast } from 'svelte-sonner';
-  import Tauri from '$lib/utils/tauri';
+  import Tauri from '$lib/tauri';
   import { downloaderStore } from '$lib/storage';
 
   type Props = {

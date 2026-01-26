@@ -16,7 +16,7 @@
   import XIcon from '@lucide/svelte/icons/x';
   import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { language } from '$lib/storage';
 
   let showCancelDialog = $state(false);

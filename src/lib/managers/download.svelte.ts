@@ -1,6 +1,6 @@
 import NotificationManager from '$lib/managers/notification';
 import { ownedApps } from '$lib/stores';
-import Legendary, { configPath } from '$lib/utils/epic/legendary';
+import Legendary, { configPath } from '$lib/epic/legendary';
 import { t } from '$lib/utils';
 import type { queueItemSchema } from '$lib/validations/settings';
 import type { ParsedApp } from '$types/legendary';
@@ -8,9 +8,9 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { toast } from 'svelte-sonner';
 import { get } from 'svelte/store';
 import type { z } from 'zod';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import { downloaderStore } from '$lib/storage';
-import Tauri, { type LegendaryStreamEvent } from '$lib/utils/tauri';
+import Tauri, { type LegendaryStreamEvent } from '$lib/tauri';
 
 const logger = getChildLogger('DownloadManager');
 

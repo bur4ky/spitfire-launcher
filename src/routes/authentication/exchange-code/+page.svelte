@@ -5,7 +5,7 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/utils/epic/authentication';
+  import Authentication from '$lib/epic/authentication';
   import { toast } from 'svelte-sonner';
   import { handleError, t } from '$lib/utils';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';

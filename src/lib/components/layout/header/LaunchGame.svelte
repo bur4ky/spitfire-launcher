@@ -1,13 +1,13 @@
 <script lang="ts">
   import { Button } from '$components/ui/button';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import Authentication from '$lib/utils/epic/authentication';
-  import Manifest from '$lib/utils/epic/manifest';
+  import Authentication from '$lib/epic/authentication';
+  import Manifest from '$lib/epic/manifest';
   import { runningAppIds } from '$lib/stores';
   import { handleError, sleep, t } from '$lib/utils';
   import { path } from '@tauri-apps/api';
   import { toast } from 'svelte-sonner';
-  import Tauri, { type LaunchAppOptions } from '$lib/utils/tauri';
+  import Tauri, { type LaunchAppOptions } from '$lib/tauri';
   import { accountStore, settingsStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore(true);

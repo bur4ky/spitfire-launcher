@@ -22,7 +22,7 @@
   import type { SpitfireShopSection } from '$types/game/shop';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore(true);

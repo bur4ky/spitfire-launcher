@@ -5,8 +5,8 @@ import { derived, type Readable } from 'svelte/store';
 import type { AccountData, AccountDataFile } from '$types/accounts';
 import { accountDataFileSchema } from '$lib/validations/accounts';
 import DeviceAuthManager from '$lib/managers/device-auth';
-import Legendary from '$lib/utils/epic/legendary';
-import { getChildLogger } from '$lib/utils/logger';
+import Legendary from '$lib/epic/legendary';
+import { getChildLogger } from '$lib/logger';
 
 const logger = getChildLogger('AccountStore');
 

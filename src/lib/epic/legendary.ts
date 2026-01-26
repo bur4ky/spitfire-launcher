@@ -1,4 +1,4 @@
-import Authentication from '$lib/utils/epic/authentication';
+import Authentication from '$lib/epic/authentication';
 import DownloadManager from '$lib/managers/download.svelte.js';
 import LegendaryError from '$lib/exceptions/LegendaryError';
 import { ownedApps } from '$lib/stores';
@@ -17,10 +17,10 @@ import { readTextFile } from '@tauri-apps/plugin-fs';
 import { toast } from 'svelte-sonner';
 import { get } from 'svelte/store';
 import { dev } from '$app/environment';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import { dataDirectory } from '$lib/storage/file-store';
 import { downloaderStore } from '$lib/storage';
-import Tauri from '$lib/utils/tauri';
+import Tauri from '$lib/tauri';
 
 const logger = getChildLogger('Legendary');
 export const configPath = await path.join(dataDirectory, dev ? 'legendary-dev' : 'legendary');

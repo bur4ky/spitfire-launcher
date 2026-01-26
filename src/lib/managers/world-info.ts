@@ -14,7 +14,7 @@ import {
 import type { ParsedModifierData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
 import { ingredients, RarityNames, RarityTypes, resources, survivors, survivorsMythicLeads, traps } from '$lib/constants/stw/resources';
 import { baseGameService } from '$lib/services/epic';
-import Authentication from '$lib/utils/epic/authentication';
+import Authentication from '$lib/epic/authentication';
 import { get } from 'svelte/store';
 import { worldInfoCache } from '$lib/stores';
 

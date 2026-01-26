@@ -1,7 +1,7 @@
 import type { AccountData } from '$types/accounts';
 import { fulfillmentService } from '$lib/services/epic';
 import type { RedeemedCodeData } from '$types/game/fulfillment';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 
 export default class CodeManager {
   static redeem(account: AccountData, code: string) {

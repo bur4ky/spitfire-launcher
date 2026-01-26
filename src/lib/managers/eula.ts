@@ -1,5 +1,5 @@
 import { eulaService } from '$lib/services/epic';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 import type { EULACheckData } from '$types/game/eula';
 import type { AccountData } from '$types/accounts';
 

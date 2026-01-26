@@ -29,7 +29,7 @@
   import type { FullQueryProfile } from '$types/game/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { getAccountsFromSelection, handleError, t } from '$lib/utils';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { language } from '$lib/storage';
 
   async function fetchDailyQuests() {

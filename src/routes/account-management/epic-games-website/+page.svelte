@@ -6,7 +6,7 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/utils/epic/authentication';
+  import Authentication from '$lib/epic/authentication';
   import { openUrl } from '@tauri-apps/plugin-opener';
   import { toast } from 'svelte-sonner';
   import { handleError, t } from '$lib/utils';

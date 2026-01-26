@@ -20,7 +20,7 @@
   import EULAManager from '$lib/managers/eula';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { toast } from 'svelte-sonner';
-  import Authentication from '$lib/utils/epic/authentication';
+  import Authentication from '$lib/epic/authentication';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { getAccountsFromSelection, handleError, t } from '$lib/utils';
 

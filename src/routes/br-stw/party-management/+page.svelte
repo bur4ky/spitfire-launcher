@@ -39,7 +39,7 @@
   import type { AccountData } from '$types/accounts';
   import type { PartyData } from '$types/game/party';
   import { EpicEvents } from '$lib/constants/events';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { accountStore, language } from '$lib/storage';
 
   type Party = {

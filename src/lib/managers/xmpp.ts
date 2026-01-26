@@ -1,9 +1,9 @@
-import AsyncLock from '$lib/utils/async-lock';
-import Authentication from '$lib/utils/epic/authentication';
+import AsyncLock from '$lib/async-lock';
+import Authentication from '$lib/epic/authentication';
 import PartyManager from '$lib/managers/party';
 import FriendsManager, { FriendsStore } from '$lib/managers/friends';
-import EventEmitter from '$lib/utils/event-emitter';
-import { getChildLogger } from '$lib/utils/logger';
+import EventEmitter from '$lib/event-emitter';
+import { getChildLogger } from '$lib/logger';
 import { accountPartiesStore } from '$lib/stores';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import { accountStore } from '$lib/storage';

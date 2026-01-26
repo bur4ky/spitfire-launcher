@@ -1,5 +1,5 @@
 import { partyService } from '$lib/services/epic';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { accountPartiesStore, avatarCache, displayNamesCache } from '$lib/stores';
 import defaultPartyMemberMeta from '$lib/data/default-party-member-meta.json';

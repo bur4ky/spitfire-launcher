@@ -2,7 +2,7 @@
   import * as Dialog from '$components/ui/dialog';
   import { Button, buttonVariants } from '$components/ui/button';
   import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/utils/epic/legendary';
+  import Legendary from '$lib/epic/legendary';
   import { cn, handleError, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
 

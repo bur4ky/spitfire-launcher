@@ -48,7 +48,7 @@
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
   import MCPManager from '$lib/managers/mcp';
   import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { accountStore, language } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();

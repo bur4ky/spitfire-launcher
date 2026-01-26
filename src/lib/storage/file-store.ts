@@ -5,8 +5,8 @@ import * as path from '@tauri-apps/api/path';
 import { dataDir } from '@tauri-apps/api/path';
 import { platform } from '@tauri-apps/plugin-os';
 import type { ZodType } from 'zod';
-import { getChildLogger } from '$lib/utils/logger';
-import debounce from '$lib/utils/debounce';
+import { getChildLogger } from '$lib/logger';
+import debounce from '$lib/debounce';
 
 type Subscriber<T> = (value: T) => void;
 

@@ -2,7 +2,7 @@
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
   import { defaultClient, fortniteNewSwitchGameClient } from '$lib/constants/clients';
-  import Authentication from '$lib/utils/epic/authentication';
+  import Authentication from '$lib/epic/authentication';
   import DeviceAuthManager from '$lib/managers/device-auth';
   import { oauthService } from '$lib/services/epic';
   import { handleError, t } from '$lib/utils';

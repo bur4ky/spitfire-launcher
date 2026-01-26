@@ -8,7 +8,7 @@ import { goto } from '$app/navigation';
 import type { FullQueryProfile } from '$types/game/mcp';
 import { m } from '$lib/paraglide/messages';
 import { type Locale, setLocale } from '$lib/paraglide/runtime';
-import logger from '$lib/utils/logger';
+import logger from '$lib/logger';
 import { accountStore, language, settingsStore } from '$lib/storage';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import type { AccountData } from '$types/accounts';

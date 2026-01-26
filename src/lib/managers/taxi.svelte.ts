@@ -7,7 +7,7 @@ import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { accountPartiesStore } from '$lib/stores';
 import { t } from '$lib/utils';
 import { get } from 'svelte/store';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import type { AccountData } from '$types/accounts';
 import type {
   EpicEventFriendRequest,

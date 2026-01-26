@@ -1,7 +1,7 @@
 import { epicService, lightswitchService } from '$lib/services/epic';
 import type { AccountData } from '$types/accounts';
-import Authentication from '$lib/utils/epic/authentication';
-import AuthSession from '$lib/utils/epic/auth-session';
+import Authentication from '$lib/epic/authentication';
+import AuthSession from '$lib/epic/auth-session';
 import type { LightswitchData, ServerStatusSummaryData, WaitingRoomData } from '$types/game/server-status';
 
 export default class ServerStatusManager {

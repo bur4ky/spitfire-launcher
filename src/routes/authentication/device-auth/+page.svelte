@@ -18,7 +18,7 @@
   import DeviceAuthManager from '$lib/managers/device-auth';
   import { handleError, t } from '$lib/utils';
   import type { AccountData } from '$types/accounts';
-  import logger from '$lib/utils/logger';
+  import logger from '$lib/logger';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();

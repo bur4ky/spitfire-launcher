@@ -2,12 +2,12 @@ import AvatarManager from '$lib/managers/avatar';
 import LookupManager from '$lib/managers/lookup';
 import { friendService } from '$lib/services/epic';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import { getChildLogger } from '$lib/utils/logger';
+import { getChildLogger } from '$lib/logger';
 import { avatarCache, displayNamesCache, type FriendsEntry, friendsStore } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import { SvelteMap } from 'svelte/reactivity';
 import type { AccountData } from '$types/accounts';
-import AuthSession from '$lib/utils/epic/auth-session';
+import AuthSession from '$lib/epic/auth-session';
 import type {
   BlockedAccountData,
   FriendData,
