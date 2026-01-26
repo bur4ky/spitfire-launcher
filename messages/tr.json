@@ -454,6 +454,7 @@
     },
     "invalidValue": "Geçersiz bir değer girdiniz.",
     "appSettings": {
+      "language": "Dil",
       "gamePath": "Özel Oyun Dosya Yolu",
       "launchArguments": {
         "title": "Başlatma Argümanları",

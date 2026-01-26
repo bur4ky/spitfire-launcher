@@ -454,6 +454,7 @@
     },
     "invalidValue": "Valor invalido.",
     "appSettings": {
+      "language": "Idioma",
       "gamePath": "Local de Jogo Personalizado",
       "launchArguments": {
         "title": "Argumentos de Lançamento",

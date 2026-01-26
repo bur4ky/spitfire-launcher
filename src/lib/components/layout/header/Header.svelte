@@ -5,7 +5,6 @@
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
   import SettingsModal from '$components/features/settings/SettingsModal.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
-  import LanguageSwitcher from '$components/layout/header/LanguageSwitcher.svelte';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import XIcon from '@lucide/svelte/icons/x';
   import { settingsStore } from '$lib/storage';
@@ -42,7 +41,6 @@
       {/if}
 
       <SettingsModal/>
-      <LanguageSwitcher/>
     </div>
 
     {#if !isMobile}

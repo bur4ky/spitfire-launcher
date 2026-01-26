@@ -5,15 +5,25 @@
   import { Switch } from '$components/ui/switch';
   import SettingsFolderPicker from '$components/features/settings/SettingsFolderPicker.svelte';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { t } from '$lib/utils';
+  import { changeLocale, t } from '$lib/utils';
   import { allSettingsSchema, appSettingsSchema } from '$lib/validations/settings';
   import type { AllSettings } from '$types/settings';
   import { type } from '@tauri-apps/plugin-os';
   import { toast } from 'svelte-sonner';
-  import { settingsStore } from '$lib/storage';
+  import { language, settingsStore } from '$lib/storage';
+  import type { Locale } from '$lib/paraglide/runtime';
 
   const currentPlatform = type();
   const isDesktop = ['windows', 'macos', 'linux'].includes(currentPlatform);
+
+  const locales: { locale: Locale; country: string }[] = [
+    { locale: 'de', country: 'germany' },
+    { locale: 'en', country: 'usa' },
+    { locale: 'es', country: 'spain' },
+    { locale: 'fr', country: 'france' },
+    { locale: 'pt-br', country: 'portugal' },
+    { locale: 'tr', country: 'turkey' }
+  ];
 
   const startingPageValues = Object.values<string>(appSettingsSchema.shape.startingPage.def.innerType.def.entries);
   const startingPageOptions = $SidebarCategories
@@ -57,6 +67,33 @@
 </script>
 
 <div class="space-y-6">
+  <SettingItem
+    labelFor="language"
+    orientation="vertical"
+    title={$t('settings.appSettings.language')}
+  >
+    <Select.Root
+      onValueChange={(value) => changeLocale(value as Locale)}
+      type="single"
+      value={$language}
+    >
+      <Select.Trigger id="language" class="w-full flex items-center gap-2">
+        {@const locale = locales.find((l) => l.locale === $language)}
+        <img class="size-5 rounded-sm" alt={locale?.country} src="/flags/{locale?.country}.svg" />
+        <span class="truncate">{$t('language', {}, { locale: $language })}</span>
+      </Select.Trigger>
+
+      <Select.Content>
+        {#each locales as { locale, country } (locale)}
+          <Select.Item class="flex items-center gap-2" value={locale}>
+            <img class="size-5 rounded-sm" alt={country} src="/flags/{country}.svg" />
+            <span class="truncate">{$t('language', {}, { locale })}</span>
+          </Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
+  </SettingItem>
+
   {#if currentPlatform === 'windows'}
     <SettingItem
       labelFor="gamePath"

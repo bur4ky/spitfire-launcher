@@ -454,6 +454,7 @@
     },
     "invalidValue": "You have entered an invalid value.",
     "appSettings": {
+      "language": "Language",
       "gamePath": "Custom Game Path",
       "launchArguments": {
         "title": "Launch Arguments",

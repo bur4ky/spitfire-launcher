@@ -454,6 +454,7 @@
     },
     "invalidValue": "Du hast einen ungültigen Wert eingegeben.",
     "appSettings": {
+      "language": "Sprache",
       "gamePath": "Benutzerdefinierter Spielpfad",
       "launchArguments": {
         "title": "Startargumente",
