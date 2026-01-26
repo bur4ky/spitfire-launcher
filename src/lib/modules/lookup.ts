@@ -3,10 +3,10 @@ import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { displayNamesCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
-import AuthSession from '$lib/epic/auth-session';
+import AuthSession from '$lib/modules/auth-session';
 import type { EpicAccountById, EpicAccountByName, EpicAccountSearch } from '$types/game/lookup';
 
-export default class LookupManager {
+export default class Lookup {
   static async fetchById(account: AccountData, accountId: string) {
     const data = await AuthSession.ky(account, publicAccountService).get<EpicAccountById>(accountId).json();
     displayNamesCache.set(data.id, data.displayName);
@@ -64,13 +64,13 @@ export default class LookupManager {
   static async fetchByNameOrId(account: AccountData, nameOrId: string) {
     const isAccountId = nameOrId.length === 32;
     if (isAccountId) {
-      const data = await LookupManager.fetchById(account, nameOrId);
+      const data = await Lookup.fetchById(account, nameOrId);
       return {
         accountId: data.id,
         displayName: data.displayName
       };
     } else {
-      const data = (await LookupManager.searchByName(account, nameOrId))?.[0];
+      const data = (await Lookup.searchByName(account, nameOrId))?.[0];
       if (!data) throw new EpicAPIError({
         errorCode: 'errors.com.epicgames.account.account_not_found',
         errorMessage: `Sorry, we couldn't find an account for ${nameOrId}`,

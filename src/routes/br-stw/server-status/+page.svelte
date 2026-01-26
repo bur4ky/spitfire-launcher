@@ -32,8 +32,8 @@
   import { ExternalLink } from '$components/ui/external-link';
   import { Switch } from '$components/ui/switch';
   import * as Tooltip from '$components/ui/tooltip';
-  import NotificationManager from '$lib/managers/notification';
-  import ServerStatusManager from '$lib/managers/server-status';
+  import Notification from '$lib/modules/notification';
+  import ServerStatus from '$lib/modules/server-status';
   import type { LightswitchData } from '$types/game/server-status';
   import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
@@ -55,7 +55,7 @@
           notifyUser = false;
           clearInterval(notifyUserIntervalId);
 
-          await NotificationManager.sendNotification(
+          await Notification.sendNotification(
             $t('serverStatus.notification.message'),
             $t('serverStatus.notification.title')
           );
@@ -73,9 +73,9 @@
 
     try {
       const [lightswitchData, queueData, statusPageData] = await Promise.all([
-        ServerStatusManager.getLightswitch(activeAccount),
-        ServerStatusManager.getWaitingRoom(),
-        ServerStatusManager.getStatusPage()
+        ServerStatus.getLightswitch(),
+        ServerStatus.getWaitingRoom(),
+        ServerStatus.getStatusPage()
       ]);
 
       lastUpdated = new Date();
@@ -188,7 +188,7 @@
 
         <Switch
           onCheckedChange={() => {
-            NotificationManager.requestPermission();
+            Notification.requestPermission();
           }}
           bind:checked={notifyUser}
         />

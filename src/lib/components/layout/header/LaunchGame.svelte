@@ -1,8 +1,9 @@
 <script lang="ts">
   import { Button } from '$components/ui/button';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import Authentication from '$lib/epic/authentication';
-  import Manifest from '$lib/epic/manifest';
+  import Authentication from '$lib/modules/authentication';
+  import AuthSession from '$lib/modules/auth-session';
+  import Manifest from '$lib/modules/manifest';
   import { runningAppIds } from '$lib/stores';
   import { handleError, sleep, t } from '$lib/utils';
   import { path } from '@tauri-apps/api';
@@ -57,8 +58,8 @@
       launchData.game_directory = gameDirectory;
       launchData.working_directory = await path.join(gameDirectory, 'FortniteGame/Binaries/Win64');
 
-      const deviceAuthResponse = await Authentication.getAccessTokenUsingDeviceAuth($activeAccount!);
-      const oldExchangeData = await Authentication.getExchangeCodeUsingAccessToken(deviceAuthResponse.access_token);
+      const accessToken = await AuthSession.new($activeAccount!).getAccessToken(true);
+      const oldExchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
       const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(oldExchangeData.code, launcherAppClient2);
       const launcherExchangeData = await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
 

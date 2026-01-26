@@ -6,7 +6,8 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/epic/authentication';
+  import Authentication from '$lib/modules/authentication';
+  import AuthSession from '$lib/modules/auth-session';
   import { openUrl } from '@tauri-apps/plugin-opener';
   import { toast } from 'svelte-sonner';
   import { handleError, t } from '$lib/utils';
@@ -48,8 +49,8 @@
   }
 
   async function generateLoginURL() {
-    const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth($activeAccount);
-    const exchangeCodeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+    const accessToken = await AuthSession.new($activeAccount).getAccessToken(true);
+    const exchangeCodeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
     return `https://www.epicgames.com/id/exchange?exchangeCode=${exchangeCodeData.code}`;
   }
 </script>

@@ -3,8 +3,8 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import SettingsFolderPicker from '$components/features/settings/SettingsFolderPicker.svelte';
   import { Switch } from '$components/ui/switch';
-  import DownloadManager from '$lib/managers/download.svelte.js';
-  import Legendary from '$lib/epic/legendary';
+  import DownloadManager from '$lib/modules/download.svelte.js';
+  import Legendary from '$lib/modules/legendary';
   import { handleError, t } from '$lib/utils';
   import { downloaderSettingsSchema } from '$lib/validations/settings';
   import type { DownloaderSettings } from '$types/settings';
@@ -60,7 +60,7 @@
       }
 
       if (accountId) {
-        const account = accountStore.get().accounts.find((acc) => acc.accountId === accountId)!;
+        const account = accountStore.getAccount(accountId)!;
         await Legendary.login(account);
       }
 

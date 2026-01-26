@@ -27,13 +27,13 @@
   import { Switch } from '$components/ui/switch';
   import * as Tabs from '$components/ui/tabs';
   import { Separator } from '$components/ui/separator';
-  import FriendsManager from '$lib/managers/friends';
-  import XMPPManager from '$lib/managers/xmpp';
-  import PartyManager from '$lib/managers/party';
-  import AutoKickBase from '$lib/managers/autokick/base';
+  import Friends from '$lib/modules/friends';
+  import XMPPManager from '$lib/modules/xmpp';
+  import Party from '$lib/modules/party';
+  import AutoKickBase from '$lib/modules/autokick/base';
   import { accountPartiesStore, friendsStore } from '$lib/stores';
-  import transferBuildingMaterials from '$lib/managers/autokick/transfer-building-materials';
-  import claimRewards from '$lib/managers/autokick/claim-rewards';
+  import transferBuildingMaterials from '$lib/modules/autokick/transfer-building-materials';
+  import claimRewards from '$lib/modules/autokick/claim-rewards';
   import { handleError, sleep, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
   import type { AccountData } from '$types/accounts';
@@ -104,7 +104,7 @@
     const cache = accountPartiesStore.get(account.accountId);
     if (cache) return cache;
 
-    const partyResponse = await PartyManager.get(account);
+    const partyResponse = await Party.get(account);
     return partyResponse?.current[0];
   }
 
@@ -131,7 +131,7 @@
 
       await Promise.allSettled(partyMemberIds.map((id) => kickMember(partyData.id, id, kickerAccount)));
 
-      await PartyManager.leave(kickerAccount, partyData.id);
+      await Party.leave(kickerAccount, partyData.id);
       afterKickActions(kickerAccount.accountId).catch(() => null);
 
       toast.success($t('partyManagement.stwActions.kickedAll'));
@@ -155,7 +155,7 @@
     kickingMemberIds.add(memberId);
 
     try {
-      await PartyManager.kick(kicker, partyId, memberId);
+      await Party.kick(kicker, partyId, memberId);
       afterKickActions(memberId).catch(() => null);
     } catch (error) {
       handleError({ error, message: $t('partyManagement.stwActions.failedToKickMember'), account: kicker });
@@ -200,7 +200,7 @@
         if (!claimOnly) {
           const oldParty = accountPartiesStore.get(account.accountId);
           const oldMembers = oldParty?.members.filter((x) => x.account_id !== account.accountId) || [];
-          await PartyManager.leave(account, partyId);
+          await Party.leave(account, partyId);
 
           if (shouldInvite && !claimOnly) {
             fetchPartyData(account).then((partyData) => {
@@ -245,8 +245,8 @@
     await sleep(1000);
 
     const [partyData, friends] = await Promise.allSettled([
-      PartyManager.get(account),
-      FriendsManager.getFriends(account)
+      Party.get(account),
+      Friends.getFriends(account)
     ]);
 
     const party = partyData.status === 'fulfilled' ? partyData?.value.current[0] : null;
@@ -255,7 +255,7 @@
     const partyMemberIds = members.map((x) => x.account_id).filter((x) => x !== account.accountId);
     const friendsInParty = friends.value.filter((friend) => partyMemberIds.includes(friend.accountId));
 
-    await Promise.allSettled(friendsInParty.map((friend) => PartyManager.invite(account, party.id, friend.accountId)));
+    await Promise.allSettled(friendsInParty.map((friend) => Party.invite(account, party.id, friend.accountId)));
   }
 
   async function afterKickActions(memberId: string, claim = false) {
@@ -294,7 +294,7 @@
       const member = partyMembers?.find((m) => m.accountId === memberId);
       if (!member) return;
 
-      await PartyManager.promote(partyLeaderAccount!, currentAccountParty!.id, memberId);
+      await Party.promote(partyLeaderAccount!, currentAccountParty!.id, memberId);
       toast.success($t('partyManagement.stwActions.promotedMember', { name: member.displayName }));
     } catch (error) {
       handleError({ error, message: $t('partyManagement.stwActions.failedToPromoteMember'), account: $activeAccount });
@@ -307,7 +307,7 @@
     isAddingFriend = true;
 
     try {
-      await FriendsManager.addFriend($activeAccount, memberId);
+      await Friends.addFriend($activeAccount, memberId);
     } catch (error) {
       handleError({ error, message: $t('partyManagement.partyMembers.failedToSendFriendRequest'), account: $activeAccount });
     } finally {
@@ -319,7 +319,7 @@
     isRemovingFriend = true;
 
     try {
-      await FriendsManager.removeFriend($activeAccount, memberId);
+      await Friends.removeFriend($activeAccount, memberId);
     } catch (error) {
       handleError({ error, message: $t('partyManagement.partyMembers.failedToRemoveFriend'), account: $activeAccount });
     } finally {
@@ -334,7 +334,7 @@
     });
 
     if (!friendsStore.has($activeAccount.accountId)) {
-      FriendsManager.getSummary($activeAccount);
+      Friends.getSummary($activeAccount);
     }
   });
 </script>

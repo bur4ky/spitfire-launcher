@@ -15,7 +15,7 @@
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import DeviceAuthManager from '$lib/managers/device-auth';
+  import DeviceAuth from '$lib/modules/device-auth';
   import { handleError, t } from '$lib/utils';
   import type { AccountData } from '$types/accounts';
   import logger from '$lib/logger';
@@ -33,7 +33,7 @@
     errorOccurred = false;
 
     try {
-      const data = await DeviceAuthManager.getAll(account);
+      const data = await DeviceAuth.getAll(account);
       allDeviceAuths[account.accountId] = data.sort((a, b) => {
         const aHasCustomName = $deviceAuthsStore.some((x) => x.deviceId === a.deviceId) ? 1 : 0;
         const bHasCustomName = $deviceAuthsStore.some((x) => x.deviceId === b.deviceId) ? 1 : 0;
@@ -60,7 +60,7 @@
 
     const toastId = toast.loading($t('deviceAuth.generating'));
     try {
-      const deviceAuth = await DeviceAuthManager.create($activeAccount);
+      const deviceAuth = await DeviceAuth.create($activeAccount);
       allDeviceAuths[$activeAccount.accountId] = [deviceAuth, ...deviceAuths];
       toast.success($t('deviceAuth.generated'), { id: toastId });
     } catch (error) {

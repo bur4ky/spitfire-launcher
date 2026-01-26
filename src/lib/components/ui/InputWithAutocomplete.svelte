@@ -3,7 +3,7 @@
   import { Input, type InputProps } from '$components/ui/input';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import debounce from '$lib/debounce';
-  import LookupManager from '$lib/managers/lookup';
+  import Lookup from '$lib/modules/lookup';
   import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore(true);
@@ -16,7 +16,7 @@
 
   const debouncedSearch = debounce(async (search: string) => {
     if (!$activeAccount || !search || search.length < 3) return;
-    await LookupManager.searchByName($activeAccount, search);
+    await Lookup.searchByName($activeAccount, search);
   }, 500);
 
   const autocompleteData = $derived.by(() => {

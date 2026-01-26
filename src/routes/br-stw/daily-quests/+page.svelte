@@ -24,7 +24,7 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import { dailyQuests } from '$lib/constants/stw/resources';
   import type { FullQueryProfile } from '$types/game/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
@@ -41,7 +41,7 @@
       const status: QuestStatus = { accountId: account.accountId, displayName: account.displayName, data: { hasFounder: false, quests: [] } };
 
       try {
-        const campaignProfile = await MCPManager.clientQuestLogin(account, 'campaign');
+        const campaignProfile = await MCP.clientQuestLogin(account, 'campaign');
         handleQueryProfile(campaignProfile, status);
 
         if (status.data.quests.length) {
@@ -94,7 +94,7 @@
     }
 
     try {
-      const rerollResponse = await MCPManager.compose<FullQueryProfile<'campaign'>>(account, 'FortRerollDailyQuest', 'campaign', { questId });
+      const rerollResponse = await MCP.compose<FullQueryProfile<'campaign'>>(account, 'FortRerollDailyQuest', 'campaign', { questId });
       const status = questStatuses.find((status) => status.accountId === accountId);
       if (status) {
         handleQueryProfile(rerollResponse, status);

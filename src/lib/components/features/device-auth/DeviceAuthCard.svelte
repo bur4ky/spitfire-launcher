@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
-  import DeviceAuthManager from '$lib/managers/device-auth';
+  import DeviceAuth from '$lib/modules/device-auth';
   import { getStartingPage, handleError, t } from '$lib/utils';
   import type { EpicDeviceAuthData } from '$types/game/authorizations';
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
@@ -43,7 +43,7 @@
         // This will also delete the device auth
         accountStore.remove($activeAccount.accountId);
       } else {
-        await DeviceAuthManager.delete($activeAccount, deviceId);
+        await DeviceAuth.delete($activeAccount, deviceId);
       }
 
       allDeviceAuths[$activeAccount.accountId] = allDeviceAuths[$activeAccount.accountId].filter((auth) => auth.deviceId !== deviceId);

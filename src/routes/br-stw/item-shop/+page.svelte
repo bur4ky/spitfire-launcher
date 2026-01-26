@@ -12,10 +12,10 @@
   import ShopSection from '$components/features/shop/ShopSection.svelte';
   import SkeletonShopSection from '$components/features/shop/skeletons/SkeletonShopSection.svelte';
   import { Input } from '$components/ui/input';
-  import FriendsManager from '$lib/managers/friends';
-  import LookupManager from '$lib/managers/lookup';
-  import MCPManager from '$lib/managers/mcp';
-  import ShopManager from '$lib/managers/shop';
+  import Friends from '$lib/modules/friends';
+  import Lookup from '$lib/modules/lookup';
+  import MCP from '$lib/modules/mcp';
+  import Shop from '$lib/modules/shop';
   import { accountDataStore, brShopStore, ownedItemsStore } from '$lib/stores';
   import { calculateVbucks, formatRemainingDuration, handleError, t } from '$lib/utils';
   import type { AccountStoreData } from '$types/accounts';
@@ -76,8 +76,8 @@
     shopSections = null;
 
     try {
-      const response = (!forceRefresh && $brShopStore) || await ShopManager.fetch();
-      shopSections = ShopManager.groupBySections(response.offers).map((section) => ({
+      const response = (!forceRefresh && $brShopStore) || await Shop.fetch();
+      shopSections = Shop.groupBySections(response.offers).map((section) => ({
         ...section,
         items: section.items.sort((a, b) => b.sortPriority - a.sortPriority)
       }));
@@ -90,9 +90,9 @@
   async function fetchAccountData() {
     const account = $activeAccount!;
     const [athena, commonCore, friends] = await Promise.allSettled([
-      MCPManager.queryProfile(account, 'athena'),
-      MCPManager.queryProfile(account, 'common_core'),
-      FriendsManager.getFriends(account)
+      MCP.queryProfile(account, 'athena'),
+      MCP.queryProfile(account, 'common_core'),
+      Friends.getFriends(account)
     ]);
 
     let accountData: AccountStoreData = {
@@ -123,7 +123,7 @@
     }
 
     if (friends.status === 'fulfilled') {
-      const accountsData = await LookupManager.fetchByIds(account, friends.value.map((friend) => friend.accountId));
+      const accountsData = await Lookup.fetchByIds(account, friends.value.map((friend) => friend.accountId));
 
       accountData.friends = accountsData
         .sort((a, b) => (a.displayName || a.id).localeCompare(b.displayName || b.id))

@@ -1,7 +1,7 @@
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
-import FriendsManager from '$lib/managers/friends';
-import PartyManager from '$lib/managers/party';
-import XMPPManager from '$lib/managers/xmpp';
+import Friends from '$lib/modules/friends';
+import Party from '$lib/modules/party';
+import XMPPManager from '$lib/modules/xmpp';
 import { SvelteSet } from 'svelte/reactivity';
 import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { accountPartiesStore } from '$lib/stores';
@@ -69,7 +69,7 @@ export default class TaxiManager {
 
       this.setIsAvailable(true);
 
-      await PartyManager.get(this.account);
+      await Party.get(this.account);
 
       this.active = true;
       TaxiManager.taxiAccountIds.add(this.account.accountId);
@@ -108,14 +108,14 @@ export default class TaxiManager {
   async handleFriendRequests() {
     if (!this.active || !this.autoAcceptFriendRequests) return;
 
-    const incomingRequests = await FriendsManager.getIncoming(this.account);
+    const incomingRequests = await Friends.getIncoming(this.account);
     if (incomingRequests.length) {
       logger.debug('Accepting all incoming friend requests', {
         accountId: this.account.accountId,
         count: incomingRequests.length
       });
 
-      await FriendsManager.acceptAllIncomingRequests(this.account, incomingRequests.map((x) => x.accountId));
+      await Friends.acceptAllIncomingRequests(this.account, incomingRequests.map((x) => x.accountId));
     }
   }
 
@@ -135,7 +135,7 @@ export default class TaxiManager {
 
   setPowerLevel(partyId: string, revision: number) {
     logger.debug('Setting power level', { accountId: this.account.accountId, partyId, level: this.level });
-    return PartyManager.sendPatch(this.account, partyId, revision, this.getUpdatePayload(), true);
+    return Party.sendPatch(this.account, partyId, revision, this.getUpdatePayload(), true);
   }
 
   private async handleInvite(invite: EpicEventPartyPing) {
@@ -143,13 +143,13 @@ export default class TaxiManager {
 
     const currentParty = accountPartiesStore.get(this.account.accountId);
     if (currentParty?.members.length === 1) {
-      await PartyManager.leave(this.account, currentParty.id);
+      await Party.leave(this.account, currentParty.id);
       accountPartiesStore.delete(this.account.accountId);
     }
 
-    const [inviterPartyData] = await PartyManager.getInviterParty(this.account, invite.pinger_id);
-    await PartyManager.acceptInvite(this.account, inviterPartyData.id, invite.pinger_id, this.xmpp!.connection!.jid, this.getUpdatePayload());
-    await PartyManager.get(this.account);
+    const [inviterPartyData] = await Party.getInviterParty(this.account, invite.pinger_id);
+    await Party.acceptInvite(this.account, inviterPartyData.id, invite.pinger_id, this.xmpp!.connection!.jid, this.getUpdatePayload());
+    await Party.get(this.account);
 
     this.setIsAvailable(false);
 
@@ -160,7 +160,7 @@ export default class TaxiManager {
     this.partyTimeoutId = window.setTimeout(async () => {
       const currentParty = accountPartiesStore.get(this.account.accountId);
       if (currentParty) {
-        await PartyManager.leave(this.account, currentParty.id);
+        await Party.leave(this.account, currentParty.id);
         accountPartiesStore.delete(this.account.accountId);
         this.setIsAvailable(true);
       }
@@ -175,7 +175,7 @@ export default class TaxiManager {
     if ('member_state_updated' in event) {
       const packedState = JSON.parse(event.member_state_updated['Default:PackedState_j']?.replaceAll('True', 'true') || '{}')?.PackedState;
       if (packedState?.location === 'Lobby') {
-        return PartyManager.leave(this.account, event.party_id);
+        return Party.leave(this.account, event.party_id);
       }
     }
 
@@ -201,7 +201,7 @@ export default class TaxiManager {
         partyId: data.party_id
       });
 
-      await PartyManager.leave(this.account, data.party_id);
+      await Party.leave(this.account, data.party_id);
     }
   }
 
@@ -209,7 +209,7 @@ export default class TaxiManager {
     if (!this.autoAcceptFriendRequests || request.status !== 'PENDING') return;
 
     logger.debug('Accepting friend request', { accountId: this.account.accountId, from: request.from });
-    await FriendsManager.addFriend(this.account, request.from);
+    await Friends.addFriend(this.account, request.from);
   }
 
   private getUpdatePayload() {

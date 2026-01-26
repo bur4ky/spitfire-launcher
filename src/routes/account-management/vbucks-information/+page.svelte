@@ -15,7 +15,7 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import { calculateVbucks, getAccountsFromSelection, handleError, t } from '$lib/utils';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { language } from '$lib/storage';
@@ -32,7 +32,7 @@
       vbucksStatuses.push(status);
 
       try {
-        const queryProfile = await MCPManager.queryProfile(account, 'common_core');
+        const queryProfile = await MCP.queryProfile(account, 'common_core');
         status.data.vbucksAmount = calculateVbucks(queryProfile);
       } catch (error) {
         handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });

@@ -1,5 +1,5 @@
-import AvatarManager from '$lib/managers/avatar';
-import LookupManager from '$lib/managers/lookup';
+import Avatar from '$lib/modules/avatar';
+import Lookup from '$lib/modules/lookup';
 import { friendService } from '$lib/services/epic';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { getChildLogger } from '$lib/logger';
@@ -7,7 +7,7 @@ import { avatarCache, displayNamesCache, type FriendsEntry, friendsStore } from 
 import { processChunks } from '$lib/utils';
 import { SvelteMap } from 'svelte/reactivity';
 import type { AccountData } from '$types/accounts';
-import AuthSession from '$lib/epic/auth-session';
+import AuthSession from '$lib/modules/auth-session';
 import type {
   BlockedAccountData,
   FriendData,
@@ -18,13 +18,13 @@ import type {
 
 const logger = getChildLogger('FriendsManager');
 
-export default class FriendsManager {
+export default class Friends {
   static async getFriend(account: AccountData, friendId: string) {
     try {
       const friendData = await AuthSession.ky(account, friendService).get<FriendData>(`${account.accountId}/friends/${friendId}`).json();
 
       FriendsStore.set(account.accountId, 'friends', friendId, friendData);
-      FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+      Friends.cacheAccountNameAndAvatar(account, friendId);
 
       return friendData;
     } catch (error) {
@@ -59,7 +59,7 @@ export default class FriendsManager {
         });
       }
 
-      FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+      Friends.cacheAccountNameAndAvatar(account, friendId);
       return data;
     } catch (error) {
       if (error instanceof EpicAPIError) {
@@ -106,7 +106,7 @@ export default class FriendsManager {
       FriendsStore.delete(account.accountId, 'incoming', friendId);
       FriendsStore.delete(account.accountId, 'outgoing', friendId);
 
-      FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+      Friends.cacheAccountNameAndAvatar(account, friendId);
       return data;
     } catch (error) {
       if (error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.friends.friendship_not_found') {
@@ -136,8 +136,8 @@ export default class FriendsManager {
     ];
 
     await Promise.allSettled([
-      LookupManager.fetchByIds(account, allAccountIds),
-      AvatarManager.fetchAvatars(account, allAccountIds)
+      Lookup.fetchByIds(account, allAccountIds),
+      Avatar.fetchAvatars(account, allAccountIds)
     ]);
 
     friendsStore.set(account.accountId, {
@@ -185,14 +185,14 @@ export default class FriendsManager {
       created: new Date().toISOString()
     });
 
-    FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+    Friends.cacheAccountNameAndAvatar(account, friendId);
     return data;
   }
 
   static async unblock(account: AccountData, friendId: string) {
     const data = await AuthSession.ky(account, friendService).delete(`${account.accountId}/blocklist/${friendId}`);
     FriendsStore.delete(account.accountId, 'blocklist', friendId);
-    FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+    Friends.cacheAccountNameAndAvatar(account, friendId);
     return data;
   }
 
@@ -217,7 +217,7 @@ export default class FriendsManager {
       alias: nickname
     });
 
-    FriendsManager.cacheAccountNameAndAvatar(account, friendId);
+    Friends.cacheAccountNameAndAvatar(account, friendId);
     return data;
   }
 
@@ -252,13 +252,13 @@ export default class FriendsManager {
 
   static cacheAccountNameAndAvatar(account: AccountData, accountId: string) {
     if (!displayNamesCache.get(accountId)) {
-      LookupManager.fetchById(account, accountId).catch((error) => {
+      Lookup.fetchById(account, accountId).catch((error) => {
         logger.error('Failed to fetch account display name for caching', { accountId, error });
       });
     }
 
     if (!avatarCache.get(accountId)) {
-      AvatarManager.fetchAvatars(account, [accountId]).catch((error) => {
+      Avatar.fetchAvatars(account, [accountId]).catch((error) => {
         logger.error('Failed to fetch account avatar for caching', { accountId, error });
       });
     }

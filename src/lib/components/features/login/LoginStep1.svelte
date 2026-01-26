@@ -2,8 +2,8 @@
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
   import { defaultClient, fortniteNewSwitchGameClient } from '$lib/constants/clients';
-  import Authentication from '$lib/epic/authentication';
-  import DeviceAuthManager from '$lib/managers/device-auth';
+  import Authentication from '$lib/modules/authentication';
+  import DeviceAuth from '$lib/modules/device-auth';
   import { oauthService } from '$lib/services/epic';
   import { handleError, t } from '$lib/utils';
   import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';
@@ -123,7 +123,7 @@
       return;
     }
 
-    const deviceAuthData = await DeviceAuthManager.create({
+    const deviceAuthData = await DeviceAuth.create({
       accountId: accessTokenData.account_id,
       accessToken: accessTokenData.access_token
     });

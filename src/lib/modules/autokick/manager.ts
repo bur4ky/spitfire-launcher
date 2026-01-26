@@ -1,13 +1,13 @@
-import FriendsManager from '$lib/managers/friends';
-import XMPPManager from '$lib/managers/xmpp';
+import Friends from '$lib/modules/friends';
+import XMPPManager from '$lib/modules/xmpp';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
-import MatchmakingManager from '$lib/managers/matchmaking';
+import Matchmaking from '$lib/modules/matchmaking';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
-import AutoKickBase from '$lib/managers/autokick/base';
-import PartyManager from '$lib/managers/party';
-import claimRewards from '$lib/managers/autokick/claim-rewards';
-import transferBuildingMaterials from '$lib/managers/autokick/transfer-building-materials';
+import AutoKickBase from '$lib/modules/autokick/base';
+import Party from '$lib/modules/party';
+import claimRewards from '$lib/modules/autokick/claim-rewards';
+import transferBuildingMaterials from '$lib/modules/autokick/transfer-building-materials';
 import type { PartyData } from '$types/game/party';
 import { getChildLogger } from '$lib/logger';
 import { accountStore, settingsStore } from '$lib/storage';
@@ -167,7 +167,7 @@ export default class AutoKickManager {
   private async checkMissionState(): Promise<State> {
     // Instead of spamming findPlayer, we could use the PackedState changes from XMPP
     // but the event doesn't fire when playing solo
-    const response = await MatchmakingManager.findPlayer(this.account, this.account.accountId);
+    const response = await Matchmaking.findPlayer(this.account, this.account.accountId);
     if (!response?.length) {
       this.previousStarted = false;
       return 'lobby';
@@ -196,7 +196,7 @@ export default class AutoKickManager {
 
     logger.debug('Post-mission actions started', { accountId, settings });
 
-    const partyData = await PartyManager.get(this.account);
+    const partyData = await Party.get(this.account);
     const party = partyData.current[0] as PartyData | undefined;
 
     this.lastKick = new Date();
@@ -259,16 +259,16 @@ export default class AutoKickManager {
       await Promise.allSettled(
         noAutoKickIds
           .filter((id) => id !== this.account.accountId)
-          .map((id) => PartyManager.kick(leaderAccount, party.id, id))
+          .map((id) => Party.kick(leaderAccount, party.id, id))
       );
 
-      return PartyManager.leave(this.account, party.id);
+      return Party.leave(this.account, party.id);
     }
 
     const leaveAccounts = noAutoKickIds.map((id) => accounts.find((a) => a.accountId === id)).filter((x) => !!x);
     leaveAccounts.push(this.account);
 
-    return Promise.allSettled(leaveAccounts.map((x) => PartyManager.leave(x, party.id)));
+    return Promise.allSettled(leaveAccounts.map((x) => Party.leave(x, party.id)));
   }
 
   private async invite(members: PartyData['members']) {
@@ -276,8 +276,8 @@ export default class AutoKickManager {
     await sleep(10_000);
 
     const [partyData, friends] = await Promise.allSettled([
-      PartyManager.get(this.account),
-      FriendsManager.getFriends(this.account)
+      Party.get(this.account),
+      Friends.getFriends(this.account)
     ]);
 
     const party = partyData.status === 'fulfilled' ? partyData?.value.current[0] : null;
@@ -287,7 +287,7 @@ export default class AutoKickManager {
     return Promise.allSettled(
       friends.value
         .filter((x) => prevMemberIds.includes(x.accountId))
-        .map((x) => PartyManager.invite(this.account, party.id, x.accountId))
+        .map((x) => Party.invite(this.account, party.id, x.accountId))
     );
   }
 }

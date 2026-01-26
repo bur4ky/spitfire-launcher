@@ -3,7 +3,7 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
-  import AutoKickBase from '$lib/managers/autokick/base';
+  import AutoKickBase from '$lib/modules/autokick/base';
   import { cn, t } from '$lib/utils';
   import { Switch } from '$components/ui/switch';
   import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';

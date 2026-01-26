@@ -4,7 +4,7 @@
   import type { SpitfireShopItem } from '$types/game/shop';
   import { toast } from 'svelte-sonner';
   import { accountDataStore, ownedItemsStore } from '$lib/stores';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import { calculateDiscountedShopPrice, cn, t } from '$lib/utils';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { derived as jsDerived } from 'svelte/store';
@@ -30,7 +30,7 @@
     isPurchasing = true;
 
     try {
-      const purchaseData = await MCPManager.purchaseCatalogEntry($activeAccount, item.offerId, $discountedPrice);
+      const purchaseData = await MCP.purchaseCatalogEntry($activeAccount, item.offerId, $discountedPrice);
 
       accountDataStore.update((accounts) => {
         const account = accounts[$activeAccount.accountId];

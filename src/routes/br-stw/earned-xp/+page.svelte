@@ -17,7 +17,7 @@
   import { Button } from '$components/ui/button';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { getAccountsFromSelection, handleError, t } from '$lib/utils';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { language } from '$lib/storage';
 
@@ -31,8 +31,8 @@
       xpStatuses.push(status);
 
       const [athena, campaign] = await Promise.allSettled([
-        MCPManager.queryProfile(account, 'athena'),
-        MCPManager.queryProfile(account, 'campaign')
+        MCP.queryProfile(account, 'athena'),
+        MCP.queryProfile(account, 'campaign')
       ]);
 
       if (athena.status === 'fulfilled') {

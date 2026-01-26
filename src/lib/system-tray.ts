@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import DownloadManager from '$lib/managers/download.svelte.js';
+import DownloadManager from '$lib/modules/download.svelte.js';
 import { Menu } from '@tauri-apps/api/menu/menu';
 import { TrayIcon } from '@tauri-apps/api/tray';
 import { defaultWindowIcon } from '@tauri-apps/api/app';

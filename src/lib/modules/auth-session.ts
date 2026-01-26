@@ -1,9 +1,13 @@
 import type { KyInstance } from 'ky';
 import AsyncLock from '$lib/async-lock';
-import Authentication from '$lib/epic/authentication';
+import Authentication from '$lib/modules/authentication';
 import type { AccountData } from '$types/accounts';
 import { getChildLogger } from '$lib/logger';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import { accountStore } from '$lib/storage';
+import { t } from '$lib/utils';
+import { get } from 'svelte/store';
+import { toast } from 'svelte-sonner';
 
 const logger = getChildLogger('AuthSession');
 
@@ -16,6 +20,8 @@ type AuthState = {
 
 export default class AuthSession {
   private static states = new Map<string, AuthState>();
+  // Used for preventing duplicate error toasts when the same error occurs repeatedly in a short time period
+  private notifiedErrors = new Map<string, number>();
   private readonly kyInstance?: KyInstance;
 
   private constructor(
@@ -27,10 +33,7 @@ export default class AuthSession {
       retry: {
         limit: 1,
         shouldRetry: async ({ error }) => {
-          return error instanceof EpicAPIError && (
-            error.errorCode === 'errors.com.epicgames.common.authentication.token_verification_failed'
-            || error.errorCode === 'errors.com.epicgames.common.oauth.invalid_token'
-          );
+          return this.handleError(error);
         }
       },
       hooks: {
@@ -42,8 +45,7 @@ export default class AuthSession {
         ],
         beforeRetry: [
           async ({ request }) => {
-            this.invalidate();
-            const token = await this.getAccessToken();
+            const token = await this.getAccessToken(true);
             request.headers.set('Authorization', `Bearer ${token}`);
           }
         ]
@@ -79,7 +81,12 @@ export default class AuthSession {
     return this.kyInstance;
   }
 
-  async getAccessToken() {
+  async getAccessToken(forceRefresh = false) {
+    if (forceRefresh) {
+      this.state.accessToken = '';
+      this.state.expiresAt = 0;
+    }
+
     if (this.tokenValid()) {
       return this.state.accessToken;
     }
@@ -97,17 +104,57 @@ export default class AuthSession {
   private async refreshToken() {
     logger.debug('Refreshing access token', { accountId: this.account.accountId });
 
-    const data = await Authentication.getAccessTokenUsingDeviceAuth(this.account);
-    this.state.accessToken = data.access_token;
-    this.state.expiresAt = Date.now() + data.expires_in * 1000;
+    try {
+      const data = await Authentication.getAccessTokenUsingDeviceAuth(this.account);
+      this.state.accessToken = data.access_token;
+      this.state.expiresAt = Date.now() + data.expires_in * 1000;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
   private tokenValid() {
     return !!this.state.accessToken && Date.now() < this.state.expiresAt;
   }
 
-  private invalidate() {
-    this.state.accessToken = '';
-    this.state.expiresAt = 0;
+  private handleError(error: unknown) {
+    if (!(error instanceof EpicAPIError)) return false;
+
+    if (
+      error.errorCode === 'errors.com.epicgames.common.authentication.token_verification_failed'
+      || error.errorCode === 'errors.com.epicgames.common.oauth.invalid_token'
+    ) {
+      return true;
+    }
+
+    const id = this.account.accountId;
+    const name = this.account.displayName;
+    const translate = get(t);
+
+    if (error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials' && this.shouldNotify(`${id}:${error.errorCode}`)) {
+      logger.warn('Removing account due to invalid credentials', { accountId: id });
+      accountStore.remove(id);
+      toast.error(translate('errors.loginExpired', { accountName: name }));
+    }
+
+    if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' && this.shouldNotify(`${id}:${error.errorCode}`)) {
+      logger.warn('Account requires EULA acceptance', { accountId: id });
+      toast.error(translate('errors.eulaRequired', { accountName: name }));
+    }
+
+    return false;
+  }
+
+  private shouldNotify(key: string) {
+    const now = Date.now();
+    const last = this.notifiedErrors.get(key);
+    const ttl = 10_000;
+    if (last && now - last < ttl) {
+      return false;
+    }
+
+    this.notifiedErrors.set(key, now);
+    return true;
   }
 }

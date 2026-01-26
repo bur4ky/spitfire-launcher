@@ -8,9 +8,9 @@
   import FriendsList, { type ListType } from '$components/features/friends/FriendsList.svelte';
   import { Button } from '$components/ui/button';
   import * as Tabs from '$components/ui/tabs';
-  import FriendsManager from '$lib/managers/friends';
-  import LookupManager from '$lib/managers/lookup';
-  import XMPPManager from '$lib/managers/xmpp';
+  import Friends from '$lib/modules/friends';
+  import Lookup from '$lib/modules/lookup';
+  import XMPPManager from '$lib/modules/xmpp';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import { friendsStore } from '$lib/stores';
@@ -46,10 +46,10 @@
     isSendingRequest = true;
 
     try {
-      const lookupData = await LookupManager.fetchByNameOrId($activeAccount, searchQuery);
+      const lookupData = await Lookup.fetchByNameOrId($activeAccount, searchQuery);
 
       try {
-        await FriendsManager.addFriend($activeAccount, lookupData.accountId);
+        await Friends.addFriend($activeAccount, lookupData.accountId);
         searchQuery = '';
         toast.success($t('friendsManagement.sentFriendRequest'));
       } catch (error) {
@@ -69,7 +69,7 @@
       }
     });
 
-    FriendsManager.getSummary($activeAccount).finally(() => {
+    Friends.getSummary($activeAccount).finally(() => {
       isLoading = false;
     });
 
@@ -84,7 +84,7 @@
     if (event.key === 'F5') {
       event.preventDefault();
       isLoading = true;
-      FriendsManager.getSummary($activeAccount).finally(() => {
+      Friends.getSummary($activeAccount).finally(() => {
         isLoading = false;
       });
     }

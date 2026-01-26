@@ -1,6 +1,6 @@
-import NotificationManager from '$lib/managers/notification';
+import Notification from '$lib/modules/notification';
 import { ownedApps } from '$lib/stores';
-import Legendary, { configPath } from '$lib/epic/legendary';
+import Legendary, { configPath } from '$lib/modules/legendary';
 import { t } from '$lib/utils';
 import type { queueItemSchema } from '$lib/validations/settings';
 import type { ParsedApp } from '$types/legendary';
@@ -181,7 +181,7 @@ class DownloadManager {
             toast.success(notificationMessage);
 
             if (downloaderSettings.sendNotifications) {
-              NotificationManager.sendNotification(notificationMessage).catch((error) => {
+              Notification.sendNotification(notificationMessage).catch((error) => {
                 logger.error('Failed to send download notification', { error });
               });
             }

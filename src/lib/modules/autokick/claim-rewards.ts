@@ -1,4 +1,4 @@
-import MCPManager from '$lib/managers/mcp';
+import MCP from '$lib/modules/mcp';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
 import type { CampaignProfile } from '$types/game/mcp';
@@ -10,7 +10,7 @@ export default async function claimRewards(account: AccountData, skipDelay = fal
     await sleep(delaySeconds * 1000);
   }
 
-  const queryProfile = await MCPManager.queryProfile(account, 'campaign');
+  const queryProfile = await MCP.queryProfile(account, 'campaign');
   const profile = queryProfile.profileChanges[0].profile;
   const attributes = profile.stats.attributes;
 
@@ -20,9 +20,9 @@ export default async function claimRewards(account: AccountData, skipDelay = fal
   return Promise.allSettled([
     claimQuestRewards(account, profile.items),
     openCardPacks(account, profile.items),
-    MCPManager.compose(account, 'RedeemSTWAccoladeTokens', 'athena', {}),
-    hasMissionAlertRewards && MCPManager.compose(account, 'ClaimMissionAlertRewards', 'campaign', {}),
-    hasDifficultyIncreaseRewards && MCPManager.compose(account, 'ClaimDifficultyIncreaseRewards', 'campaign', {})
+    MCP.compose(account, 'RedeemSTWAccoladeTokens', 'athena', {}),
+    hasMissionAlertRewards && MCP.compose(account, 'ClaimMissionAlertRewards', 'campaign', {}),
+    hasDifficultyIncreaseRewards && MCP.compose(account, 'ClaimDifficultyIncreaseRewards', 'campaign', {})
   ]);
 }
 
@@ -33,7 +33,7 @@ async function openCardPacks(account: AccountData, queryProfileItems: CampaignPr
 
   if (!cardPackItemIds.length) return;
 
-  return MCPManager.compose(account, 'OpenCardPackBatch', 'campaign', { cardPackItemIds });
+  return MCP.compose(account, 'OpenCardPackBatch', 'campaign', { cardPackItemIds });
 }
 
 async function claimQuestRewards(account: AccountData, queryProfileItems: CampaignProfile['items']) {
@@ -45,7 +45,7 @@ async function claimQuestRewards(account: AccountData, queryProfileItems: Campai
 
   return Promise.allSettled(
     questIds.map((id) =>
-      MCPManager.compose(account, 'ClaimQuestReward', 'campaign', { questId: id, selectedRewardIndex: 0 })
+      MCP.compose(account, 'ClaimQuestReward', 'campaign', { questId: id, selectedRewardIndex: 0 })
     )
   );
 }

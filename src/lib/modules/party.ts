@@ -1,5 +1,5 @@
 import { partyService } from '$lib/services/epic';
-import AuthSession from '$lib/epic/auth-session';
+import AuthSession from '$lib/modules/auth-session';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { accountPartiesStore, avatarCache, displayNamesCache } from '$lib/stores';
 import defaultPartyMemberMeta from '$lib/data/default-party-member-meta.json';
@@ -7,7 +7,7 @@ import defaultPartyMeta from '$lib/data/default-party-meta.json';
 import type { AccountData } from '$types/accounts';
 import type { FetchPartyResponse, InviterPartyResponse } from '$types/game/party';
 
-export default class PartyManager {
+export default class Party {
   static async get(account: AccountData) {
     const data = await AuthSession.ky(account, partyService).get<FetchPartyResponse>(
       `user/${account.accountId}`
@@ -44,7 +44,7 @@ export default class PartyManager {
   }
 
   static leave(account: AccountData, partyId: string) {
-    return PartyManager.kick(account, partyId, account.accountId);
+    return Party.kick(account, partyId, account.accountId);
   }
 
   static promote(account: AccountData, partyId: string, accountToPromote: string) {
@@ -74,7 +74,7 @@ export default class PartyManager {
     } catch (error) {
       if (error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.social.party.stale_revision') {
         const newRevision = Number.parseInt(error.messageVars[1]);
-        if (!Number.isNaN(newRevision)) return PartyManager.sendPatch(account, partyId, newRevision, update, patchSelf);
+        if (!Number.isNaN(newRevision)) return Party.sendPatch(account, partyId, newRevision, update, patchSelf);
       }
 
       throw error;

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Button } from '$components/ui/button';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import DownloadManager from '$lib/managers/download.svelte.js';
+  import DownloadManager from '$lib/modules/download.svelte.js';
   import { ownedApps, runningAppIds } from '$lib/stores';
-  import Legendary from '$lib/epic/legendary';
+  import Legendary from '$lib/modules/legendary';
   import { bytesToSize, handleError, sleep, t } from '$lib/utils';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';

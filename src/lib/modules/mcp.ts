@@ -1,10 +1,10 @@
 import type { AccountData } from '$types/accounts';
 import { baseGameService } from '$lib/services/epic';
-import AuthSession from '$lib/epic/auth-session';
+import AuthSession from '$lib/modules/auth-session';
 import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 
-export default class MCPManager {
+export default class MCP {
   static compose<T>(account: AccountData, operation: MCPOperation, profile: MCPProfileId, data: Record<string, any>) {
     const route = operation === 'QueryPublicProfile' ? 'public' : 'client';
     return AuthSession.ky(account, baseGameService).post<T>(
@@ -30,7 +30,7 @@ export default class MCPManager {
 
   static async purchaseCatalogEntry(account: AccountData, offerId: string, price: number, isPriceRetry?: boolean): Promise<{ vbucksSpent: number; data: any }> {
     try {
-      const purchaseData = await MCPManager.compose(account, 'PurchaseCatalogEntry', 'common_core', {
+      const purchaseData = await MCP.compose(account, 'PurchaseCatalogEntry', 'common_core', {
         offerId,
         purchaseQuantity: 1,
         currency: 'MtxCurrency',
@@ -44,7 +44,7 @@ export default class MCPManager {
         data: purchaseData
       };
     } catch (error) {
-      if (error instanceof EpicAPIError && MCPManager.isPriceMismatchError(error) && !isPriceRetry) {
+      if (error instanceof EpicAPIError && MCP.isPriceMismatchError(error) && !isPriceRetry) {
         const newPrice = Number.parseInt(error.messageVars[1]);
         if (newPrice > price) throw error;
 
@@ -57,7 +57,7 @@ export default class MCPManager {
 
   static async giftCatalogEntry(account: AccountData, offerId: string, receivers: string[], price: number, isPriceRetry?: boolean): Promise<{ vbucksSpent: number; data: any }> {
     try {
-      const purchaseData = await MCPManager.compose(account, 'GiftCatalogEntry', 'common_core', {
+      const purchaseData = await MCP.compose(account, 'GiftCatalogEntry', 'common_core', {
         offerId,
         currency: 'MtxCurrency',
         currencySubType: '',
@@ -73,7 +73,7 @@ export default class MCPManager {
         data: purchaseData
       };
     } catch (error) {
-      if (error instanceof EpicAPIError && MCPManager.isPriceMismatchError(error) && !isPriceRetry) {
+      if (error instanceof EpicAPIError && MCP.isPriceMismatchError(error) && !isPriceRetry) {
         const newPrice = Number.parseInt(error.messageVars[1]);
         if (newPrice > price) throw error;
 

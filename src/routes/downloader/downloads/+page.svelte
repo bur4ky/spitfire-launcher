@@ -3,7 +3,7 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
-  import DownloadManager, { type DownloadProgress } from '$lib/managers/download.svelte';
+  import DownloadManager, { type DownloadProgress } from '$lib/modules/download.svelte';
   import { bytesToSize, formatRemainingDuration, t } from '$lib/utils';
   import { Progress } from '$components/ui/progress';
   import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';

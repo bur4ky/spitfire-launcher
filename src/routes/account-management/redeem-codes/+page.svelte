@@ -17,7 +17,7 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
   import { TagInput } from '$components/ui/tag-input';
-  import CodeManager from '$lib/managers/code';
+  import Code from '$lib/modules/code';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { getAccountsFromSelection, handleError, t } from '$lib/utils';
@@ -55,7 +55,7 @@
         }
 
         try {
-          await CodeManager.redeem(account, code);
+          await Code.redeem(account, code);
           status.data.push({ code });
         } catch (error) {
           handleError({ error, message: 'Failed to redeem code', account, toastId: false });

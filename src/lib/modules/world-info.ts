@@ -14,16 +14,16 @@ import {
 import type { ParsedModifierData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
 import { ingredients, RarityNames, RarityTypes, resources, survivors, survivorsMythicLeads, traps } from '$lib/constants/stw/resources';
 import { baseGameService } from '$lib/services/epic';
-import Authentication from '$lib/epic/authentication';
+import Authentication from '$lib/modules/authentication';
 import { get } from 'svelte/store';
 import { worldInfoCache } from '$lib/stores';
 
 type World = keyof typeof Theaters;
 
-export default class WorldInfoManager {
+export default class WorldInfo {
   static async setCache() {
-    const worldInfoData = await WorldInfoManager.getWorldInfoData();
-    const parsedWorldInfo = WorldInfoManager.parseWorldInfo(worldInfoData);
+    const worldInfoData = await WorldInfo.getWorldInfoData();
+    const parsedWorldInfo = WorldInfo.parseWorldInfo(worldInfoData);
     worldInfoCache.set(parsedWorldInfo);
   }
 
@@ -113,11 +113,11 @@ export default class WorldInfoManager {
         const zone = data.missions.get(mission.tileIndex);
         if (!zone) continue;
 
-        const zoneInfo = WorldInfoManager.parseZone(mission.missionGenerator);
+        const zoneInfo = WorldInfo.parseZone(mission.missionGenerator);
         const currentAlert = alertByTile.get(mission.tileIndex);
 
         const zoneLetter = (WorldLettersByTheaters as any)[theaterId] || WorldLetters.Ventures;
-        const modifiers = currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfoManager.parseModifier(modifier.itemType)) || null;
+        const modifiers = currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfo.parseModifier(modifier.itemType)) || null;
         const powerLevel = (WorldPowerLevels as any)[theaterId]?.[zone] ?? (WorldPowerLevels.ventures as any)?.[zone] ?? -1;
         const filters: string[] = [];
 
@@ -133,7 +133,7 @@ export default class WorldInfoManager {
             return acc;
           }, [])
           .map((item) => {
-            const parsedResource = WorldInfoManager.parseResource(item.itemType, item.quantity);
+            const parsedResource = WorldInfo.parseResource(item.itemType, item.quantity);
 
             filters.push(item.itemType);
 
@@ -162,14 +162,14 @@ export default class WorldInfoManager {
             return acc;
           }, [])
           .map((item) => {
-            const parsedResource = WorldInfoManager.parseResource(item.itemType, item.quantity);
+            const parsedResource = WorldInfo.parseResource(item.itemType, item.quantity);
 
             let isHard = false;
 
             filters.push(item.itemType);
 
             if (
-              WorldInfoManager.isEvolutionMaterial(parsedResource.itemType) &&
+              WorldInfo.isEvolutionMaterial(parsedResource.itemType) &&
 							WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
             ) {
               isHard = !(
@@ -280,7 +280,7 @@ export default class WorldInfoManager {
       .replace('AccountResource:', '')
       .replace('CardPack:zcp_', '');
 
-    const rarity = WorldInfoManager.parseRarity(newKey);
+    const rarity = WorldInfo.parseRarity(newKey);
     const data: ParsedResourceData = {
       key,
       quantity,

@@ -1,11 +1,11 @@
 import FileStore from '$lib/storage/file-store';
-import AutoKickBase from '$lib/managers/autokick/base';
-import XMPPManager from '$lib/managers/xmpp';
+import AutoKickBase from '$lib/modules/autokick/base';
+import XMPPManager from '$lib/modules/xmpp';
 import { derived, type Readable } from 'svelte/store';
 import type { AccountData, AccountDataFile } from '$types/accounts';
 import { accountDataFileSchema } from '$lib/validations/accounts';
-import DeviceAuthManager from '$lib/managers/device-auth';
-import Legendary from '$lib/epic/legendary';
+import DeviceAuth from '$lib/modules/device-auth';
+import Legendary from '$lib/modules/legendary';
 import { getChildLogger } from '$lib/logger';
 
 const logger = getChildLogger('AccountStore');
@@ -28,7 +28,7 @@ export default class AccountStore extends FileStore<AccountDataFile> {
   }
 
   remove(id: string) {
-    const account = this.get().accounts.find((x) => x.accountId === id);
+    const account = this.getAccount(id);
 
     this.set((state) => {
       state.accounts = state.accounts.filter((x) => x.accountId !== id);
@@ -44,7 +44,7 @@ export default class AccountStore extends FileStore<AccountDataFile> {
     XMPPManager.instances.get(id)?.disconnect();
 
     if (account) {
-      DeviceAuthManager.delete(account, account.deviceId).catch((error) => {
+      DeviceAuth.delete(account, account.deviceId).catch((error) => {
         logger.error('Failed to delete device auth', { error });
       });
 
@@ -56,6 +56,10 @@ export default class AccountStore extends FileStore<AccountDataFile> {
         }
       });
     }
+  }
+
+  getAccount(id: string) {
+    return this.get().accounts.find((x) => x.accountId === id) || null;
   }
 
   getActive() {

@@ -10,7 +10,7 @@
   import BanIcon from '@lucide/svelte/icons/ban';
   import ShieldMinus from '@lucide/svelte/icons/shield-minus';
   import { handleError, t } from '$lib/utils';
-  import FriendsManager from '$lib/managers/friends';
+  import Friends from '$lib/modules/friends';
   import { accountStore } from '$lib/storage';
 
   type Props = {
@@ -30,7 +30,7 @@
     isAdding = true;
 
     try {
-      await FriendsManager.addFriend($activeAccount, id);
+      await Friends.addFriend($activeAccount, id);
     } catch (error) {
       handleError({ error, message: $t('friendsManagement.failedToAdd'), account: $activeAccount });
     } finally {
@@ -42,7 +42,7 @@
     isRemoving = true;
 
     try {
-      await FriendsManager.removeFriend($activeAccount, id);
+      await Friends.removeFriend($activeAccount, id);
     } catch (error) {
       handleError({ error, message: $t('friendsManagement.failedToRemove'), account: $activeAccount });
     } finally {
@@ -54,7 +54,7 @@
     isBlocking = true;
 
     try {
-      await FriendsManager.block($activeAccount, id);
+      await Friends.block($activeAccount, id);
     } catch (error) {
       handleError({ error, message: $t('friendsManagement.failedToBlock'), account: $activeAccount });
     } finally {
@@ -66,7 +66,7 @@
     isUnblocking = true;
 
     try {
-      await FriendsManager.unblock($activeAccount, id);
+      await Friends.unblock($activeAccount, id);
     } catch (error) {
       handleError({ error, message: $t('friendsManagement.failedToUnblock'), account: $activeAccount });
     } finally {

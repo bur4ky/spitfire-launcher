@@ -1,7 +1,7 @@
 import AsyncLock from '$lib/async-lock';
-import Authentication from '$lib/epic/authentication';
-import PartyManager from '$lib/managers/party';
-import FriendsManager, { FriendsStore } from '$lib/managers/friends';
+import AuthSession from '$lib/modules/auth-session';
+import Party from '$lib/modules/party';
+import Friends, { FriendsStore } from '$lib/modules/friends';
 import EventEmitter from '$lib/event-emitter';
 import { getChildLogger } from '$lib/logger';
 import { accountPartiesStore } from '$lib/stores';
@@ -90,8 +90,8 @@ export default class XMPPManager extends EventEmitter<EventMap> {
       }
 
       try {
-        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
-        const instance = new XMPPManager({ ...account, accessToken: accessTokenData.access_token }, purpose);
+        const accessToken = await AuthSession.new(account).getAccessToken(true);
+        const instance = new XMPPManager({ ...account, accessToken }, purpose);
         XMPPManager.instances.set(account.accountId, instance);
         return instance;
       } catch (error) {
@@ -421,9 +421,9 @@ export default class XMPPManager extends EventEmitter<EventMap> {
       accountPartiesStore.set(accountId, { ...party });
     }
 
-    const joiningAccount = accountStore.get().accounts.find((account) => account.accountId === data.account_id);
+    const joiningAccount = accountStore.getAccount(data.account_id);
     if (joiningAccount) {
-      const partyData = await PartyManager.get(joiningAccount).catch(() => null);
+      const partyData = await Party.get(joiningAccount).catch(() => null);
       if (!partyData) accountPartiesStore.delete(data.account_id);
     }
   }
@@ -446,7 +446,7 @@ export default class XMPPManager extends EventEmitter<EventMap> {
 
     if (data.status === 'PENDING') {
       if (data.from === this.accountId) {
-        FriendsManager.cacheAccountNameAndAvatar(this.account, data.to);
+        Friends.cacheAccountNameAndAvatar(this.account, data.to);
         friends.outgoing.set(data.to, {
           accountId: data.to,
           mutual: 0,
@@ -454,7 +454,7 @@ export default class XMPPManager extends EventEmitter<EventMap> {
           created: data.timestamp
         });
       } else {
-        FriendsManager.cacheAccountNameAndAvatar(this.account, data.from);
+        Friends.cacheAccountNameAndAvatar(this.account, data.from);
         friends.incoming.set(data.from, {
           accountId: data.from,
           mutual: 0,
@@ -465,7 +465,7 @@ export default class XMPPManager extends EventEmitter<EventMap> {
     } else if (data.status === 'ACCEPTED') {
       const friendId = data.from === this.accountId ? data.to : data.from;
 
-      FriendsManager.cacheAccountNameAndAvatar(this.account, friendId);
+      Friends.cacheAccountNameAndAvatar(this.account, friendId);
       friends.incoming.delete(friendId);
       friends.outgoing.delete(friendId);
       friends.friends.set(friendId, {

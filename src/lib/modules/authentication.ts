@@ -5,20 +5,11 @@ import type {
   EpicExchangeCodeData,
   EpicExchangeCodeLoginData,
   EpicOAuthData,
-  EpicTokenType,
-  EpicVerifyAccessTokenData
+  EpicTokenType
 } from '$types/game/authorizations';
 import { type ClientCredentials, defaultClient } from '$lib/constants/clients';
 
 export default class Authentication {
-  static async verifyAccessToken(accessToken: string) {
-    return oauthService.get<EpicVerifyAccessTokenData>('verify', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }).json();
-  }
-
   static getAccessTokenUsingDeviceAuth(deviceAuthData: DeviceAuthData, tokenType: EpicTokenType = 'eg1') {
     return oauthService.post<EpicDeviceAuthLoginData>('token', {
       body: new URLSearchParams({

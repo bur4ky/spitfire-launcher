@@ -10,7 +10,6 @@ import { m } from '$lib/paraglide/messages';
 import { type Locale, setLocale } from '$lib/paraglide/runtime';
 import logger from '$lib/logger';
 import { accountStore, language, settingsStore } from '$lib/storage';
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import type { AccountData } from '$types/accounts';
 
 export function cn(...inputs: ClassValue[]) {
@@ -53,27 +52,6 @@ type HandleErrorOptions = {
 
 export function handleError({ error, message, toastId, account } = {} as HandleErrorOptions) {
   const accountId = typeof account === 'string' ? account : account?.accountId;
-
-  if (error instanceof EpicAPIError && account) {
-    const translate = get(t);
-    const accountName = typeof account === 'string'
-      ? accountStore.get().accounts.find((x) => x.accountId === account)?.displayName
-      : account.displayName;
-
-    if (error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials') {
-      logger.warn('Removing account due to invalid credentials', { accountId });
-      accountStore.remove(accountId!);
-      if (accountName) toast.error(translate('errors.loginExpired', { accountName }));
-      return;
-    }
-
-    if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required') {
-      logger.warn('Account requires EULA acceptance', { accountId });
-      if (accountName) toast.error(translate('errors.eulaRequired', { accountName }));
-      return;
-    }
-  }
-
   logger.error(message, { accountId, error });
 
   if (toastId !== false) {

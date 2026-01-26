@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DownloadManager from '$lib/managers/download.svelte.js';
+  import DownloadManager from '$lib/modules/download.svelte.js';
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { platform } from '@tauri-apps/plugin-os';
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';

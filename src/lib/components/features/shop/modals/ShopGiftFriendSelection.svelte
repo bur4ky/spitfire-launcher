@@ -6,7 +6,7 @@
   import { cn, t } from '$lib/utils';
   import { toast } from 'svelte-sonner';
   import type { SpitfireShopItem } from '$types/game/shop';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import type { AccountStoreData } from '$types/accounts';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { Button, buttonVariants } from '$components/ui/button';
@@ -33,7 +33,7 @@
     isSendingGifts = true;
 
     try {
-      const giftData = await MCPManager.giftCatalogEntry($activeAccount, item.offerId, selectedFriends, item.price.final);
+      const giftData = await MCP.giftCatalogEntry($activeAccount, item.offerId, selectedFriends, item.price.final);
       accountDataStore.update((accounts) => {
         const account = accounts[$activeAccount.accountId];
         account.remainingGifts = (account.remainingGifts || 0) - selectedFriends.length;

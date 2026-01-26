@@ -1,9 +1,9 @@
 import type { AccountData } from '$types/accounts';
 import { fulfillmentService } from '$lib/services/epic';
 import type { RedeemedCodeData } from '$types/game/fulfillment';
-import AuthSession from '$lib/epic/auth-session';
+import AuthSession from '$lib/modules/auth-session';
 
-export default class CodeManager {
+export default class Code {
   static redeem(account: AccountData, code: string) {
     code = encodeURIComponent(code.toUpperCase().replaceAll('-', '').replaceAll('_', '').trim());
 

@@ -1,6 +1,8 @@
-import Authentication from '$lib/epic/authentication';
-import DownloadManager from '$lib/managers/download.svelte.js';
+import Authentication from '$lib/modules/authentication';
+import DownloadManager from '$lib/modules/download.svelte.js';
 import LegendaryError from '$lib/exceptions/LegendaryError';
+import Tauri from '$lib/tauri';
+import AuthSession from '$lib/modules/auth-session';
 import { ownedApps } from '$lib/stores';
 import { t } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
@@ -20,7 +22,6 @@ import { dev } from '$app/environment';
 import { getChildLogger } from '$lib/logger';
 import { dataDirectory } from '$lib/storage/file-store';
 import { downloaderStore } from '$lib/storage';
-import Tauri from '$lib/tauri';
 
 const logger = getChildLogger('Legendary');
 export const configPath = await path.join(dataDirectory, dev ? 'legendary-dev' : 'legendary');
@@ -73,8 +74,8 @@ export default class Legendary {
   }
 
   static async login(account: AccountData) {
-    const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
-    const { code: exchange } = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+    const accessToken = await AuthSession.new(account).getAccessToken(true);
+    const { code: exchange } = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
 
     const data = await Legendary.execute<string>(['auth', '--token', exchange]);
     Legendary.caches.account = account.accountId;

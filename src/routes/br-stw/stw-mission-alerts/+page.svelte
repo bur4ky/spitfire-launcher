@@ -7,12 +7,12 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import AlertsOverviewItem from '$components/features/mission-alerts/AlertsOverviewItem.svelte';
   import AlertsSection from '$components/features/mission-alerts/AlertsSection.svelte';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import type { WorldParsedMission } from '$types/game/stw/world-info';
   import { worldInfoCache } from '$lib/stores';
   import { WorldPowerLevels, Theaters } from '$lib/constants/stw/world-info';
   import { isLegendaryOrMythicSurvivor, t } from '$lib/utils';
-  import WorldInfoManager from '$lib/managers/world-info';
+  import WorldInfo from '$lib/modules/world-info';
   import { onMount } from 'svelte';
   import { accountStore } from '$lib/storage';
 
@@ -109,7 +109,7 @@
 
   function refreshWorldInfo() {
     worldInfoCache.set(new Map());
-    WorldInfoManager.setCache();
+    WorldInfo.setCache();
   }
 
   function countMissionReward(missions: WorldParsedMission[] | undefined, idOrValidator: string | ((id: string) => boolean)) {
@@ -140,7 +140,7 @@
   $effect(() => {
     if (!$activeAccount || claimedMissionAlerts.has($activeAccount.accountId)) return;
 
-    MCPManager.queryProfile($activeAccount, 'campaign').then((queryProfile) => {
+    MCP.queryProfile($activeAccount, 'campaign').then((queryProfile) => {
       const attributes = queryProfile.profileChanges[0].profile.stats.attributes;
       const doneMissionAlerts = attributes.mission_alert_redemption_record?.claimData?.map((claimData) => claimData.missionAlertId) || [];
 

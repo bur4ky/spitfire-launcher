@@ -2,11 +2,11 @@
   import './layout.css';
   import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
   import Header from '$components/layout/header/Header.svelte';
-  import AvatarManager from '$lib/managers/avatar';
-  import LookupManager from '$lib/managers/lookup';
-  import DownloadManager from '$lib/managers/download.svelte';
+  import Avatar from '$lib/modules/avatar';
+  import Lookup from '$lib/modules/lookup';
+  import DownloadManager from '$lib/modules/download.svelte';
   import SystemTray from '$lib/system-tray';
-  import Legendary from '$lib/epic/legendary';
+  import Legendary from '$lib/modules/legendary';
   import { getVersion } from '@tauri-apps/api/app';
   import { listen } from '@tauri-apps/api/event';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
@@ -18,9 +18,9 @@
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import * as Dialog from '$components/ui/dialog';
   import * as Tooltip from '$components/ui/tooltip';
-  import WorldInfoManager from '$lib/managers/world-info';
+  import WorldInfo from '$lib/modules/world-info';
   import { ownedApps, runningAppIds } from '$lib/stores';
-  import AutoKickBase from '$lib/managers/autokick/base';
+  import AutoKickBase from '$lib/modules/autokick/base';
   import { handleError, t } from '$lib/utils';
   import { platform } from '@tauri-apps/plugin-os';
   import logger, { setLogLevel } from '$lib/logger';
@@ -53,7 +53,7 @@
     if (!account) return;
 
     const userAccounts = accountStore.get().accounts;
-    const accounts = await LookupManager.fetchByIds(account, userAccounts.map((account) => account.accountId));
+    const accounts = await Lookup.fetchByIds(account, userAccounts.map((account) => account.accountId));
     accountStore.set((current) => ({
       ...current,
       accounts: current.accounts.map((account) => ({
@@ -161,7 +161,7 @@
       setupDiscordRPC(),
       AutoKickBase.init(),
       DownloadManager.init(),
-      WorldInfoManager.setCache(),
+      WorldInfo.setCache(),
       checkForUpdates(),
       syncAccountNames(),
       autoUpdateApps(),
@@ -169,7 +169,7 @@
       // However, fetching per account allows invalid accounts to fail independently
       // and be detected and removed from the config.
       accountStore.get().accounts.map((x) =>
-        AvatarManager.fetchAvatars(x, [x.accountId])
+        Avatar.fetchAvatars(x, [x.accountId])
           .catch((error) => {
             handleError({
               error,

@@ -5,7 +5,8 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/epic/authentication';
+  import Authentication from '$lib/modules/authentication';
+  import AuthSession from '$lib/modules/auth-session';
   import { toast } from 'svelte-sonner';
   import { handleError, t } from '$lib/utils';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
@@ -16,8 +17,8 @@
 
     const account = accountStore.getActive()!;
     try {
-      const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
-      const { code } = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+      const accessToken = await AuthSession.new(account).getAccessToken(true);
+      const { code } = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
 
       await writeText(code);
       toast.success($t('exchangeCode.generated'));

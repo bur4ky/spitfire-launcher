@@ -1,4 +1,4 @@
-import MCPManager from '$lib/managers/mcp';
+import MCP from '$lib/modules/mcp';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/accounts';
 import { settingsStore } from '$lib/storage';
@@ -29,7 +29,7 @@ export default async function transferBuildingMaterials(account: AccountData, sk
     'WorldItem:metalitemdata': { total: 0, items: [] }
   };
 
-  const storageProfile = await MCPManager.queryProfile(account, 'outpost0');
+  const storageProfile = await MCP.queryProfile(account, 'outpost0');
   const profile = storageProfile.profileChanges[0].profile;
   const materialIds = Object.keys(materials);
   const ownedMaterials = Object.entries(profile.items).filter(([, item]) => materialIds.includes(item.templateId));
@@ -48,7 +48,7 @@ export default async function transferBuildingMaterials(account: AccountData, sk
     });
   }
 
-  return MCPManager.compose(account, 'StorageTransfer', 'theater0', {
+  return MCP.compose(account, 'StorageTransfer', 'theater0', {
     transferOperations: Object.values(materials).flatMap((material) => material.items).filter((x) => x.quantity > 0)
   });
 }

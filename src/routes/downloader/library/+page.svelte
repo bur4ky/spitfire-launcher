@@ -7,8 +7,8 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import { Input } from '$components/ui/input';
   import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/epic/legendary';
-  import DownloadManager from '$lib/managers/download.svelte';
+  import Legendary from '$lib/modules/legendary';
+  import DownloadManager from '$lib/modules/download.svelte';
   import { handleError, t } from '$lib/utils';
   import type { AppFilterValue } from '$types/legendary';
   import Fuse from 'fuse.js';

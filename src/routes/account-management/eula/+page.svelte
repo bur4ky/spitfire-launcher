@@ -11,29 +11,18 @@
 </script>
 
 <script lang="ts">
-  import { page } from '$app/state';
+  import AuthSession from '$lib/modules/auth-session';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
   import { ExternalLink } from '$components/ui/external-link';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import EULAManager from '$lib/managers/eula';
+  import EULA from '$lib/modules/eula';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { toast } from 'svelte-sonner';
-  import Authentication from '$lib/epic/authentication';
+  import Authentication from '$lib/modules/authentication';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { getAccountsFromSelection, handleError, t } from '$lib/utils';
-
-  type PageState = {
-    selectedAccounts?: string[];
-  };
-
-  $effect(() => {
-    const pageState = page.state as PageState;
-    if (pageState.selectedAccounts?.length) {
-      selectedAccounts = pageState.selectedAccounts;
-    }
-  });
 
   async function checkEULA(event: SubmitEvent) {
     event.preventDefault();
@@ -48,8 +37,8 @@
 
       try {
         // TODO: Shortest way I could find. Might change later
-        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
-        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+        const accessToken = await AuthSession.new(account).getAccessToken();
+        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
         const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(exchangeData.code, launcherAppClient2);
         await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
       } catch (error) {
@@ -61,8 +50,8 @@
           status.data.acceptLink = error.continuationUrl;
         }
       } finally {
-        const gameEULAData = await EULAManager.check(account).catch(() => null);
-        if (gameEULAData) await EULAManager.accept(account, gameEULAData.version).catch(() => null);
+        const gameEULAData = await EULA.check(account).catch(() => null);
+        if (gameEULAData) await EULA.accept(account, gameEULAData.version).catch(() => null);
       }
     }));
 

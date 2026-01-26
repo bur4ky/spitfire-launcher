@@ -33,7 +33,7 @@
   import STWDetails from '$components/features/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
   import AlertsSectionAccordion from '$components/features/mission-alerts/AlertsSectionAccordion.svelte';
-  import MatchmakingManager from '$lib/managers/matchmaking';
+  import Matchmaking from '$lib/modules/matchmaking';
   import { avatarCache, worldInfoCache } from '$lib/stores';
   import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';
   import { Button } from '$components/ui/button';
@@ -42,11 +42,11 @@
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import SearchIcon from '@lucide/svelte/icons/search';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import LookupManager from '$lib/managers/lookup';
+  import Lookup from '$lib/modules/lookup';
   import { toast } from 'svelte-sonner';
   import { handleError, t } from '$lib/utils';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
-  import MCPManager from '$lib/managers/mcp';
+  import MCP from '$lib/modules/mcp';
   import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
   import logger from '$lib/logger';
   import { accountStore, language } from '$lib/storage';
@@ -81,7 +81,7 @@
     resetData();
 
     try {
-      const internalLookupData = await LookupManager.fetchByNameOrId($activeAccount, searchQuery);
+      const internalLookupData = await Lookup.fetchByNameOrId($activeAccount, searchQuery);
 
       const [stwDataResult, matchmakingDataResult] = await Promise.allSettled([
         getSTWData(internalLookupData.accountId),
@@ -106,7 +106,7 @@
   }
 
   async function getSTWData(accountId: string) {
-    const queryPublicProfile = await MCPManager.queryPublicProfile($activeAccount, accountId, 'campaign');
+    const queryPublicProfile = await MCP.queryPublicProfile($activeAccount, accountId, 'campaign');
     const profile = queryPublicProfile.profileChanges[0].profile;
     const items = Object.entries(profile.items);
     const attributes = profile.stats.attributes;
@@ -211,7 +211,7 @@
   }
 
   async function getMatchmakingData(accountId: string) {
-    const [matchmakingData] = await MatchmakingManager.findPlayer($activeAccount, accountId);
+    const [matchmakingData] = await Matchmaking.findPlayer($activeAccount, accountId);
     if (!matchmakingData) return;
 
     const zoneData = matchmakingData.attributes.ZONEINSTANCEID_s && JSON.parse(matchmakingData.attributes.ZONEINSTANCEID_s);
@@ -229,7 +229,7 @@
       };
     }
 
-    const playerNames = await LookupManager.fetchByIds($activeAccount, matchmakingData.publicPlayers);
+    const playerNames = await Lookup.fetchByIds($activeAccount, matchmakingData.publicPlayers);
     missionPlayers = playerNames.map((player) => ({
       accountId: player.id,
       name: player.displayName
