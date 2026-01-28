@@ -165,7 +165,7 @@
   }
 
   async function leaveParty(claimOnly = false, accountId?: string) {
-    const selectedAccounts = accountId 
+    const selectedAccounts = accountId
       ? [accountId]
       : claimOnly ? claimRewardsPartySelectedAccounts : leavePartySelectedAccounts;
 
@@ -306,7 +306,11 @@
     try {
       await Friends.addFriend($activeAccount, memberId);
     } catch (error) {
-      handleError({ error, message: $t('partyManagement.partyMembers.failedToSendFriendRequest'), account: $activeAccount });
+      handleError({
+        error,
+        message: $t('partyManagement.partyMembers.failedToSendFriendRequest'),
+        account: $activeAccount
+      });
     } finally {
       isAddingFriend = false;
     }
@@ -451,7 +455,8 @@
           {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
           {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
           {@const accountFriends = friendsStore.get($activeAccount.accountId)}
-          {@const canAddFriend = !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
+          {@const
+            canAddFriend = !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
 
           <!-- Maybe this wasn't a good idea -->
           <MemberCard

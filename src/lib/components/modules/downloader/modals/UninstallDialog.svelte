@@ -1,10 +1,10 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
   import { Button, buttonVariants } from '$components/ui/button';
-  import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/modules/legendary';
-  import { cn, handleError } from '$lib/utils';
+  import * as Dialog from '$components/ui/dialog';
   import { t } from '$lib/i18n';
+  import Legendary from '$lib/modules/legendary';
+  import { ownedApps } from '$lib/stores';
+  import { cn, handleError } from '$lib/utils';
   import { toast } from 'svelte-sonner';
 
   type Props = {

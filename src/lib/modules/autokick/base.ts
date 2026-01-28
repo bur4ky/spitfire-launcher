@@ -1,8 +1,8 @@
-import { SvelteMap } from 'svelte/reactivity';
 import AutoKickManager from '$lib/modules/autokick/manager';
+import { accountStore, automationStore } from '$lib/storage';
 import type { AccountData } from '$types/account';
 import type { AutomationSetting } from '$types/settings';
-import { accountStore, automationStore } from '$lib/storage';
+import { SvelteMap } from 'svelte/reactivity';
 
 export type AutomationAccount = {
   status: 'LOADING' | 'ACTIVE' | 'INVALID_CREDENTIALS' | 'DISCONNECTED';

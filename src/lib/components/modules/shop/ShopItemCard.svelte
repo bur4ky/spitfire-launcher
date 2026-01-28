@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { calculateDiscountedShopPrice } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import type { SpitfireShopItem } from '$types/game/shop';
   import { ItemColors } from '$lib/constants/item-colors';
+  import { language, t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
   import { ownedItemsStore } from '$lib/stores';
+  import { calculateDiscountedShopPrice } from '$lib/utils';
+  import type { SpitfireShopItem } from '$types/game/shop';
   import CheckIcon from '@lucide/svelte/icons/check';
   import { derived as jsDerived } from 'svelte/store';
-  import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
 
   type ItemCardProps = {
     item: SpitfireShopItem;
@@ -66,7 +65,7 @@
 
     <div class="relative flex items-center justify-start pl-6">
       {#if isItemOwned}
-        <CheckIcon class="absolute left-0 top-1/2 -translate-y-1/2 size-5 text-green-500"/>
+        <CheckIcon class="absolute left-0 top-1/2 -translate-y-1/2 size-5 text-green-500" />
       {:else}
         <img
           class="absolute left-0 top-1/2 -translate-y-1/2 size-5"

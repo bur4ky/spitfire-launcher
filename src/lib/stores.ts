@@ -1,11 +1,16 @@
-import type { BlockedAccountData, FriendData, IncomingFriendRequestData, OutgoingFriendRequestData } from '$types/game/friends';
+import type { AccountCacheData } from '$types/account';
+import type {
+  BlockedAccountData,
+  FriendData,
+  IncomingFriendRequestData,
+  OutgoingFriendRequestData
+} from '$types/game/friends';
 import type { PartyData } from '$types/game/party';
+import type { SpitfireShop } from '$types/game/shop';
+import type { ParsedWorldInfo } from '$types/game/stw/world-info';
 import type { ParsedApp } from '$types/legendary';
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
-import type { AccountCacheData } from '$types/account';
-import type { ParsedWorldInfo } from '$types/game/stw/world-info';
-import type { SpitfireShop } from '$types/game/shop';
 
 export const runningAppIds = new SvelteSet<string>();
 export const ownedItemsStore = writable<Record<string, Set<string>>>({});

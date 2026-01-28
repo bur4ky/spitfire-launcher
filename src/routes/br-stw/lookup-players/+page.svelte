@@ -91,12 +91,18 @@
       ]);
 
       if (stwDataResult.status === 'rejected') {
-        logger.warn('Failed to fetch STW data', { accountId: internalLookupData.accountId, error: stwDataResult.reason });
+        logger.warn('Failed to fetch STW data', {
+          accountId: internalLookupData.accountId,
+          error: stwDataResult.reason
+        });
         toast.error($t('lookupPlayers.stwStatsPrivate'));
       }
 
       if (matchmakingDataResult.status === 'rejected') {
-        logger.warn('Failed to fetch Matchmaking data', { accountId: internalLookupData.accountId, error: matchmakingDataResult.reason });
+        logger.warn('Failed to fetch Matchmaking data', {
+          accountId: internalLookupData.accountId,
+          error: matchmakingDataResult.reason
+        });
       }
 
       lookupData = internalLookupData;
@@ -285,9 +291,9 @@
       type="submit"
     >
       {#if isLoading}
-        <LoaderCircleIcon class="size-5 animate-spin"/>
+        <LoaderCircleIcon class="size-5 animate-spin" />
       {:else}
-        <SearchIcon class="size-5"/>
+        <SearchIcon class="size-5" />
       {/if}
     </Button>
   </form>
@@ -323,7 +329,10 @@
     <div class="space-y-4 text-sm relative border p-5 rounded-md min-w-72 sm:min-w-80 xs:min-w-96 bg-card">
       <div class="flex gap-4 items-start">
         {#if avatarCache.has(lookupData.accountId)}
-          <img class="hidden xs:block size-20 rounded-md self-center" alt={lookupData.displayName} src={avatarCache.get(lookupData.accountId)}/>
+          <img
+            class="hidden xs:block size-20 rounded-md self-center" alt={lookupData.displayName}
+            src={avatarCache.get(lookupData.accountId)}
+          />
         {/if}
 
         <div class="flex-1">
@@ -334,7 +343,7 @@
                   <ExternalLink class="flex items-center gap-1" href={href}>
                     <span class="text-muted-foreground">{name}:</span>
                     <span>{value}</span>
-                    <ExternalLinkIcon class="size-4 text-muted-foreground"/>
+                    <ExternalLinkIcon class="size-4 text-muted-foreground" />
                   </ExternalLink>
                 {:else}
                   <span class="text-muted-foreground">{name}:</span>
@@ -346,10 +355,10 @@
         </div>
       </div>
 
-      <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers}/>
+      <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers} />
 
       {#if stwData && stwData?.claimedMissionAlertIds.size > 0 && claimedMissionAlerts && claimedMissionAlerts.length}
-        <Separator orientation="horizontal"/>
+        <Separator orientation="horizontal" />
 
         <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.claimedAlerts.title')}</h3>
 
@@ -361,11 +370,11 @@
       {/if}
 
       {#if stwData && dailyQuests.length}
-        <Separator orientation="horizontal"/>
+        <Separator orientation="horizontal" />
 
         <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.dailyQuests.title')}</h3>
 
-        <DailyQuestAccordion {dailyQuests}/>
+        <DailyQuestAccordion {dailyQuests} />
       {/if}
     </div>
   {/if}

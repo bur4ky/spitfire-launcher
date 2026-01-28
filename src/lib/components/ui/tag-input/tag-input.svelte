@@ -49,7 +49,7 @@
           onclick={(e) => removeItem(i, e)}
           type="button"
         >
-          <XIcon class="size-4"/>
+          <XIcon class="size-4" />
         </button>
       </div>
     {/each}

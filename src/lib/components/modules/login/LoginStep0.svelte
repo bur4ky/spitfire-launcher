@@ -50,7 +50,7 @@
         onclick={() => selectLoginMethod(method.id)}
       >
         <span class="mb-3 rounded-full bg-muted p-3">
-          <Icon class="size-8 text-muted-foreground"/>
+          <Icon class="size-8 text-muted-foreground" />
         </span>
 
         <span class="mb-1 font-medium">

@@ -169,7 +169,7 @@
     </div>
   </div>
 
-  <Separator orientation="horizontal"/>
+  <Separator orientation="horizontal" />
 
   <div class="flex justify-end">
     <Button
@@ -183,10 +183,10 @@
       variant={taxiManager.active ? 'destructive' : 'default'}
     >
       {#if taxiManager.active}
-        <XIcon class="size-5"/>
+        <XIcon class="size-5" />
         {$t('taxiService.stop')}
       {:else}
-        <CarTaxiFrontIcon class="size-5"/>
+        <CarTaxiFrontIcon class="size-5" />
         {$t('taxiService.start')}
       {/if}
     </Button>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { WorldParsedMission } from '$types/game/stw/world-info';
   import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
-  import { worldInfoCache } from '$lib/stores';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
+  import { worldInfoCache } from '$lib/stores';
+  import type { WorldParsedMission } from '$types/game/stw/world-info';
 
   type Props = {
     title: string;

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { t } from '$lib/i18n';
-  import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
   import { accountStore } from '$lib/storage';
+  import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
 
   const activeAccount = accountStore.getActiveStore();
 </script>
 
 <div class="flex flex-col items-center justify-center text-center mt-12">
   <div class="mb-4 rounded-full bg-muted p-4">
-    <CheckCircleIcon class="size-10 text-muted-foreground"/>
+    <CheckCircleIcon class="size-10 text-muted-foreground" />
   </div>
 
   <h3 class="mb-2 text-xl font-medium">

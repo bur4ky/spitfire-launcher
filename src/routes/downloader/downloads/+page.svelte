@@ -1,24 +1,23 @@
 <script lang="ts">
-  import CancelDownloadDialog from '$components/modules/downloader/modals/CancelDownloadDialog.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
+  import CancelDownloadDialog from '$components/modules/downloader/modals/CancelDownloadDialog.svelte';
   import { Button } from '$components/ui/button';
+  import { Progress } from '$components/ui/progress';
   import * as Tooltip from '$components/ui/tooltip';
+  import { language, t } from '$lib/i18n';
+  import logger from '$lib/logger';
   import DownloadManager, { type DownloadProgress } from '$lib/modules/download.svelte';
   import { bytesToSize, formatRemainingDuration } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { Progress } from '$components/ui/progress';
-  import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
+  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+  import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
   import ClockIcon from '@lucide/svelte/icons/clock';
   import DownloadIcon from '@lucide/svelte/icons/download';
   import HardDriveIcon from '@lucide/svelte/icons/hard-drive';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import PauseIcon from '@lucide/svelte/icons/pause';
   import PlayIcon from '@lucide/svelte/icons/play';
+  import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
   import XIcon from '@lucide/svelte/icons/x';
-  import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import logger from '$lib/logger';
-  import { language } from '$lib/i18n';
 
   let showCancelDialog = $state(false);
   let isCancelling = $state(false);
@@ -75,22 +74,28 @@
         <div class="flex items-center justify-between">
           <h3 class="font-semibold text-lg">{currentDownload.item.title}</h3>
           <div class="flex items-center gap-2">
-            <Button class="p-2" disabled={isCancelling || isTogglingPause} onclick={togglePause} size="sm" variant="outline">
+            <Button
+              class="p-2" disabled={isCancelling || isTogglingPause} onclick={togglePause} size="sm"
+              variant="outline"
+            >
               {#if isTogglingPause}
-                <LoaderCircleIcon class="size-4 animate-spin"/>
+                <LoaderCircleIcon class="size-4 animate-spin" />
               {:else}
                 {#if currentDownload.status === 'paused'}
-                  <PlayIcon class="size-4"/>
+                  <PlayIcon class="size-4" />
                 {:else}
-                  <PauseIcon class="size-4"/>
+                  <PauseIcon class="size-4" />
                 {/if}
               {/if}
             </Button>
-            <Button class="p-2" disabled={isCancelling || isTogglingPause} onclick={() => showCancelDialog = true} size="sm" variant="outline">
+            <Button
+              class="p-2" disabled={isCancelling || isTogglingPause} onclick={() => showCancelDialog = true}
+              size="sm" variant="outline"
+            >
               {#if isCancelling}
-                <LoaderCircleIcon class="size-4 animate-spin"/>
+                <LoaderCircleIcon class="size-4 animate-spin" />
               {:else}
-                <XIcon class="size-4"/>
+                <XIcon class="size-4" />
               {/if}
             </Button>
           </div>
@@ -103,16 +108,16 @@
             <span>{(progress.percent || 0).toFixed(2)}%</span>
           </div>
 
-          <Progress class="bg-accent" value={progress.percent || 0}/>
+          <Progress class="bg-accent" value={progress.percent || 0} />
 
           <div class="flex items-center justify-between text-sm text-muted-foreground">
             <div class="flex items-center gap-2">
               <span class="flex items-center gap-1">
-                <DownloadIcon class="size-4"/>
+                <DownloadIcon class="size-4" />
                 {bytesToSize(progress.downloadSpeed, 1)}ps
               </span>
               <span class="flex items-center gap-1 border-l pl-2">
-                <HardDriveIcon class="size-4"/>
+                <HardDriveIcon class="size-4" />
                 {bytesToSize(progress.diskWriteSpeed, 1)}ps
               </span>
             </div>
@@ -121,7 +126,7 @@
               {#if currentDownload.status === 'paused'}
                 Paused
               {:else}
-                <ClockIcon class="size-4"/>
+                <ClockIcon class="size-4" />
                 {formatRemainingDuration(progress.etaMs)}
               {/if}
             </span>
@@ -162,7 +167,7 @@
                 size="sm"
                 variant="outline"
               >
-                <ChevronUpIcon class="size-4"/>
+                <ChevronUpIcon class="size-4" />
               </Button>
 
               <Button
@@ -172,7 +177,7 @@
                 size="sm"
                 variant="outline"
               >
-                <ChevronDownIcon class="size-4"/>
+                <ChevronDownIcon class="size-4" />
               </Button>
 
               <Button
@@ -181,7 +186,7 @@
                 size="sm"
                 variant="outline"
               >
-                <XIcon class="size-4"/>
+                <XIcon class="size-4" />
               </Button>
             </div>
           </div>
@@ -213,7 +218,7 @@
                 {#if status === 'failed'}
                   <Tooltip.Root>
                     <Tooltip.Trigger>
-                      <TriangleAlertIcon class="size-4 text-red-500"/>
+                      <TriangleAlertIcon class="size-4 text-red-500" />
                     </Tooltip.Trigger>
 
                     <Tooltip.Content>
@@ -227,7 +232,7 @@
 
             <div class="flex items-center gap-2">
               <Button onclick={() => DownloadManager.removeFromQueue(item.id)} variant="outline">
-                <XIcon class="size-4"/>
+                <XIcon class="size-4" />
               </Button>
             </div>
           </div>

@@ -98,7 +98,7 @@
       onclick={generateDeviceAuth}
     />
 
-    <Separator class="h-10" orientation="vertical"/>
+    <Separator class="h-10" orientation="vertical" />
 
     <RefreshCwIcon
       class="ml-1.5 size-8 cursor-pointer {isFetching ? 'animate-spin opacity-50 !cursor-not-allowed' : ''}"
@@ -114,11 +114,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 place-items-center gap-4">
       {#if !isFetching}
         {#each deviceAuths as auth (auth.deviceId)}
-          <DeviceAuthCard {allDeviceAuths} {auth}/>
+          <DeviceAuthCard {allDeviceAuths} {auth} />
         {/each}
       {:else}
-        <SkeletonDeviceAuthCard/>
-        <SkeletonDeviceAuthCard/>
+        <SkeletonDeviceAuthCard />
+        <SkeletonDeviceAuthCard />
       {/if}
     </div>
   {/if}

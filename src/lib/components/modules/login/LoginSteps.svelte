@@ -33,7 +33,7 @@
 
         <span
           class="absolute top-10 w-max max-w-[120px] text-center text-xs"
-          class:text-foreground={index <= currentStep} 
+          class:text-foreground={index <= currentStep}
           class:text-muted-foreground={!(index <= currentStep)}
         >
           {step}

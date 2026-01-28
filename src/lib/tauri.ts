@@ -1,6 +1,6 @@
+import type { LegendaryLaunchData } from '$types/legendary';
 import { invoke } from '@tauri-apps/api/core';
 import { type } from '@tauri-apps/plugin-os';
-import type { LegendaryLaunchData } from '$types/legendary';
 
 export type GetDiskSpaceOptions = {
   dir: string;

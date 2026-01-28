@@ -1,5 +1,5 @@
-import ky from 'ky';
 import { fetch } from '@tauri-apps/plugin-http';
+import ky from 'ky';
 
 // Used to avoid CORS issues
 export default ky.create({

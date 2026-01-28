@@ -1,3 +1,4 @@
+import { type ClientCredentials, defaultClient } from '$lib/constants/clients';
 import { oauthService } from '$lib/services/epic';
 import type {
   DeviceAuthData,
@@ -7,7 +8,6 @@ import type {
   EpicOAuthData,
   EpicTokenType
 } from '$types/game/authorizations';
-import { type ClientCredentials, defaultClient } from '$lib/constants/clients';
 
 export default class Authentication {
   static getAccessTokenUsingDeviceAuth(deviceAuthData: DeviceAuthData, tokenType: EpicTokenType = 'eg1') {

@@ -1,17 +1,16 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import type { SpitfireShopItem } from '$types/game/shop';
-  import { toast } from 'svelte-sonner';
-  import { accountCacheStore, ownedItemsStore } from '$lib/stores';
-  import MCP from '$lib/modules/mcp';
-  import { calculateDiscountedShopPrice, cn } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { derived as jsDerived } from 'svelte/store';
   import { Button, buttonVariants } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
+  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { language, t } from '$lib/i18n';
+  import MCP from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
+  import { accountCacheStore, ownedItemsStore } from '$lib/stores';
+  import { calculateDiscountedShopPrice, cn } from '$lib/utils';
+  import type { SpitfireShopItem } from '$types/game/shop';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { toast } from 'svelte-sonner';
+  import { derived as jsDerived } from 'svelte/store';
 
   type Props = {
     item: SpitfireShopItem;
@@ -112,7 +111,7 @@
 
       <Button class="flex-1" disabled={isPurchasing} onclick={purchaseItem}>
         {#if isPurchasing}
-          <LoaderCircleIcon class="size-5 animate-spin mr-2"/>
+          <LoaderCircleIcon class="size-5 animate-spin mr-2" />
           {$t('itemShop.purchasing')}
         {:else}
           {$t('confirm')}

@@ -1,4 +1,12 @@
-import type { ParsedWorldInfo, WorldInfoData, WorldInfoMission, WorldInfoMissionAlert, WorldInfoTheater, WorldParsedMission } from '$types/game/stw/world-info';
+import {
+  ingredients,
+  RarityNames,
+  RarityTypes,
+  resources,
+  survivors,
+  survivorsMythicLeads,
+  traps
+} from '$lib/constants/stw/resources';
 import {
   GroupZones,
   Theaters,
@@ -11,12 +19,19 @@ import {
   WorldStormKingZones,
   ZoneCategories
 } from '$lib/constants/stw/world-info';
-import type { ParsedModifierData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
-import { ingredients, RarityNames, RarityTypes, resources, survivors, survivorsMythicLeads, traps } from '$lib/constants/stw/resources';
-import { baseGameService } from '$lib/services/epic';
 import Authentication from '$lib/modules/authentication';
-import { get } from 'svelte/store';
+import { baseGameService } from '$lib/services/epic';
 import { worldInfoCache } from '$lib/stores';
+import type { ParsedModifierData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
+import type {
+  ParsedWorldInfo,
+  WorldInfoData,
+  WorldInfoMission,
+  WorldInfoMissionAlert,
+  WorldInfoTheater,
+  WorldParsedMission
+} from '$types/game/stw/world-info';
+import { get } from 'svelte/store';
 
 type World = keyof typeof Theaters;
 
@@ -170,11 +185,11 @@ export default class WorldInfo {
 
             if (
               WorldInfo.isEvolutionMaterial(parsedResource.itemType) &&
-							WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
+              WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
             ) {
               isHard = !(
                 parsedResource.itemType.endsWith('_veryhigh') ||
-								parsedResource.itemType.endsWith('_extreme')
+                parsedResource.itemType.endsWith('_extreme')
               );
             }
 
@@ -222,8 +237,8 @@ export default class WorldInfo {
         const missionBAlert = b.alert ? 1 : 0;
 
         return b.powerLevel - a.powerLevel
-					|| missionBGroup - missionAGroup
-					|| missionBAlert - missionAAlert;
+          || missionBGroup - missionAGroup
+          || missionBAlert - missionAAlert;
       }));
 
       worldInfo.set(theaterId as World, parsedMissions);
@@ -256,11 +271,11 @@ export default class WorldInfo {
 
     return {
       imageUrl:
-				key ?
-				  isGroup && GroupZones.includes(key as keyof typeof ZoneCategories)
-				    ? `/world/${key}-group.png`
-				    : `/world/${key}.png`
-				  : '/world/quest.png',
+        key ?
+          isGroup && GroupZones.includes(key as keyof typeof ZoneCategories)
+            ? `/world/${key}-group.png`
+            : `/world/${key}.png`
+          : '/world/quest.png',
       type: key as keyof typeof ZoneCategories | null
     };
   }
@@ -268,9 +283,9 @@ export default class WorldInfo {
   private static isEvolutionMaterial(key: string) {
     return (
       key.includes('reagent_c_t01') ||
-			key.includes('reagent_c_t02') ||
-			key.includes('reagent_c_t03') ||
-			key.includes('reagent_c_t04')
+      key.includes('reagent_c_t02') ||
+      key.includes('reagent_c_t03') ||
+      key.includes('reagent_c_t04')
     );
   }
 
@@ -301,9 +316,9 @@ export default class WorldInfo {
       const [resourceId, resourceData] = resource;
       const isEventCurrency =
         (newKey !== 'eventcurrency_scaling' &&
-					newKey !== 'eventcurrency_founders' &&
-					newKey.startsWith('eventcurrency_')) ||
-				newKey === 'campaign_event_currency';
+          newKey !== 'eventcurrency_founders' &&
+          newKey.startsWith('eventcurrency_')) ||
+        newKey === 'campaign_event_currency';
 
       const unknownTickets = [
         'campaign_event_currency',

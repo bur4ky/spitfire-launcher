@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Progress as ProgressPrimitive } from "bits-ui";
-  import { cn, type WithoutChildrenOrChild } from "$lib/utils";
+  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
+  import { Progress as ProgressPrimitive } from 'bits-ui';
 
   let {
     ref = $bindable(null),
@@ -12,12 +12,12 @@
 </script>
 
 <ProgressPrimitive.Root
+  {...restProps}
   class={cn("bg-primary/20 relative h-2 w-full overflow-hidden rounded-full", className)}
   data-slot="progress"
   {max}
   {value}
   bind:ref
-  {...restProps}
 >
   <div
     style="transform: translateX(-{100 - (100 * (value || 0)) / (max || 1)}%)"

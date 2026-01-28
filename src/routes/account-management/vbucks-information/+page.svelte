@@ -28,7 +28,11 @@
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const state: VBucksState = { accountId: account.accountId, displayName: account.displayName, data: { vbucksAmount: 0 } };
+      const state: VBucksState = {
+        accountId: account.accountId,
+        displayName: account.displayName,
+        data: { vbucksAmount: 0 }
+      };
       vbucksStates.push(state);
 
       try {

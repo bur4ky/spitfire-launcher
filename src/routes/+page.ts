@@ -1,6 +1,6 @@
-import { redirect } from '@sveltejs/kit';
-import { settingsStore } from '$lib/storage';
 import { SidebarCategories } from '$lib/constants/sidebar';
+import { settingsStore } from '$lib/storage';
+import { redirect } from '@sveltejs/kit';
 
 export async function load() {
   const startingPage = settingsStore.get().app?.startingPage;

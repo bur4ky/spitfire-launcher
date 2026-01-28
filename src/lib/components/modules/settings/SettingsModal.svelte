@@ -1,13 +1,13 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
-  import { Button } from '$components/ui/button';
-  import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
   import AppSettings from '$components/modules/settings/categories/AppSettings.svelte';
   import CustomizableMenu from '$components/modules/settings/categories/CustomizableMenu.svelte';
-  import { platform as getPlatform } from '@tauri-apps/plugin-os';
-  import SettingsIcon from '@lucide/svelte/icons/settings';
+  import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
   import { t } from '$lib/i18n';
   import { cn } from '$lib/utils';
+  import SettingsIcon from '@lucide/svelte/icons/settings';
+  import { platform as getPlatform } from '@tauri-apps/plugin-os';
   import type { Component } from 'svelte';
 
   const platform = getPlatform();
@@ -19,7 +19,11 @@
     ];
 
     if (platform === 'windows') {
-      categories.push({ id: 'downloaderSettings', name: $t('settings.tabs.downloaderSettings'), component: DownloaderSettings });
+      categories.push({
+        id: 'downloaderSettings',
+        name: $t('settings.tabs.downloaderSettings'),
+        component: DownloaderSettings
+      });
     }
 
     return categories;
@@ -31,7 +35,7 @@
 
 <Dialog.Root>
   <Dialog.Trigger class="p-2 rounded-md hover:bg-accent">
-    <SettingsIcon class="size-6"/>
+    <SettingsIcon class="size-6" />
   </Dialog.Trigger>
 
   <Dialog.Content class="!max-w-[calc(100%-2rem)] sm:!max-w-200 max-xs:w-full flex flex-col sm:flex-row">
@@ -56,7 +60,7 @@
       <div>
         {#each categories as category (category.id)}
           {#if activeTab === category.id}
-            <category.component/>
+            <category.component />
           {/if}
         {/each}
       </div>

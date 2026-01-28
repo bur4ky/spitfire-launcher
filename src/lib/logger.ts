@@ -1,5 +1,5 @@
-import { Logger } from 'tslog';
 import { dev } from '$app/environment';
+import { Logger } from 'tslog';
 
 export const levelMap = {
   silly: 0,

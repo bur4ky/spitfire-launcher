@@ -108,9 +108,9 @@
       type="submit"
     >
       {#if isSendingRequest}
-        <LoaderCircleIcon class="size-5 animate-spin"/>
+        <LoaderCircleIcon class="size-5 animate-spin" />
       {:else}
-        <UserPlusIcon class="size-5"/>
+        <UserPlusIcon class="size-5" />
       {/if}
     </Button>
   </form>
@@ -130,11 +130,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
         {#each Array(3) as _, index (index)}
-          <SkeletonFriendCard/>
+          <SkeletonFriendCard />
         {/each}
       </div>
     {:else}
-      <FriendsList listType={activeTab} bind:searchQuery/>
+      <FriendsList listType={activeTab} bind:searchQuery />
     {/if}
   </div>
 </PageContent>

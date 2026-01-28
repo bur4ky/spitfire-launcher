@@ -1,18 +1,17 @@
 <script lang="ts">
   import SettingItem from '$components/modules/settings/SettingItem.svelte';
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Switch } from '$components/ui/switch';
+  import { t } from '$lib/i18n';
   import DownloadManager from '$lib/modules/download.svelte.js';
   import Legendary from '$lib/modules/legendary';
-  import { t } from '$lib/i18n';
-  import { handleError } from '$lib/utils';
   import { downloaderSettingsSchema } from '$lib/schemas/settings';
-  import type { DownloaderSettings } from '$types/settings';
-  import { onMount, untrack } from 'svelte';
-  import { toast } from 'svelte-sonner';
-  import { tick } from 'svelte';
   import { accountStore, downloaderStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import type { DownloaderSettings } from '$types/settings';
+  import { onMount, tick, untrack } from 'svelte';
+  import { toast } from 'svelte-sonner';
 
   let loadingAccount = $state(true);
   let downloaderAccountId = $state<string>();
@@ -84,7 +83,7 @@
   onMount(async () => {
     downloaderAccountId = await Legendary.getAccount() || undefined;
     loadingAccount = false;
-    
+
     await tick();
     mounted = true;
   });

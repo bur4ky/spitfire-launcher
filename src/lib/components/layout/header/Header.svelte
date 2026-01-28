@@ -1,13 +1,13 @@
 <script lang="ts">
-  import DownloadManager from '$lib/modules/download.svelte.js';
-  import { getCurrentWindow } from '@tauri-apps/api/window';
-  import { platform } from '@tauri-apps/plugin-os';
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
-  import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
+  import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
+  import DownloadManager from '$lib/modules/download.svelte.js';
+  import { settingsStore } from '$lib/storage';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import XIcon from '@lucide/svelte/icons/x';
-  import { settingsStore } from '$lib/storage';
+  import { getCurrentWindow } from '@tauri-apps/api/window';
+  import { platform } from '@tauri-apps/plugin-os';
 
   const appWindow = getCurrentWindow();
   const currentPlatform = platform();
@@ -32,24 +32,24 @@
   class="{isMobile ? 'pt-6 h-22' : 'h-16'} bg-card border-b border-border flex items-center justify-between md:justify-end px-4 select-none sticky top-0 z-10"
   data-tauri-drag-region
 >
-  <SidebarBurger/>
+  <SidebarBurger />
 
   <div class="flex items-center gap-x-2">
     <div class="flex items-center gap-x-2">
       {#if currentPlatform === 'windows'}
-        <LaunchGame/>
+        <LaunchGame />
       {/if}
 
-      <SettingsModal/>
+      <SettingsModal />
     </div>
 
     {#if !isMobile}
       <div class="flex items-center space-x-2 max-sm:hidden">
         <button class="p-2 hover:bg-accent rounded transition-colors duration-200" onclick={minimizeOrHide}>
-          <MinusIcon/>
+          <MinusIcon />
         </button>
         <button class="p-2 hover:bg-red-500/80 hover:text-white rounded transition-colors duration-200" onclick={close}>
-          <XIcon/>
+          <XIcon />
         </button>
       </div>
     {/if}

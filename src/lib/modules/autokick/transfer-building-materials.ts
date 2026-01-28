@@ -1,7 +1,7 @@
 import MCP from '$lib/modules/mcp';
+import { settingsStore } from '$lib/storage';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/account';
-import { settingsStore } from '$lib/storage';
 
 type MCPStorageTransferItem = {
   itemId: string;

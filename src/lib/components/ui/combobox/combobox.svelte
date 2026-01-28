@@ -8,4 +8,4 @@
   }: ComboboxPrimitive.RootProps = $props();
 </script>
 
-<ComboboxPrimitive.Root bind:open bind:value={value as never} {...restProps} />
+<ComboboxPrimitive.Root {...restProps} bind:open bind:value={value as never} />

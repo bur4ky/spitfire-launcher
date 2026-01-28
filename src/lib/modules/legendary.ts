@@ -1,8 +1,11 @@
-import Authentication from '$lib/modules/authentication';
+import { dev } from '$app/environment';
 import LegendaryError from '$lib/exceptions/LegendaryError';
-import Tauri from '$lib/tauri';
+import { getChildLogger } from '$lib/logger';
 import AuthSession from '$lib/modules/auth-session';
+import Authentication from '$lib/modules/authentication';
+import { dataDirectory } from '$lib/storage/file-store';
 import { ownedApps } from '$lib/stores';
+import Tauri from '$lib/tauri';
 import type { AccountData } from '$types/account';
 import type { EpicOAuthData } from '$types/game/authorizations';
 import type {
@@ -15,9 +18,6 @@ import type {
 import { path } from '@tauri-apps/api';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import { get } from 'svelte/store';
-import { dev } from '$app/environment';
-import { getChildLogger } from '$lib/logger';
-import { dataDirectory } from '$lib/storage/file-store';
 
 const logger = getChildLogger('Legendary');
 export const configPath = await path.join(dataDirectory, dev ? 'legendary-dev' : 'legendary');

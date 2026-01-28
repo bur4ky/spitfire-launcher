@@ -80,7 +80,7 @@
 </script>
 
 {#if missionPlayers?.length || mission || loadoutData?.length}
-  <Separator orientation="horizontal"/>
+  <Separator orientation="horizontal" />
 
   <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.stwDetails.title')}</h3>
 
@@ -93,12 +93,15 @@
             <div class="flex items-center gap-1">
               <span class="mr-1">{member.name}</span>
 
-              <ExternalLink class="text-muted-foreground hover:text-primary transition" href="https://fortnitedb.com/profile/{member.accountId}">
-                <ExternalLinkIcon class="size-4"/>
+              <ExternalLink
+                class="text-muted-foreground hover:text-primary transition"
+                href="https://fortnitedb.com/profile/{member.accountId}"
+              >
+                <ExternalLinkIcon class="size-4" />
               </ExternalLink>
 
               {#if copiedIds.has(member.accountId)}
-                <CheckIcon class="size-4 text-muted-foreground"/>
+                <CheckIcon class="size-4 text-muted-foreground" />
               {:else}
                 <CopyIcon
                   class="size-4 cursor-pointer text-muted-foreground hover:text-primary transition"
@@ -117,7 +120,7 @@
           {#if mission.nameId && $ZoneNames[mission.nameId]}
             <div class="flex items-center gap-1">
               <span class="text-muted-foreground">{$t('lookupPlayers.stwDetails.missionInformation.name')}:</span>
-              <img class="size-5" alt={$ZoneNames[mission.nameId]} src={mission.icon}/>
+              <img class="size-5" alt={$ZoneNames[mission.nameId]} src={mission.icon} />
               <span>{$ZoneNames[mission.nameId]}{mission.powerLevel != null ? ` ⚡ ${mission.powerLevel}` : ''}</span>
             </div>
           {/if}
@@ -140,7 +143,7 @@
 
   {#if selectedHeroLoadout && loadoutData?.length}
     {#if missionPlayers?.length || mission}
-      <Separator orientation="horizontal"/>
+      <Separator orientation="horizontal" />
     {/if}
 
     <div class="flex flex-col items-center gap-4">
@@ -193,14 +196,14 @@
             <div class="flex flex-col items-center gap-y-1">
               <span class="text-lg font-semibold md:hidden">{$t('lookupPlayers.stwDetails.heroLoadout.gadgets')}</span>
               {#each selectedHeroLoadout.gadgets as gadget (gadget.name)}
-                <img class="size-10" alt={gadget.name} src={gadget.icon} title={gadget.name}/>
+                <img class="size-10" alt={gadget.name} src={gadget.icon} title={gadget.name} />
               {/each}
             </div>
           {/if}
         </div>
       {/if}
 
-      <Pagination count={loadoutData.length} perPage={1} bind:page={heroLoadoutPage}/>
+      <Pagination count={loadoutData.length} perPage={1} bind:page={heroLoadoutPage} />
     </div>
   {/if}
 {/if}

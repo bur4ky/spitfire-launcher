@@ -1,17 +1,17 @@
 <script lang="ts">
   import SettingItem from '$components/modules/settings/SettingItem.svelte';
+  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
   import { Input } from '$components/ui/input';
   import * as Select from '$components/ui/select';
   import { Switch } from '$components/ui/switch';
-  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { t, language } from '$lib/i18n';
+  import { language, t } from '$lib/i18n';
+  import type { Locale } from '$lib/paraglide/runtime';
   import { allSettingsSchema, appSettingsSchema } from '$lib/schemas/settings';
+  import { settingsStore } from '$lib/storage';
   import type { AllSettings } from '$types/settings';
   import { type } from '@tauri-apps/plugin-os';
   import { toast } from 'svelte-sonner';
-  import { settingsStore } from '$lib/storage';
-  import type { Locale } from '$lib/paraglide/runtime';
 
   const currentPlatform = type();
   const isDesktop = ['windows', 'macos', 'linux'].includes(currentPlatform);

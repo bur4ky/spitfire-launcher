@@ -1,9 +1,9 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
   import LoginStep0, { type LoginMethod } from '$components/modules/login/LoginStep0.svelte';
   import LoginStep1 from '$components/modules/login/LoginStep1.svelte';
   import LoginStep2 from '$components/modules/login/LoginStep2.svelte';
   import LoginSteps from '$components/modules/login/LoginSteps.svelte';
+  import * as Dialog from '$components/ui/dialog';
   import { t } from '$lib/i18n';
 
   type Props = {
@@ -56,11 +56,11 @@
 
 <Dialog.Root bind:open>
   <Dialog.Content class="flex flex-col">
-    <LoginSteps {currentStep} {steps}/>
+    <LoginSteps {currentStep} {steps} />
 
     <div class="mt-4 min-h-64">
       {#if currentStep === 0}
-        <LoginStep0 {selectLoginMethod}/>
+        <LoginStep0 {selectLoginMethod} />
       {:else if currentStep === 1}
         <LoginStep1
           {goToNextStep}
@@ -68,7 +68,7 @@
           selectedMethod={selectedMethod!}
         />
       {:else if currentStep === 2}
-        <LoginStep2/>
+        <LoginStep2 />
       {/if}
     </div>
   </Dialog.Content>

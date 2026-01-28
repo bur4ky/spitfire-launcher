@@ -1,19 +1,19 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { MediaQuery } from 'svelte/reactivity';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import PlusIcon from '@lucide/svelte/icons/plus';
-  import LogOutIcon from '@lucide/svelte/icons/log-out';
-  import CheckIcon from '@lucide/svelte/icons/check';
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import type { AccountData } from '$types/account';
-  import { avatarCache } from '$lib/stores';
-  import { toast } from 'svelte-sonner';
   import LoginModal from '$components/modules/login/LoginModal.svelte';
-  import { t } from '$lib/i18n';
-  import { cn, handleError } from '$lib/utils';
   import { Button } from '$components/ui/button';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
+  import { avatarCache } from '$lib/stores';
+  import { cn, handleError } from '$lib/utils';
+  import type { AccountData } from '$types/account';
+  import CheckIcon from '@lucide/svelte/icons/check';
+  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+  import LogOutIcon from '@lucide/svelte/icons/log-out';
+  import PlusIcon from '@lucide/svelte/icons/plus';
+  import { toast } from 'svelte-sonner';
+  import { MediaQuery } from 'svelte/reactivity';
 
   type PageState = {
     showLoginModal?: boolean;
@@ -129,7 +129,7 @@
             <span class="truncate">{account.displayName}</span>
 
             {#if $activeAccount.accountId === account.accountId}
-              <CheckIcon class="size-5 ml-auto"/>
+              <CheckIcon class="size-5 ml-auto" />
             {/if}
           </DropdownMenu.Item>
         {/each}
@@ -144,7 +144,7 @@
       ]}
     >
       <DropdownMenu.Item onclick={addNewAccount}>
-        <PlusIcon class="size-4 shrink-0"/>
+        <PlusIcon class="size-4 shrink-0" />
         <span class="truncate">{$t('accountManager.login')}</span>
       </DropdownMenu.Item>
 
@@ -153,7 +153,7 @@
           class="hover:bg-destructive hover:text-destructive-foreground"
           onclick={logout}
         >
-          <LogOutIcon class="size-4 shrink-0"/>
+          <LogOutIcon class="size-4 shrink-0" />
           <span class="truncate">{$t('accountManager.logout')}</span>
         </DropdownMenu.Item>
       {/if}
@@ -161,4 +161,4 @@
   </DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<LoginModal bind:open={showLoginModal}/>
+<LoginModal bind:open={showLoginModal} />

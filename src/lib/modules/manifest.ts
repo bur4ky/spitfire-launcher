@@ -1,7 +1,7 @@
-import { readDir, readTextFile } from '@tauri-apps/plugin-fs';
-import * as path from '@tauri-apps/api/path';
-import { platform } from '@tauri-apps/plugin-os';
 import logger from '$lib/logger';
+import * as path from '@tauri-apps/api/path';
+import { readDir, readTextFile } from '@tauri-apps/plugin-fs';
+import { platform } from '@tauri-apps/plugin-os';
 
 export type EpicManifestRaw = {
   DisplayName: string;

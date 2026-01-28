@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Switch as SwitchPrimitive } from "bits-ui";
-  import { cn, type WithoutChildrenOrChild } from "$lib/utils";
+  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
+  import { Switch as SwitchPrimitive } from 'bits-ui';
 
   let {
     ref = $bindable(null),
@@ -11,14 +11,14 @@
 </script>
 
 <SwitchPrimitive.Root
+  {...restProps}
   class={cn(
     "data-[state=checked]:bg-foreground data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
     className
   )}
   data-slot="switch"
-  bind:ref
   bind:checked
-  {...restProps}
+  bind:ref
 >
   <SwitchPrimitive.Thumb
     class={cn(

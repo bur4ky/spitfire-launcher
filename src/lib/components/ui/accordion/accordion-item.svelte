@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Accordion as AccordionPrimitive } from "bits-ui";
+  import { Accordion as AccordionPrimitive } from 'bits-ui';
 
   let {
     ref = $bindable(null),
@@ -8,7 +8,7 @@
 </script>
 
 <AccordionPrimitive.Item
+  {...restProps}
   data-slot="accordion-item"
   bind:ref
-  {...restProps}
 />

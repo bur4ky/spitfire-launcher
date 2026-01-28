@@ -1,3 +1,17 @@
+import dailyQuestsJson from '$lib/data/daily-quests.json';
+import gadgetsJson from '$lib/data/gadgets.json';
+import heroesJson from '$lib/data/heroes.json';
+import ingredientsJson from '$lib/data/ingredients.json';
+import missionsJson from '$lib/data/missions.json';
+
+import resourcesJson from '$lib/data/resources.json';
+import survivorsMythicLeadsJson from '$lib/data/survivors-mythic-leads.json';
+import survivorsJson from '$lib/data/survivors.json';
+import teamPerksJson from '$lib/data/team-perks.json';
+import theatersJson from '$lib/data/theaters.json';
+import trapsJson from '$lib/data/traps.json';
+import zoneThemesJson from '$lib/data/zone-themes.json';
+import { t } from '$lib/i18n';
 import type {
   DailyQuestData,
   GadgetData,
@@ -13,21 +27,7 @@ import type {
   TrapData,
   ZoneThemeData
 } from '$types/game/stw/resources';
-
-import resourcesJson from '$lib/data/resources.json';
-import survivorsJson from '$lib/data/survivors.json';
-import survivorsMythicLeadsJson from '$lib/data/survivors-mythic-leads.json';
-import ingredientsJson from '$lib/data/ingredients.json';
-import trapsJson from '$lib/data/traps.json';
-import dailyQuestsJson from '$lib/data/daily-quests.json';
-import teamPerksJson from '$lib/data/team-perks.json';
-import gadgetsJson from '$lib/data/gadgets.json';
-import heroesJson from '$lib/data/heroes.json';
-import zoneThemesJson from '$lib/data/zone-themes.json';
-import theatersJson from '$lib/data/theaters.json';
-import missionsJson from '$lib/data/missions.json';
 import { derived } from 'svelte/store';
-import { t } from '$lib/i18n';
 
 export const RarityTypes = Object.freeze({
   Common: 'c',

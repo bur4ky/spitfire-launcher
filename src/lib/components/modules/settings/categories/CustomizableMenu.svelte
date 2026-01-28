@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { Separator } from '$components/ui/separator';
   import { Label } from '$components/ui/label';
+  import { Separator } from '$components/ui/separator';
   import { Switch } from '$components/ui/switch';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { settingsStore } from '$lib/storage';
   import { t } from '$lib/i18n';
+  import { settingsStore } from '$lib/storage';
 
   function isItemEnabled(key: string) {
     const menu = ($settingsStore.customizableMenu) as Record<string, boolean>;
@@ -28,8 +28,8 @@
       <h2 class="text-lg font-semibold">
         {$t(`sidebar.categories.${category.key}`)}
       </h2>
-      
-      <Separator class="mb-2" orientation="horizontal"/>
+
+      <Separator class="mb-2" orientation="horizontal" />
 
       <div class="grid grid-cols-1 xs:grid-cols-2 gap-y-1 gap-x-3">
         {#each category.items as item (item.key)}

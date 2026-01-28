@@ -1,8 +1,8 @@
 <script lang="ts">
   import BaseModal from '$components/modules/docs/BaseModal.svelte';
-  import { avatarCache } from '$lib/stores';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
+  import { avatarCache } from '$lib/stores';
 
   const activeAccount = accountStore.getActiveStore();
 </script>

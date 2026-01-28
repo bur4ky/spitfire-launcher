@@ -2,13 +2,13 @@
   import { goto } from '$app/navigation';
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
-  import DeviceAuth from '$lib/modules/device-auth';
-  import { handleError } from '$lib/utils';
   import { language, t } from '$lib/i18n';
+  import DeviceAuth from '$lib/modules/device-auth';
+  import { accountStore, deviceAuthsStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
   import type { EpicDeviceAuthData } from '$types/game/authorizations';
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import { toast } from 'svelte-sonner';
-  import { accountStore, deviceAuthsStore } from '$lib/storage';
 
   type Props = {
     auth: EpicDeviceAuthData;
@@ -150,7 +150,7 @@
       size="sm"
       variant="destructive"
     >
-      <Trash2Icon class="size-5"/>
+      <Trash2Icon class="size-5" />
     </Button>
   </div>
 </div>

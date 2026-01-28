@@ -39,7 +39,11 @@
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const state: QuestState = { accountId: account.accountId, displayName: account.displayName, data: { hasFounder: false, quests: [] } };
+      const state: QuestState = {
+        accountId: account.accountId,
+        displayName: account.displayName,
+        data: { hasFounder: false, quests: [] }
+      };
 
       try {
         const campaignProfile = await MCP.clientQuestLogin(account, 'campaign');
@@ -163,7 +167,7 @@
                     size="sm"
                     variant="outline"
                   >
-                    <RefreshCwIcon class={rerollingQuestId === quest.id ? 'animate-spin': ''}/>
+                    <RefreshCwIcon class={rerollingQuestId === quest.id ? 'animate-spin': ''} />
                   </Button>
                 {/if}
               </div>
@@ -172,7 +176,7 @@
                 {#each rewards as reward (reward.name)}
                   {#if reward.amount > 0}
                     <div class="flex items-center gap-2 bg-accent/50 p-2 rounded">
-                      <img class="size-6" alt={reward.name} src={reward.icon}/>
+                      <img class="size-6" alt={reward.name} src={reward.icon} />
                       <span class="font-medium">{reward.amount.toLocaleString($language)}</span>
                     </div>
                   {/if}

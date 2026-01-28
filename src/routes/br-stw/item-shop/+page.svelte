@@ -112,7 +112,7 @@
         return accounts;
       });
     } else {
-      handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false })
+      handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
     }
 
     if (commonCore.status === 'fulfilled') {
@@ -120,7 +120,12 @@
       accountData.vbucks = calculateVbucks(commonCore.value);
       accountData.remainingGifts = profile.stats.attributes.allowed_to_send_gifts ? 5 : 0;
     } else {
-      handleError({ error: commonCore.reason, message: 'Failed to fetch Common Core profile', account, toastId: false });
+      handleError({
+        error: commonCore.reason,
+        message: 'Failed to fetch Common Core profile',
+        account,
+        toastId: false
+      });
     }
 
     if (friends.status === 'fulfilled') {
@@ -197,7 +202,7 @@
       type="search"
       bind:value={searchQuery}
     />
-    <ShopFilter bind:value={selectedFilters}/>
+    <ShopFilter bind:value={selectedFilters} />
   </div>
 
   <div class="mt-4">
@@ -208,14 +213,14 @@
         <div class="space-y-9">
           <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
           {#each Array(2) as _, index (index)}
-            <SkeletonShopSection/>
+            <SkeletonShopSection />
           {/each}
         </div>
       {/if}
     {:else if filteredSections?.length}
       <div class="space-y-9">
         {#each filteredSections as section (section.name)}
-          <ShopSection {section} bind:modalOfferId/>
+          <ShopSection {section} bind:modalOfferId />
         {/each}
       </div>
     {:else}
@@ -224,6 +229,6 @@
   </div>
 
   {#if modalOfferId}
-    <ShopItemModal bind:offerId={modalOfferId}/>
+    <ShopItemModal bind:offerId={modalOfferId} />
   {/if}
 </PageContent>

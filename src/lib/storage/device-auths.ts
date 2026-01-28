@@ -1,6 +1,6 @@
+import { deviceAuthsSettingsSchema } from '$lib/schemas/settings';
 import FileStore from '$lib/storage/file-store';
 import type { DeviceAuthsSettings } from '$types/settings';
-import { deviceAuthsSettingsSchema } from '$lib/schemas/settings';
 
 export default class DeviceAuthsStore extends FileStore<DeviceAuthsSettings> {
   constructor() {

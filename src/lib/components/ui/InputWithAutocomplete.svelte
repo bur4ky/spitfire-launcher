@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { avatarCache, displayNamesCache } from '$lib/stores';
-  import { Input, type InputProps } from '$components/ui/input';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import { Input, type InputProps } from '$components/ui/input';
   import debounce from '$lib/debounce';
   import Lookup from '$lib/modules/lookup';
   import { accountStore } from '$lib/storage';
+  import { avatarCache, displayNamesCache } from '$lib/stores';
 
   const activeAccount = accountStore.getActiveStore(true);
 
@@ -52,10 +52,10 @@
 
 <div class="relative w-full">
   <Input
+    {...restProps}
     oninput={handleInput}
     bind:ref={inputElement}
     bind:value
-    {...restProps}
   />
 
   <DropdownMenu.Root

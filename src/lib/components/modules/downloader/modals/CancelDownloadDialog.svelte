@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
   import { Button, buttonVariants } from '$components/ui/button';
-  import { cn } from '$lib/utils';
+  import * as Dialog from '$components/ui/dialog';
   import { t } from '$lib/i18n';
+  import { cn } from '$lib/utils';
 
   type Props = {
     open: boolean;

@@ -1,18 +1,18 @@
 <script lang="ts">
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
   import type { Friend, ListType } from '$components/modules/friends/FriendsList.svelte';
-  import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import CopyIcon from '@lucide/svelte/icons/copy';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
-  import UserMinusIcon from '@lucide/svelte/icons/user-minus';
-  import BanIcon from '@lucide/svelte/icons/ban';
-  import ShieldMinus from '@lucide/svelte/icons/shield-minus';
-  import { handleError } from '$lib/utils';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
   import { t } from '$lib/i18n';
   import Friends from '$lib/modules/friends';
   import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import BanIcon from '@lucide/svelte/icons/ban';
+  import CopyIcon from '@lucide/svelte/icons/copy';
+  import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import ShieldMinus from '@lucide/svelte/icons/shield-minus';
+  import UserMinusIcon from '@lucide/svelte/icons/user-minus';
+  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
+  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 
   type Props = {
     listType: ListType;
@@ -95,7 +95,7 @@
 
   <DropdownMenu.Root>
     <DropdownMenu.Trigger>
-      <EllipsisIcon class="size-6 cursor-pointer"/>
+      <EllipsisIcon class="size-6 cursor-pointer" />
     </DropdownMenu.Trigger>
 
     <DropdownMenu.Content>
@@ -120,7 +120,7 @@
 
 {#snippet CopyIdDropdownItem(friendId: string)}
   <DropdownMenu.Item onclick={() => writeText(friendId)}>
-    <CopyIcon class="size-5"/>
+    <CopyIcon class="size-5" />
     {$t('friendsManagement.copyId')}
   </DropdownMenu.Item>
 {/snippet}
@@ -131,9 +131,9 @@
     onclick={() => acceptOrAddFriend(friendId)}
   >
     {#if isAdding}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <UserPlusIcon class="size-5"/>
+      <UserPlusIcon class="size-5" />
     {/if}
     {$t('friendsManagement.acceptRequest')}
   </DropdownMenu.Item>
@@ -145,9 +145,9 @@
     onclick={() => denyOrRemoveFriend(friendId)}
   >
     {#if isRemoving}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <UserMinusIcon class="size-5"/>
+      <UserMinusIcon class="size-5" />
     {/if}
     {type === 'friend' ? $t('friendsManagement.removeFriend') : type === 'outgoing' ? $t('friendsManagement.cancelRequest') : $t('friendsManagement.denyRequest')}
   </DropdownMenu.Item>
@@ -159,9 +159,9 @@
     onclick={() => blockUser(accountId)}
   >
     {#if isBlocking}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <BanIcon class="size-5"/>
+      <BanIcon class="size-5" />
     {/if}
     {$t('friendsManagement.blockUser')}
   </DropdownMenu.Item>
@@ -173,9 +173,9 @@
     onclick={() => unblockUser(accountId)}
   >
     {#if isUnblocking}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <ShieldMinus class="size-5"/>
+      <ShieldMinus class="size-5" />
     {/if}
     {$t('friendsManagement.unblockUser')}
   </DropdownMenu.Item>

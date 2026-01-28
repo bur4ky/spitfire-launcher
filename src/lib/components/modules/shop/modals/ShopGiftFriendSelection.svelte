@@ -1,19 +1,18 @@
 <script lang="ts">
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button, buttonVariants } from '$components/ui/button';
   import * as Dialog from '$components/ui/dialog';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import GiftIcon from '@lucide/svelte/icons/gift';
+  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { language, t } from '$lib/i18n';
+  import MCP from '$lib/modules/mcp';
+  import { accountStore } from '$lib/storage';
   import { accountCacheStore } from '$lib/stores';
   import { cn } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { toast } from 'svelte-sonner';
-  import type { SpitfireShopItem } from '$types/game/shop';
-  import MCP from '$lib/modules/mcp';
   import type { AccountCacheData } from '$types/account';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { Button, buttonVariants } from '$components/ui/button';
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
+  import type { SpitfireShopItem } from '$types/game/shop';
+  import GiftIcon from '@lucide/svelte/icons/gift';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { toast } from 'svelte-sonner';
 
   type Props = {
     item: SpitfireShopItem;
@@ -105,7 +104,7 @@
       <Dialog.Title>
         {$t('itemShop.giftConfirmation.title')}
       </Dialog.Title>
-  
+
       <Dialog.Description class="flex flex-wrap items-center gap-1 break-words whitespace-normal">
         {@html $t('itemShop.giftConfirmation.description', {
           name: `<span class="font-semibold">${item.name}</span>`,
@@ -122,7 +121,7 @@
       bind:value={selectedFriends}
     >
     </AccountCombobox>
-  
+
     <Dialog.Footer class="flex w-full items-center justify-center gap-2">
       <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
         {$t('cancel')}
@@ -136,10 +135,10 @@
         onclick={sendGifts}
       >
         {#if isSendingGifts}
-          <LoaderCircleIcon class="size-5 animate-spin"/>
+          <LoaderCircleIcon class="size-5 animate-spin" />
           {$t('itemShop.sendingGift')}
         {:else}
-          <GiftIcon class="size-5"/>
+          <GiftIcon class="size-5" />
           {$t('itemShop.sendGift')}
         {/if}
       </Button>

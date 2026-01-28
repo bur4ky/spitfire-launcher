@@ -1,9 +1,8 @@
 <script lang="ts">
   import * as Accordion from '$components/ui/accordion';
-  import { language } from '$lib/i18n';
-  import type { WorldParsedMission } from '$types/game/stw/world-info';
+  import { language, t } from '$lib/i18n';
   import { cn, isLegendaryOrMythicSurvivor } from '$lib/utils';
-  import { t } from '$lib/i18n';
+  import type { WorldParsedMission } from '$types/game/stw/world-info';
 
   type Props = {
     missions: WorldParsedMission[];

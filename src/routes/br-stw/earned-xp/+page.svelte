@@ -28,7 +28,11 @@
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const state: XPState = { accountId: account.accountId, displayName: account.displayName, data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 } };
+      const state: XPState = {
+        accountId: account.accountId,
+        displayName: account.displayName,
+        data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 }
+      };
       xpStates.push(state);
 
       const [athena, campaign] = await Promise.allSettled([
@@ -41,7 +45,7 @@
         state.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
         state.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
       } else {
-        handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false })
+        handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
       }
 
       if (campaign.status === 'fulfilled') {
@@ -51,7 +55,7 @@
           state.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
         }
       } else {
-        handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false })
+        handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false });
       }
     }));
 

@@ -1,16 +1,14 @@
 import AsyncLock from '$lib/async-lock';
-import AuthSession from '$lib/modules/auth-session';
-import Party from '$lib/modules/party';
-import Friends, { FriendsStore } from '$lib/modules/friends';
+import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import EventEmitter from '$lib/event-emitter';
 import { getChildLogger } from '$lib/logger';
-import { accountPartiesStore } from '$lib/stores';
-import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
+import AuthSession from '$lib/modules/auth-session';
+import Friends, { FriendsStore } from '$lib/modules/friends';
+import Party from '$lib/modules/party';
 import { accountStore } from '$lib/storage';
+import { accountPartiesStore } from '$lib/stores';
 import { handleError } from '$lib/utils';
-import { type Agent, createClient } from 'stanza';
 import type { AccountData } from '$types/account';
-import type { PartyMember } from '$types/game/party';
 import type {
   EpicEventFriendRemoved,
   EpicEventFriendRequest,
@@ -26,6 +24,8 @@ import type {
   EpicEventPartyPing,
   EpicEventPartyUpdated
 } from '$types/game/events';
+import type { PartyMember } from '$types/game/party';
+import { type Agent, createClient } from 'stanza';
 
 type EventMap = {
   [EpicEvents.MemberConnected]: EpicEventMemberConnected;

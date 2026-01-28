@@ -1,10 +1,10 @@
+import { getChildLogger } from '$lib/logger';
+import AuthSession from '$lib/modules/auth-session';
 import Lookup from '$lib/modules/lookup';
 import { matchmakingService } from '$lib/services/epic';
-import AuthSession from '$lib/modules/auth-session';
 import { displayNamesCache } from '$lib/stores';
-import type { MatchmakingTrackResponse } from '$types/game/matchmaking';
 import type { AccountData } from '$types/account';
-import { getChildLogger } from '$lib/logger';
+import type { MatchmakingTrackResponse } from '$types/game/matchmaking';
 
 const logger = getChildLogger('MatchmakingManager');
 

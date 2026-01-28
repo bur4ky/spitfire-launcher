@@ -100,7 +100,7 @@
         type="button"
         variant="ghost"
       >
-        <MoonIcon class="size-4 text-orange-400 fill-orange-400 fill-orange-40"/>
+        <MoonIcon class="size-4 text-orange-400 fill-orange-400 fill-orange-40" />
       </Button>
     </div>
 
@@ -124,9 +124,9 @@
         variant="secondary"
       >
         {#if isResettingStatus}
-          <LoaderCircleIcon class="size-4 animate-spin"/>
+          <LoaderCircleIcon class="size-4 animate-spin" />
         {:else}
-          <XIcon class="size-4"/>
+          <XIcon class="size-4" />
         {/if}
       </Button>
     </div>

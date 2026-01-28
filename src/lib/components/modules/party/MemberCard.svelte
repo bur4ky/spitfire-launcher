@@ -83,7 +83,7 @@
     <div class="absolute top-3 right-3">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <EllipsisIcon class="size-6"/>
+          <EllipsisIcon class="size-6" />
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content>
@@ -97,18 +97,18 @@
             >
               {#if canKick}
                 {#if kickingMemberIds.has(member.accountId)}
-                  <LoaderCircleIcon class="size-5 animate-spin"/>
+                  <LoaderCircleIcon class="size-5 animate-spin" />
                   {$t('partyManagement.partyMembers.kicking')}
                 {:else}
-                  <UserXIcon class="size-5"/>
+                  <UserXIcon class="size-5" />
                   {$t('partyManagement.partyMembers.kick')}
                 {/if}
               {:else if canLeave}
                 {#if isLeaving}
-                  <LoaderCircleIcon class="size-5 animate-spin"/>
+                  <LoaderCircleIcon class="size-5 animate-spin" />
                   {$t('partyManagement.partyMembers.leavingParty')}
                 {:else}
-                  <LogOutIcon class="size-5"/>
+                  <LogOutIcon class="size-5" />
                   {$t('partyManagement.partyMembers.leaveParty')}
                 {/if}
               {/if}
@@ -121,10 +121,10 @@
               onclick={() => promote(member.accountId)}
             >
               {#if promotingMemberId === member.accountId}
-                <LoaderCircleIcon class="size-5 animate-spin"/>
+                <LoaderCircleIcon class="size-5 animate-spin" />
                 {$t('partyManagement.partyMembers.promoting')}
               {:else}
-                <CrownIcon class="size-5"/>
+                <CrownIcon class="size-5" />
                 {$t('partyManagement.partyMembers.promote')}
               {/if}
             </DropdownMenu.Item>
@@ -137,18 +137,18 @@
             >
               {#if canAddFriend}
                 {#if isAddingFriend}
-                  <LoaderCircleIcon class="size-5 animate-spin"/>
+                  <LoaderCircleIcon class="size-5 animate-spin" />
                   {$t('partyManagement.partyMembers.sendingFriendRequest')}
                 {:else}
-                  <UserPlusIcon class="size-5"/>
+                  <UserPlusIcon class="size-5" />
                   {$t('partyManagement.partyMembers.sendFriendRequest')}
                 {/if}
               {:else if !canAddFriend}
                 {#if isRemovingFriend}
-                  <LoaderCircleIcon class="size-5 animate-spin"/>
+                  <LoaderCircleIcon class="size-5 animate-spin" />
                   {$t('partyManagement.partyMembers.removingFriend')}
                 {:else}
-                  <UserMinusIcon class="size-5"/>
+                  <UserMinusIcon class="size-5" />
                   {$t('partyManagement.partyMembers.removeFriend')}
                 {/if}
               {/if}
@@ -185,7 +185,7 @@
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
             <span class="text-sm">{member.platformSpecificName}</span>
-            <ExternalLinkIcon class="size-4 text-muted-foreground"/>
+            <ExternalLinkIcon class="size-4 text-muted-foreground" />
           </div>
 
           <span class="text-xs text-muted-foreground">
@@ -194,7 +194,7 @@
         </div>
       {:else}
         <span class="text-sm">{member.displayName}</span>
-        <ExternalLinkIcon class="size-4 text-muted-foreground"/>
+        <ExternalLinkIcon class="size-4 text-muted-foreground" />
       {/if}
     </ExternalLink>
 

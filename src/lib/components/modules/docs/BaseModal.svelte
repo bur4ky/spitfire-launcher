@@ -14,7 +14,7 @@
 
 <Dialog.Root>
   <Dialog.Trigger>
-    <HelpCircleIcon class="text-muted-foreground hover:text-foreground transition-colors size-6"/>
+    <HelpCircleIcon class="text-muted-foreground hover:text-foreground transition-colors size-6" />
   </Dialog.Trigger>
 
   <Dialog.Content>

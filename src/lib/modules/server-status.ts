@@ -1,5 +1,5 @@
-import { epicService, lightswitchService } from '$lib/services/epic';
 import Authentication from '$lib/modules/authentication';
+import { epicService, lightswitchService } from '$lib/services/epic';
 import type { LightswitchData, ServerStatusSummaryData, WaitingRoomData } from '$types/game/server-status';
 
 export default class ServerStatus {

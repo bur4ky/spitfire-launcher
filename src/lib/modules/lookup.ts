@@ -1,9 +1,9 @@
-import { publicAccountService, userSearchService } from '$lib/services/epic';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import AuthSession from '$lib/modules/auth-session';
+import { publicAccountService, userSearchService } from '$lib/services/epic';
 import { displayNamesCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';
-import AuthSession from '$lib/modules/auth-session';
 import type { EpicAccountById, EpicAccountByName, EpicAccountSearch } from '$types/game/lookup';
 
 export default class Lookup {

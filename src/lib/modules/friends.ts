@@ -1,13 +1,12 @@
+import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import { getChildLogger } from '$lib/logger';
+import AuthSession from '$lib/modules/auth-session';
 import Avatar from '$lib/modules/avatar';
 import Lookup from '$lib/modules/lookup';
 import { friendService } from '$lib/services/epic';
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import { getChildLogger } from '$lib/logger';
 import { avatarCache, displayNamesCache, type FriendsEntry, friendsStore } from '$lib/stores';
 import { processChunks } from '$lib/utils';
-import { SvelteMap } from 'svelte/reactivity';
 import type { AccountData } from '$types/account';
-import AuthSession from '$lib/modules/auth-session';
 import type {
   BlockedAccountData,
   FriendData,
@@ -15,6 +14,7 @@ import type {
   IncomingFriendRequestData,
   OutgoingFriendRequestData
 } from '$types/game/friends';
+import { SvelteMap } from 'svelte/reactivity';
 
 const logger = getChildLogger('FriendsManager');
 

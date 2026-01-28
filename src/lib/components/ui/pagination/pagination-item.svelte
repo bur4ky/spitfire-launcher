@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { HTMLLiAttributes } from "svelte/elements";
-  import type { WithElementRef } from "$lib/utils";
+  import type { WithElementRef } from '$lib/utils';
+  import type { HTMLLiAttributes } from 'svelte/elements';
 
   let {
     ref = $bindable(null),
@@ -9,6 +9,6 @@
   }: WithElementRef<HTMLLiAttributes> = $props();
 </script>
 
-<li bind:this={ref} data-slot="pagination-item" {...restProps}>
+<li {...restProps} bind:this={ref} data-slot="pagination-item">
   {@render children?.()}
 </li>

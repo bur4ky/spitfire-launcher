@@ -1,8 +1,8 @@
-import FileStore from '$lib/storage/file-store';
-import { derived, type Readable } from 'svelte/store';
-import type { AccountData, AccountDataFile } from '$types/account';
-import { accountDataFileSchema } from '$lib/schemas/account';
 import { getChildLogger } from '$lib/logger';
+import { accountDataFileSchema } from '$lib/schemas/account';
+import FileStore from '$lib/storage/file-store';
+import type { AccountData, AccountDataFile } from '$types/account';
+import { derived, type Readable } from 'svelte/store';
 
 const logger = getChildLogger('AccountStore');
 
@@ -41,6 +41,38 @@ export default class AccountStore extends FileStore<AccountDataFile> {
     }
   }
 
+  getAccount(id: string) {
+    return this.get().accounts.find((x) => x.accountId === id) || null;
+  }
+
+  getActive() {
+    const data = this.get();
+    return data.accounts.find((x) => x.accountId === data.activeAccountId) || null;
+  }
+
+  // The nullable parameter is useful when the component is behind authentication
+  getActiveStore(nullable?: false): Readable<AccountData>;
+
+  getActiveStore(nullable: true): Readable<AccountData | null>;
+
+  getActiveStore(nullable = false): Readable<AccountData | null> {
+    return derived(this, ($state) => {
+      const account = $state.accounts.find((x) => x.accountId === $state.activeAccountId) ?? null;
+      if (!nullable && !account) {
+        throw new Error('Active account is required');
+      }
+
+      return account;
+    });
+  }
+
+  setActive(id: string) {
+    this.set((state) => {
+      state.activeAccountId = id;
+      return state;
+    });
+  }
+
   private async cleanupAccount(account: AccountData) {
     const [
       { default: AutoKickBase },
@@ -69,36 +101,6 @@ export default class AccountStore extends FileStore<AccountDataFile> {
           logger.error('Failed to logout from Legendary', { error });
         });
       }
-    });
-  }
-
-  getAccount(id: string) {
-    return this.get().accounts.find((x) => x.accountId === id) || null;
-  }
-
-  getActive() {
-    const data = this.get();
-    return data.accounts.find((x) => x.accountId === data.activeAccountId) || null;
-  }
-
-  // The nullable parameter is useful when the component is behind authentication
-  getActiveStore(nullable?: false): Readable<AccountData>;
-  getActiveStore(nullable: true): Readable<AccountData | null>;
-  getActiveStore(nullable = false): Readable<AccountData | null> {
-    return derived(this, ($state) => {
-      const account = $state.accounts.find((x) => x.accountId === $state.activeAccountId) ?? null;
-      if (!nullable && !account) {
-        throw new Error('Active account is required');
-      }
-
-      return account;
-    });
-  }
-
-  setActive(id: string) {
-    this.set((state) => {
-      state.activeAccountId = id;
-      return state;
     });
   }
 }

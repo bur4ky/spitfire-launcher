@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { Tooltip as TooltipPrimitive } from "bits-ui";
-  import { cn } from "$lib/utils";
-  import TooltipPortal from "./tooltip-portal.svelte";
-  import type { ComponentProps } from "svelte";
-  import type { WithoutChildrenOrChild } from "$lib/utils";
+  import type { WithoutChildrenOrChild } from '$lib/utils';
+  import { cn } from '$lib/utils';
+  import { Tooltip as TooltipPrimitive } from 'bits-ui';
+  import type { ComponentProps } from 'svelte';
+  import TooltipPortal from './tooltip-portal.svelte';
 
   let {
     ref = $bindable(null),
     class: className,
     sideOffset = 0,
-    side = "top",
+    side = 'top',
     children,
     arrowClasses,
     portalProps,
@@ -22,6 +22,7 @@
 
 <TooltipPortal {...portalProps}>
   <TooltipPrimitive.Content
+    {...restProps}
     class={cn(
       "bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-end-2 data-[side=right]:slide-in-from-start-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--bits-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance",
       className
@@ -30,7 +31,6 @@
     {side}
     {sideOffset}
     bind:ref
-    {...restProps}
   >
     {@render children?.()}
     <TooltipPrimitive.Arrow>

@@ -11,5 +11,5 @@
     <li>{$t('docs.autoKick.importantNotes.1')}</li>
   </ul>
 
-  <YoutubeVideoEmbed title="Auto-Kick Tutorial" videoId="jkQYdWAARBg"/>
+  <YoutubeVideoEmbed title="Auto-Kick Tutorial" videoId="jkQYdWAARBg" />
 </BaseModal>

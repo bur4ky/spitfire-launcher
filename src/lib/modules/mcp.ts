@@ -1,8 +1,8 @@
-import type { AccountData } from '$types/account';
-import { baseGameService } from '$lib/services/epic';
-import AuthSession from '$lib/modules/auth-session';
-import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import AuthSession from '$lib/modules/auth-session';
+import { baseGameService } from '$lib/services/epic';
+import type { AccountData } from '$types/account';
+import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';
 
 export default class MCP {
   static compose<T>(account: AccountData, operation: MCPOperation, profile: MCPProfileId, data: Record<string, any>) {
@@ -28,7 +28,10 @@ export default class MCP {
     return this.compose<FullQueryProfile<T>>(account, 'ClientQuestLogin', profile, { streamingAppKey: '' });
   }
 
-  static async purchaseCatalogEntry(account: AccountData, offerId: string, price: number, isPriceRetry?: boolean): Promise<{ vbucksSpent: number; data: any }> {
+  static async purchaseCatalogEntry(account: AccountData, offerId: string, price: number, isPriceRetry?: boolean): Promise<{
+    vbucksSpent: number;
+    data: any
+  }> {
     try {
       const purchaseData = await MCP.compose(account, 'PurchaseCatalogEntry', 'common_core', {
         offerId,
@@ -55,7 +58,10 @@ export default class MCP {
     }
   }
 
-  static async giftCatalogEntry(account: AccountData, offerId: string, receivers: string[], price: number, isPriceRetry?: boolean): Promise<{ vbucksSpent: number; data: any }> {
+  static async giftCatalogEntry(account: AccountData, offerId: string, receivers: string[], price: number, isPriceRetry?: boolean): Promise<{
+    vbucksSpent: number;
+    data: any
+  }> {
     try {
       const purchaseData = await MCP.compose(account, 'GiftCatalogEntry', 'common_core', {
         offerId,

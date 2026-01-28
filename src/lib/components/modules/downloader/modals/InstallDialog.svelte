@@ -64,7 +64,7 @@
   onMount(async () => {
     const appInfo = appInfoCache.get(app.id) || (await Legendary.getAppInfo(app.id).then((x) => x.stdout))!;
 
-    const diskSpace = await Tauri.getDiskSpace({ dir: downloaderStore.get().downloadPath! })
+    const diskSpace = await Tauri.getDiskSpace({ dir: downloaderStore.get().downloadPath! });
 
     appInfoCache.set(app.id, appInfo);
 
@@ -97,7 +97,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="bg-card border rounded-lg p-4">
           <div class="flex items-center gap-2 mb-1">
-            <DownloadIcon class="size-6 text-primary"/>
+            <DownloadIcon class="size-6 text-primary" />
             <span class="font-medium">{$t('library.installConfirmation.downloadSize')}</span>
           </div>
 
@@ -111,7 +111,7 @@
 
         <div class="bg-card border rounded-lg p-4">
           <div class="flex items-center gap-2 mb-1">
-            <PackageIcon class="size-6 text-primary"/>
+            <PackageIcon class="size-6 text-primary" />
             <span class="font-medium">{$t('library.installConfirmation.installSize')}</span>
           </div>
 
@@ -126,7 +126,7 @@
 
       <div class="bg-card border rounded-lg p-4">
         <div class="flex items-center gap-2 mb-1">
-          <HardDriveIcon class="size-6 text-primary"/>
+          <HardDriveIcon class="size-6 text-primary" />
           <span class="font-medium">{$t('library.installConfirmation.storage.title')}</span>
         </div>
 
@@ -152,7 +152,7 @@
               )}
             >
               {#if afterInstallPercentage >= 85}
-                <AlertTriangleIcon class="size-4"/>
+                <AlertTriangleIcon class="size-4" />
               {/if}
 
               {$t('library.installConfirmation.storage.after')}:
@@ -164,7 +164,7 @@
             </span>
           </div>
 
-          <Progress class="bg-accent" value={usedPercentage}/>
+          <Progress class="bg-accent" value={usedPercentage} />
         </div>
       </div>
 

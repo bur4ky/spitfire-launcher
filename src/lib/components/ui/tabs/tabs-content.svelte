@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Tabs as TabsPrimitive } from "bits-ui";
-  import { cn } from "$lib/utils";
+  import { cn } from '$lib/utils';
+  import { Tabs as TabsPrimitive } from 'bits-ui';
 
   let {
     ref = $bindable(null),
@@ -10,8 +10,8 @@
 </script>
 
 <TabsPrimitive.Content
+  {...restProps}
   class={cn("flex-1 outline-none", className)}
   data-slot="tabs-content"
   bind:ref
-  {...restProps}
 />

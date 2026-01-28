@@ -52,11 +52,11 @@
           handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
         }
       }
-      
+
       const gameEULAData = await EULA.check(account).catch(() => null);
       if (gameEULAData) {
         try {
-          await EULA.accept(account, gameEULAData.version)
+          await EULA.accept(account, gameEULAData.version);
         } catch (error) {
           handleError({ error, message: 'Failed to accept EULA', account, toastId: false });
         }
@@ -100,7 +100,7 @@
             class="hover:bg-muted-foreground/10 flex size-8 items-center justify-center rounded-md"
             href={state.data.acceptLink!}
           >
-            <ExternalLinkIcon class="size-5"/>
+            <ExternalLinkIcon class="size-5" />
           </ExternalLink>
         </div>
       {/each}

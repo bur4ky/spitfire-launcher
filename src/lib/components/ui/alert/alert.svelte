@@ -41,7 +41,7 @@
 <div class="border rounded-lg p-3 mb-2 {backgroundcolors[color]}">
   <div class="flex items-center gap-2">
     {#if Icon}
-      <Icon class="size-5 {iconColors[color]}"/>
+      <Icon class="size-5 {iconColors[color]}" />
     {/if}
     <span class="font-medium">{title}</span>
   </div>

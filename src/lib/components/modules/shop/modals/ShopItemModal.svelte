@@ -1,22 +1,21 @@
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
-  import * as Tooltip from '$components/ui/tooltip';
-  import { calculateDiscountedShopPrice } from '$lib/utils';
-  import { t } from '$lib/i18n';
+  import ShopGiftFriendSelection from '$components/modules/shop/modals/ShopGiftFriendSelection.svelte';
+  import ShopPurchaseConfirmation from '$components/modules/shop/modals/ShopPurchaseConfirmation.svelte';
   import { Badge } from '$components/ui/badge';
-  import { Separator } from '$components/ui/separator';
   import { Button } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
+  import { Separator } from '$components/ui/separator';
+  import * as Tooltip from '$components/ui/tooltip';
+  import { ItemColors } from '$lib/constants/item-colors';
+  import { language, t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
+  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
+  import { calculateDiscountedShopPrice } from '$lib/utils';
+  import type { AccountCacheData } from '$types/account';
+  import CheckIcon from '@lucide/svelte/icons/check';
   import GiftIcon from '@lucide/svelte/icons/gift';
   import ShoppingCartIcon from '@lucide/svelte/icons/shopping-cart';
-  import CheckIcon from '@lucide/svelte/icons/check';
-  import { ItemColors } from '$lib/constants/item-colors';
-  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
-  import ShopPurchaseConfirmation from '$components/modules/shop/modals/ShopPurchaseConfirmation.svelte';
-  import ShopGiftFriendSelection from '$components/modules/shop/modals/ShopGiftFriendSelection.svelte';
-  import type { AccountCacheData } from '$types/account';
   import { derived as jsDerived } from 'svelte/store';
-  import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
 
   type Props = {
     offerId: string;

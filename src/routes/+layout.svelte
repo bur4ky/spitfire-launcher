@@ -1,35 +1,34 @@
 <script lang="ts">
   import './layout.css';
-  import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
   import Header from '$components/layout/header/Header.svelte';
-  import Avatar from '$lib/modules/avatar';
-  import Lookup from '$lib/modules/lookup';
-  import DownloadManager from '$lib/modules/download.svelte';
-  import Legendary from '$lib/modules/legendary';
-  import { getVersion } from '@tauri-apps/api/app';
-  import { listen } from '@tauri-apps/api/event';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { Toaster } from 'svelte-sonner';
-  import { onMount } from 'svelte';
-  import ky from 'ky';
-  import type { GitHubRelease } from '$types/github';
+  import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
   import { Button } from '$components/ui/button';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import * as Dialog from '$components/ui/dialog';
   import * as Tooltip from '$components/ui/tooltip';
-  import WorldInfo from '$lib/modules/world-info';
-  import { ownedApps, runningAppIds } from '$lib/stores';
-  import AutoKickBase from '$lib/modules/autokick/base';
   import { language, t } from '$lib/i18n';
-  import { handleError } from '$lib/utils';
-  import { platform } from '@tauri-apps/plugin-os';
   import logger, { setLogLevel } from '$lib/logger';
-  import Tauri from '$lib/tauri';
-  import { accountStore, downloaderStore, settingsStore } from '$lib/storage';
-  import { on } from 'svelte/events';
-  import { toast } from 'svelte-sonner';
-  import { get } from 'svelte/store';
+  import AutoKickBase from '$lib/modules/autokick/base';
+  import Avatar from '$lib/modules/avatar';
+  import DownloadManager from '$lib/modules/download.svelte';
+  import Legendary from '$lib/modules/legendary';
+  import Lookup from '$lib/modules/lookup';
+  import WorldInfo from '$lib/modules/world-info';
   import { setLocale } from '$lib/paraglide/runtime';
+  import { accountStore, downloaderStore, settingsStore } from '$lib/storage';
+  import { ownedApps, runningAppIds } from '$lib/stores';
+  import Tauri from '$lib/tauri';
+  import { handleError } from '$lib/utils';
+  import type { GitHubRelease } from '$types/github';
+  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { getVersion } from '@tauri-apps/api/app';
+  import { listen } from '@tauri-apps/api/event';
+  import { platform } from '@tauri-apps/plugin-os';
+  import ky from 'ky';
+  import { onMount } from 'svelte';
+  import { toast, Toaster } from 'svelte-sonner';
+  import { on } from 'svelte/events';
+  import { get } from 'svelte/store';
 
   const { children } = $props();
 
@@ -183,7 +182,7 @@
         return settings;
       });
     });
-    
+
     Promise.allSettled([
       setupDiscordRPC(),
       AutoKickBase.init(),

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Button } from '$components/ui/button';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import DownloadManager from '$lib/modules/download.svelte.js';
-  import { ownedApps, runningAppIds } from '$lib/stores';
-  import Legendary from '$lib/modules/legendary';
-  import { bytesToSize, handleError, sleep } from '$lib/utils';
   import { t } from '$lib/i18n';
+  import DownloadManager from '$lib/modules/download.svelte.js';
+  import Legendary from '$lib/modules/legendary';
+  import { downloaderStore } from '$lib/storage';
+  import { ownedApps, runningAppIds } from '$lib/stores';
+  import Tauri from '$lib/tauri';
+  import { bytesToSize, handleError, sleep } from '$lib/utils';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
-  import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
-  import WrenchIcon from '@lucide/svelte/icons/wrench';
   import DownloadIcon from '@lucide/svelte/icons/download';
   import EyeIcon from '@lucide/svelte/icons/eye';
   import EyeOffIcon from '@lucide/svelte/icons/eye-off';
@@ -18,11 +18,11 @@
   import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal';
   import PlayIcon from '@lucide/svelte/icons/play';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
+  import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
+  import WrenchIcon from '@lucide/svelte/icons/wrench';
   import XIcon from '@lucide/svelte/icons/x';
   import { toast } from 'svelte-sonner';
-  import Tauri from '$lib/tauri';
-  import { downloaderStore } from '$lib/storage';
 
   type Props = {
     appId: string;
@@ -60,7 +60,7 @@
     isStopping = true;
 
     try {
-      await Tauri.stopApp({ appId: app.id })
+      await Tauri.stopApp({ appId: app.id });
       toast.success($t('library.app.stopped', { name: app.title }));
     } catch (error) {
       handleError({ error, message: $t('library.app.failedToStop', { name: app.title }) });
@@ -150,21 +150,30 @@
     <div class="absolute top-2 right-2 flex flex-col space-y-2">
       {#if $downloaderStore.favoriteApps?.includes(app.id)}
         <button class="bg-black rounded-full p-1.5" onclick={toggleFavorite} title={$t('library.app.unfavorite')}>
-          <HeartIcon class="text-red-500 size-4.5" fill="red"/>
+          <HeartIcon class="text-red-500 size-4.5" fill="red" />
         </button>
       {:else}
-        <button class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleFavorite} title={$t('library.app.favorite')}>
-          <HeartIcon class="text-gray-400 size-4.5"/>
+        <button
+          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleFavorite}
+          title={$t('library.app.favorite')}
+        >
+          <HeartIcon class="text-gray-400 size-4.5" />
         </button>
       {/if}
 
       {#if $downloaderStore.hiddenApps?.includes(app.id)}
-        <button class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden} title={$t('library.app.show')}>
-          <EyeOffIcon class="text-gray-400 size-4.5"/>
+        <button
+          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden}
+          title={$t('library.app.show')}
+        >
+          <EyeOffIcon class="text-gray-400 size-4.5" />
         </button>
       {:else}
-        <button class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden} title={$t('library.app.hide')}>
-          <EyeIcon class="text-gray-400 size-4.5"/>
+        <button
+          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden}
+          title={$t('library.app.hide')}
+        >
+          <EyeIcon class="text-gray-400 size-4.5" />
         </button>
       {/if}
     </div>
@@ -197,7 +206,7 @@
             size="sm"
             variant="ghost"
           >
-            <MoreHorizontalIcon class="size-6"/>
+            <MoreHorizontalIcon class="size-6" />
           </Button>
         </DropdownMenu.Trigger>
 
@@ -205,19 +214,22 @@
           {#if app.installed}
             <DropdownMenu.Item onclick={toggleAutoUpdate}>
               {#if ($downloaderStore.perAppAutoUpdate || {})[app.id] ?? $downloaderStore.autoUpdate}
-                <RefreshCwOffIcon class="size-5"/>
+                <RefreshCwOffIcon class="size-5" />
                 {$t('library.app.dropdown.autoUpdate.disable')}
               {:else}
-                <RefreshCwIcon class="size-5"/>
+                <RefreshCwIcon class="size-5" />
                 {$t('library.app.dropdown.autoUpdate.enable')}
               {/if}
             </DropdownMenu.Item>
 
-            <DropdownMenu.Item disabled={isVerifying || isDeleting || runningAppIds.has(app.id)} onclick={verifyAndRepair}>
+            <DropdownMenu.Item
+              disabled={isVerifying || isDeleting || runningAppIds.has(app.id)}
+              onclick={verifyAndRepair}
+            >
               {#if isVerifying}
-                <LoaderCircleIcon class="size-5 animate-spin"/>
+                <LoaderCircleIcon class="size-5 animate-spin" />
               {:else}
-                <WrenchIcon class="size-5"/>
+                <WrenchIcon class="size-5" />
               {/if}
               {$t('library.app.dropdown.verifyAndRepair')}
             </DropdownMenu.Item>
@@ -227,15 +239,15 @@
               onclick={() => uninstallDialogAppId = app.id}
             >
               {#if isDeleting}
-                <LoaderCircleIcon class="size-5 animate-spin"/>
+                <LoaderCircleIcon class="size-5 animate-spin" />
               {:else}
-                <Trash2Icon class="size-5"/>
+                <Trash2Icon class="size-5" />
               {/if}
               {$t('library.app.dropdown.uninstall')}
             </DropdownMenu.Item>
 
             <DropdownMenu.Item disabled={true}>
-              <HardDriveIcon class="size-5"/>
+              <HardDriveIcon class="size-5" />
               {$t('library.app.dropdown.size')}: {bytesToSize(app.installSize)}
             </DropdownMenu.Item>
           {/if}
@@ -261,9 +273,9 @@
     variant="destructive"
   >
     {#if isStopping}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <XIcon class="size-5"/>
+      <XIcon class="size-5" />
     {/if}
     <span class="truncate">{$t('library.app.stop')}</span>
   </Button>
@@ -276,9 +288,9 @@
     onclick={() => launchApp()}
   >
     {#if isLaunching}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <PlayIcon class="size-5"/>
+      <PlayIcon class="size-5" />
     {/if}
     <span class="truncate">{$t('library.app.play')}</span>
   </Button>
@@ -291,7 +303,7 @@
     onclick={installApp}
     variant="secondary"
   >
-    <RefreshCwIcon class="size-5"/>
+    <RefreshCwIcon class="size-5" />
     <span class="truncate">{$t('library.app.update')}</span>
   </Button>
 {/snippet}
@@ -303,7 +315,7 @@
     onclick={verifyAndRepair}
     variant="secondary"
   >
-    <WrenchIcon class="size-5"/>
+    <WrenchIcon class="size-5" />
     <span class="truncate">{$t('library.app.repair')}</span>
   </Button>
 {/snippet}
@@ -315,13 +327,14 @@
     title={$t('library.app.removeFromQueue.long')}
     variant="destructive"
   >
-    <CircleMinusIcon class="size-5"/>
+    <CircleMinusIcon class="size-5" />
     <span class="truncate">{$t('library.app.removeFromQueue.short')}</span>
   </Button>
 {/snippet}
 
 {#snippet InstallButton(isInstalling: boolean)}
-  {@const percent = isInstalling && DownloadManager.progress.percent ? `(${Math.floor(DownloadManager.progress.percent)}%)` : ''}
+  {@const
+    percent = isInstalling && DownloadManager.progress.percent ? `(${Math.floor(DownloadManager.progress.percent)}%)` : ''}
 
   <Button
     class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
@@ -330,9 +343,9 @@
     variant="outline"
   >
     {#if isInstalling}
-      <LoaderCircleIcon class="size-5 animate-spin"/>
+      <LoaderCircleIcon class="size-5 animate-spin" />
     {:else}
-      <DownloadIcon class="size-5"/>
+      <DownloadIcon class="size-5" />
     {/if}
     <span class="truncate">{app.hasUpdate ? $t('library.app.update') : app.requiresRepair ? $t('library.app.repair') : $t('library.app.install')} {percent}</span>
   </Button>

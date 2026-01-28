@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { Pagination as PaginationPrimitive } from "bits-ui";
-
-  import { cn } from "$lib/utils";
+  import { cn } from '$lib/utils';
+  import { Pagination as PaginationPrimitive } from 'bits-ui';
 
   let {
     ref = $bindable(null),
@@ -15,6 +14,7 @@
 </script>
 
 <PaginationPrimitive.Root
+  {...restProps}
   class={cn("mx-auto flex w-full justify-center", className)}
   aria-label="pagination"
   {count}
@@ -22,7 +22,6 @@
   {perPage}
   role="navigation"
   {siblingCount}
-  bind:ref
   bind:page
-  {...restProps}
+  bind:ref
 />

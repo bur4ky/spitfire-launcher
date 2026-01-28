@@ -1,19 +1,19 @@
 <script lang="ts">
-  import AutoKickTutorial from '$components/modules/docs/tutorials/AutoKick.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
+  import AutoKickTutorial from '$components/modules/docs/tutorials/AutoKick.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
-  import AutoKickBase from '$lib/modules/autokick/base';
-  import { cn } from '$lib/utils';
-  import { t } from '$lib/i18n';
   import { Switch } from '$components/ui/switch';
-  import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';
-  import { platform } from '@tauri-apps/plugin-os';
-  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
-  import Trash2Icon from '@lucide/svelte/icons/trash-2';
-  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { t } from '$lib/i18n';
+  import AutoKickBase from '$lib/modules/autokick/base';
   import { accountStore } from '$lib/storage';
+  import { cn } from '$lib/utils';
+  import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';
+  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
+  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
+  import Trash2Icon from '@lucide/svelte/icons/trash-2';
+  import { platform } from '@tauri-apps/plugin-os';
 
   type AutomationSetting = keyof Omit<AutomationSettingWithId, 'accountId'>;
 
@@ -119,9 +119,9 @@
               variant="ghost"
             >
               {#if isLoading}
-                <RefreshCwIcon class="size-4 animate-spin opacity-50 !cursor-not-allowed"/>
+                <RefreshCwIcon class="size-4 animate-spin opacity-50 !cursor-not-allowed" />
               {:else}
-                <Trash2Icon class="size-4"/>
+                <Trash2Icon class="size-4" />
               {/if}
             </Button>
           </div>

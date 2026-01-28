@@ -133,7 +133,7 @@
   </nav>
 
   <div class="border-t space-y-2 p-3">
-    <AccountSwitcher/>
+    <AccountSwitcher />
 
     <div class="flex items-center justify-center gap-4 border-t pt-2">
       <div class="flex items-center gap-3">
@@ -147,7 +147,7 @@
         {/each}
       </div>
 
-      <Separator class="h-4" orientation="vertical"/>
+      <Separator class="h-4" orientation="vertical" />
 
       {#await getVersion()}
         <!-- -->

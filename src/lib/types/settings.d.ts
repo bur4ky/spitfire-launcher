@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import {
   allSettingsSchema,
   appSettingsSchema,
@@ -11,6 +9,7 @@ import {
   taxiSettingSchema,
   taxiSettingsSchema
 } from '$lib/schemas/settings';
+import { z } from 'zod';
 
 export type AppSettings = z.infer<typeof appSettingsSchema>;
 export type CustomizableMenuSettings = z.infer<typeof customizableMenuSettingsSchema>;

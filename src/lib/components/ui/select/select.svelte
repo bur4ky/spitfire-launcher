@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Select as SelectPrimitive } from "bits-ui";
+  import { Select as SelectPrimitive } from 'bits-ui';
 
   let {
     open = $bindable(false),
@@ -8,4 +8,4 @@
   }: SelectPrimitive.RootProps = $props();
 </script>
 
-<SelectPrimitive.Root bind:open bind:value={value as never} {...restProps} />
+<SelectPrimitive.Root {...restProps} bind:open bind:value={value as never} />

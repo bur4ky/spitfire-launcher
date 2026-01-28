@@ -1,12 +1,12 @@
 <script lang="ts">
   import * as Combobox from '$components/ui/combobox';
   import { Input } from '$components/ui/input';
-  import type { ComboboxRootProps } from 'bits-ui';
   import { t } from '$lib/i18n';
-  import UserIcon from '@lucide/svelte/icons/user';
-  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-  import { onMount } from 'svelte';
   import { accountStore } from '$lib/storage';
+  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+  import UserIcon from '@lucide/svelte/icons/user';
+  import type { ComboboxRootProps } from 'bits-ui';
+  import { onMount } from 'svelte';
 
   type Props = {
     autoSelect?: boolean;
@@ -70,10 +70,10 @@
 </script>
 
 <Combobox.Root
+  {...restProps}
   type={type as never}
   bind:open
   bind:value={value as never}
-  {...restProps}
 >
 
   <div bind:this={anchorEl} class="relative w-full">

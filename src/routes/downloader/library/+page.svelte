@@ -1,21 +1,21 @@
 <script lang="ts">
+  import PageContent from '$components/layout/PageContent.svelte';
   import AppCard from '$components/modules/downloader/AppCard.svelte';
   import AppFilter from '$components/modules/downloader/AppFilter.svelte';
   import InstallDialog from '$components/modules/downloader/modals/InstallDialog.svelte';
-  import SkeletonAppCard from '$components/modules/downloader/skeletons/SkeletonAppCard.svelte';
   import UninstallDialog from '$components/modules/downloader/modals/UninstallDialog.svelte';
-  import PageContent from '$components/layout/PageContent.svelte';
+  import SkeletonAppCard from '$components/modules/downloader/skeletons/SkeletonAppCard.svelte';
   import { Input } from '$components/ui/input';
-  import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/modules/legendary';
-  import DownloadManager from '$lib/modules/download.svelte';
-  import { handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
+  import DownloadManager from '$lib/modules/download.svelte';
+  import Legendary from '$lib/modules/legendary';
+  import { accountStore, downloaderStore } from '$lib/storage';
+  import { ownedApps } from '$lib/stores';
+  import { handleError } from '$lib/utils';
   import type { AppFilterValue } from '$types/legendary';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import { accountStore, downloaderStore } from '$lib/storage';
 
   let isRefreshing = $state(false);
   let searchQuery = $state<string>('');
@@ -107,14 +107,14 @@
       type="search"
       bind:value={searchQuery}
     />
-    <AppFilter bind:value={filters}/>
+    <AppFilter bind:value={filters} />
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {#if isRefreshing}
       <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
       {#each Array(8) as _, i (i)}
-        <SkeletonAppCard/>
+        <SkeletonAppCard />
       {/each}
     {:else}
       {#each filteredApps as app (app.id)}
@@ -128,10 +128,10 @@
   </div>
 
   {#if installDialogAppId}
-    <InstallDialog bind:id={installDialogAppId}/>
+    <InstallDialog bind:id={installDialogAppId} />
   {/if}
 
   {#if uninstallDialogAppId}
-    <UninstallDialog bind:id={uninstallDialogAppId}/>
+    <UninstallDialog bind:id={uninstallDialogAppId} />
   {/if}
 </PageContent>

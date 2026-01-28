@@ -14,7 +14,12 @@
   import BanIcon from '@lucide/svelte/icons/ban';
   import { avatarCache, displayNamesCache, friendsStore } from '$lib/stores';
   import { t } from '$lib/i18n';
-  import type { BlockedAccountData, FriendData, IncomingFriendRequestData, OutgoingFriendRequestData } from '$types/game/friends';
+  import type {
+    BlockedAccountData,
+    FriendData,
+    IncomingFriendRequestData,
+    OutgoingFriendRequestData
+  } from '$types/game/friends';
   import FriendCard from '$components/modules/friends/FriendCard.svelte';
   import { accountStore } from '$lib/storage';
 
@@ -50,13 +55,13 @@
 {#if list?.length}
   <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
     {#each list as friend (friend.accountId)}
-      <FriendCard {friend} {listType}/>
+      <FriendCard {friend} {listType} />
     {/each}
   </div>
 {:else}
   <div class="flex flex-col items-center justify-center p-4 gap-1">
     <div class="rounded-full bg-muted p-4 mb-2">
-      <BanIcon class="size-10 text-muted-foreground"/>
+      <BanIcon class="size-10 text-muted-foreground" />
     </div>
 
     <h3 class="text-xl font-medium">

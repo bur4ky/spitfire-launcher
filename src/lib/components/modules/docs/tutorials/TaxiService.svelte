@@ -34,5 +34,5 @@
     </li>
   </ul>
 
-  <YoutubeVideoEmbed title="Taxi Service Tutorial" videoId="CxV9W2FuY30"/>
+  <YoutubeVideoEmbed title="Taxi Service Tutorial" videoId="CxV9W2FuY30" />
 </BaseModal>

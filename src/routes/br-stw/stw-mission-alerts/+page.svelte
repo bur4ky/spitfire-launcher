@@ -195,7 +195,7 @@
 
     <div class="flex flex-col gap-y-5">
       {#each sections as { id, title, missions } (id)}
-        <AlertsSection {claimedMissionAlerts} {missions} {title}/>
+        <AlertsSection {claimedMissionAlerts} {missions} {title} />
       {/each}
     </div>
   </div>

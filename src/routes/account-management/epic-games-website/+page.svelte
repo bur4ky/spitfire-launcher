@@ -79,9 +79,9 @@
       variant="secondary"
     >
       {#if isCopying}
-        <LoaderCircleIcon class="size-4 animate-spin"/>
+        <LoaderCircleIcon class="size-4 animate-spin" />
       {:else}
-        <CopyIcon class="size-4"/>
+        <CopyIcon class="size-4" />
       {/if}
     </Button>
   </div>

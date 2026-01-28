@@ -1,21 +1,21 @@
 <script lang="ts">
+  import type { LoginMethod } from '$components/modules/login/LoginStep0.svelte';
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
   import { defaultClient, fortniteNewSwitchGameClient } from '$lib/constants/clients';
+  import { t } from '$lib/i18n';
   import Authentication from '$lib/modules/authentication';
   import DeviceAuth from '$lib/modules/device-auth';
   import { oauthService } from '$lib/services/epic';
-  import { t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
   import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';
-  import { readText } from '@tauri-apps/plugin-clipboard-manager';
-  import { openUrl } from '@tauri-apps/plugin-opener';
   import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import type { LoginMethod } from '$components/modules/login/LoginStep0.svelte';
-  import { toast } from 'svelte-sonner';
+  import { readText } from '@tauri-apps/plugin-clipboard-manager';
+  import { openUrl } from '@tauri-apps/plugin-opener';
   import { tick } from 'svelte';
-  import { accountStore } from '$lib/storage';
+  import { toast } from 'svelte-sonner';
 
   type Props = {
     selectedMethod: LoginMethod;
@@ -149,7 +149,7 @@
     class="mb-4 flex w-fit items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
     onclick={goToPreviousStep}
   >
-    <ArrowLeftIcon class="size-4"/>
+    <ArrowLeftIcon class="size-4" />
     {$t('accountManager.back')}
   </button>
 
@@ -170,7 +170,7 @@
         onclick={openDeviceCodeLink}
         variant="outline"
       >
-        <ExternalLinkIcon class="size-4"/>
+        <ExternalLinkIcon class="size-4" />
         {$t('accountManager.loginMethods.webConfirmation.openWebsite')}
       </Button>
     </div>
@@ -196,7 +196,10 @@
       {$t('accountManager.loginMethods.exchangeCode.instructions')}
     </p>
 
-    <form bind:this={exchangeForm} class="flex flex-col gap-y-4 flex-1 justify-between h-full" onsubmit={handleExchangeCodeSubmit}>
+    <form
+      bind:this={exchangeForm} class="flex flex-col gap-y-4 flex-1 justify-between h-full"
+      onsubmit={handleExchangeCodeSubmit}
+    >
       <Input
         autofocus={true}
         disabled={isLoggingIn}

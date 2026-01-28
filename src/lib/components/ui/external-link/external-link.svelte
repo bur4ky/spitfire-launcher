@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { WithElementRef } from '$lib/utils';
   import { openUrl } from '@tauri-apps/plugin-opener';
   import type { Snippet } from 'svelte';
   import type { HTMLAnchorAttributes } from 'svelte/elements';
-  import type { WithElementRef } from '$lib/utils';
 
   type ExternalLinkProps = WithElementRef<Omit<HTMLAnchorAttributes, 'onclick'>> & {
     children: Snippet;

@@ -1,16 +1,16 @@
-import Friends from '$lib/modules/friends';
-import XMPPManager from '$lib/modules/xmpp';
-import { sleep } from '$lib/utils';
-import type { AccountData } from '$types/account';
-import Matchmaking from '$lib/modules/matchmaking';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
+import { getChildLogger } from '$lib/logger';
 import AutoKickBase from '$lib/modules/autokick/base';
-import Party from '$lib/modules/party';
 import claimRewards from '$lib/modules/autokick/claim-rewards';
 import transferBuildingMaterials from '$lib/modules/autokick/transfer-building-materials';
-import type { PartyData } from '$types/game/party';
-import { getChildLogger } from '$lib/logger';
+import Friends from '$lib/modules/friends';
+import Matchmaking from '$lib/modules/matchmaking';
+import Party from '$lib/modules/party';
+import XMPPManager from '$lib/modules/xmpp';
 import { accountStore, settingsStore } from '$lib/storage';
+import { sleep } from '$lib/utils';
+import type { AccountData } from '$types/account';
+import type { PartyData } from '$types/game/party';
 
 const logger = getChildLogger('AutoKickManager');
 

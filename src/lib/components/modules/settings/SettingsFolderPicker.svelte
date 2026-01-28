@@ -1,6 +1,6 @@
 <script lang="ts">
-  import XIcon from '@lucide/svelte/icons/x';
   import { Input, type InputProps } from '$components/ui/input';
+  import XIcon from '@lucide/svelte/icons/x';
   import { open } from '@tauri-apps/plugin-dialog';
 
   type Props = Omit<InputProps, 'onchange' | 'value' | 'files'> & {
@@ -42,6 +42,7 @@
 
 <div class="relative">
   <Input
+    {...restProps}
     class="pr-10 hover:cursor-pointer"
     onclick={handleClick}
     onkeydown={(event) => {
@@ -52,7 +53,6 @@
     }}
     readonly
     bind:value
-    {...restProps}
   />
 
   {#if value && showClearButton}
@@ -61,7 +61,7 @@
       onclick={handleClear}
       type="button"
     >
-      <XIcon class="size-5"/>
+      <XIcon class="size-5" />
     </button>
   {/if}
 </div>

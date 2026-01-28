@@ -1,16 +1,16 @@
-import Notification from '$lib/modules/notification';
-import { ownedApps } from '$lib/stores';
-import Legendary, { configPath } from '$lib/modules/legendary';
 import { t } from '$lib/i18n';
+import { getChildLogger } from '$lib/logger';
+import Legendary, { configPath } from '$lib/modules/legendary';
+import Notification from '$lib/modules/notification';
 import type { queueItemSchema } from '$lib/schemas/settings';
+import { downloaderStore } from '$lib/storage';
+import { ownedApps } from '$lib/stores';
+import Tauri, { type LegendaryStreamEvent } from '$lib/tauri';
 import type { ParsedApp } from '$types/legendary';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { toast } from 'svelte-sonner';
 import { get } from 'svelte/store';
 import type { z } from 'zod';
-import { getChildLogger } from '$lib/logger';
-import { downloaderStore } from '$lib/storage';
-import Tauri, { type LegendaryStreamEvent } from '$lib/tauri';
 
 const logger = getChildLogger('DownloadManager');
 
@@ -120,7 +120,10 @@ class DownloadManager {
   }
 
   isInQueue(appId: string): boolean {
-    return this.queue.some(({ item, status }) => item.id === appId && ['queued', 'downloading', 'paused'].includes(status));
+    return this.queue.some(({
+      item,
+      status
+    }) => item.id === appId && ['queued', 'downloading', 'paused'].includes(status));
   }
 
   async processQueue(processPaused = false) {

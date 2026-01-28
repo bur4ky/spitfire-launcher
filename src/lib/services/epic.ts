@@ -1,11 +1,11 @@
 import { defaultClient } from '$lib/constants/clients';
-import tauriKy from '$lib/services/tauri-ky';
-import { isHTTPError } from 'ky';
-import Manifest from '$lib/modules/manifest';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import { getVersion } from '@tauri-apps/api/app';
-import { platform, arch } from '@tauri-apps/plugin-os';
+import Manifest from '$lib/modules/manifest';
+import tauriKy from '$lib/services/tauri-ky';
 import type { EpicAPIErrorData } from '$types/game/authorizations';
+import { getVersion } from '@tauri-apps/api/app';
+import { arch, platform } from '@tauri-apps/plugin-os';
+import { isHTTPError } from 'ky';
 
 const manifest = await Manifest.getFortniteManifest().catch(() => null);
 const userAgent = manifest?.appVersionString

@@ -1,6 +1,6 @@
-import type { SpitfireShop, SpitfireShopItem, SpitfireShopSection } from '$types/game/shop';
-import { brShopStore } from '$lib/stores';
 import { spitfireService } from '$lib/services/epic';
+import { brShopStore } from '$lib/stores';
+import type { SpitfireShop, SpitfireShopItem, SpitfireShopSection } from '$types/game/shop';
 
 export default class Shop {
   static async fetch() {

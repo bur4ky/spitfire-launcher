@@ -1,13 +1,11 @@
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
+import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
+import { t } from '$lib/i18n';
+import { getChildLogger } from '$lib/logger';
 import Friends from '$lib/modules/friends';
 import Party from '$lib/modules/party';
 import XMPPManager from '$lib/modules/xmpp';
-import { SvelteSet } from 'svelte/reactivity';
-import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { accountPartiesStore } from '$lib/stores';
-import { t } from '$lib/i18n';
-import { get } from 'svelte/store';
-import { getChildLogger } from '$lib/logger';
 import type { AccountData } from '$types/account';
 import type {
   EpicEventFriendRequest,
@@ -19,6 +17,8 @@ import type {
   EpicEventPartyPing,
   EpicEventPartyUpdated
 } from '$types/game/events';
+import { SvelteSet } from 'svelte/reactivity';
+import { get } from 'svelte/store';
 
 const FORT_STATS_KEY = 'Default:FORTStats_j';
 const FORT_STATS_KEYS = [
@@ -32,11 +32,6 @@ const logger = getChildLogger('TaxiManager');
 
 export default class TaxiManager {
   public static readonly taxiAccountIds = new SvelteSet<string>();
-
-  private xmpp?: XMPPManager;
-  private abortController?: AbortController;
-  private partyTimeoutId?: number;
-
   public active = $state(false);
   public isStarting = $state(false);
   public isStopping = $state(false);
@@ -45,6 +40,9 @@ export default class TaxiManager {
   public availableStatus = $state(get(t)('taxiService.settings.availableStatus.default'));
   public busyStatus = $state(get(t)('taxiService.settings.busyStatus.default'));
   public autoAcceptFriendRequests = $state(false);
+  private xmpp?: XMPPManager;
+  private abortController?: AbortController;
+  private partyTimeoutId?: number;
 
   constructor(private account: AccountData) { }
 

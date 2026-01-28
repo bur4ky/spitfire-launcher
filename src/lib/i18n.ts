@@ -1,7 +1,7 @@
 import { m } from '$lib/paraglide/messages';
-import { type Locale, baseLocale } from '$lib/paraglide/runtime';
-import { derived } from 'svelte/store';
+import { baseLocale, type Locale } from '$lib/paraglide/runtime';
 import { settingsStore } from '$lib/storage';
+import { derived } from 'svelte/store';
 
 type MessageKey = keyof typeof m;
 type MessageFn<K extends MessageKey> = typeof m[K];
