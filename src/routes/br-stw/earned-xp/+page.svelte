@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
   type XPState = BulkState<{
     battleRoyale: number;
@@ -16,10 +16,11 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import MCP from '$lib/modules/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { language } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   async function fetchXPData() {
     isFetching = true;

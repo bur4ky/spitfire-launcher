@@ -1,7 +1,8 @@
 <script lang="ts">
   import * as Dialog from '$components/ui/dialog';
   import * as Tooltip from '$components/ui/tooltip';
-  import { calculateDiscountedShopPrice, t } from '$lib/utils';
+  import { calculateDiscountedShopPrice } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Badge } from '$components/ui/badge';
   import { Separator } from '$components/ui/separator';
   import { Button } from '$components/ui/button';
@@ -9,12 +10,13 @@
   import ShoppingCartIcon from '@lucide/svelte/icons/shopping-cart';
   import CheckIcon from '@lucide/svelte/icons/check';
   import { ItemColors } from '$lib/constants/item-colors';
-  import { accountDataStore, brShopStore, ownedItemsStore } from '$lib/stores';
+  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
   import ShopPurchaseConfirmation from '$components/modules/shop/modals/ShopPurchaseConfirmation.svelte';
   import ShopGiftFriendSelection from '$components/modules/shop/modals/ShopGiftFriendSelection.svelte';
-  import type { AccountStoreData } from '$types/accounts';
+  import type { AccountCacheData } from '$types/account';
   import { derived as jsDerived } from 'svelte/store';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type Props = {
     offerId: string;
@@ -29,7 +31,7 @@
     vbucks: ownedVbucks = 0,
     friends = [],
     remainingGifts = 5
-  } = $derived<AccountStoreData>($accountDataStore[$accountStore.activeAccountId!] || {});
+  } = $derived<AccountCacheData>($accountCacheStore[$accountStore.activeAccountId!] || {});
 
   const colors: Record<string, string> = { ...ItemColors.rarities, ...ItemColors.series };
   const ownedItems = $derived($ownedItemsStore[$accountStore.activeAccountId!]);

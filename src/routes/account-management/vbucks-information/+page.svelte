@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
   type VBucksState = BulkState<{
     vbucksAmount?: number;
@@ -15,10 +15,10 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
-  import MCP from '$lib/modules/mcp';
-  import { calculateVbucks, getAccountsFromSelection, handleError, t } from '$lib/utils';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { language } from '$lib/storage';
+  import MCP from '$lib/modules/mcp';
+  import { calculateVbucks, getAccountsFromSelection, handleError } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
 
   async function fetchVbucksData(event: SubmitEvent) {
     event.preventDefault();

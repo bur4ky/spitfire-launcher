@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { language } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type Props = {
     name: string;

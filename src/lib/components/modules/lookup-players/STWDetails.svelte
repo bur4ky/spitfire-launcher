@@ -47,9 +47,8 @@
   import Pagination from '$components/ui/Pagination.svelte';
   import { RarityColors } from '$lib/constants/stw/resources';
   import { TheaterNames, ZoneNames } from '$lib/constants/stw/world-info';
-  import { language } from '$lib/storage';
   import { Separator } from '$components/ui/separator';
-  import { t } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import CopyIcon from '@lucide/svelte/icons/copy';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';

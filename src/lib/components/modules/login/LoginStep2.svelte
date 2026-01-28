@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
   import { accountStore } from '$lib/storage';
 

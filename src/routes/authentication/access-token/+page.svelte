@@ -7,7 +7,8 @@
   import { Button } from '$components/ui/button';
   import Authentication from '$lib/modules/authentication';
   import { toast } from 'svelte-sonner';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   import * as Select from '$components/ui/select';
   import KeyRound from '@lucide/svelte/icons/key-round';

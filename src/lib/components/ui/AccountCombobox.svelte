@@ -2,7 +2,7 @@
   import * as Combobox from '$components/ui/combobox';
   import { Input } from '$components/ui/input';
   import type { ComboboxRootProps } from 'bits-ui';
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import UserIcon from '@lucide/svelte/icons/user';
   import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
   import { onMount } from 'svelte';

@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import GlobeIcon from '@lucide/svelte/icons/globe';
   import KeyIcon from '@lucide/svelte/icons/key';
 

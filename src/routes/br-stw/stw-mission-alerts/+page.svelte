@@ -11,7 +11,8 @@
   import type { WorldParsedMission } from '$types/game/stw/world-info';
   import { worldInfoCache } from '$lib/stores';
   import { WorldPowerLevels, Theaters } from '$lib/constants/stw/world-info';
-  import { isLegendaryOrMythicSurvivor, t } from '$lib/utils';
+  import { isLegendaryOrMythicSurvivor } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import WorldInfo from '$lib/modules/world-info';
   import { onMount } from 'svelte';
   import { accountStore } from '$lib/storage';

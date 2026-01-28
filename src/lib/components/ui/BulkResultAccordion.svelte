@@ -1,7 +1,7 @@
 <script generics="T" lang="ts">
   import * as Accordion from '$components/ui/accordion';
   import type { Snippet } from 'svelte';
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
   type Props = {
     states: BulkState<T>[];

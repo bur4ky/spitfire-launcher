@@ -2,15 +2,14 @@ import type { SpitfireShopItem } from '$types/game/shop';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { ownedItemsStore } from '$lib/stores';
-import { derived, get } from 'svelte/store';
+import { get } from 'svelte/store';
 import { toast } from 'svelte-sonner';
 import { goto } from '$app/navigation';
 import type { FullQueryProfile } from '$types/game/mcp';
-import { m } from '$lib/paraglide/messages';
-import { type Locale, setLocale } from '$lib/paraglide/runtime';
 import logger from '$lib/logger';
-import { accountStore, language, settingsStore } from '$lib/storage';
-import type { AccountData } from '$types/accounts';
+import { accountStore } from '$lib/storage';
+import type { AccountData } from '$types/account';
+import { t } from '$lib/i18n';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -63,15 +62,6 @@ export function isLegendaryOrMythicSurvivor(itemId: string) {
   return itemId.includes('workerbasic_sr') || (itemId.startsWith('Worker:manager') && itemId.includes('_sr_'));
 }
 
-export async function getStartingPage() {
-  const startingPage = settingsStore.get().app?.startingPage;
-  // Dynamic import to avoid circular dependency
-  const sidebar = await import('$lib/constants/sidebar');
-  const pages = get(sidebar.SidebarCategories).flatMap((x) => x.items);
-
-  return (pages.find((x) => x.key === startingPage) || pages.find((x) => x.key === 'stwMissionAlerts')!)?.href;
-}
-
 export function calculateDiscountedShopPrice(accountId: string, item: SpitfireShopItem) {
   const isBundle = item.contents.some((item) => item.alreadyOwnedPriceReduction != null);
   const ownedItems = get(ownedItemsStore)[accountId];
@@ -117,38 +107,6 @@ export function formatRemainingDuration(ms: number) {
   return parts.length ? parts.join(' ') : translate('times.seconds.other', { count: 0 });
 }
 
-type MessageKey = keyof typeof m;
-type MessageFn<K extends MessageKey> = typeof m[K];
-type InputsOf<K extends MessageKey> = Parameters<MessageFn<K>>[0];
-type OptionsOf<K extends MessageKey> = Parameters<MessageFn<K>>[1];
-
-export const t = derived(language, ($language) => {
-  return function t<K extends MessageKey>(
-    key: K,
-    inputs?: InputsOf<K>,
-    options?: OptionsOf<K>
-  ): string {
-    return m[key](inputs ?? {} as any, {
-      locale: $language,
-      ...options
-    }) as ReturnType<MessageFn<K>>;
-  };
-});
-
-export function changeLocale(locale: Locale) {
-  setLocale(locale, { reload: false });
-  document.documentElement.lang = locale;
-
-  settingsStore.set((settings) => {
-    if (!settings.app) {
-      settings.app = {};
-    }
-
-    settings.app.language = locale;
-    return settings;
-  });
-}
-
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -156,13 +114,13 @@ export function sleep(ms: number) {
 export async function processChunks<T, R>(
   items: T[],
   chunkSize: number,
-  processFn: (chunk: T[]) => Promise<R[]>
+  fn: (chunk: T[]) => Promise<R[]>
 ): Promise<R[]> {
   const promises = [];
 
   for (let i = 0; i < items.length; i += chunkSize) {
     const chunk = items.slice(i, i + chunkSize);
-    promises.push(processFn(chunk).catch(() => []));
+    promises.push(fn(chunk).catch(() => []));
   }
 
   const results = await Promise.allSettled(promises);

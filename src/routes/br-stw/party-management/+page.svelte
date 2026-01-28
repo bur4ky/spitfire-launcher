@@ -33,13 +33,15 @@
   import { accountPartiesStore, friendsStore } from '$lib/stores';
   import transferBuildingMaterials from '$lib/modules/autokick/transfer-building-materials';
   import claimRewards from '$lib/modules/autokick/claim-rewards';
-  import { handleError, sleep, t } from '$lib/utils';
+  import { handleError, sleep } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { toast } from 'svelte-sonner';
-  import type { AccountData } from '$types/accounts';
+  import type { AccountData } from '$types/account';
   import type { PartyData } from '$types/game/party';
   import { EpicEvents } from '$lib/constants/events';
   import logger from '$lib/logger';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type PartySummary = {
     maxSize: number;

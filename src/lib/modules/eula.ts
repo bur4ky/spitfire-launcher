@@ -1,7 +1,7 @@
 import { eulaService } from '$lib/services/epic';
 import AuthSession from '$lib/modules/auth-session';
 import type { EULACheckData } from '$types/game/eula';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 
 export default class EULA {
   // Returns null if EULA is accepted

@@ -5,7 +5,8 @@
   import Authentication from '$lib/modules/authentication';
   import DeviceAuth from '$lib/modules/device-auth';
   import { oauthService } from '$lib/services/epic';
-  import { handleError, t } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { handleError } from '$lib/utils';
   import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';
   import { readText } from '@tauri-apps/plugin-clipboard-manager';
   import { openUrl } from '@tauri-apps/plugin-opener';

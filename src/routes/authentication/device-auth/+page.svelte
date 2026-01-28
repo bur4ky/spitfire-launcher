@@ -16,8 +16,9 @@
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
   import DeviceAuth from '$lib/modules/device-auth';
-  import { handleError, t } from '$lib/utils';
-  import type { AccountData } from '$types/accounts';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import type { AccountData } from '$types/account';
   import logger from '$lib/logger';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
 

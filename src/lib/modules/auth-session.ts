@@ -1,11 +1,11 @@
 import type { KyInstance } from 'ky';
 import AsyncLock from '$lib/async-lock';
 import Authentication from '$lib/modules/authentication';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import { getChildLogger } from '$lib/logger';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { accountStore } from '$lib/storage';
-import { t } from '$lib/utils';
+import { t } from '$lib/i18n';
 import { get } from 'svelte/store';
 import { toast } from 'svelte-sonner';
 

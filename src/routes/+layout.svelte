@@ -20,12 +20,16 @@
   import WorldInfo from '$lib/modules/world-info';
   import { ownedApps, runningAppIds } from '$lib/stores';
   import AutoKickBase from '$lib/modules/autokick/base';
-  import { handleError, t } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
+  import { handleError } from '$lib/utils';
   import { platform } from '@tauri-apps/plugin-os';
   import logger, { setLogLevel } from '$lib/logger';
   import Tauri from '$lib/tauri';
-  import { accountStore, settingsStore } from '$lib/storage';
+  import { accountStore, downloaderStore, settingsStore } from '$lib/storage';
   import { on } from 'svelte/events';
+  import { toast } from 'svelte-sonner';
+  import { get } from 'svelte/store';
+  import { setLocale } from '$lib/paraglide/runtime';
 
   const { children } = $props();
 
@@ -67,7 +71,23 @@
     if (!account) return;
 
     await Legendary.cacheApps();
-    await Legendary.autoUpdateApps();
+
+    const settings = downloaderStore.get();
+    const updatableApps = get(ownedApps).filter((app) => app.hasUpdate);
+    const appAutoUpdate = settings.perAppAutoUpdate || {};
+
+    let sentFirstNotification = false;
+
+    for (const app of updatableApps) {
+      if (appAutoUpdate[app.id] ?? settings.autoUpdate) {
+        await DownloadManager.addToQueue(app);
+
+        if (!sentFirstNotification) {
+          sentFirstNotification = true;
+          toast.info(get(t)('library.app.startedUpdate', { name: app.title }));
+        }
+      }
+    }
   }
 
   async function getAppName(appId: string) {
@@ -151,6 +171,17 @@
     // logger.error gives more context than unhandled console.error
     on(window, 'error', (event) => {
       logger.error('Unhandled error occurred', { error: event.error });
+    });
+
+    language.subscribe((locale) => {
+      setLocale(locale, { reload: false });
+      document.documentElement.lang = locale;
+
+      settingsStore.set((settings) => {
+        settings.app ??= {};
+        settings.app.language = locale;
+        return settings;
+      });
     });
     
     Promise.allSettled([

@@ -5,12 +5,12 @@
   import { Switch } from '$components/ui/switch';
   import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { changeLocale, t } from '$lib/utils';
-  import { allSettingsSchema, appSettingsSchema } from '$lib/validations/settings';
+  import { t, language } from '$lib/i18n';
+  import { allSettingsSchema, appSettingsSchema } from '$lib/schemas/settings';
   import type { AllSettings } from '$types/settings';
   import { type } from '@tauri-apps/plugin-os';
   import { toast } from 'svelte-sonner';
-  import { language, settingsStore } from '$lib/storage';
+  import { settingsStore } from '$lib/storage';
   import type { Locale } from '$lib/paraglide/runtime';
 
   const currentPlatform = type();
@@ -26,14 +26,14 @@
   ];
 
   const startingPageValues = Object.values<string>(appSettingsSchema.shape.startingPage.def.innerType.def.entries);
-  const startingPageOptions = $SidebarCategories
+  const startingPageOptions = $derived(SidebarCategories
     .map((category) => category.items)
     .flat()
     .filter((item) => startingPageValues.includes(item.key))
     .map((item) => ({
-      label: item.name,
+      label: $t(`${item.key}.page.title`),
       value: item.key
-    }));
+    })));
 
   type SettingKey = keyof NonNullable<AllSettings['app']>;
   type SettingValue = string | number | boolean | undefined;
@@ -73,7 +73,7 @@
     title={$t('settings.appSettings.language')}
   >
     <Select.Root
-      onValueChange={(value) => changeLocale(value as Locale)}
+      onValueChange={(value) => settingsStore.setLanguage(value as Locale)}
       type="single"
       value={$language}
     >

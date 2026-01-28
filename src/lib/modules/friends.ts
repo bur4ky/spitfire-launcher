@@ -6,7 +6,7 @@ import { getChildLogger } from '$lib/logger';
 import { avatarCache, displayNamesCache, type FriendsEntry, friendsStore } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import { SvelteMap } from 'svelte/reactivity';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import AuthSession from '$lib/modules/auth-session';
 import type {
   BlockedAccountData,

@@ -2,16 +2,18 @@
   import * as Dialog from '$components/ui/dialog';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import GiftIcon from '@lucide/svelte/icons/gift';
-  import { accountDataStore } from '$lib/stores';
-  import { cn, t } from '$lib/utils';
+  import { accountCacheStore } from '$lib/stores';
+  import { cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { toast } from 'svelte-sonner';
   import type { SpitfireShopItem } from '$types/game/shop';
   import MCP from '$lib/modules/mcp';
-  import type { AccountStoreData } from '$types/accounts';
+  import type { AccountCacheData } from '$types/account';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { Button, buttonVariants } from '$components/ui/button';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type Props = {
     item: SpitfireShopItem;
@@ -25,7 +27,7 @@
   const {
     vbucks: ownedVbucks = 0,
     friends = []
-  } = $derived<AccountStoreData>($accountDataStore[$activeAccount.accountId] || {});
+  } = $derived<AccountCacheData>($accountCacheStore[$activeAccount.accountId] || {});
 
   let selectedFriends = $state<string[]>([]);
 
@@ -34,7 +36,7 @@
 
     try {
       const giftData = await MCP.giftCatalogEntry($activeAccount, item.offerId, selectedFriends, item.price.final);
-      accountDataStore.update((accounts) => {
+      accountCacheStore.update((accounts) => {
         const account = accounts[$activeAccount.accountId];
         account.remainingGifts = (account.remainingGifts || 0) - selectedFriends.length;
         account.vbucks = (account.vbucks || 0) - giftData.vbucksSpent;
@@ -48,7 +50,7 @@
         switch (error.errorCode) {
           case 'errors.com.epicgames.modules.gamesubcatalog.gift_limit_reached': {
             toast.error($t('itemShop.reachedDailyGiftLimit'));
-            accountDataStore.update((accounts) => {
+            accountCacheStore.update((accounts) => {
               const account = accounts[$activeAccount.accountId];
               account.remainingGifts = 0;
               return accounts;
@@ -60,7 +62,7 @@
             const [, errorItemPrice, errorOwnedVbucks] = error.messageVars;
 
             toast.error($t('itemShop.needMoreVbucksToGift', { amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks) }));
-            accountDataStore.update((accounts) => {
+            accountCacheStore.update((accounts) => {
               const account = accounts[$activeAccount.accountId];
               account.vbucks = Number.parseInt(errorItemPrice);
               return accounts;

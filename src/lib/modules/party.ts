@@ -4,7 +4,7 @@ import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { accountPartiesStore, avatarCache, displayNamesCache } from '$lib/stores';
 import defaultPartyMemberMeta from '$lib/data/default-party-member-meta.json';
 import defaultPartyMeta from '$lib/data/default-party-meta.json';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import type { FetchPartyResponse, InviterPartyResponse } from '$types/game/party';
 
 export default class Party {

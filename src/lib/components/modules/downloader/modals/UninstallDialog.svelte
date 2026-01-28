@@ -3,7 +3,8 @@
   import { Button, buttonVariants } from '$components/ui/button';
   import { ownedApps } from '$lib/stores';
   import Legendary from '$lib/modules/legendary';
-  import { cn, handleError, t } from '$lib/utils';
+  import { cn, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { toast } from 'svelte-sonner';
 
   type Props = {

@@ -4,7 +4,8 @@
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
   import DownloadManager, { type DownloadProgress } from '$lib/modules/download.svelte';
-  import { bytesToSize, formatRemainingDuration, t } from '$lib/utils';
+  import { bytesToSize, formatRemainingDuration } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Progress } from '$components/ui/progress';
   import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
   import ClockIcon from '@lucide/svelte/icons/clock';
@@ -17,7 +18,7 @@
   import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
   import logger from '$lib/logger';
-  import { language } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   let showCancelDialog = $state(false);
   let isCancelling = $state(false);

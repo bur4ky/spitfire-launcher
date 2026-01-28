@@ -1,4 +1,4 @@
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import { baseGameService } from '$lib/services/epic';
 import AuthSession from '$lib/modules/auth-session';
 import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';

@@ -1,6 +1,6 @@
 import { SvelteMap } from 'svelte/reactivity';
 import AutoKickManager from '$lib/modules/autokick/manager';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import type { AutomationSetting } from '$types/settings';
 import { accountStore, automationStore } from '$lib/storage';
 

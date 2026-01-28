@@ -21,7 +21,7 @@
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import { ExternalLink } from '$components/ui/external-link';
   import { accountPartiesStore } from '$lib/stores';
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import CrownIcon from '@lucide/svelte/icons/crown';
   import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';

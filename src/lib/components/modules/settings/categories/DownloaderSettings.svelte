@@ -5,8 +5,9 @@
   import { Switch } from '$components/ui/switch';
   import DownloadManager from '$lib/modules/download.svelte.js';
   import Legendary from '$lib/modules/legendary';
-  import { handleError, t } from '$lib/utils';
-  import { downloaderSettingsSchema } from '$lib/validations/settings';
+  import { t } from '$lib/i18n';
+  import { handleError } from '$lib/utils';
+  import { downloaderSettingsSchema } from '$lib/schemas/settings';
   import type { DownloaderSettings } from '$types/settings';
   import { onMount, untrack } from 'svelte';
   import { toast } from 'svelte-sonner';

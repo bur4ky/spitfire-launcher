@@ -1,4 +1,3 @@
-import { changeLocale } from '$lib/utils';
 import { baseLocale, locales } from '$lib/paraglide/runtime';
 import Tauri from '$lib/tauri';
 import { setLogLevel } from '$lib/logger';
@@ -18,5 +17,5 @@ export async function load() {
     locale = baseLocale;
   }
 
-  changeLocale(locale as typeof locales[number]);
+  settingsStore.setLanguage(locale as typeof locales[number]);
 }

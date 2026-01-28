@@ -10,7 +10,8 @@
   import { Alert } from '$components/ui/alert';
   import { Label } from '$components/ui/label';
   import { accountPartiesStore } from '$lib/stores';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Button } from '$components/ui/button';
   import { Separator } from '$components/ui/separator';
   import { Switch } from '$components/ui/switch';

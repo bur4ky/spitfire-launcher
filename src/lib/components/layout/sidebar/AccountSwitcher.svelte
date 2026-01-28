@@ -6,11 +6,12 @@
   import LogOutIcon from '@lucide/svelte/icons/log-out';
   import CheckIcon from '@lucide/svelte/icons/check';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import type { AccountData } from '$types/accounts';
+  import type { AccountData } from '$types/account';
   import { avatarCache } from '$lib/stores';
   import { toast } from 'svelte-sonner';
   import LoginModal from '$components/modules/login/LoginModal.svelte';
-  import { cn, handleError, t } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { cn, handleError } from '$lib/utils';
   import { Button } from '$components/ui/button';
   import { accountStore } from '$lib/storage';
 

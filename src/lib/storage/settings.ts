@@ -1,6 +1,7 @@
 import FileStore from '$lib/storage/file-store';
 import type { AllSettings } from '$types/settings';
-import { allSettingsSchema } from '$lib/validations/settings';
+import { allSettingsSchema } from '$lib/schemas/settings';
+import type { Locale } from '$lib/paraglide/runtime';
 
 export default class SettingsStore extends FileStore<AllSettings> {
   constructor() {
@@ -16,5 +17,13 @@ export default class SettingsStore extends FileStore<AllSettings> {
         debugLogs: false
       }
     }, allSettingsSchema);
+  }
+
+  setLanguage(language: Locale) {
+    this.set((settings) => {
+      settings.app ??= {};
+      settings.app.language = language;
+      return settings;
+    });
   }
 }

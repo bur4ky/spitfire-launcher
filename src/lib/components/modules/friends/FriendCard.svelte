@@ -9,7 +9,8 @@
   import UserMinusIcon from '@lucide/svelte/icons/user-minus';
   import BanIcon from '@lucide/svelte/icons/ban';
   import ShieldMinus from '@lucide/svelte/icons/shield-minus';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import Friends from '$lib/modules/friends';
   import { accountStore } from '$lib/storage';
 

@@ -3,7 +3,7 @@ import { matchmakingService } from '$lib/services/epic';
 import AuthSession from '$lib/modules/auth-session';
 import { displayNamesCache } from '$lib/stores';
 import type { MatchmakingTrackResponse } from '$types/game/matchmaking';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import { getChildLogger } from '$lib/logger';
 
 const logger = getChildLogger('MatchmakingManager');

@@ -4,7 +4,7 @@
   import LoginStep1 from '$components/modules/login/LoginStep1.svelte';
   import LoginStep2 from '$components/modules/login/LoginStep2.svelte';
   import LoginSteps from '$components/modules/login/LoginSteps.svelte';
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   type Props = {
     open: boolean;

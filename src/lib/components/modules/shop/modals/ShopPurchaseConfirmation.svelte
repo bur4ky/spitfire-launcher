@@ -3,13 +3,15 @@
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import type { SpitfireShopItem } from '$types/game/shop';
   import { toast } from 'svelte-sonner';
-  import { accountDataStore, ownedItemsStore } from '$lib/stores';
+  import { accountCacheStore, ownedItemsStore } from '$lib/stores';
   import MCP from '$lib/modules/mcp';
-  import { calculateDiscountedShopPrice, cn, t } from '$lib/utils';
+  import { calculateDiscountedShopPrice, cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import { derived as jsDerived } from 'svelte/store';
   import { Button, buttonVariants } from '$components/ui/button';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type Props = {
     item: SpitfireShopItem;
@@ -32,7 +34,7 @@
     try {
       const purchaseData = await MCP.purchaseCatalogEntry($activeAccount, item.offerId, $discountedPrice);
 
-      accountDataStore.update((accounts) => {
+      accountCacheStore.update((accounts) => {
         const account = accounts[$activeAccount.accountId];
         account.vbucks = (account.vbucks || 0) - purchaseData.vbucksSpent;
         return accounts;
@@ -55,7 +57,7 @@
             const [, errorItemPrice, errorOwnedVbucks] = error.messageVars;
 
             toast.error($t('itemShop.needMoreVbucksToPurchase', { amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks) }));
-            accountDataStore.update((accounts) => {
+            accountCacheStore.update((accounts) => {
               const account = accounts[$activeAccount.accountId];
               account.vbucks = Number.parseInt(errorItemPrice);
               return accounts;

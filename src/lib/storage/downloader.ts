@@ -2,7 +2,7 @@ import FileStore from '$lib/storage/file-store';
 import type { DownloaderSettings } from '$types/settings';
 import { homeDir } from '@tauri-apps/api/path';
 import * as path from '@tauri-apps/api/path';
-import { downloaderSettingsSchema } from '$lib/validations/settings';
+import { downloaderSettingsSchema } from '$lib/schemas/settings';
 
 const downloadPath = await path.join(await homeDir(), 'Games', 'Spitfire Launcher');
 

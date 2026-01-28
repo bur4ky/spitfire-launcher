@@ -10,8 +10,7 @@
 
 <script lang="ts">
   import * as Accordion from '$components/ui/accordion';
-  import { language } from '$lib/storage';
-  import { t } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
 
   type Props = {
     dailyQuests: DailyQuest[];

@@ -16,9 +16,10 @@
   import Lookup from '$lib/modules/lookup';
   import MCP from '$lib/modules/mcp';
   import Shop from '$lib/modules/shop';
-  import { accountDataStore, brShopStore, ownedItemsStore } from '$lib/stores';
-  import { calculateVbucks, formatRemainingDuration, handleError, t } from '$lib/utils';
-  import type { AccountStoreData } from '$types/accounts';
+  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
+  import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import type { AccountCacheData } from '$types/account';
   import type { SpitfireShopSection } from '$types/game/shop';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
@@ -28,7 +29,7 @@
   const activeAccount = accountStore.getActiveStore(true);
 
   $effect(() => {
-    const alreadyFetched = $activeAccount && Object.keys($accountDataStore[$activeAccount.accountId] || {}).length;
+    const alreadyFetched = $activeAccount && Object.keys($accountCacheStore[$activeAccount.accountId] || {}).length;
     if (!$activeAccount || alreadyFetched) return;
 
     fetchAccountData();
@@ -95,7 +96,7 @@
       Friends.getFriends(account)
     ]);
 
-    let accountData: AccountStoreData = {
+    let accountData: AccountCacheData = {
       vbucks: 0,
       remainingGifts: 0,
       friends: []
@@ -136,7 +137,7 @@
     }
 
     if (commonCore.status === 'fulfilled' || friends.status === 'fulfilled') {
-      accountDataStore.update((accounts) => {
+      accountCacheStore.update((accounts) => {
         accounts[account.accountId] = accountData;
         return accounts;
       });

@@ -1,11 +1,7 @@
 import FileStore from '$lib/storage/file-store';
-import AutoKickBase from '$lib/modules/autokick/base';
-import XMPPManager from '$lib/modules/xmpp';
 import { derived, type Readable } from 'svelte/store';
-import type { AccountData, AccountDataFile } from '$types/accounts';
-import { accountDataFileSchema } from '$lib/validations/accounts';
-import DeviceAuth from '$lib/modules/device-auth';
-import Legendary from '$lib/modules/legendary';
+import type { AccountData, AccountDataFile } from '$types/account';
+import { accountDataFileSchema } from '$lib/schemas/account';
 import { getChildLogger } from '$lib/logger';
 
 const logger = getChildLogger('AccountStore');
@@ -40,22 +36,40 @@ export default class AccountStore extends FileStore<AccountDataFile> {
       return state;
     });
 
-    AutoKickBase.removeAccount(id);
-    XMPPManager.instances.get(id)?.disconnect();
-
     if (account) {
-      DeviceAuth.delete(account, account.deviceId).catch((error) => {
-        logger.error('Failed to delete device auth', { error });
-      });
-
-      Legendary.getAccount().then((legAccount) => {
-        if (legAccount === account.accountId) {
-          Legendary.logout().catch((error) => {
-            logger.error('Failed to logout from Legendary', { error });
-          });
-        }
-      });
+      void this.cleanupAccount(account);
     }
+  }
+
+  private async cleanupAccount(account: AccountData) {
+    const [
+      { default: AutoKickBase },
+      { default: XMPPManager },
+      { default: DeviceAuth },
+      { default: Legendary }
+    ] = await Promise.all([
+      import('$lib/modules/autokick/base'),
+      import('$lib/modules/xmpp'),
+      import('$lib/modules/device-auth'),
+      import('$lib/modules/legendary')
+    ]);
+
+    AutoKickBase.removeAccount(account.accountId);
+    XMPPManager.instances.get(account.accountId)?.disconnect();
+
+    if (!account) return;
+
+    DeviceAuth.delete(account, account.deviceId).catch((error) => {
+      logger.error('Failed to delete device auth', { error });
+    });
+
+    Legendary.getAccount().then((legAccount) => {
+      if (legAccount === account.accountId) {
+        Legendary.logout().catch((error) => {
+          logger.error('Failed to logout from Legendary', { error });
+        });
+      }
+    });
   }
 
   getAccount(id: string) {

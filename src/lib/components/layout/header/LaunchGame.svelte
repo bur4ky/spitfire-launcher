@@ -5,7 +5,8 @@
   import AuthSession from '$lib/modules/auth-session';
   import Manifest from '$lib/modules/manifest';
   import { runningAppIds } from '$lib/stores';
-  import { handleError, sleep, t } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { handleError, sleep } from '$lib/utils';
   import { path } from '@tauri-apps/api';
   import { toast } from 'svelte-sonner';
   import Tauri, { type LaunchAppOptions } from '$lib/tauri';

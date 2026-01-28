@@ -44,12 +44,14 @@
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import Lookup from '$lib/modules/lookup';
   import { toast } from 'svelte-sonner';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
   import MCP from '$lib/modules/mcp';
   import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
   import logger from '$lib/logger';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   const activeAccount = accountStore.getActiveStore();
   const claimedMissionAlerts = $derived.by(() => {

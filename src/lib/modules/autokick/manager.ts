@@ -1,7 +1,7 @@
 import Friends from '$lib/modules/friends';
 import XMPPManager from '$lib/modules/xmpp';
 import { sleep } from '$lib/utils';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import Matchmaking from '$lib/modules/matchmaking';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import AutoKickBase from '$lib/modules/autokick/base';

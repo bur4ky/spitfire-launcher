@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
   type CodeState = BulkState<Array<{
     code: string;
@@ -20,7 +20,8 @@
   import Code from '$lib/modules/code';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   const humanizedErrors: Record<string, string> = {
     'errors.com.epicgames.coderedemption.code_not_found': $t('redeemCodes.redeemErrors.notFound'),

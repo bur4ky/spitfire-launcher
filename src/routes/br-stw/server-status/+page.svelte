@@ -42,9 +42,11 @@
   import { Button } from '$components/ui/button';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import { formatRemainingDuration, handleError, t } from '$lib/utils';
+  import { formatRemainingDuration, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Alert } from '$components/ui/alert';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   $effect(() => {
     if (notifyUser) {

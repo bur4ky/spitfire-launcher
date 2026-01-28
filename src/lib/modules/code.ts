@@ -1,4 +1,4 @@
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import { fulfillmentService } from '$lib/services/epic';
 import type { RedeemedCodeData } from '$types/game/fulfillment';
 import AuthSession from '$lib/modules/auth-session';

@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { calculateDiscountedShopPrice, t } from '$lib/utils';
+  import { calculateDiscountedShopPrice } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import type { SpitfireShopItem } from '$types/game/shop';
   import { ItemColors } from '$lib/constants/item-colors';
   import { ownedItemsStore } from '$lib/stores';
   import CheckIcon from '@lucide/svelte/icons/check';
   import { derived as jsDerived } from 'svelte/store';
-  import { accountStore, language } from '$lib/storage';
+  import { accountStore } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   type ItemCardProps = {
     item: SpitfireShopItem;

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
   type EULAState = BulkState<{
     acceptLink?: string;
@@ -21,7 +21,8 @@
   import { toast } from 'svelte-sonner';
   import Authentication from '$lib/modules/authentication';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   async function checkEULA(event: SubmitEvent) {
     event.preventDefault();

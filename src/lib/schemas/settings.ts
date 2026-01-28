@@ -1,7 +1,8 @@
+import { SidebarItemKeys } from '$lib/constants/sidebar';
 import { locales } from '$lib/paraglide/runtime';
 import { z } from 'zod';
 
-type SidebarItem = typeof sidebarItems[number];
+type SidebarItem = typeof SidebarItemKeys[number];
 
 export const appSettingsSchema = z.object({
   language: z.enum(locales).nullish(),
@@ -16,39 +17,8 @@ export const appSettingsSchema = z.object({
   debugLogs: z.boolean()
 }).partial();
 
-export const deviceAuthsSettingsSchema = z.array(z.object({
-  deviceId: z.string(),
-  customName: z.string()
-}));
-
-export const sidebarItems = [
-  'vbucksInformation',
-  'friendsManagement',
-  'redeemCodes',
-  'epicGamesWebsite',
-  'eula',
-
-  'autoKick',
-  'taxiService',
-  'customStatus',
-  'partyManagement',
-  'serverStatus',
-  'itemShop',
-  'earnedXP',
-  'dailyQuests',
-  'stwMissionAlerts',
-  'lookupPlayers',
-
-  'library',
-  'downloads',
-
-  'exchangeCode',
-  'accessToken',
-  'deviceAuth'
-] as const;
-
 export const customizableMenuSettingsSchema = z.object(
-  sidebarItems.reduce((acc, item) => {
+  SidebarItemKeys.reduce((acc, item) => {
     acc[item] = z.boolean().optional();
     return acc;
   }, {} as Record<SidebarItem, z.ZodOptional<z.ZodBoolean>>)
@@ -68,6 +38,11 @@ export const automationSettingSchema = z.object({
 });
 
 export const automationSettingsSchema = z.array(automationSettingSchema);
+
+export const deviceAuthsSettingsSchema = z.array(z.object({
+  deviceId: z.string(),
+  customName: z.string()
+}));
 
 export const taxiSettingSchema = z.object({
   accountId: z.string(),

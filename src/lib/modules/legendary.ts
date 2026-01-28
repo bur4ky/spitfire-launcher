@@ -1,11 +1,9 @@
 import Authentication from '$lib/modules/authentication';
-import DownloadManager from '$lib/modules/download.svelte.js';
 import LegendaryError from '$lib/exceptions/LegendaryError';
 import Tauri from '$lib/tauri';
 import AuthSession from '$lib/modules/auth-session';
 import { ownedApps } from '$lib/stores';
-import { t } from '$lib/utils';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import type { EpicOAuthData } from '$types/game/authorizations';
 import type {
   LegendaryAppInfo,
@@ -16,12 +14,10 @@ import type {
 } from '$types/legendary';
 import { path } from '@tauri-apps/api';
 import { readTextFile } from '@tauri-apps/plugin-fs';
-import { toast } from 'svelte-sonner';
 import { get } from 'svelte/store';
 import { dev } from '$app/environment';
 import { getChildLogger } from '$lib/logger';
 import { dataDirectory } from '$lib/storage/file-store';
-import { downloaderStore } from '$lib/storage';
 
 const logger = getChildLogger('Legendary');
 export const configPath = await path.join(dataDirectory, dev ? 'legendary-dev' : 'legendary');
@@ -221,24 +217,5 @@ export default class Legendary {
       }));
 
     Legendary.cachedApps = true;
-  }
-
-  static async autoUpdateApps() {
-    const settings = downloaderStore.get();
-    const updatableApps = get(ownedApps).filter((app) => app.hasUpdate);
-    const appAutoUpdate = settings.perAppAutoUpdate || {};
-
-    let sentFirstNotification = false;
-
-    for (const app of updatableApps) {
-      if (appAutoUpdate[app.id] ?? settings.autoUpdate) {
-        await DownloadManager.addToQueue(app);
-
-        if (!sentFirstNotification) {
-          sentFirstNotification = true;
-          toast.info(get(t)('library.app.startedUpdate', { name: app.title }));
-        }
-      }
-    }
   }
 }

@@ -10,7 +10,8 @@
   import { ownedApps } from '$lib/stores';
   import Legendary from '$lib/modules/legendary';
   import DownloadManager from '$lib/modules/download.svelte.js';
-  import { bytesToSize, cn, t } from '$lib/utils';
+  import { bytesToSize, cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Progress } from '$components/ui/progress';
   import PackageIcon from '@lucide/svelte/icons/package';
   import DownloadIcon from '@lucide/svelte/icons/download';

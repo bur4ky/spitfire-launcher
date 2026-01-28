@@ -2,7 +2,7 @@
   import * as Select from '$components/ui/select';
   import FilterIcon from '@lucide/svelte/icons/filter';
   import type { SpitfireShopFilter } from '$types/game/shop';
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   const filters: { label: string; value: SpitfireShopFilter }[] = $derived([
     { label: $t('itemShop.filters.new'), value: 'new' },

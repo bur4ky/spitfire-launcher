@@ -5,10 +5,10 @@ import XMPPManager from '$lib/modules/xmpp';
 import { SvelteSet } from 'svelte/reactivity';
 import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { accountPartiesStore } from '$lib/stores';
-import { t } from '$lib/utils';
+import { t } from '$lib/i18n';
 import { get } from 'svelte/store';
 import { getChildLogger } from '$lib/logger';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import type {
   EpicEventFriendRequest,
   EpicEventMemberJoined,

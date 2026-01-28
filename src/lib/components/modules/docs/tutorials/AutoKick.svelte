@@ -1,7 +1,7 @@
 <script lang="ts">
   import BaseModal from '$components/modules/docs/BaseModal.svelte';
   import YoutubeVideoEmbed from '$components/modules/docs/YoutubeVideoEmbed.svelte';
-  import { t } from '$lib/utils';
+  import { t } from '$lib/i18n';
 </script>
 
 <BaseModal description={$t('docs.autoKick.description')} title={$t('autoKick.page.title')}>

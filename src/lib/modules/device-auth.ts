@@ -1,6 +1,6 @@
 import { publicAccountService } from '$lib/services/epic';
 import type { EpicDeviceAuthData } from '$types/game/authorizations';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import AuthSession from '$lib/modules/auth-session';
 
 export default class DeviceAuth {

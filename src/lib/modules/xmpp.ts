@@ -9,7 +9,7 @@ import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import { accountStore } from '$lib/storage';
 import { handleError } from '$lib/utils';
 import { type Agent, createClient } from 'stanza';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import type { PartyMember } from '$types/game/party';
 import type {
   EpicEventFriendRemoved,

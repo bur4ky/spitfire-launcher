@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { BulkState } from '$types/accounts';
+  import type { BulkState } from '$types/account';
   import type { DailyQuestData } from '$types/game/stw/resources';
 
   type DailyQuest = DailyQuestData & {
@@ -28,9 +28,10 @@
   import { dailyQuests } from '$lib/constants/stw/resources';
   import type { FullQueryProfile } from '$types/game/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, handleError, t } from '$lib/utils';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import logger from '$lib/logger';
-  import { language } from '$lib/storage';
+  import { language } from '$lib/i18n';
 
   async function fetchDailyQuests() {
     isFetching = true;

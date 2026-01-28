@@ -3,7 +3,7 @@ import type { PartyData } from '$types/game/party';
 import type { ParsedApp } from '$types/legendary';
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
-import type { AccountStoreData } from '$types/accounts';
+import type { AccountCacheData } from '$types/account';
 import type { ParsedWorldInfo } from '$types/game/stw/world-info';
 import type { SpitfireShop } from '$types/game/shop';
 
@@ -15,7 +15,7 @@ export const avatarCache = new SvelteMap<string, string>();
 export const worldInfoCache = writable<ParsedWorldInfo>(new Map());
 export const brShopStore = writable<SpitfireShop>();
 export const accountPartiesStore = new SvelteMap<string, PartyData>();
-export const accountDataStore = writable<Record<string, AccountStoreData>>({});
+export const accountCacheStore = writable<Record<string, AccountCacheData>>({});
 
 export type FriendsEntry = {
   friends: SvelteMap<string, FriendData>;

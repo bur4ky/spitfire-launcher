@@ -1,7 +1,7 @@
 import { avatarCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import AuthSession from '$lib/modules/auth-session';
-import type { AccountData } from '$types/accounts';
+import type { AccountData } from '$types/account';
 import { avatarService } from '$lib/services/epic';
 import type { AvatarData } from '$types/game/avatar';
 

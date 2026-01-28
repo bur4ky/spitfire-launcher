@@ -15,7 +15,8 @@
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import { friendsStore } from '$lib/stores';
   import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { toast } from 'svelte-sonner';
   import { untrack } from 'svelte';
   import SkeletonFriendCard from '$components/modules/friends/SkeletonFriendCard.svelte';

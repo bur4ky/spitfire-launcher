@@ -1,7 +1,7 @@
 <script lang="ts" module>
   import { SvelteSet } from 'svelte/reactivity';
 
-  let statusSetAccounts = new SvelteSet<string>();
+  const statusSetAccounts = new SvelteSet<string>();
   let isSettingStatus = $state(false);
   let isResettingStatus = $state(false);
 
@@ -16,7 +16,8 @@
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
   import { toast } from 'svelte-sonner';
-  import { handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import XMPPManager from '$lib/modules/xmpp';
   import MoonIcon from '@lucide/svelte/icons/moon';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';

@@ -14,7 +14,8 @@
   import { cubicInOut } from 'svelte/easing';
   import { platform } from '@tauri-apps/plugin-os';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import { cn, t } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { cn } from '$lib/utils';
   import { page } from '$app/state';
   import { SidebarCategories } from '$lib/constants/sidebar';
   import { SvelteSet } from 'svelte/reactivity';
@@ -22,8 +23,7 @@
 
   const currentPlatform = platform();
   const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
-	
-  let notExpandedCategories = new SvelteSet<string>();
+  const notExpandedCategories = new SvelteSet<string>();
 
   const externalLinks = $derived([
     {
@@ -39,21 +39,20 @@
   ]);
 
   function toggleCategory(id: string) {
-    const isNotExpanded = notExpandedCategories.has(id);
-    if (!isNotExpanded) {
+    if (!notExpandedCategories.has(id)) {
       notExpandedCategories.add(id);
     } else {
       notExpandedCategories.delete(id);
     }
   }
 
-  function isCategoryVisible(name: string) {
-    return $SidebarCategories
-      .find((category) => category.name === name)
-      ?.items.some((item) => getItemVisibility(item.key));
+  function isCategoryVisible(key: string) {
+    return SidebarCategories
+      .find((category) => category.key === key)
+      ?.items.some((item) => isItemVisible(item.key));
   }
 
-  function getItemVisibility(key: string) {
+  function isItemVisible(key: string) {
     const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
     return menu[key] !== false;
   }
@@ -84,8 +83,8 @@
 
   <nav class="flex-1 overflow-y-auto py-4 border-r">
     <ul class="space-y-1.5 px-2">
-      {#each $SidebarCategories as category (category.key)}
-        {#if isCategoryVisible(category.name)}
+      {#each SidebarCategories as category (category.key)}
+        {#if isCategoryVisible(category.key)}
           <li>
             <Button
               class="w-full justify-between"
@@ -93,7 +92,7 @@
               size="sm"
               variant="ghost"
             >
-              <span>{category.name}</span>
+              <span>{$t(`sidebar.categories.${category.key}`)}</span>
               <ChevronDownIcon
                 class={cn(
                   'size-4 transition-transform duration-200',
@@ -107,8 +106,8 @@
                 class="mt-1 ml-4 space-y-1 border-l border-border pl-2"
                 transition:slide|local={{ duration: 200, easing: cubicInOut }}
               >
-                {#each category.items as item (item.name)}
-                  {#if getItemVisibility(item.key)}
+                {#each category.items as item (item.key)}
+                  {#if isItemVisible(item.key)}
                     <li>
                       <Button
                         class={cn(
@@ -120,7 +119,7 @@
                         size="sm"
                         variant="ghost"
                       >
-                        {item.name}
+                        {$t(`${item.key}.page.title`)}
                       </Button>
                     </li>
                   {/if}
@@ -136,7 +135,7 @@
   <div class="border-t space-y-2 p-3">
     <AccountSwitcher/>
 
-    <footer class="flex items-center justify-center gap-4 border-t pt-2">
+    <div class="flex items-center justify-center gap-4 border-t pt-2">
       <div class="flex items-center gap-3">
         {#each externalLinks as link (link.name)}
           <ExternalLink
@@ -160,6 +159,6 @@
           {$t('sidebar.version')} v{version}
         </ExternalLink>
       {/await}
-    </footer>
+    </div>
   </div>
 </aside>

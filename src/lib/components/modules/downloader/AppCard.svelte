@@ -4,7 +4,8 @@
   import DownloadManager from '$lib/modules/download.svelte.js';
   import { ownedApps, runningAppIds } from '$lib/stores';
   import Legendary from '$lib/modules/legendary';
-  import { bytesToSize, handleError, sleep, t } from '$lib/utils';
+  import { bytesToSize, handleError, sleep } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
   import WrenchIcon from '@lucide/svelte/icons/wrench';

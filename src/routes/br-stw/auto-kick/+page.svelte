@@ -4,7 +4,8 @@
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
   import AutoKickBase from '$lib/modules/autokick/base';
-  import { cn, t } from '$lib/utils';
+  import { cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { Switch } from '$components/ui/switch';
   import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';
   import { platform } from '@tauri-apps/plugin-os';

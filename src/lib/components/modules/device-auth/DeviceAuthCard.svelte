@@ -3,11 +3,12 @@
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
   import DeviceAuth from '$lib/modules/device-auth';
-  import { getStartingPage, handleError, t } from '$lib/utils';
+  import { handleError } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
   import type { EpicDeviceAuthData } from '$types/game/authorizations';
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import { toast } from 'svelte-sonner';
-  import { accountStore, deviceAuthsStore, language } from '$lib/storage';
+  import { accountStore, deviceAuthsStore } from '$lib/storage';
 
   type Props = {
     auth: EpicDeviceAuthData;
@@ -52,7 +53,7 @@
       if (isCurrentDevice) {
         allDeviceAuths[$activeAccount.accountId] = [];
         if (!$activeAccount) {
-          await goto(await getStartingPage());
+          await goto('/');
         }
       }
     } catch (error) {
