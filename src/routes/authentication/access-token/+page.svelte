@@ -3,24 +3,29 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import Authentication from '$lib/core/authentication';
-  import { activeAccountStore } from '$lib/core/data-storage';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import Authentication from '$lib/modules/authentication';
   import { toast } from 'svelte-sonner';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import Select from '$components/ui/Select.svelte';
+  import * as Select from '$components/ui/select';
   import KeyRound from '@lucide/svelte/icons/key-round';
-  import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
-  import { defaultClient, fortniteAndroidGameClient, fortnitePCGameClient, launcherAppClient2 } from '$lib/constants/clients';
+  import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone';
+  import {
+    defaultClient,
+    fortniteAndroidGameClient,
+    fortnitePCGameClient,
+    launcherAppClient2
+  } from '$lib/constants/clients';
+  import { accountStore } from '$lib/storage';
+  import type { EpicTokenType } from '$types/game/authorizations';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
-
-  let selectedTokenType = $state<'eg1' | 'bearer'>();
-  const tokenTypeOptions = [
-    { value: 'eg1', label: 'EG1' },
-    { value: 'bearer', label: 'Bearer' }
+  let selectedTokenType = $state<EpicTokenType>();
+  const tokenTypeOptions: { label: string; value: EpicTokenType }[] = [
+    { label: 'EG1', value: 'eg1' },
+    { label: 'Bearer', value: 'bearer' }
   ];
 
   let selectedClient = $state<string>();
@@ -32,8 +37,9 @@
 
     generatingAccessToken = true;
 
+    const account = accountStore.getActive()!;
     try {
-      let accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(activeAccount, false, selectedTokenType);
+      let accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account, selectedTokenType);
 
       if (selectedClient !== defaultClient.clientId) {
         const { code } = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
@@ -45,40 +51,46 @@
       await writeText(accessTokenData.access_token);
       toast.success($t('accessToken.generated'));
     } catch (error) {
-      handleError(error, $t('accessToken.failedToGenerate'));
+      handleError({ error, message: $t('accessToken.failedToGenerate'), account });
     } finally {
       generatingAccessToken = false;
     }
   }
 </script>
 
-<PageContent small={true} title={$t('accessToken.page.title')}>
+<PageContent center={true} title={$t('accessToken.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={generateAccessToken}>
-    <Select
-      items={tokenTypeOptions}
-      triggerClass="bg-surface-alt"
-      type="single"
-      bind:value={selectedTokenType}
-    >
-      {#snippet trigger(label)}
-        <KeyRound class="text-muted-foreground size-5 mr-2"/>
-        <span class="text-muted-foreground">{label || $t('accessToken.selectTokenType')}</span>
-        <ChevronsUpDownIcon class="text-muted-foreground size-5 ml-auto"/>
-      {/snippet}
-    </Select>
+    <Select.Root type="single" bind:value={selectedTokenType}>
+      <Select.Trigger class="w-full">
+        <KeyRound class="size-5" />
+        {tokenTypeOptions.find((option) => option.value === selectedTokenType)?.label
+          || $t('accessToken.selectTokenType')}
+      </Select.Trigger>
 
-    <Select
-      items={clientOptions}
-      triggerClass="bg-surface-alt"
-      type="single"
-      bind:value={selectedClient}
-    >
-      {#snippet trigger(label)}
-        <KeyRound class="text-muted-foreground size-5 mr-2"/>
-        <span class="text-muted-foreground">{label || $t('accessToken.selectClient')}</span>
-        <ChevronsUpDownIcon class="text-muted-foreground size-5 ml-auto"/>
-      {/snippet}
-    </Select>
+      <Select.Content>
+        {#each tokenTypeOptions as option (option.value)}
+          <Select.Item value={option.value}>
+            {option.label}
+          </Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
+
+    <Select.Root type="single" bind:value={selectedClient}>
+      <Select.Trigger class="w-full">
+        <MonitorSmartphone class="size-5" />
+        {clientOptions.find((option) => option.value === selectedClient)?.label
+          || $t('accessToken.selectClient')}
+      </Select.Trigger>
+
+      <Select.Content>
+        {#each clientOptions as option (option.value)}
+          <Select.Item value={option.value}>
+            {option.label}
+          </Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
 
     <Button
       class="mt-2"
@@ -86,7 +98,6 @@
       loading={generatingAccessToken}
       loadingText={$t('accessToken.generating')}
       type="submit"
-      variant="epic"
     >
       {$t('accessToken.generate')}
     </Button>

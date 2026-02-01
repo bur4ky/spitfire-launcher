@@ -7,21 +7,23 @@
 </script>
 
 <script lang="ts">
-  import DeviceAuthCard from '$components/device-auth/DeviceAuthCard.svelte';
-  import SkeletonDeviceAuthCard from '$components/device-auth/SkeletonDeviceAuthCard.svelte';
-  import PageContent from '$components/PageContent.svelte';
-  import { Separator } from 'bits-ui';
+  import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
+  import SkeletonDeviceAuthCard from '$components/modules/device-auth/SkeletonDeviceAuthCard.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Separator } from '$components/ui/separator';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import DeviceAuthManager from '$lib/core/managers/device-auth';
-  import { activeAccountStore, deviceAuthsStorage } from '$lib/core/data-storage';
-  import { handleError, nonNull, t } from '$lib/utils/util';
-  import type { AccountData } from '$types/accounts';
+  import DeviceAuth from '$lib/modules/device-auth';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import type { AccountData } from '$types/account';
+  import logger from '$lib/logger';
+  import { accountStore, deviceAuthsStore } from '$lib/storage';
 
-  const activeAccount = $derived(nonNull($activeAccountStore));
-  const deviceAuths = $derived(allDeviceAuths[activeAccount?.accountId] || []);
+  const activeAccount = accountStore.getActiveStore();
+  const deviceAuths = $derived(allDeviceAuths[$activeAccount.accountId] || []);
 
   let errorOccurred = $state(false);
 
@@ -32,10 +34,10 @@
     errorOccurred = false;
 
     try {
-      const data = await DeviceAuthManager.getAll(account);
+      const data = await DeviceAuth.getAll(account);
       allDeviceAuths[account.accountId] = data.sort((a, b) => {
-        const aHasCustomName = $deviceAuthsStorage.some((x) => x.deviceId === a.deviceId) ? 1 : 0;
-        const bHasCustomName = $deviceAuthsStorage.some((x) => x.deviceId === b.deviceId) ? 1 : 0;
+        const aHasCustomName = $deviceAuthsStore.some((x) => x.deviceId === a.deviceId) ? 1 : 0;
+        const bHasCustomName = $deviceAuthsStore.some((x) => x.deviceId === b.deviceId) ? 1 : 0;
         const hasCustomName = bHasCustomName - aHasCustomName;
 
         const aDate = a.lastAccess?.dateTime || a.created?.dateTime;
@@ -46,7 +48,7 @@
       });
     } catch (error) {
       errorOccurred = true;
-      console.error(error);
+      logger.error('Failed to fetch device authentications', { error });
     } finally {
       isFetching = false;
     }
@@ -59,19 +61,20 @@
 
     const toastId = toast.loading($t('deviceAuth.generating'));
     try {
-      const deviceAuth = await DeviceAuthManager.create(activeAccount);
-      allDeviceAuths[activeAccount.accountId] = [deviceAuth, ...deviceAuths];
+      const deviceAuth = await DeviceAuth.create($activeAccount);
+      allDeviceAuths[$activeAccount.accountId] = [deviceAuth, ...deviceAuths];
       toast.success($t('deviceAuth.generated'), { id: toastId });
     } catch (error) {
-      handleError(error, $t('deviceAuth.failedToGenerate'), toastId);
+      handleError({ error, message: $t('deviceAuth.failedToGenerate'), account: $activeAccount, toastId });
     } finally {
       isGenerating = false;
     }
   }
 
   $effect(() => {
-    if (!activeAccount) return;
-    untrack(() => fetchDeviceAuths(activeAccount));
+    // Only track activeAccount changes
+    const account = $activeAccount;
+    untrack(() => fetchDeviceAuths(account));
   });
 </script>
 
@@ -79,7 +82,7 @@
   onkeydown={(event) => {
     if (event.key === 'F5') {
       event.preventDefault();
-      fetchDeviceAuths(activeAccount, true);
+      fetchDeviceAuths($activeAccount, true);
     }
   }}
 />
@@ -95,11 +98,11 @@
       onclick={generateDeviceAuth}
     />
 
-    <Separator.Root class="bg-border h-10 w-px"/>
+    <Separator class="h-10" orientation="vertical" />
 
     <RefreshCwIcon
       class="ml-1.5 size-8 cursor-pointer {isFetching ? 'animate-spin opacity-50 !cursor-not-allowed' : ''}"
-      onclick={() => fetchDeviceAuths(activeAccount, true)}
+      onclick={() => fetchDeviceAuths($activeAccount, true)}
     />
   {/snippet}
 
@@ -111,11 +114,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 place-items-center gap-4">
       {#if !isFetching}
         {#each deviceAuths as auth (auth.deviceId)}
-          <DeviceAuthCard {allDeviceAuths} {auth}/>
+          <DeviceAuthCard {allDeviceAuths} {auth} />
         {/each}
       {:else}
-        <SkeletonDeviceAuthCard/>
-        <SkeletonDeviceAuthCard/>
+        <SkeletonDeviceAuthCard />
+        <SkeletonDeviceAuthCard />
       {/if}
     </div>
   {/if}

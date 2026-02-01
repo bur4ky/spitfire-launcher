@@ -55,8 +55,10 @@ export type PartyKickResponse = Record<string, unknown>;
 
 export type PartyInviteResponse = Record<string, unknown>;
 
-export type InviterPartyResponse = Pick<PartyData, 'id' | 'config' | 'created_at' | 'updated_at' | 'revision' | 'meta' | 'members'> & {
-  invites: Array<PartyPingData & {
-    status: string;
-  }>;
-};
+export type InviterPartyResponse =
+  Pick<PartyData, 'id' | 'config' | 'created_at' | 'updated_at' | 'revision' | 'meta' | 'members'>
+  & {
+    invites: Array<PartyPingData & {
+      status: string;
+    }>;
+  };

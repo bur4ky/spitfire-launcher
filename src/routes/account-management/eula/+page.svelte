@@ -1,88 +1,82 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
-  type EULAStatus = BulkActionStatus<{
+  type EULAState = BulkState<{
     acceptLink?: string;
   }>;
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let eulaStatuses = $state<EULAStatus[]>([]);
+  let eulaStates = $state<EULAState[]>([]);
 </script>
 
 <script lang="ts">
-  import { page } from '$app/state';
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import ExternalLink from '$components/ui/ExternalLink.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
+  import { ExternalLink } from '$components/ui/external-link';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import EULAManager from '$lib/core/managers/eula';
+  import EULA from '$lib/modules/eula';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import { doingBulkOperations } from '$lib/stores';
   import { toast } from 'svelte-sonner';
-  import Authentication from '$lib/core/authentication';
+  import Authentication from '$lib/modules/authentication';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import { getAccountsFromSelection, t } from '$lib/utils/util';
-
-  type PageState = {
-    selectedAccounts?: string[];
-  };
-
-  $effect(() => {
-    const pageState = page.state as PageState;
-    if (pageState.selectedAccounts?.length) {
-      selectedAccounts = pageState.selectedAccounts;
-    }
-  });
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   async function checkEULA(event: SubmitEvent) {
     event.preventDefault();
 
     isFetching = true;
-    doingBulkOperations.set(true);
-    eulaStatuses = [];
+    eulaStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: EULAStatus = { accountId: account.accountId, displayName: account.displayName, data: {} };
-      eulaStatuses.push(status);
+      const state: EULAState = { accountId: account.accountId, displayName: account.displayName, data: {} };
 
       try {
         // TODO: Shortest way I could find. Might change later
-        const accessToken = await Authentication.verifyOrRefreshAccessToken(account);
-        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
+        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
+        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
         const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(exchangeData.code, launcherAppClient2);
         await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
       } catch (error) {
-        if (!(error instanceof EpicAPIError)) return;
-
-        if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' && error.continuationUrl) {
-          status.data.acceptLink = error.continuationUrl;
+        if (
+          error instanceof EpicAPIError
+          && error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required'
+          && error.continuationUrl
+        ) {
+          state.data.acceptLink = error.continuationUrl;
+          eulaStates.push(state);
+        } else {
+          handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
         }
-      } finally {
-        const gameEULAData = await EULAManager.check(account).catch(() => null);
-        if (gameEULAData) await EULAManager.accept(account, gameEULAData.version).catch(() => null);
+      }
+
+      const gameEULAData = await EULA.check(account).catch(() => null);
+      if (gameEULAData) {
+        try {
+          await EULA.accept(account, gameEULAData.version);
+        } catch (error) {
+          handleError({ error, message: 'Failed to accept EULA', account, toastId: false });
+        }
       }
     }));
 
-    eulaStatuses = eulaStatuses.filter((status) => status.data.acceptLink);
-
-    if (!eulaStatuses.length) {
+    if (!eulaStates.length) {
       toast.info($t('eula.allAccountsAlreadyAccepted'));
     }
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 </script>
 
-<PageContent small={true} title={$t('eula.page.title')}>
+<PageContent center={true} title={$t('eula.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={checkEULA}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -91,23 +85,22 @@
       loading={isFetching}
       loadingText={$t('eula.checking')}
       type="submit"
-      variant="epic"
     >
       {$t('eula.check')}
     </Button>
   </form>
 
-  {#if !isFetching && eulaStatuses.length}
+  {#if !isFetching && eulaStates.length}
     <div class="mt-4 space-y-4">
-      {#each eulaStatuses as status (status.accountId)}
+      {#each eulaStates as state (state.accountId)}
         <div class="flex items-center justify-between px-3 py-2 bg-muted border rounded-lg">
-          <span class="font-semibold truncate">{status.displayName}</span>
+          <span class="font-semibold truncate">{state.displayName}</span>
 
           <ExternalLink
             class="hover:bg-muted-foreground/10 flex size-8 items-center justify-center rounded-md"
-            href={status.data.acceptLink!}
+            href={state.data.acceptLink!}
           >
-            <ExternalLinkIcon class="size-5"/>
+            <ExternalLinkIcon class="size-5" />
           </ExternalLink>
         </div>
       {/each}

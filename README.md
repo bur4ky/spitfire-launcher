@@ -4,7 +4,7 @@ A launcher for Fortnite Battle Royale and Save the World
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/bur4ky/spitfire-launcher/total?label=Total+Downloads)
 
-![Launcher Preview](assets/launcher-preview.png)
+![Launcher Preview](launcher-preview.png)
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ On first install, SmartScreen may show a blue warning. This happens because the 
 
 Settings are stored in:
 
-- **Windows:** `C:/Users/USERNAME_HERE/AppData/Roaming/spitfire-launcher`
+- **Windows:** `C:/Users/%USERNAME%/AppData/Roaming/spitfire-launcher`
 - **Android:** `/data/user/0/com.spitfire_launcher.app` (Requires root access)
 
 ## Features

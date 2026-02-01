@@ -3,27 +3,28 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import Authentication from '$lib/core/authentication';
-  import { activeAccountStore } from '$lib/core/data-storage';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import Authentication from '$lib/modules/authentication';
+  import AuthSession from '$lib/modules/auth-session';
   import { toast } from 'svelte-sonner';
-  import { handleError, nonNull, t } from '$lib/utils/util';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-
-  const activeAccount = $derived(nonNull($activeAccountStore));
+  import { accountStore } from '$lib/storage';
 
   async function openEpicGamesWebsite() {
     generatingExchangeCode = true;
 
+    const account = accountStore.getActive()!;
     try {
-      const accessToken = await Authentication.verifyOrRefreshAccessToken(activeAccount);
+      const accessToken = await AuthSession.new(account).getAccessToken(true);
       const { code } = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
 
       await writeText(code);
       toast.success($t('exchangeCode.generated'));
     } catch (error) {
-      handleError(error, $t('exchangeCode.failedToGenerate'));
+      handleError({ error, message: $t('exchangeCode.failedToGenerate'), account });
     } finally {
       generatingExchangeCode = false;
     }
@@ -31,8 +32,8 @@
 </script>
 
 <PageContent
+  center={true}
   description={$t('exchangeCode.page.description')}
-  small={true}
   title={$t('exchangeCode.page.title')}
 >
   <Button
@@ -40,7 +41,6 @@
     loading={generatingExchangeCode}
     loadingText={$t('exchangeCode.generating')}
     onclick={openEpicGamesWebsite}
-    variant="epic"
   >
     {$t('exchangeCode.generate')}
   </Button>

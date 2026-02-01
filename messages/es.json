@@ -454,6 +454,7 @@
     },
     "invalidValue": "Ha introducido un valor no válido.",
     "appSettings": {
+      "language": "Idioma",
       "gamePath": "Ruta de juego personalizada",
       "launchArguments": {
         "title": "Argumentos de lanzamiento",
@@ -473,7 +474,8 @@
       },
       "discordStatus": "Estado de Discord",
       "hideToTray": "Ocultar en la bandeja del sistema",
-      "checkForUpdates": "Buscar actualizaciones"
+      "checkForUpdates": "Buscar actualizaciones",
+      "debugLogs": "Habilitar registros de depuración"
     },
     "downloaderSettings": {
       "downloadPath": {
@@ -670,6 +672,7 @@
     "queued": "En cola",
     "completed": "Completado",
     "clearAll": "Borrar todo",
+    "downloadFailed": "Descarga fallida",
     "cancelDownloadConfirmation": {
       "title": "Confirmación de cancelación de descarga",
       "description": "¿Estás seguro de que quieres cancelar la descarga? Los archivos descargados se conservarán."

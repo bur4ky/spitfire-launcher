@@ -19,7 +19,8 @@ export const EpicEvents = Object.freeze({
 
 export const ConnectionEvents = Object.freeze({
   SessionStarted: 'session:started',
+  StreamError: 'stream:error',
   Connected: 'connected',
   Disconnected: 'disconnected',
-  Destroy: 'destroy'
+  Destroyed: 'destroyed'
 } as const);

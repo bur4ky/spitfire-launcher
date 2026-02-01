@@ -8,7 +8,7 @@ on:
 
 jobs:
   publish-tauri:
-    if: "${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'chore: release v') }}"
+    if: "${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'chore: release') }}"
 
     permissions:
       contents: write
@@ -22,27 +22,20 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: install dependencies (ubuntu only)
+      - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
-          run_install: false
+          no-cache: false
 
-      - name: setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: 'pnpm'
-
-      - name: install Rust stable
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
@@ -52,8 +45,8 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
-      - name: install frontend dependencies
-        run: pnpm install
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
 
       - uses: tauri-apps/tauri-action@v0
         env:

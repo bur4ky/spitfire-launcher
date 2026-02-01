@@ -11,6 +11,8 @@ mod legendary;
 mod commands;
 #[cfg(desktop)]
 mod discord_rpc;
+#[cfg(desktop)]
+mod system_tray;
 mod types;
 
 use commands::*;
@@ -68,7 +70,8 @@ pub fn run() {
             #[cfg(windows)] get_disk_space,
             #[cfg(desktop)] connect_discord_rpc,
             #[cfg(desktop)] update_discord_rpc,
-            #[cfg(desktop)] disconnect_discord_rpc
+            #[cfg(desktop)] disconnect_discord_rpc,
+            #[cfg(desktop)] set_tray_visibility
         ])
         .plugin(prevent)
         .plugin(tauri_plugin_http::init())

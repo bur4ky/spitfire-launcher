@@ -1,59 +1,62 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
-  type VBucksStatus = BulkActionStatus<{
+  type VBucksState = BulkState<{
     vbucksAmount?: number;
     error?: string;
   }>;
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let vbucksStatuses = $state<VBucksStatus[]>([]);
+  let vbucksStates = $state<VBucksState[]>([]);
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import { language } from '$lib/core/data-storage';
-  import { doingBulkOperations } from '$lib/stores';
-  import MCPManager from '$lib/core/managers/mcp';
-  import { calculateVbucks, getAccountsFromSelection, t } from '$lib/utils/util';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import MCP from '$lib/modules/mcp';
+  import { calculateVbucks, getAccountsFromSelection, handleError } from '$lib/utils';
+  import { language, t } from '$lib/i18n';
 
   async function fetchVbucksData(event: SubmitEvent) {
     event.preventDefault();
 
     isFetching = true;
-    doingBulkOperations.set(true);
-    vbucksStatuses = [];
+    vbucksStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: VBucksStatus = { accountId: account.accountId, displayName: account.displayName, data: { vbucksAmount: 0 } };
-      vbucksStatuses.push(status);
+      const state: VBucksState = {
+        accountId: account.accountId,
+        displayName: account.displayName,
+        data: { vbucksAmount: 0 }
+      };
+      vbucksStates.push(state);
 
       try {
-        const queryProfile = await MCPManager.queryProfile(account, 'common_core');
-        status.data.vbucksAmount = calculateVbucks(queryProfile);
+        const queryProfile = await MCP.queryProfile(account, 'common_core');
+        state.data.vbucksAmount = calculateVbucks(queryProfile);
       } catch (error) {
-        status.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
+        handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });
+
+        state.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
           ? $t('vbucksInformation.loginExpired')
           : $t('vbucksInformation.unknownError');
       }
     }));
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 </script>
 
-<PageContent small={true} title={$t('vbucksInformation.page.title')}>
+<PageContent center={true} title={$t('vbucksInformation.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={fetchVbucksData}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -62,27 +65,26 @@
       loading={isFetching}
       loadingText={$t('vbucksInformation.loading')}
       type="submit"
-      variant="epic"
     >
       {$t('vbucksInformation.getInformation')}
     </Button>
   </form>
 
-  {#if !isFetching && vbucksStatuses.length}
+  {#if !isFetching && vbucksStates.length}
     <div class="flex flex-col p-2 border rounded-md">
-      {#each vbucksStatuses as status (status.accountId)}
+      {#each vbucksStates as state (state.accountId)}
         <div class="flex gap-x-2">
-          <p class="font-medium">{status.displayName}:</p>
+          <p class="font-medium">{state.displayName}:</p>
 
-          {#if status.data.error}
-            <p class="text-red-500">{status.data.error}</p>
+          {#if state.data.error}
+            <p class="text-red-500">{state.data.error}</p>
           {:else}
             <div class="flex items-center gap-x-1">
-              <p>{status.data.vbucksAmount!.toLocaleString($language)}</p>
+              <p>{state.data.vbucksAmount!.toLocaleString($language)}</p>
               <img
                 class="size-5"
                 alt="V-Bucks"
-                src="/assets/resources/currency_mtxswap.png"
+                src="/resources/currency_mtxswap.png"
               />
             </div>
           {/if}

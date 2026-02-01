@@ -1,143 +1,147 @@
-import type { sidebarItems } from '$lib/validations/settings';
 import { platform as getPlatform } from '@tauri-apps/plugin-os';
-import { derived } from 'svelte/store';
-import { t } from '$lib/utils/util';
 
 const platform = getPlatform();
 
 type Category = {
-  key: string;
-  name: string;
+  key: typeof SidebarCategoryKeys[number];
   items: {
-    key: typeof sidebarItems[number];
-    name: string;
+    key: typeof SidebarItemKeys[number];
     href: string;
   }[];
 };
 
-export const SidebarCategories = derived(t, ($t) => [
+export const SidebarCategoryKeys = Object.freeze([
+  'account',
+  'brStw',
+  'downloader',
+  'authentication'
+] as const);
+
+export const SidebarItemKeys = Object.freeze([
+  'vbucksInformation',
+  'friendsManagement',
+  'redeemCodes',
+  'epicGamesWebsite',
+  'eula',
+
+  'autoKick',
+  'taxiService',
+  'customStatus',
+  'partyManagement',
+  'serverStatus',
+  'itemShop',
+  'earnedXP',
+  'dailyQuests',
+  'stwMissionAlerts',
+  'lookupPlayers',
+
+  'library',
+  'downloads',
+
+  'exchangeCode',
+  'accessToken',
+  'deviceAuth'
+] as const);
+
+export const SidebarCategories = Object.freeze([
   {
     key: 'account',
-    name: $t('sidebar.categories.account'),
     items: [
       {
-        key: 'vbucksInformation' as const,
-        name: $t('vbucksInformation.page.title'),
+        key: 'vbucksInformation',
         href: '/account-management/vbucks-information'
       },
       {
-        key: 'friendsManagement' as const,
-        name: $t('friendsManagement.page.title'),
+        key: 'friendsManagement',
         href: '/account-management/friends-management'
       },
       {
-        key: 'redeemCodes' as const,
-        name: $t('redeemCodes.page.title'),
+        key: 'redeemCodes',
         href: '/account-management/redeem-codes'
       },
       {
-        key: 'epicGamesWebsite' as const,
-        name: $t('epicGamesWebsite.page.title'),
+        key: 'epicGamesWebsite',
         href: '/account-management/epic-games-website'
       },
       {
-        key: 'eula' as const,
-        name: $t('eula.page.title'),
+        key: 'eula',
         href: '/account-management/eula'
       }
     ]
   },
   {
     key: 'brStw',
-    name: $t('sidebar.categories.brStw'),
     items: [
       {
-        key: 'autoKick' as const,
-        name: $t('autoKick.page.title'),
+        key: 'autoKick',
         href: '/br-stw/auto-kick'
       },
       {
-        key: 'taxiService' as const,
-        name: $t('taxiService.page.title'),
+        key: 'taxiService',
         href: '/br-stw/taxi-service'
       },
       {
-        key: 'customStatus' as const,
-        name: $t('customStatus.page.title'),
+        key: 'customStatus',
         href: '/br-stw/custom-status'
       },
       {
-        key: 'partyManagement' as const,
-        name: $t('partyManagement.page.title'),
+        key: 'partyManagement',
         href: '/br-stw/party-management'
       },
       {
-        key: 'serverStatus' as const,
-        name: $t('serverStatus.page.title'),
+        key: 'serverStatus',
         href: '/br-stw/server-status'
       },
       {
-        key: 'itemShop' as const,
-        name: $t('itemShop.page.title'),
+        key: 'itemShop',
         href: '/br-stw/item-shop'
       },
       {
-        key: 'earnedXP' as const,
-        name: $t('earnedXP.page.title'),
+        key: 'earnedXP',
         href: '/br-stw/earned-xp'
       },
       {
-        key: 'dailyQuests' as const,
-        name: $t('dailyQuests.page.title'),
+        key: 'dailyQuests',
         href: '/br-stw/daily-quests'
       },
       {
-        key: 'stwMissionAlerts' as const,
-        name: $t('stwMissionAlerts.page.title'),
+        key: 'stwMissionAlerts',
         href: '/br-stw/stw-mission-alerts'
       },
       {
-        key: 'lookupPlayers' as const,
-        name: $t('lookupPlayers.page.title'),
+        key: 'lookupPlayers',
         href: '/br-stw/lookup-players'
       }
     ]
   },
   platform === 'windows' && {
     key: 'downloader',
-    name: $t('sidebar.categories.downloader'),
     items: [
       {
-        key: 'library' as const,
-        name: $t('library.page.title'),
+        key: 'library',
         href: '/downloader/library'
       },
       {
-        key: 'downloads' as const,
-        name: $t('downloads.page.title'),
+        key: 'downloads',
         href: '/downloader/downloads'
       }
     ]
   },
   {
     key: 'authentication',
-    name: $t('sidebar.categories.authentication'),
     items: [
       {
-        key: 'exchangeCode' as const,
-        name: $t('exchangeCode.page.title'),
+        key: 'exchangeCode',
         href: '/authentication/exchange-code'
       },
       {
-        key: 'accessToken' as const,
-        name: $t('accessToken.page.title'),
+        key: 'accessToken',
         href: '/authentication/access-token'
       },
       {
-        key: 'deviceAuth' as const,
-        name: $t('deviceAuth.page.title'),
+        key: 'deviceAuth',
         href: '/authentication/device-auth'
       }
     ]
   }
-].filter((x) => !!x), [] as Category[]);
+].filter((x) => !!x) as Category[]);

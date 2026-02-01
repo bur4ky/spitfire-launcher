@@ -1,0 +1,18 @@
+diff --git a/dist/Toast.svelte b/dist/Toast.svelte
+index 5711365afec59e5ab0cd3bac6f6f1af372d94a65..e91a3152aa7e52e7db68ff2e989f33cea3f88fed 100644
+--- a/dist/Toast.svelte
++++ b/dist/Toast.svelte
+@@ -313,12 +313,7 @@ const icon = $derived.by(() => {
+ 
+ {#snippet LoadingIcon()}
+ 	{#if loadingIcon}
+-		<div
+-			class={cn(classes?.loader, toast?.classes?.loader, 'sonner-loader')}
+-			data-visible={toastType === 'loading'}
+-		>
+-			{@render loadingIcon()}
+-		</div>
++    {@render loadingIcon()}
+ 	{:else}
+ 		<Loader
+ 			class={cn(classes?.loader, toast.classes?.loader)}

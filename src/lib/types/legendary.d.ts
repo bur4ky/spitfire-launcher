@@ -1,4 +1,4 @@
-import type { parsedAppSchema } from '$lib/validations/settings';
+import type { parsedAppSchema } from '$lib/schemas/settings';
 import { z } from 'zod';
 
 export type AppFilterValue = 'hidden' | 'installed' | 'updatesAvailable';

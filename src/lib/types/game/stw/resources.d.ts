@@ -1,6 +1,6 @@
-import type { WorldParsedMission } from '$types/game/stw/world-info';
 import type { RarityTypes } from '$lib/constants/stw/resources';
 import type { Locale } from '$lib/paraglide/runtime';
+import type { WorldParsedMission } from '$types/game/stw/world-info';
 
 export type RarityType = typeof RarityTypes[keyof typeof RarityTypes];
 export type ResourceType =

@@ -2,30 +2,34 @@
   import type { SpitfireShopFilter } from '$types/game/shop';
 
   let searchQuery = $state<string>('');
-  let selectedFilter = $state<SpitfireShopFilter>();
+  let selectedFilters = $state<SpitfireShopFilter[]>([]);
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import ShopItemModal from '$components/shop/modals/ShopItemModal.svelte';
-  import ShopFilter from '$components/shop/ShopFilter.svelte';
-  import ShopSection from '$components/shop/ShopSection.svelte';
-  import SkeletonShopSection from '$components/shop/SkeletonShopSection.svelte';
-  import Input from '$components/ui/Input/Input.svelte';
-  import { activeAccountStore as activeAccount } from '$lib/core/data-storage';
-  import FriendsManager from '$lib/core/managers/friends';
-  import LookupManager from '$lib/core/managers/lookup';
-  import MCPManager from '$lib/core/managers/mcp';
-  import ShopManager from '$lib/core/managers/shop';
-  import { accountDataStore, brShopStore, ownedItemsStore } from '$lib/stores';
-  import { calculateVbucks, formatRemainingDuration, getResolvedResults, t } from '$lib/utils/util';
-  import type { AccountStoreData } from '$types/accounts';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import ShopItemModal from '$components/modules/shop/modals/ShopItemModal.svelte';
+  import ShopFilter from '$components/modules/shop/ShopFilter.svelte';
+  import ShopSection from '$components/modules/shop/ShopSection.svelte';
+  import SkeletonShopSection from '$components/modules/shop/skeletons/SkeletonShopSection.svelte';
+  import { Input } from '$components/ui/input';
+  import Friends from '$lib/modules/friends';
+  import Lookup from '$lib/modules/lookup';
+  import MCP from '$lib/modules/mcp';
+  import Shop from '$lib/modules/shop';
+  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
+  import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import type { AccountCacheData } from '$types/account';
   import type { SpitfireShopSection } from '$types/game/shop';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
+  import logger from '$lib/logger';
+  import { accountStore } from '$lib/storage';
+
+  const activeAccount = accountStore.getActiveStore(true);
 
   $effect(() => {
-    const alreadyFetched = $activeAccount && Object.keys($accountDataStore[$activeAccount.accountId] || {}).length > 0;
+    const alreadyFetched = $activeAccount && Object.keys($accountCacheStore[$activeAccount.accountId] || {}).length;
     if (!$activeAccount || alreadyFetched) return;
 
     fetchAccountData();
@@ -39,78 +43,67 @@
   const filteredSections = $derived.by(() => {
     if (!shopSections) return null;
 
-    let result: SpitfireShopSection[] = shopSections;
+    const now = Date.now();
+    const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+    const longestWaitMs = 120 * 24 * 60 * 60 * 1000;
 
-    switch (selectedFilter) {
-      case 'new':
-        result = result.map((section) => ({
-          ...section,
-          items: section.items.filter((item) => !item.dates.lastSeen || item.shopHistory.length < 2)
-        }));
-        break;
-      case 'leavingSoon':
-        result = result.map((section) => ({
-          ...section,
-          items: section.items.filter((item) => item.dates.out && new Date(item.dates.out).getTime() - Date.now() < 3 * 24 * 60 * 60 * 1000)
-        }));
-        break;
-      case 'longestWait':
-        result = result.map((section) => ({
-          ...section,
-          items: section.items.filter((item) => item.dates.lastSeen && Date.now() - new Date(item.dates.lastSeen).getTime() > 120 * 24 * 60 * 60 * 1000)
-        }));
-        break;
-    }
+    return shopSections
+      .map((section) => {
+        let items = section.items;
 
-    if (searchQuery) {
-      result = result.map((section) => {
-        const fuse = new Fuse(section.items, {
-          keys: ['name'],
-          threshold: 0.4,
-          shouldSort: false
-        });
+        if (selectedFilters.includes('new')) {
+          items = items.filter((item) => !item.dates.lastSeen || item.shopHistory.length < 2);
+        }
 
-        return {
-          ...section,
-          items: fuse.search(searchQuery).map((result) => result.item)
-        };
-      });
-    }
+        if (selectedFilters.includes('leavingSoon')) {
+          items = items.filter((item) => item.dates.out && new Date(item.dates.out).getTime() - now < threeDaysMs);
+        }
 
-    return result.filter((x) => x.items.length > 0);
+        if (selectedFilters.includes('longestWait')) {
+          items = items.filter((item) => item.dates.lastSeen && now - new Date(item.dates.lastSeen).getTime() > longestWaitMs);
+        }
+
+        if (searchQuery && items.length) {
+          const fuse = new Fuse(items, { keys: ['name'], threshold: 0.4, shouldSort: false });
+          items = fuse.search(searchQuery).map((result) => result.item);
+        }
+
+        return { ...section, items };
+      })
+      .filter((section) => section.items.length);
   });
 
   async function fetchShop(forceRefresh = false) {
     shopSections = null;
 
     try {
-      const shopResponse = (!forceRefresh && $brShopStore) || await ShopManager.fetch();
-      shopSections = ShopManager.groupBySections(shopResponse.offers).map((section) => ({
+      const response = (!forceRefresh && $brShopStore) || await Shop.fetch();
+      shopSections = Shop.groupBySections(response.offers).map((section) => ({
         ...section,
         items: section.items.sort((a, b) => b.sortPriority - a.sortPriority)
       }));
     } catch (error) {
-      console.error(error);
+      logger.error('Failed to fetch BR shop data', { error });
       errorOccurred = true;
     }
   }
 
   async function fetchAccountData() {
     const account = $activeAccount!;
-    const [athenaProfile, commonCoreProfile, friendsList] = await getResolvedResults([
-      MCPManager.queryProfile(account, 'athena'),
-      MCPManager.queryProfile(account, 'common_core'),
-      FriendsManager.getFriends(account)
+    const [athena, commonCore, friends] = await Promise.allSettled([
+      MCP.queryProfile(account, 'athena'),
+      MCP.queryProfile(account, 'common_core'),
+      Friends.getFriends(account)
     ]);
 
-    let accountData: AccountStoreData = {
+    let accountData: AccountCacheData = {
       vbucks: 0,
       remainingGifts: 0,
       friends: []
     };
 
-    if (athenaProfile) {
-      const profile = athenaProfile.profileChanges[0].profile;
+    if (athena.status === 'fulfilled') {
+      const profile = athena.value.profileChanges[0].profile;
       const items = Object.values(profile.items);
       const ownedItems = items.filter((item) => item.attributes.item_seen != null).map((item) => item.templateId.split(':')[1].toLowerCase());
 
@@ -118,16 +111,25 @@
         accounts[account.accountId] = new Set<string>(ownedItems);
         return accounts;
       });
+    } else {
+      handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
     }
 
-    if (commonCoreProfile) {
-      const profile = commonCoreProfile.profileChanges[0].profile;
-      accountData.vbucks = calculateVbucks(commonCoreProfile);
+    if (commonCore.status === 'fulfilled') {
+      const profile = commonCore.value.profileChanges[0].profile;
+      accountData.vbucks = calculateVbucks(commonCore.value);
       accountData.remainingGifts = profile.stats.attributes.allowed_to_send_gifts ? 5 : 0;
+    } else {
+      handleError({
+        error: commonCore.reason,
+        message: 'Failed to fetch Common Core profile',
+        account,
+        toastId: false
+      });
     }
 
-    if (friendsList) {
-      const accountsData = await LookupManager.fetchByIds(account, friendsList.map((friend) => friend.accountId));
+    if (friends.status === 'fulfilled') {
+      const accountsData = await Lookup.fetchByIds(account, friends.value.map((friend) => friend.accountId));
 
       accountData.friends = accountsData
         .sort((a, b) => (a.displayName || a.id).localeCompare(b.displayName || b.id))
@@ -135,10 +137,12 @@
           displayName: account.displayName || account.id,
           accountId: account.id
         }));
+    } else {
+      handleError({ error: friends.reason, message: 'Failed to fetch friends list', account, toastId: false });
     }
 
-    if (commonCoreProfile || friendsList) {
-      accountDataStore.update((accounts) => {
+    if (commonCore.status === 'fulfilled' || friends.status === 'fulfilled') {
+      accountCacheStore.update((accounts) => {
         accounts[account.accountId] = accountData;
         return accounts;
       });
@@ -198,7 +202,7 @@
       type="search"
       bind:value={searchQuery}
     />
-    <ShopFilter bind:selected={selectedFilter}/>
+    <ShopFilter bind:value={selectedFilters} />
   </div>
 
   <div class="mt-4">
@@ -209,14 +213,14 @@
         <div class="space-y-9">
           <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
           {#each Array(2) as _, index (index)}
-            <SkeletonShopSection/>
+            <SkeletonShopSection />
           {/each}
         </div>
       {/if}
     {:else if filteredSections?.length}
       <div class="space-y-9">
-        {#each filteredSections as section (section.id)}
-          <ShopSection {section} bind:modalOfferId/>
+        {#each filteredSections as section (section.name)}
+          <ShopSection {section} bind:modalOfferId />
         {/each}
       </div>
     {:else}
@@ -225,6 +229,6 @@
   </div>
 
   {#if modalOfferId}
-    <ShopItemModal bind:offerId={modalOfferId}/>
+    <ShopItemModal bind:offerId={modalOfferId} />
   {/if}
 </PageContent>

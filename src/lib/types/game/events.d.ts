@@ -1,4 +1,5 @@
 export type EpicEventMemberConnected = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_CONNECTED';
   ns?: string;
   sent: string;
   connection: {
@@ -18,6 +19,7 @@ export type EpicEventMemberConnected = {
 };
 
 export type EpicEventMemberDisconnected = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_DISCONNECTED';
   ns?: string;
   sent: string;
   connection: {
@@ -39,6 +41,7 @@ export type EpicEventMemberDisconnected = {
 };
 
 export type EpicEventMemberExpired = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_EXPIRED';
   ns?: string;
   sent: string;
   revision: number;
@@ -48,6 +51,7 @@ export type EpicEventMemberExpired = {
 };
 
 export type EpicEventMemberJoined = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_JOINED';
   ns?: string;
   sent: string;
   connection: {
@@ -67,6 +71,7 @@ export type EpicEventMemberJoined = {
 };
 
 export type EpicEventMemberKicked = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_KICKED';
   ns?: string;
   sent: string;
   revision: number;
@@ -76,6 +81,7 @@ export type EpicEventMemberKicked = {
 };
 
 export type EpicEventMemberLeft = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_LEFT';
   ns?: string;
   sent: string;
   revision: number;
@@ -85,6 +91,7 @@ export type EpicEventMemberLeft = {
 };
 
 export type EpicEventMemberStateUpdated = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_STATE_UPDATED';
   ns?: string;
   sent: string;
   revision: number;
@@ -99,6 +106,7 @@ export type EpicEventMemberStateUpdated = {
 };
 
 export type EpicEventMemberNewCaptain = {
+  type: 'com.epicgames.social.party.notification.v0.MEMBER_NEW_CAPTAIN';
   ns?: string;
   sent: string;
   revision: number;
@@ -111,6 +119,7 @@ export type EpicEventMemberNewCaptain = {
 };
 
 export type EpicEventPartyUpdated = {
+  type: 'com.epicgames.social.party.notification.v0.PARTY_UPDATED';
   ns?: string;
   sent: string;
   party_id: string;
@@ -130,6 +139,7 @@ export type EpicEventPartyUpdated = {
 };
 
 export type EpicEventInteractionNotification = {
+  type: 'com.epicgames.social.interactions.notification.v2';
   ns?: string;
   interactions: Array<{
     namespace?: string;
@@ -156,6 +166,7 @@ export type EpicEventInteractionNotification = {
 };
 
 export type EpicEventPartyPing = {
+  type: 'com.epicgames.social.party.notification.v0.PING';
   ns?: string;
   pinger_dn: string;
   pinger_id: string;
@@ -165,6 +176,7 @@ export type EpicEventPartyPing = {
 };
 
 export type EpicEventFriendRequest = {
+  type: 'FRIENDSHIP_REQUEST';
   from: string;
   to: string;
   status: 'PENDING' | 'ACCEPTED';
@@ -172,6 +184,7 @@ export type EpicEventFriendRequest = {
 };
 
 export type EpicEventFriendRemoved = {
+  type: 'FRIENDSHIP_REMOVE';
   from: string;
   to: string;
   reason: 'DELETED';

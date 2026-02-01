@@ -10,7 +10,11 @@ use {
 };
 
 #[cfg(desktop)]
-use crate::discord_rpc;
+use {
+    crate::discord_rpc,
+    crate::system_tray,
+};
+
 use tauri::command;
 
 #[command]
@@ -33,6 +37,12 @@ pub fn get_disk_space(dir: String) -> Result<DiskSpace, String> {
         }
         (Err(e), _) | (_, Err(e)) => Err(e.to_string()),
     }
+}
+
+#[cfg(desktop)]
+#[command]
+pub fn set_tray_visibility(app: AppHandle, visible: bool) -> bool {
+    system_tray::set_visibility(app, visible)
 }
 
 #[cfg(windows)]

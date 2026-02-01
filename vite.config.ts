@@ -1,4 +1,5 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
+import devtoolsJson from 'vite-plugin-devtools-json';
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
@@ -8,13 +9,14 @@ const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig(async () => ({
   plugins: [
+    tailwindcss(),
+    sveltekit(),
+    devtoolsJson(),
     paraglideVitePlugin({
       project: './project.inlang',
       outdir: './src/lib/paraglide',
       strategy: ['baseLocale']
-    }),
-    sveltekit(),
-    tailwindcss()
+    })
   ],
   clearScreen: false,
   server: {

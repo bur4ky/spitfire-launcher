@@ -454,6 +454,7 @@
     },
     "invalidValue": "You have entered an invalid value.",
     "appSettings": {
+      "language": "Language",
       "gamePath": "Custom Game Path",
       "launchArguments": {
         "title": "Launch Arguments",
@@ -473,7 +474,8 @@
       },
       "discordStatus": "Discord Status",
       "hideToTray": "Hide to System Tray",
-      "checkForUpdates": "Check for Updates"
+      "checkForUpdates": "Check for Updates",
+      "debugLogs": "Enable Debug Logs"
     },
     "downloaderSettings": {
       "downloadPath": {
@@ -670,6 +672,7 @@
     "queued": "Queued",
     "completed": "Completed",
     "clearAll": "Clear All",
+    "downloadFailed": "Download failed",
     "cancelDownloadConfirmation": {
       "title": "Cancel Download Confirmation",
       "description": "Are you sure you want to cancel the download? Downloaded files will be kept."

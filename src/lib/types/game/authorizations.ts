@@ -6,7 +6,6 @@ export type EpicAPIErrorData = {
   continuation?: string;
   continuationUrl?: string;
   correctiveAction?: string;
-  validationFailures?: Record<string, any>;
 };
 
 export type EpicTokenType = 'eg1' | 'bearer';
@@ -40,10 +39,12 @@ export type EpicExchangeCodeData = {
   creatingClientId: string;
 };
 
-export type EpicVerifyAccessTokenData = Omit<EpicOAuthData, 'access_token' | 'displayName' | 'refresh_token' | 'refresh_expires_at' | 'refresh_expires'> & {
-  display_name: string;
-  token: string;
-};
+export type EpicVerifyAccessTokenData =
+  Omit<EpicOAuthData, 'access_token' | 'displayName' | 'refresh_token' | 'refresh_expires_at' | 'refresh_expires'>
+  & {
+    display_name: string;
+    token: string;
+  };
 
 export type DeviceAuthData = {
   accountId: string;

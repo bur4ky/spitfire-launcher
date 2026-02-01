@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
-  type XPStatus = BulkActionStatus<{
+  type XPState = BulkState<{
     battleRoyale: number;
     creative: number;
     saveTheWorld: number;
@@ -9,50 +9,56 @@
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let xpStatuses = $state<XPStatus[]>([]);
+  let xpStates = $state<XPState[]>([]);
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import { language } from '$lib/core/data-storage';
-  import { doingBulkOperations } from '$lib/stores';
-  import Button from '$components/ui/Button.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import { getAccountsFromSelection, getResolvedResults, t } from '$lib/utils/util';
-  import MCPManager from '$lib/core/managers/mcp';
-  import BulkResultAccordion from '$components/ui/Accordion/BulkResultAccordion.svelte';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import MCP from '$lib/modules/mcp';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
+  import { language } from '$lib/i18n';
 
   async function fetchXPData() {
     isFetching = true;
-    doingBulkOperations.set(true);
-    xpStatuses = [];
+    xpStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: XPStatus = { accountId: account.accountId, displayName: account.displayName, data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 } };
-      xpStatuses.push(status);
+      const state: XPState = {
+        accountId: account.accountId,
+        displayName: account.displayName,
+        data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 }
+      };
+      xpStates.push(state);
 
-      const [athenaProfile, campaignProfile] = await getResolvedResults([
-        MCPManager.queryProfile(account, 'athena'),
-        MCPManager.queryProfile(account, 'campaign')
+      const [athena, campaign] = await Promise.allSettled([
+        MCP.queryProfile(account, 'athena'),
+        MCP.queryProfile(account, 'campaign')
       ]);
 
-      if (athenaProfile) {
-        const attributes = athenaProfile.profileChanges[0].profile.stats.attributes;
-        status.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
-        status.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
+      if (athena.status === 'fulfilled') {
+        const attributes = athena.value.profileChanges[0].profile.stats.attributes;
+        state.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
+        state.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
+      } else {
+        handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
       }
 
-      if (campaignProfile) {
-        const items = Object.values(campaignProfile.profileChanges[0].profile.items);
+      if (campaign.status === 'fulfilled') {
+        const items = Object.values(campaign.value.profileChanges[0].profile.items);
         const xpItem = items.find((item) => item.templateId === 'Token:stw_accolade_tracker');
         if (xpItem) {
-          status.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
+          state.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
         }
+      } else {
+        handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false });
       }
     }));
 
-    doingBulkOperations.set(false);
     isFetching = false;
   }
 
@@ -61,7 +67,7 @@
     const currentDay = now.getDay();
     const daysUntilTarget = (7 + dayIndex - currentDay) % 7;
 
-    // eslint-disable-next-line svelte/prefer-svelte-reactivity -- This is not a reactive store
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const nextDay = new Date();
     nextDay.setUTCDate(now.getDate() + (daysUntilTarget === 0 ? 7 : daysUntilTarget));
     nextDay.setUTCHours(hours, 0, 0, 0);
@@ -71,15 +77,15 @@
 </script>
 
 <PageContent
+  center={true}
   description={$t('earnedXP.page.description')}
-  small={true}
   title={$t('earnedXP.page.title')}
 >
   <form class="flex flex-col gap-y-4" onsubmit={fetchXPData}>
     <AccountCombobox
       disabled={isFetching}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <Button
@@ -87,32 +93,31 @@
       loading={isFetching}
       loadingText={$t('earnedXP.loading')}
       onclick={fetchXPData}
-      variant="epic"
     >
       {$t('earnedXP.check')}
     </Button>
   </form>
 
-  {#if !isFetching && xpStatuses.length}
-    <BulkResultAccordion statuses={xpStatuses}>
-      {#snippet content(status)}
+  {#if !isFetching && xpStates.length}
+    <BulkResultAccordion states={xpStates}>
+      {#snippet content(state)}
         {@const gamemodes = [
           {
             id: 'battleRoyale',
             name: $t('gameModes.battleRoyale'),
-            value: status.data.battleRoyale || 0,
+            value: state.data.battleRoyale || 0,
             limit: 4_000_000
           },
           {
             id: 'creative',
             name: $t('gameModes.creative'),
-            value: status.data.creative || 0,
+            value: state.data.creative || 0,
             limit: 4_000_000
           },
           {
             id: 'saveTheWorld',
             name: $t('gameModes.saveTheWorld'),
-            value: status.data.saveTheWorld || 0,
+            value: state.data.saveTheWorld || 0,
             limit: 3_400_000
           }
         ]}
@@ -127,7 +132,7 @@
                   <img
                     class="size-4"
                     alt="XP Icon"
-                    src="/assets/misc/battle-royale-xp.png"
+                    src="/misc/battle-royale-xp.png"
                   />
                   <span class="font-medium">{gamemode.name}</span>
                 </div>
@@ -144,7 +149,7 @@
               <div class="h-2 w-full bg-muted rounded-full overflow-hidden">
                 <div
                   style="width: {Math.min(100, (gamemode.value / gamemode.limit) * 100)}%"
-                  class="h-full bg-epic"
+                  class="h-full bg-primary"
                 ></div>
               </div>
 

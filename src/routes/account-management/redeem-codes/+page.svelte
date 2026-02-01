@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { BulkActionStatus } from '$types/accounts';
+  import type { BulkState } from '$types/account';
 
-  type CodeStatus = BulkActionStatus<Array<{
+  type CodeState = BulkState<Array<{
     code: string;
     error?: string;
   }>>;
@@ -9,19 +9,19 @@
   let selectedAccounts = $state<string[]>([]);
   let codesToRedeem = $state<string[]>([]);
   let isRedeeming = $state(false);
-  let codeStatuses = $state<CodeStatus[]>([]);
+  let codeStates = $state<CodeState[]>([]);
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/PageContent.svelte';
-  import AccountCombobox from '$components/ui/Combobox/AccountCombobox.svelte';
-  import Button from '$components/ui/Button.svelte';
-  import TagInput from '$components/ui/TagInput.svelte';
-  import { doingBulkOperations } from '$lib/stores';
-  import CodeManager from '$lib/core/managers/code';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button } from '$components/ui/button';
+  import { TagInput } from '$components/ui/tag-input';
+  import Code from '$lib/modules/code';
   import EpicAPIError from '$lib/exceptions/EpicAPIError';
-  import BulkResultAccordion from '$components/ui/Accordion/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, t } from '$lib/utils/util';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   const humanizedErrors: Record<string, string> = {
     'errors.com.epicgames.coderedemption.code_not_found': $t('redeemCodes.redeemErrors.notFound'),
@@ -34,36 +34,37 @@
     event.preventDefault();
 
     isRedeeming = true;
-    doingBulkOperations.set(true);
-    codeStatuses = [];
+    codeStates = [];
 
     const nonExistentCodes: string[] = [];
     const invalidCredentialsAccounts: string[] = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
     await Promise.allSettled(accounts.map(async (account) => {
-      const status: CodeStatus = { accountId: account.accountId, displayName: account.displayName, data: [] };
-      codeStatuses.push(status);
+      const state: CodeState = { accountId: account.accountId, displayName: account.displayName, data: [] };
+      codeStates.push(state);
 
       await Promise.allSettled(codesToRedeem.map(async (code) => {
         if (nonExistentCodes.includes(code)) {
-          status.data.push({ code, error: $t('redeemCodes.redeemErrors.notFound') });
+          state.data.push({ code, error: $t('redeemCodes.redeemErrors.notFound') });
           return;
         }
 
         if (invalidCredentialsAccounts.includes(account.accountId)) {
-          status.data.push({ code, error: $t('redeemCodes.loginExpired') });
+          state.data.push({ code, error: $t('redeemCodes.loginExpired') });
           return;
         }
 
         try {
-          await CodeManager.redeem(account, code);
-          status.data.push({ code });
+          await Code.redeem(account, code);
+          state.data.push({ code });
         } catch (error) {
+          handleError({ error, message: 'Failed to redeem code', account, toastId: false });
+
           let errorString = $t('redeemCodes.redeemErrors.unknownError');
 
           if (error instanceof EpicAPIError) {
-            errorString = humanizedErrors[error.errorCode] || error.message;
+            errorString = humanizedErrors[error.errorCode] || error.errorMessage;
 
             switch (error.errorCode) {
               case 'errors.com.epicgames.coderedemption.code_not_found': {
@@ -78,28 +79,27 @@
             }
           }
 
-          status.data.push({ code, error: errorString });
+          state.data.push({ code, error: errorString });
         }
       }));
     }));
 
-    for (const status of codeStatuses) {
-      const successCount = status.data.filter(({ error }) => !error).length;
-      status.displayName = `${status.displayName} - ${successCount}/${status.data.length}`;
+    for (const state of codeStates) {
+      const successCount = state.data.filter(({ error }) => !error).length;
+      state.displayName = `${state.displayName} - ${successCount}/${state.data.length}`;
     }
 
     codesToRedeem = [];
-    doingBulkOperations.set(false);
     isRedeeming = false;
   }
 </script>
 
-<PageContent small={true} title={$t('redeemCodes.page.title')}>
+<PageContent center={true} title={$t('redeemCodes.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={redeemCodes}>
     <AccountCombobox
       disabled={isRedeeming}
       type="multiple"
-      bind:selected={selectedAccounts}
+      bind:value={selectedAccounts}
     />
 
     <TagInput
@@ -113,17 +113,16 @@
       loading={isRedeeming}
       loadingText={$t('redeemCodes.redeeming')}
       type="submit"
-      variant="epic"
     >
       {$t('redeemCodes.redeemCodes')}
     </Button>
   </form>
 
-  {#if !isRedeeming && codeStatuses.length}
-    <BulkResultAccordion statuses={codeStatuses}>
-      {#snippet content(status)}
+  {#if !isRedeeming && codeStates.length}
+    <BulkResultAccordion states={codeStates}>
+      {#snippet content(state)}
         <div class="p-3 space-y-2 text-sm">
-          {#each status.data as { code, error } (code)}
+          {#each state.data as { code, error } (code)}
             <div class="flex items-center gap-1 truncate">
               <span class="font-medium">{code}:</span>
               <span class="truncate" class:text-green-500={!error} class:text-red-500={error}>

@@ -1,54 +1,40 @@
 <script lang="ts">
-  import { cn } from '$lib/utils/util';
-  import { Pagination } from 'bits-ui';
+  import * as Pagination from '$lib/components/ui/pagination';
   import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
   import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+  import type { PaginationRootProps } from 'bits-ui';
 
-  type Props = Pagination.RootProps;
-
-  let {
-    page = $bindable(1),
-    ...restProps
-  }: Props = $props();
-
-  const paginationButtonClasses = cn(
-    'size-8 flex items-center justify-center rounded-md [&>svg]:size-6',
-    'bg-transparent text-primary transition-colors active:scale-[0.98]',
-    'disabled:cursor-not-allowed disabled:opacity-50',
-    'hover:bg-muted hover:disabled:bg-transparent'
-  );
+  let { page = $bindable(), ...restProps }: PaginationRootProps = $props();
 </script>
 
-<Pagination.Root bind:page {...restProps}>
-  {#snippet children({ pages })}
-    <div class="flex items-center gap-3">
-      <Pagination.PrevButton class={paginationButtonClasses}>
-        <ChevronLeftIcon/>
-      </Pagination.PrevButton>
+<Pagination.Root {...restProps} bind:page>
+  {#snippet children({ pages, currentPage })}
+    <Pagination.Content>
+      <Pagination.Item>
+        <Pagination.PrevButton>
+          <ChevronLeftIcon class="size-4" />
+        </Pagination.PrevButton>
+      </Pagination.Item>
 
-      <div class="flex items-center gap-2.5">
-        {#each pages as page (page.key)}
-          {#if page.type === 'ellipsis'}
-            <div class="select-none text-muted-foreground font-medium">
-              ...
-            </div>
-          {:else}
-            <Pagination.Page
-              class={cn(
-                paginationButtonClasses,
-                'font-medium data-selected:bg-foreground data-selected:text-background'
-              )}
-              {page}
-            >
+      {#each pages as page (page.key)}
+        {#if page.type === "ellipsis"}
+          <Pagination.Item>
+            <Pagination.Ellipsis />
+          </Pagination.Item>
+        {:else}
+          <Pagination.Item>
+            <Pagination.Link isActive={currentPage === page.value} {page}>
               {page.value}
-            </Pagination.Page>
-          {/if}
-        {/each}
-      </div>
+            </Pagination.Link>
+          </Pagination.Item>
+        {/if}
+      {/each}
 
-      <Pagination.NextButton class={paginationButtonClasses}>
-        <ChevronRightIcon/>
-      </Pagination.NextButton>
-    </div>
+      <Pagination.Item>
+        <Pagination.NextButton>
+          <ChevronRightIcon class="size-4" />
+        </Pagination.NextButton>
+      </Pagination.Item>
+    </Pagination.Content>
   {/snippet}
 </Pagination.Root>
