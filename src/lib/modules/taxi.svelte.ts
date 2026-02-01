@@ -63,7 +63,7 @@ export default class TaxiManager {
       this.xmpp.on(EpicEvents.MemberKicked, this.handlePartyStateChange.bind(this), { signal });
       this.xmpp.on(EpicEvents.MemberStateUpdated, this.handlePartyStateChange.bind(this), { signal });
       this.xmpp.on(EpicEvents.PartyUpdated, this.handlePartyStateChange.bind(this), { signal });
-      this.xmpp.on(ConnectionEvents.Disconnected, () => this.stop(), { signal });
+      this.xmpp.on(ConnectionEvents.Destroyed, () => this.stop(), { signal });
 
       this.setIsAvailable(true);
 
@@ -133,7 +133,7 @@ export default class TaxiManager {
 
   setPowerLevel(partyId: string, revision: number) {
     logger.debug('Setting power level', { accountId: this.account.accountId, partyId, level: this.level });
-    return Party.sendPatch(this.account, partyId, revision, this.getUpdatePayload(), true);
+    return Party.patchSelf(this.account, partyId, revision, this.getUpdatePayload());
   }
 
   private async handleInvite(invite: EpicEventPartyPing) {

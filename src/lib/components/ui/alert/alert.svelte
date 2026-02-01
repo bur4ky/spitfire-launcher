@@ -1,12 +1,16 @@
-<script lang="ts">
-  type Props = {
+<script lang="ts" module>
+  export type AlertColor = 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'indigo' | 'purple' | 'pink' | 'gray';
+
+  export type AlertProps = {
     title: string;
     message: string;
-    color: 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'indigo' | 'purple' | 'pink' | 'gray';
+    color: AlertColor;
     icon?: any;
   };
+</script>
 
-  const iconColors: Record<Props['color'], string> = {
+<script lang="ts">
+  const iconColors: Record<AlertProps['color'], string> = {
     red: 'text-red-500',
     green: 'text-green-500',
     blue: 'text-blue-500',
@@ -18,7 +22,7 @@
     gray: 'text-gray-500'
   };
 
-  const backgroundcolors: Record<Props['color'], string> = {
+  const backgroundcolors: Record<AlertProps['color'], string> = {
     red: 'bg-red-500/20 border-red-500/50',
     green: 'bg-green-500/20 border-green-500/50',
     blue: 'bg-blue-500/20 border-blue-500/50',
@@ -35,7 +39,7 @@
     message,
     color,
     icon: Icon
-  }: Props = $props();
+  }: AlertProps = $props();
 </script>
 
 <div class="border rounded-lg p-3 mb-2 {backgroundcolors[color]}">

@@ -3,7 +3,6 @@ import gadgetsJson from '$lib/data/gadgets.json';
 import heroesJson from '$lib/data/heroes.json';
 import ingredientsJson from '$lib/data/ingredients.json';
 import missionsJson from '$lib/data/missions.json';
-
 import resourcesJson from '$lib/data/resources.json';
 import survivorsMythicLeadsJson from '$lib/data/survivors-mythic-leads.json';
 import survivorsJson from '$lib/data/survivors.json';

@@ -44,7 +44,7 @@
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import { formatRemainingDuration, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
-  import { Alert } from '$components/ui/alert';
+  import { Alert, type AlertColor } from '$components/ui/alert';
   import { accountStore } from '$lib/storage';
   import { language } from '$lib/i18n';
 
@@ -114,25 +114,22 @@
     return 'UP';
   }
 
-  function getStatusData(status: ServiceStatus['status'] | StatusPageStatus['status']) {
-    switch (status) {
-      case 'UP':
+  function getStatusData(status: ServiceStatus['status'] | StatusPageStatus['status']): { text: string; color: AlertColor; } {
+    switch (status.toLowerCase()) {
+      case 'up':
       case 'operational':
-        return { text: $t('serverStatus.statuses.operational'), color: 'green' } as const;
-      case 'DOWN':
-      case 'MAJOR_OUTAGE':
+        return { text: $t('serverStatus.statuses.operational'), color: 'green' };
+      case 'down':
       case 'major_outage':
-        return { text: $t('serverStatus.statuses.down'), color: 'red' } as const;
-      case 'PARTIAL_OUTAGE':
+        return { text: $t('serverStatus.statuses.down'), color: 'red' };
       case 'partial_outage':
-        return { text: $t('serverStatus.statuses.partialOutage'), color: 'orange' } as const;
-      case 'UNDER_MAINTENANCE':
+        return { text: $t('serverStatus.statuses.partialOutage'), color: 'orange' };
       case 'under_maintenance':
-        return { text: $t('serverStatus.statuses.underMaintenance'), color: 'blue' } as const;
+        return { text: $t('serverStatus.statuses.underMaintenance'), color: 'blue' };
       case 'degraded_performance':
-        return { text: $t('serverStatus.statuses.degradedPerformance'), color: 'yellow' } as const;
+        return { text: $t('serverStatus.statuses.degradedPerformance'), color: 'yellow' };
       default:
-        return { text: $t('serverStatus.statuses.unknown'), color: 'gray' } as const;
+        return { text: $t('serverStatus.statuses.unknown'), color: 'gray' };
     }
   }
 

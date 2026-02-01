@@ -38,7 +38,7 @@ export default class Party {
   }
 
   static kick(account: AccountData, partyId: string, accountToKick: string) {
-    return AuthSession.ky(account, partyService).delete<any>(
+    return AuthSession.ky(account, partyService).delete(
       `parties/${partyId}/members/${accountToKick}`
     ).json();
   }
@@ -53,28 +53,37 @@ export default class Party {
     ).json();
   }
 
-  static async sendPatch(account: AccountData, partyId: string, revision: number, update: Record<string, string>, patchSelf = false): Promise<void> {
-    const body: Record<string, any> = { revision };
-
-    if (patchSelf) {
-      body.delete = [];
-      body.update = { ...defaultPartyMemberMeta, ...update };
-    } else {
-      body.meta = {
+  static patchParty(account: AccountData, partyId: string, revision: number, update: Record<string, string>) {
+    const body = {
+      revision,
+      meta: {
         deleted: [],
         update: { ...defaultPartyMeta, ...update }
-      };
-    }
+      }
+    };
 
+    return Party.patchWithRetry(account, `parties/${partyId}`, body);
+  }
+
+  static patchSelf(account: AccountData, partyId: string, revision: number, update: Record<string, string>) {
+    const body = {
+      revision,
+      deleted: [],
+      update: { ...defaultPartyMemberMeta, ...update }
+    };
+
+    return Party.patchWithRetry(account, `parties/${partyId}/members/${account.accountId}/meta`, body);
+  }
+
+  private static async patchWithRetry(account: AccountData, url: string, body: Record<string, any>) {
     try {
-      await AuthSession.ky(account, partyService).patch(
-        `parties/${partyId}${patchSelf ? `/members/${account.accountId}/meta` : ''}`,
-        { json: body }
-      ).json();
+      await AuthSession.ky(account, partyService).patch(url, { json: body }).json();
     } catch (error) {
       if (error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.social.party.stale_revision') {
         const newRevision = Number.parseInt(error.messageVars[1]);
-        if (!Number.isNaN(newRevision)) return Party.sendPatch(account, partyId, newRevision, update, patchSelf);
+        if (!Number.isNaN(newRevision)) {
+          return AuthSession.ky(account, partyService).patch(url,{ json: { ...body, revision: newRevision } }).json();
+        }
       }
 
       throw error;

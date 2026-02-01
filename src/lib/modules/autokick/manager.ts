@@ -201,7 +201,7 @@ export default class AutoKickManager {
 
     this.lastKick = new Date();
 
-    let kickPromise = Promise.resolve();
+    let kickPromise: Promise<unknown> = Promise.resolve();
     if (settings.autoKick && party) {
       logger.debug('Running auto-kick', { accountId, partyId: party.id });
 

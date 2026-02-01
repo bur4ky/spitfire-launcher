@@ -7,7 +7,6 @@ import Friends, { FriendsStore } from '$lib/modules/friends';
 import Party from '$lib/modules/party';
 import { accountStore } from '$lib/storage';
 import { accountPartiesStore } from '$lib/stores';
-import { handleError } from '$lib/utils';
 import type { AccountData } from '$types/account';
 import type {
   EpicEventFriendRemoved,
@@ -45,6 +44,7 @@ type EventMap = {
   [ConnectionEvents.SessionStarted]: void;
   [ConnectionEvents.Connected]: void;
   [ConnectionEvents.Disconnected]: void;
+  [ConnectionEvents.Destroyed]: void;
 };
 
 type AccountOptions = AccountData & {
@@ -71,10 +71,6 @@ export default class XMPPManager extends EventEmitter<EventMap> {
     this.purposes.add(purpose);
   }
 
-  get accountId() {
-    return this.account?.accountId;
-  }
-
   static new(account: AccountData, purpose: Purpose) {
     let lock = connectionLocks.get(account.accountId);
     if (!lock) {
@@ -89,15 +85,10 @@ export default class XMPPManager extends EventEmitter<EventMap> {
         return existingInstance;
       }
 
-      try {
-        const accessToken = await AuthSession.new(account).getAccessToken(true);
-        const instance = new XMPPManager({ ...account, accessToken }, purpose);
-        XMPPManager.instances.set(account.accountId, instance);
-        return instance;
-      } catch (error) {
-        handleError({ error, message: 'Failed to create XMPPManager instance', account, toastId: false });
-        throw error;
-      }
+      const accessToken = await AuthSession.new(account).getAccessToken(true);
+      const instance = new XMPPManager({ ...account, accessToken }, purpose);
+      XMPPManager.instances.set(account.accountId, instance);
+      return instance;
     });
   }
 
@@ -108,7 +99,8 @@ export default class XMPPManager extends EventEmitter<EventMap> {
 
     const server = 'prod.ol.epicgames.com';
 
-    const resourceHash = window.crypto.getRandomValues(new Uint8Array(16))
+    const resourceHash = window.crypto
+      .getRandomValues(new Uint8Array(16))
       .reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
       .toUpperCase();
 
@@ -127,33 +119,20 @@ export default class XMPPManager extends EventEmitter<EventMap> {
       resource: `V2:Fortnite:WIN::${resourceHash}`
     });
 
-    this.connection.enableKeepAlive({
-      interval: 30
-    });
-
+    this.connection.enableKeepAlive({ interval: 30 });
     this.setupEvents();
 
     return new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Connection timeout'));
-      }, 15000);
+      const timeout = setTimeout(() => reject(new Error('Connection timeout')), 15000);
 
-      this.connection!.once('session:started', () => {
-        this.intentionalDisconnect = false;
-        this.reconnectAttempts = 0;
-
-        if (this.reconnectTimeout) {
-          clearTimeout(this.reconnectTimeout);
-          this.reconnectTimeout = undefined;
-        }
-
+      this.connection!.once(ConnectionEvents.SessionStarted, () => {
         clearTimeout(timeout);
         resolve();
       });
 
-      this.connection!.once('stream:error', (error) => {
+      this.connection!.once(ConnectionEvents.StreamError, (err) => {
         clearTimeout(timeout);
-        reject(error);
+        reject(err);
       });
 
       this.connection!.connect();
@@ -168,22 +147,12 @@ export default class XMPPManager extends EventEmitter<EventMap> {
       this.reconnectTimeout = undefined;
     }
 
-    this.emit(ConnectionEvents.Disconnected, undefined);
-    this.connection?.removeAllListeners();
     this.connection?.disconnect();
-    this.connection = undefined;
-    this.removeAllListeners();
-
-    XMPPManager.instances.delete(this.account.accountId);
-    this.account = undefined!;
   }
 
   removePurpose(purpose: Purpose) {
     this.purposes.delete(purpose);
-
-    if (!this.purposes.size) {
-      this.disconnect();
-    }
+    if (!this.purposes.size) this.disconnect();
   }
 
   setStatus(status: string, onlineType: 'online' | 'away' | 'chat' | 'dnd' | 'xa' = 'online') {
@@ -214,55 +183,48 @@ export default class XMPPManager extends EventEmitter<EventMap> {
     });
   }
 
-  private getReconnectDelay() {
-    return Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30_000);
-  }
-
-  private async tryReconnect() {
-    if (this.intentionalDisconnect || this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) return;
-
-    try {
-      await this.connect();
-    } catch (error) {
-      this.reconnectAttempts++;
-
-      logger.warn('Reconnect attempt failed', {
-        accountId: this.accountId,
-        attempt: this.reconnectAttempts,
-        error
-      });
-
-      if (!this.intentionalDisconnect && this.reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-        const delay = this.getReconnectDelay();
-        this.reconnectTimeout = window.setTimeout(() => this.tryReconnect(), delay);
-      }
-    }
-  }
-
   private setupEvents() {
     if (!this.connection) return;
 
     this.connection.on(ConnectionEvents.SessionStarted, () => {
+      this.intentionalDisconnect = false;
+      this.reconnectAttempts = 0;
+
+      if (this.reconnectTimeout) {
+        clearTimeout(this.reconnectTimeout);
+        this.reconnectTimeout = undefined;
+      }
+
       this.emit(ConnectionEvents.SessionStarted, undefined);
     });
 
     this.connection.on(ConnectionEvents.Connected, () => {
       this.emit(ConnectionEvents.Connected, undefined);
-
-      this.reconnectAttempts = 0;
-      if (this.reconnectTimeout) {
-        clearTimeout(this.reconnectTimeout);
-        this.reconnectTimeout = undefined;
-      }
     });
 
     this.connection.on(ConnectionEvents.Disconnected, async () => {
       this.emit(ConnectionEvents.Disconnected, undefined);
 
-      if (!this.intentionalDisconnect && !this.reconnectTimeout) {
+      if (this.intentionalDisconnect) {
+        if (this.reconnectTimeout) {
+          clearTimeout(this.reconnectTimeout);
+          this.reconnectTimeout = undefined;
+        }
+
+        this.emit(ConnectionEvents.Destroyed, undefined);
+
+        this.connection?.removeAllListeners();
+        this.connection = undefined;
+        this.removeAllListeners();
+
+        XMPPManager.instances.delete(this.account.accountId);
+        this.account = undefined!;
+        return;
+      }
+
+      if (!this.reconnectTimeout) {
         const delay = this.getReconnectDelay();
         this.reconnectTimeout = window.setTimeout(() => this.tryReconnect(), delay);
-        await this.tryReconnect();
       }
     });
 
@@ -284,40 +246,63 @@ export default class XMPPManager extends EventEmitter<EventMap> {
       if (!type) return;
 
       switch (type) {
-        case EpicEvents.MemberStateUpdated: {
+        case EpicEvents.MemberStateUpdated:
           this.handleMemberStateUpdated(body as EpicEventMemberStateUpdated);
           break;
-        }
-        case EpicEvents.PartyUpdated: {
+        case EpicEvents.PartyUpdated:
           this.handlePartyUpdated(body as EpicEventPartyUpdated);
           break;
-        }
-        case EpicEvents.MemberJoined: {
+        case EpicEvents.MemberJoined:
           await this.handleMemberJoin(body as EpicEventMemberJoined);
           break;
-        }
         case EpicEvents.MemberExpired:
         case EpicEvents.MemberLeft:
-        case EpicEvents.MemberKicked: {
+        case EpicEvents.MemberKicked:
           this.handleMemberLeave(body as EpicEventMemberLeft | EpicEventMemberKicked | EpicEventMemberExpired);
           break;
-        }
-        case EpicEvents.MemberNewCaptain: {
+        case EpicEvents.MemberNewCaptain:
           this.handleMemberNewCaptain(body as EpicEventMemberNewCaptain);
           break;
-        }
-        case EpicEvents.FriendRequest: {
+        case EpicEvents.FriendRequest:
           this.handleFriendRequest(body as EpicEventFriendRequest);
           break;
-        }
-        case EpicEvents.FriendRemove: {
+        case EpicEvents.FriendRemove:
           this.handleFriendRemoved(body as EpicEventFriendRemoved);
           break;
-        }
       }
 
       this.emit(type, body);
     });
+  }
+
+  private getReconnectDelay() {
+    return Math.min(1000 * 2 ** this.reconnectAttempts, 30_000);
+  }
+
+  private async tryReconnect() {
+    if (this.intentionalDisconnect || this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) return;
+
+    try {
+      if (this.reconnectAttempts === 0) {
+        const newToken = await AuthSession.new(this.account).getAccessToken(true);
+        this.account.accessToken = newToken;
+      }
+
+      await this.connect();
+      logger.info('Reconnected successfully');
+    } catch (error) {
+      this.reconnectAttempts++;
+      logger.warn('Reconnect attempt failed', {
+        accountId: this.account.accountId,
+        attempt: this.reconnectAttempts,
+        error
+      });
+
+      if (!this.intentionalDisconnect) {
+        const delay = this.getReconnectDelay();
+        this.reconnectTimeout = window.setTimeout(() => this.tryReconnect(), delay);
+      }
+    }
   }
 
   private handleMemberStateUpdated(data: EpicEventMemberStateUpdated) {
@@ -442,10 +427,10 @@ export default class XMPPManager extends EventEmitter<EventMap> {
   }
 
   private handleFriendRequest(data: EpicEventFriendRequest) {
-    const friends = FriendsStore.getOrCreate(this.accountId);
+    const friends = FriendsStore.getOrCreate(this.account.accountId);
 
     if (data.status === 'PENDING') {
-      if (data.from === this.accountId) {
+      if (data.from === this.account.accountId) {
         Friends.cacheAccountNameAndAvatar(this.account, data.to);
         friends.outgoing.set(data.to, {
           accountId: data.to,
@@ -463,7 +448,7 @@ export default class XMPPManager extends EventEmitter<EventMap> {
         });
       }
     } else if (data.status === 'ACCEPTED') {
-      const friendId = data.from === this.accountId ? data.to : data.from;
+      const friendId = data.from === this.account.accountId ? data.to : data.from;
 
       Friends.cacheAccountNameAndAvatar(this.account, friendId);
       friends.incoming.delete(friendId);
@@ -480,8 +465,8 @@ export default class XMPPManager extends EventEmitter<EventMap> {
   }
 
   private handleFriendRemoved(data: EpicEventFriendRemoved) {
-    const friends = FriendsStore.getOrCreate(this.accountId);
-    const friendId = data.from === this.accountId ? data.to : data.from;
+    const friends = FriendsStore.getOrCreate(this.account.accountId);
+    const friendId = data.from === this.account.accountId ? data.to : data.from;
 
     friends.friends.delete(friendId);
     friends.incoming.delete(friendId);

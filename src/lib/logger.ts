@@ -1,7 +1,7 @@
 import { dev } from '$app/environment';
 import { Logger } from 'tslog';
 
-export const levelMap = {
+export const logLevel = {
   silly: 0,
   trace: 1,
   debug: 2,
@@ -11,11 +11,11 @@ export const levelMap = {
   fatal: 6
 } as const;
 
-type LogLevel = keyof typeof levelMap;
+type LogLevel = keyof typeof logLevel;
 
 export function getLevel(level: LogLevel) {
   const lvl = level.toLowerCase() as LogLevel;
-  return lvl in levelMap ? levelMap[lvl] : levelMap.info;
+  return lvl in logLevel ? logLevel[lvl] : logLevel.info;
 }
 
 const logger = new Logger({
