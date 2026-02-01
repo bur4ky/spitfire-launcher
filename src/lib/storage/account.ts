@@ -89,8 +89,6 @@ export default class AccountStore extends FileStore<AccountDataFile> {
     AutoKickBase.removeAccount(account.accountId);
     XMPPManager.instances.get(account.accountId)?.disconnect();
 
-    if (!account) return;
-
     DeviceAuth.delete(account, account.deviceId).catch((error) => {
       logger.error('Failed to delete device auth', { error });
     });

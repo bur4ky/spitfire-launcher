@@ -41,13 +41,12 @@ export default abstract class FileStore<T> implements Readable<T> {
       return;
     }
 
-    const raw = await readTextFile(this.path);
-    const parsed = this.schema.safeParse(JSON.parse(raw));
-    if (!parsed.success) {
-      logger.error('Invalid data, resetting to defaults', { file: this.path, error: parsed.error });
+    try {
+      const raw = await readTextFile(this.path);
+      this.state = this.schema.parse(JSON.parse(raw));
+    } catch (error) {
+      logger.error('Invalid data, resetting to defaults', { file: this.path, error });
       this.state = structuredClone(this.defaults);
-    } else {
-      this.state = parsed.data;
     }
 
     this.notify();

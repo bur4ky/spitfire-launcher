@@ -265,7 +265,7 @@ export default class AutoKickManager {
       return Party.leave(this.account, party.id);
     }
 
-    const leaveAccounts = noAutoKickIds.map((id) => accounts.find((a) => a.accountId === id)).filter((x) => !!x);
+    const leaveAccounts = accounts.filter((acc) => noAutoKickIds.includes(acc.accountId));
     leaveAccounts.push(this.account);
 
     return Promise.allSettled(leaveAccounts.map((x) => Party.leave(x, party.id)));
