@@ -1,3 +1,4 @@
+import { fortnitePCGameClient } from '$lib/constants/clients';
 import AuthSession from '$lib/modules/auth-session';
 import { publicAccountService } from '$lib/services/epic';
 import type { AccountData } from '$types/account';
@@ -15,13 +16,13 @@ export default class DeviceAuth {
   }
 
   static get(account: AccountData, deviceId: string) {
-    return AuthSession.ky(account, publicAccountService).get<EpicDeviceAuthData>(
+    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient).get<EpicDeviceAuthData>(
       `${account.accountId}/deviceAuth/${deviceId}`
     ).json();
   }
 
   static getAll(account: AccountData) {
-    return AuthSession.ky(account, publicAccountService).get<EpicDeviceAuthData[]>(
+    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient).get<EpicDeviceAuthData[]>(
       `${account.accountId}/deviceAuth`
     ).json();
   }

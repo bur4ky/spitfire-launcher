@@ -1,4 +1,5 @@
 import AsyncLock from '$lib/async-lock';
+import { defaultClient, type ClientCredentials } from '$lib/constants/clients';
 import EpicAPIError from '$lib/exceptions/EpicAPIError';
 import { t } from '$lib/i18n';
 import { getChildLogger } from '$lib/logger';
@@ -11,7 +12,7 @@ import { get } from 'svelte/store';
 
 const logger = getChildLogger('AuthSession');
 
-// This allows us to have one access token per account
+// This allows us to have one access token per account per client
 type AuthState = {
   accessToken: string;
   expiresAt: number;
@@ -19,14 +20,15 @@ type AuthState = {
 };
 
 export default class AuthSession {
-  private static states = new Map<string, AuthState>();
+  // accountId -> clientId -> AuthState
+  private static states = new Map<string, Map<string, AuthState>>();
   // Used for preventing duplicate error toasts when the same error occurs repeatedly in a short time period
   private notifiedErrors = new Map<string, number>();
   private readonly kyInstance?: KyInstance;
 
   private constructor(
     private readonly account: AccountData,
-    private readonly state: AuthState,
+    private readonly client: ClientCredentials,
     baseKy?: KyInstance
   ) {
     this.kyInstance = baseKy?.extend({
@@ -53,8 +55,14 @@ export default class AuthSession {
     });
   }
 
-  static new(account: AccountData, baseKy?: KyInstance) {
-    let state = AuthSession.states.get(account.accountId);
+  static new(account: AccountData, baseKy?: KyInstance, client: ClientCredentials = defaultClient) {
+    let clientMap = AuthSession.states.get(account.accountId);
+    if (!clientMap) {
+      clientMap = new Map<string, AuthState>();
+      AuthSession.states.set(account.accountId, clientMap);
+    }
+
+    let state = clientMap.get(client.clientId);
     if (!state) {
       state = {
         accessToken: '',
@@ -62,60 +70,69 @@ export default class AuthSession {
         lock: new AsyncLock()
       };
 
-      AuthSession.states.set(account.accountId, state);
+      clientMap.set(client.clientId, state);
     }
 
-    return new AuthSession(account, state, baseKy);
+    return new AuthSession(account, client, baseKy);
   }
 
-  // Convenience method to get a ky instance directly
-  static ky(account: AccountData, baseKy?: KyInstance) {
-    return this.new(account, baseKy).ky();
+  // Shortcut method to get a ky instance directly
+  static ky(account: AccountData, baseKy?: KyInstance, client: ClientCredentials = defaultClient) {
+    return this.new(account, baseKy, client).ky();
   }
 
   ky() {
     if (!this.kyInstance) {
-      throw new Error('No kyInstance instance available');
+      throw new Error('No Ky instance available');
     }
 
     return this.kyInstance;
   }
 
-  async getAccessToken(forceRefresh = false) {
+  async getAccessToken(forceRefresh = false, client: ClientCredentials = this.client) {
+    const clientMap = AuthSession.states.get(this.account.accountId)!;
+    const state = clientMap.get(client.clientId)!;
+
     if (forceRefresh) {
-      this.state.accessToken = '';
-      this.state.expiresAt = 0;
+      state.accessToken = '';
+      state.expiresAt = 0;
     }
 
-    if (this.tokenValid()) {
-      return this.state.accessToken;
+    if (this.tokenValid(state)) {
+      return state.accessToken;
     }
 
-    return this.state.lock.withLock(async () => {
-      if (this.tokenValid()) {
-        return this.state.accessToken;
+    return state.lock.withLock(async () => {
+      if (this.tokenValid(state)) {
+        return state.accessToken;
       }
 
-      await this.refreshToken();
-      return this.state.accessToken;
+      await this.refreshToken(state, client);
+      return state.accessToken;
     });
   }
 
-  private async refreshToken() {
-    logger.debug('Refreshing access token', { accountId: this.account.accountId });
+  private async refreshToken(state: AuthState, client: ClientCredentials) {
+    logger.debug('Refreshing access token', { accountId: this.account.accountId, clientId: client.clientId });
 
     try {
-      const data = await Authentication.getAccessTokenUsingDeviceAuth(this.account);
-      this.state.accessToken = data.access_token;
-      this.state.expiresAt = Date.now() + data.expires_in * 1000;
+      let accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(this.account);
+
+      if (client.clientId !== defaultClient.clientId) {
+        const { code } = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+        accessTokenData = await Authentication.getAccessTokenUsingExchangeCode(code, client);
+      }
+
+      state.accessToken = accessTokenData.access_token;
+      state.expiresAt = Date.now() + accessTokenData.expires_in * 1000;
     } catch (error) {
       this.handleError(error);
       throw error;
     }
   }
 
-  private tokenValid() {
-    return !!this.state.accessToken && Date.now() < this.state.expiresAt;
+  private tokenValid(state: AuthState) {
+    return !!state.accessToken && Date.now() < state.expiresAt;
   }
 
   private handleError(error: unknown) {

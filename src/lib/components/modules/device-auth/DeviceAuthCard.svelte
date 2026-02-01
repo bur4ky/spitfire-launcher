@@ -26,7 +26,6 @@
     const newName = event.currentTarget.textContent?.trim();
     if (!newName) {
       event.currentTarget.textContent = $t('deviceAuth.authInfo.noName');
-
       deviceAuthsStore.remove(deviceId);
     } else {
       deviceAuthsStore.setName(deviceId, newName);
@@ -109,7 +108,7 @@
           { title: $t('deviceAuth.authInfo.id'), value: auth.deviceId },
           { title: 'User-Agent', value: auth.userAgent },
           { title: 'Secret', value: auth.secret }
-        ] as { title, value } (title)}
+        ] as { title, value } (value)}
           {#if value}
             <div class="text-sm flex flex-col">
               <span class="font-semibold">{title}</span>
@@ -147,8 +146,8 @@
       class="absolute top-4 right-4 p-2"
       disabled={isDeleting}
       onclick={() => deleteDeviceAuth(auth.deviceId)}
-      size="sm"
-      variant="destructive"
+      size="icon"
+      variant="ghost"
     >
       <Trash2Icon class="size-5" />
     </Button>

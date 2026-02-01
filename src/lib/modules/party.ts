@@ -77,7 +77,7 @@ export default class Party {
 
   private static async patchWithRetry(account: AccountData, url: string, body: Record<string, any>) {
     try {
-      await AuthSession.ky(account, partyService).patch(url, { json: body }).json();
+      return await AuthSession.ky(account, partyService).patch(url, { json: body }).json();
     } catch (error) {
       if (error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.social.party.stale_revision') {
         const newRevision = Number.parseInt(error.messageVars[1]);
