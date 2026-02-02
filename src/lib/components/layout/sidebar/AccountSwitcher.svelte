@@ -20,7 +20,7 @@
   };
 
   const allAccounts = $derived($accountStore.accounts);
-  const activeAccount = accountStore.getActiveStore();
+  const activeAccount = accountStore.getActiveStore(true);
 
   let dropdownOpen = $state(false);
   let searchTerm = $state<string>();
@@ -52,6 +52,8 @@
   }
 
   async function logout() {
+    if (!$activeAccount) return;
+
     const accountName = $activeAccount.displayName || $activeAccount.accountId;
     const toastId = toast.loading($t('accountManager.loggingOut', { name: accountName }));
 
@@ -86,12 +88,12 @@
     >
       <img
         class="size-8 rounded-full"
-        alt={$activeAccount.displayName}
-        src={avatarCache.get($activeAccount.accountId) || '/misc/default-outfit-icon.png'}
+        alt={$activeAccount?.displayName}
+        src={($activeAccount && avatarCache.get($activeAccount.accountId)) || '/misc/default-outfit-icon.png'}
       />
 
       <span class="text-base font-medium truncate">
-        {$activeAccount.displayName || $t('accountManager.noAccount')}
+        {$activeAccount?.displayName || $t('accountManager.noAccount')}
       </span>
 
       <ChevronDownIcon
@@ -128,7 +130,7 @@
 
             <span class="truncate">{account.displayName}</span>
 
-            {#if $activeAccount.accountId === account.accountId}
+            {#if $activeAccount?.accountId === account.accountId}
               <CheckIcon class="size-5 ml-auto" />
             {/if}
           </DropdownMenu.Item>

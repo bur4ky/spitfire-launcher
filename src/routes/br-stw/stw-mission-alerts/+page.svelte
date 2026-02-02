@@ -17,7 +17,7 @@
   import { onMount } from 'svelte';
   import { accountStore } from '$lib/storage';
 
-  const activeAccount = accountStore.getActiveStore();
+  const activeAccount = accountStore.getActiveStore(true);
 
   const filteredMissions = $derived.by(() => {
     if (!$worldInfoCache) return null;
