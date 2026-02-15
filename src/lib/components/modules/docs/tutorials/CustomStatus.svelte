@@ -7,7 +7,9 @@
   const activeAccount = accountStore.getActiveStore();
 </script>
 
-<BaseModal description={$t('docs.customStatus.description')} title={$t('customStatus.page.title')}>
+<BaseModal title={$t('customStatus.page.title')}>
+  <p>{$t('docs.customStatus.description')}</p>
+  
   <div class="bg-gradient-to-r from-[#005ba3] to-[#0674b5] w-3/4 mx-auto h-16 flex items-center px-4 rounded-sm">
     <div class="relative mr-5">
       <div class="size-10 bg-gradient-to-b from-[#0049ae] to-[#0570c1] rounded-full flex items-center justify-center">

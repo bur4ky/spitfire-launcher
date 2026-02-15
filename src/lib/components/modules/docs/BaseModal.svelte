@@ -5,11 +5,10 @@
 
   type Props = {
     title?: string;
-    description?: string;
     children: Snippet;
   };
 
-  const { title, description, children }: Props = $props();
+  const { title, children }: Props = $props();
 </script>
 
 <Dialog.Root>
@@ -18,14 +17,9 @@
   </Dialog.Trigger>
 
   <Dialog.Content>
-    {#if title || description}
+    {#if title}
       <Dialog.Header>
-        {#if title}
-          <Dialog.Title>{title}</Dialog.Title>
-        {/if}
-        {#if description}
-          <Dialog.Description>{description}</Dialog.Description>
-        {/if}
+        <Dialog.Title>{title}</Dialog.Title>
       </Dialog.Header>
     {/if}
 
