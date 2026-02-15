@@ -55,7 +55,11 @@
           case 'errors.com.epicgames.modules.gameplayutils.not_enough_mtx': {
             const [, errorItemPrice, errorOwnedVbucks] = error.messageVars;
 
-            toast.error($t('itemShop.needMoreVbucksToPurchase', { amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks) }));
+            toast.error(
+              $t('itemShop.needMoreVbucksToPurchase', {
+                amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks)
+              })
+            );
             accountCacheStore.update((accounts) => {
               const account = accounts[$activeAccount.accountId];
               account.vbucks = Number.parseInt(errorItemPrice);
@@ -105,13 +109,13 @@
     </Dialog.Header>
 
     <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
+      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
         {$t('cancel')}
       </Dialog.Close>
 
       <Button class="flex-1" disabled={isPurchasing} onclick={purchaseItem}>
         {#if isPurchasing}
-          <LoaderCircleIcon class="size-5 animate-spin mr-2" />
+          <LoaderCircleIcon class="mr-2 size-5 animate-spin" />
           {$t('itemShop.purchasing')}
         {:else}
           {$t('confirm')}

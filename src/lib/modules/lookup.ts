@@ -17,15 +17,9 @@ export class Lookup {
     const MAX_IDS_PER_REQUEST = 100;
     const session = AuthSession.ky(account, publicAccountService);
 
-    const accounts = await processChunks(
-      accountIds,
-      MAX_IDS_PER_REQUEST,
-      async (ids) => {
-        return session.get<EpicAccountById[]>(
-          `?${ids.map((x) => `accountId=${x}`).join('&')}`
-        ).json();
-      }
-    );
+    const accounts = await processChunks(accountIds, MAX_IDS_PER_REQUEST, async (ids) => {
+      return session.get<EpicAccountById[]>(`?${ids.map((x) => `accountId=${x}`).join('&')}`).json();
+    });
 
     for (const account of accounts) {
       const name = account.displayName || Object.values(account.externalAuths).map((x) => x.externalDisplayName)?.[0];
@@ -38,18 +32,18 @@ export class Lookup {
   }
 
   static async fetchByName(account: AccountData, displayName: string) {
-    const data = await AuthSession.ky(account, publicAccountService).get<EpicAccountByName>(
-      `displayName/${displayName.trim()}`
-    ).json();
+    const data = await AuthSession.ky(account, publicAccountService)
+      .get<EpicAccountByName>(`displayName/${displayName.trim()}`)
+      .json();
 
     displayNamesCache.set(data.id, data.displayName);
     return data;
   }
 
   static async searchByName(account: AccountData, namePrefix: string) {
-    const data = await AuthSession.ky(account, userSearchService).get<EpicAccountSearch[]>(
-      `${account.accountId}?prefix=${namePrefix.trim()}&platform=epic`
-    ).json();
+    const data = await AuthSession.ky(account, userSearchService)
+      .get<EpicAccountSearch[]>(`${account.accountId}?prefix=${namePrefix.trim()}&platform=epic`)
+      .json();
 
     for (const account of data) {
       const name = account.matches[0]?.value;
@@ -71,12 +65,13 @@ export class Lookup {
       };
     } else {
       const data = (await Lookup.searchByName(account, nameOrId))?.[0];
-      if (!data) throw new EpicAPIError({
-        errorCode: 'errors.com.epicgames.account.account_not_found',
-        errorMessage: `Sorry, we couldn't find an account for ${nameOrId}`,
-        messageVars: [nameOrId],
-        numericErrorCode: 18007
-      });
+      if (!data)
+        throw new EpicAPIError({
+          errorCode: 'errors.com.epicgames.account.account_not_found',
+          errorMessage: `Sorry, we couldn't find an account for ${nameOrId}`,
+          messageVars: [nameOrId],
+          numericErrorCode: 18007
+        });
 
       return {
         accountId: data.accountId,

@@ -66,7 +66,10 @@ export class XMPPManager extends EventEmitter<EventMap> {
   private intentionalDisconnect = false;
   private reconnectAttempts = 0;
 
-  private constructor(private account: AccountOptions, purpose: Purpose) {
+  private constructor(
+    private account: AccountOptions,
+    purpose: Purpose
+  ) {
     super();
     this.purposes.add(purpose);
   }
@@ -230,10 +233,11 @@ export class XMPPManager extends EventEmitter<EventMap> {
 
     this.connection.on('message', async (message) => {
       if (
-        (message.type && message.type !== 'normal')
-        || !message.body
-        || message.from !== 'xmpp-admin@prod.ol.epicgames.com'
-      ) return;
+        (message.type && message.type !== 'normal') ||
+        !message.body ||
+        message.from !== 'xmpp-admin@prod.ol.epicgames.com'
+      )
+        return;
 
       let body: any;
       try {

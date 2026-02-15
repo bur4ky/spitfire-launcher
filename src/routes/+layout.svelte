@@ -39,7 +39,9 @@
     if (!settingsStore.get().app?.checkForUpdates) return;
 
     const currentVersion = await getVersion();
-    const latestVersion = await ky.get<GitHubRelease>(`https://api.github.com/repos/bur4ky/spitfire-launcher/releases/latest`).json();
+    const latestVersion = await ky
+      .get<GitHubRelease>(`https://api.github.com/repos/bur4ky/spitfire-launcher/releases/latest`)
+      .json();
 
     if (latestVersion.tag_name.replace('v', '') !== currentVersion) {
       hasNewVersion = true;
@@ -55,7 +57,10 @@
     if (!account) return;
 
     const userAccounts = accountStore.get().accounts;
-    const accounts = await Lookup.fetchByIds(account, userAccounts.map((account) => account.accountId));
+    const accounts = await Lookup.fetchByIds(
+      account,
+      userAccounts.map((account) => account.accountId)
+    );
     accountStore.set((current) => ({
       ...current,
       accounts: current.accounts.map((account) => ({
@@ -152,17 +157,19 @@
 
     if (platform() === 'windows') {
       // Used to set running apps when the page is refreshed
-      Tauri.getTrackedApps().then((apps) => {
-        for (const app of apps) {
-          if (app.is_running) {
-            runningAppIds.add(app.app_id);
-          } else {
-            runningAppIds.delete(app.app_id);
+      Tauri.getTrackedApps()
+        .then((apps) => {
+          for (const app of apps) {
+            if (app.is_running) {
+              runningAppIds.add(app.app_id);
+            } else {
+              runningAppIds.delete(app.app_id);
+            }
           }
-        }
-      }).catch((error) => {
-        logger.error('Failed to get tracked apps', { error });
-      });
+        })
+        .catch((error) => {
+          logger.error('Failed to get tracked apps', { error });
+        });
     }
   }
 
@@ -195,15 +202,14 @@
       // However, fetching per account allows invalid accounts to fail independently
       // and be detected and removed from the config.
       accountStore.get().accounts.map((x) =>
-        Avatar.fetchAvatars(x, [x.accountId])
-          .catch((error) => {
-            handleError({
-              error,
-              message: 'Failed to fetch avatar',
-              account: x.accountId,
-              toastId: false
-            });
-          })
+        Avatar.fetchAvatars(x, [x.accountId]).catch((error) => {
+          handleError({
+            error,
+            message: 'Failed to fetch avatar',
+            account: x.accountId,
+            toastId: false
+          });
+        })
       )
     ]);
   });
@@ -223,16 +229,16 @@
       }}
     >
       {#snippet loadingIcon()}
-        <LoaderCircleIcon class="animate-spin size-5" />
+        <LoaderCircleIcon class="size-5 animate-spin" />
       {/snippet}
     </Toaster>
 
     <Sidebar />
 
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-1 flex-col">
       <Header />
       <div>
-        <main class="px-5 py-5 xs:px-10 sm:py-10 sm:px-20 flex-1 overflow-auto bg-background h-[calc(100dvh-4rem)]">
+        <main class="h-[calc(100dvh-4rem)] flex-1 overflow-auto bg-background px-5 py-5 xs:px-10 sm:px-20 sm:py-10">
           {@render children()}
         </main>
       </div>
@@ -252,10 +258,7 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <Button
-      class="flex gap-2 justify-center items-center w-fit"
-      href={newVersionData?.downloadUrl}
-    >
+    <Button class="flex w-fit items-center justify-center gap-2" href={newVersionData?.downloadUrl}>
       <ExternalLinkIcon class="size-5" />
       {$t('newVersionAvailable.download')}
     </Button>

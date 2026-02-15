@@ -1,35 +1,35 @@
-<div class="border rounded-md p-4.5 relative size-full bg-card skeleton-loader">
-  <div class="flex justify-between items-start">
+<div class="skeleton-loader relative size-full rounded-md border bg-card p-4.5">
+  <div class="flex items-start justify-between">
     <div class="flex flex-col gap-y-1">
-      <div class="h-6 w-32 rounded skeleton-loader mb-2"></div>
+      <div class="skeleton-loader mb-2 h-6 w-32 rounded"></div>
 
       <div class="flex flex-col gap-y-4">
         <div class="flex flex-col gap-1">
-          <div class="h-4 w-20 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
+          <div class="skeleton-loader h-4 w-20 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
         </div>
 
         <div class="flex flex-col gap-1">
-          <div class="h-4 w-20 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
+          <div class="skeleton-loader h-4 w-20 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
         </div>
 
-        <div class="flex flex-col gap-2 mt-2">
-          <div class="h-4 w-24 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
+        <div class="mt-2 flex flex-col gap-2">
+          <div class="skeleton-loader h-4 w-24 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
         </div>
 
-        <div class="flex flex-col gap-2 mt-2">
-          <div class="h-4 w-24 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
-          <div class="h-4 w-48 rounded skeleton-loader"></div>
+        <div class="mt-2 flex flex-col gap-2">
+          <div class="skeleton-loader h-4 w-24 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
+          <div class="skeleton-loader h-4 w-48 rounded"></div>
         </div>
       </div>
     </div>
 
-    <div class="absolute top-4 right-4 size-10 rounded skeleton-loader"></div>
+    <div class="skeleton-loader absolute top-4 right-4 size-10 rounded"></div>
   </div>
 </div>

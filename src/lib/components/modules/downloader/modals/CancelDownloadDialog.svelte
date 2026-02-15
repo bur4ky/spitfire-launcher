@@ -9,10 +9,7 @@
     onConfirm: () => void;
   };
 
-  let {
-    open = $bindable(),
-    onConfirm
-  }: Props = $props();
+  let { open = $bindable(), onConfirm }: Props = $props();
 
   let isCancelling = $state(false);
 </script>
@@ -30,12 +27,12 @@
     </Dialog.Header>
 
     <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
+      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
         {$t('cancel')}
       </Dialog.Close>
 
       <Button
-        class="flex items-center gap-2 flex-1"
+        class="flex flex-1 items-center gap-2"
         disabled={isCancelling}
         loading={isCancelling}
         onclick={() => {

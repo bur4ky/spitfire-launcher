@@ -22,10 +22,22 @@ import { get } from 'svelte/store';
 
 const FORT_STATS_KEY = 'Default:FORTStats_j';
 const FORT_STATS_KEYS = [
-  'fortitude', 'offense', 'resistance', 'tech',
-  'teamFortitude', 'teamOffense', 'teamResistance', 'teamTech',
-  'fortitude_Phoenix', 'offense_Phoenix', 'resistance_Phoenix', 'tech_Phoenix',
-  'teamFortitude_Phoenix', 'teamOffense_Phoenix', 'teamResistance_Phoenix', 'teamTech_Phoenix'
+  'fortitude',
+  'offense',
+  'resistance',
+  'tech',
+  'teamFortitude',
+  'teamOffense',
+  'teamResistance',
+  'teamTech',
+  'fortitude_Phoenix',
+  'offense_Phoenix',
+  'resistance_Phoenix',
+  'tech_Phoenix',
+  'teamFortitude_Phoenix',
+  'teamOffense_Phoenix',
+  'teamResistance_Phoenix',
+  'teamTech_Phoenix'
 ];
 
 const logger = getChildLogger('TaxiManager');
@@ -44,7 +56,7 @@ export class TaxiManager {
   private abortController?: AbortController;
   private partyTimeoutId?: number;
 
-  constructor(private account: AccountData) { }
+  constructor(private account: AccountData) {}
 
   async start() {
     this.isStarting = true;
@@ -113,7 +125,10 @@ export class TaxiManager {
         count: incomingRequests.length
       });
 
-      await Friends.acceptAllIncomingRequests(this.account, incomingRequests.map((x) => x.accountId));
+      await Friends.acceptAllIncomingRequests(
+        this.account,
+        incomingRequests.map((x) => x.accountId)
+      );
     }
   }
 
@@ -146,7 +161,13 @@ export class TaxiManager {
     }
 
     const [inviterPartyData] = await Party.getInviterParty(this.account, invite.pinger_id);
-    await Party.acceptInvite(this.account, inviterPartyData.id, invite.pinger_id, this.xmpp!.connection!.jid, this.getUpdatePayload());
+    await Party.acceptInvite(
+      this.account,
+      inviterPartyData.id,
+      invite.pinger_id,
+      this.xmpp!.connection!.jid,
+      this.getUpdatePayload()
+    );
     await Party.get(this.account);
 
     this.setIsAvailable(false);
@@ -165,13 +186,22 @@ export class TaxiManager {
     }, 180_000);
   }
 
-  private async handlePartyStateChange(event: EpicEventMemberJoined | EpicEventMemberLeft | EpicEventMemberKicked | EpicEventMemberStateUpdated | EpicEventPartyUpdated) {
+  private async handlePartyStateChange(
+    event:
+      | EpicEventMemberJoined
+      | EpicEventMemberLeft
+      | EpicEventMemberKicked
+      | EpicEventMemberStateUpdated
+      | EpicEventPartyUpdated
+  ) {
     if (event.type === EpicEvents.MemberJoined && event.account_id === this.account.accountId) {
       return this.setPowerLevel(event.party_id, event.revision);
     }
 
     if ('member_state_updated' in event) {
-      const packedState = JSON.parse(event.member_state_updated['Default:PackedState_j']?.replaceAll('True', 'true') || '{}')?.PackedState;
+      const packedState = JSON.parse(
+        event.member_state_updated['Default:PackedState_j']?.replaceAll('True', 'true') || '{}'
+      )?.PackedState;
       if (packedState?.location === 'Lobby') {
         return Party.leave(this.account, event.party_id);
       }
@@ -243,7 +273,7 @@ function getFORT(powerLevel: number) {
   return 0;
 }
 
-function evaluateCurve(keys: { Time: number, Value: number; }[], time: number) {
+function evaluateCurve(keys: { Time: number; Value: number }[], time: number) {
   if (time < keys[0].Time) {
     return keys[0].Value;
   }

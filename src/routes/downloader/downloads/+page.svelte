@@ -23,9 +23,13 @@
   let isCancelling = $state(false);
   let isTogglingPause = $state(false);
 
-  const currentDownload = $derived(DownloadManager.queue.find(({ item }) => item.id === DownloadManager.downloadingAppId));
+  const currentDownload = $derived(
+    DownloadManager.queue.find(({ item }) => item.id === DownloadManager.downloadingAppId)
+  );
   const queue = $derived(DownloadManager.queue.filter((item) => item.status === 'queued'));
-  const completed = $derived(DownloadManager.queue.filter((item) => item.status === 'completed' || item.status === 'failed'));
+  const completed = $derived(
+    DownloadManager.queue.filter((item) => item.status === 'completed' || item.status === 'failed')
+  );
   const progress = $derived(DownloadManager.progress as DownloadProgress);
 
   async function togglePause() {
@@ -62,35 +66,39 @@
 </script>
 
 <PageContent title={$t('downloads.page.title')}>
-  <div class="w-full border rounded-md p-3 relative h-36 {!currentDownload && 'bg-card'}">
+  <div class="relative h-36 w-full rounded-md border p-3 {!currentDownload && 'bg-card'}">
     {#if currentDownload}
       <img
-        class="absolute inset-0 size-full object-cover rounded-md opacity-10 pointer-events-none"
+        class="pointer-events-none absolute inset-0 size-full rounded-md object-cover opacity-10"
         alt="Background"
         src={currentDownload.item.images.wide}
       />
 
       <div class="space-y-3">
         <div class="flex items-center justify-between">
-          <h3 class="font-semibold text-lg">{currentDownload.item.title}</h3>
+          <h3 class="text-lg font-semibold">{currentDownload.item.title}</h3>
           <div class="flex items-center gap-2">
             <Button
-              class="p-2" disabled={isCancelling || isTogglingPause} onclick={togglePause} size="sm"
+              class="p-2"
+              disabled={isCancelling || isTogglingPause}
+              onclick={togglePause}
+              size="sm"
               variant="outline"
             >
               {#if isTogglingPause}
                 <LoaderCircleIcon class="size-4 animate-spin" />
+              {:else if currentDownload.status === 'paused'}
+                <PlayIcon class="size-4" />
               {:else}
-                {#if currentDownload.status === 'paused'}
-                  <PlayIcon class="size-4" />
-                {:else}
-                  <PauseIcon class="size-4" />
-                {/if}
+                <PauseIcon class="size-4" />
               {/if}
             </Button>
             <Button
-              class="p-2" disabled={isCancelling || isTogglingPause} onclick={() => showCancelDialog = true}
-              size="sm" variant="outline"
+              class="p-2"
+              disabled={isCancelling || isTogglingPause}
+              onclick={() => (showCancelDialog = true)}
+              size="sm"
+              variant="outline"
             >
               {#if isCancelling}
                 <LoaderCircleIcon class="size-4 animate-spin" />
@@ -134,7 +142,7 @@
         </div>
       </div>
     {:else}
-      <div class="flex items-center justify-center h-full">
+      <div class="flex h-full items-center justify-center">
         <p class="text-muted-foreground">
           {$t('downloads.noDownloads')}
         </p>
@@ -143,16 +151,12 @@
   </div>
 
   {#if queue.length}
-    <div class="w-full border rounded-md p-4 mt-2">
-      <h3 class="font-semibold text-2xl mb-4">{$t('downloads.queued')}</h3>
+    <div class="mt-2 w-full rounded-md border p-4">
+      <h3 class="mb-4 text-2xl font-semibold">{$t('downloads.queued')}</h3>
       <div class="space-y-4">
         {#each queue as { item }, index (item.id)}
-          <div class="flex items-center gap-4 p-3 rounded-lg border bg-card">
-            <img
-              class="w-12 h-16 object-cover rounded"
-              alt={item.title}
-              src={item.images.tall}
-            />
+          <div class="flex items-center gap-4 rounded-lg border bg-card p-3">
+            <img class="h-16 w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
 
             <div class="flex-1">
               <h4 class="font-medium">{item.title}</h4>
@@ -180,12 +184,7 @@
                 <ChevronDownIcon class="size-4" />
               </Button>
 
-              <Button
-                class="p-2"
-                onclick={() => DownloadManager.removeFromQueue(item.id)}
-                size="sm"
-                variant="outline"
-              >
+              <Button class="p-2" onclick={() => DownloadManager.removeFromQueue(item.id)} size="sm" variant="outline">
                 <XIcon class="size-4" />
               </Button>
             </div>
@@ -196,21 +195,17 @@
   {/if}
 
   {#if completed.length}
-    <div class="w-full border rounded-md p-4 mt-2">
-      <div class="flex items-center gap-2 mb-4">
-        <h3 class="font-semibold text-2xl">{$t('downloads.completed')}</h3>
+    <div class="mt-2 w-full rounded-md border p-4">
+      <div class="mb-4 flex items-center gap-2">
+        <h3 class="text-2xl font-semibold">{$t('downloads.completed')}</h3>
         <Button onclick={() => DownloadManager.clearCompleted()} size="sm" variant="outline">
           {$t('downloads.clearAll')}
         </Button>
       </div>
       <div class="space-y-4">
         {#each completed as { status, item, completedAt } (item.id)}
-          <div class="flex items-center gap-4 p-3 rounded-lg border bg-card">
-            <img
-              class="w-12 h-16 object-cover rounded"
-              alt={item.title}
-              src={item.images.tall}
-            />
+          <div class="flex items-center gap-4 rounded-lg border bg-card p-3">
+            <img class="h-16 w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
 
             <div class="flex-1">
               <div class="flex items-center gap-2">
@@ -241,8 +236,5 @@
     </div>
   {/if}
 
-  <CancelDownloadDialog
-    onConfirm={cancelDownload}
-    bind:open={showCancelDialog}
-  />
+  <CancelDownloadDialog onConfirm={cancelDownload} bind:open={showCancelDialog} />
 </PageContent>

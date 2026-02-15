@@ -13,7 +13,7 @@
 
 <Dialog.Root>
   <Dialog.Trigger>
-    <HelpCircleIcon class="text-muted-foreground hover:text-foreground transition-colors size-6" />
+    <HelpCircleIcon class="size-6 text-muted-foreground transition-colors hover:text-foreground" />
   </Dialog.Trigger>
 
   <Dialog.Content>
@@ -23,7 +23,7 @@
       </Dialog.Header>
     {/if}
 
-    <div class="prose dark:prose-invert prose-sm">
+    <div class="prose prose-sm dark:prose-invert">
       {@render children()}
     </div>
   </Dialog.Content>

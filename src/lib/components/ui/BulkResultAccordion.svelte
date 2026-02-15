@@ -11,14 +11,16 @@
   const { states, content: accordionContent }: Props = $props();
 </script>
 
-<Accordion.Root class="rounded-lg space-y-2 group" type="multiple">
+<Accordion.Root class="group space-y-2 rounded-lg" type="multiple">
   {#each states as state, index (index.toString())}
     <Accordion.Item value="item-{index}">
-      <Accordion.Trigger class="flex items-center justify-between px-3 py-2 bg-accent rounded-lg data-[state=open]:rounded-b-none">
-        <span class="font-semibold truncate">{state.displayName}</span>
+      <Accordion.Trigger
+        class="flex items-center justify-between rounded-lg bg-accent px-3 py-2 data-[state=open]:rounded-b-none"
+      >
+        <span class="truncate font-semibold">{state.displayName}</span>
       </Accordion.Trigger>
 
-      <Accordion.Content class="bg-card rounded-b-lg">
+      <Accordion.Content class="rounded-b-lg bg-card">
         {@render accordionContent(state)}
       </Accordion.Content>
     </Accordion.Item>

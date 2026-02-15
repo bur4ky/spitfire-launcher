@@ -49,6 +49,8 @@ export async function transferBuildingMaterials(account: AccountData, skipDelay 
   }
 
   return MCP.compose(account, 'StorageTransfer', 'theater0', {
-    transferOperations: Object.values(materials).flatMap((material) => material.items).filter((x) => x.quantity > 0)
+    transferOperations: Object.values(materials)
+      .flatMap((material) => material.items)
+      .filter((x) => x.quantity > 0)
   });
 }

@@ -2,7 +2,7 @@
   import { Theaters } from '$lib/constants/stw/world-info';
   import type { RarityType, ZoneThemeData } from '$types/game/stw/resources';
 
-  type Theater = typeof Theaters[keyof typeof Theaters];
+  type Theater = (typeof Theaters)[keyof typeof Theaters];
 
   export type MissionPlayers = Array<{
     accountId: string;
@@ -82,10 +82,10 @@
 {#if missionPlayers?.length || mission || loadoutData?.length}
   <Separator orientation="horizontal" />
 
-  <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.stwDetails.title')}</h3>
+  <h3 class="text-center text-lg font-semibold">{$t('lookupPlayers.stwDetails.title')}</h3>
 
   {#if missionPlayers?.length || mission}
-    <div class="grid grid-cols-1 xs:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4 xs:grid-cols-2">
       {#if missionPlayers?.length}
         <div>
           <h4 class="text-lg font-semibold">{$t('lookupPlayers.stwDetails.players')}</h4>
@@ -94,7 +94,7 @@
               <span class="mr-1">{member.name}</span>
 
               <ExternalLink
-                class="text-muted-foreground hover:text-primary transition"
+                class="text-muted-foreground transition hover:text-primary"
                 href="https://fortnitedb.com/profile/{member.accountId}"
               >
                 <ExternalLinkIcon class="size-4" />
@@ -104,7 +104,7 @@
                 <CheckIcon class="size-4 text-muted-foreground" />
               {:else}
                 <CopyIcon
-                  class="size-4 cursor-pointer text-muted-foreground hover:text-primary transition"
+                  class="size-4 cursor-pointer text-muted-foreground transition hover:text-primary"
                   onclick={() => copyAccountId(member.accountId)}
                 />
               {/if}
@@ -148,7 +148,7 @@
 
     <div class="flex flex-col items-center gap-4">
       {#if selectedHeroLoadout}
-        <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 place-items-center max-md:gap-4">
+        <div class="grid grid-cols-1 place-items-center max-md:gap-4 xs:grid-cols-2 md:grid-cols-4">
           {#if selectedHeroLoadout.commander}
             <div class="flex flex-col items-center gap-y-1">
               <span class="text-lg font-semibold">{$t('lookupPlayers.stwDetails.heroLoadout.commander')}</span>
@@ -176,10 +176,12 @@
 
           {#if selectedHeroLoadout.supportTeam?.length}
             <div class="flex flex-col items-center gap-y-1">
-              <span class="text-lg font-semibold md:hidden">{$t('lookupPlayers.stwDetails.heroLoadout.supportTeam')}</span>
+              <span class="text-lg font-semibold md:hidden">
+                {$t('lookupPlayers.stwDetails.heroLoadout.supportTeam')}
+              </span>
               <div class="grid grid-cols-3 gap-2">
                 {#each selectedHeroLoadout.supportTeam as support (support.name)}
-                  <div class="flex justify-center items-center size-10" title={support.name}>
+                  <div class="flex size-10 items-center justify-center" title={support.name}>
                     <img
                       style="background-color: {RarityColors[support.rarity]}"
                       class="rounded-md"

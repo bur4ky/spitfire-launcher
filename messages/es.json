@@ -120,8 +120,8 @@
     "page": {
       "title": "PaVos"
     },
-    "getInformation": "Obtener V-Bucks",
-    "loading": "Cargando V-Bucks",
+    "getInformation": "Obtener PaVos",
+    "loading": "Cargando PaVos",
     "loginExpired": "Código expirado. Por favor inicia otra vez.",
     "unknownError": "Código desconocido"
   },

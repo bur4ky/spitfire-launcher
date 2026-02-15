@@ -120,8 +120,8 @@
     "page": {
       "title": "V-Papel"
     },
-    "getInformation": "V-Bucks Al",
-    "loading": "V-Bucks Yükleniyor",
+    "getInformation": "V-Papel Bilgilerini Al",
+    "loading": "V-Papeller Yükleniyor",
     "loginExpired": "Oturumunuz süresi doldu. Lütfen tekrar giriş yapın.",
     "unknownError": "Bilinmeyen hata"
   },

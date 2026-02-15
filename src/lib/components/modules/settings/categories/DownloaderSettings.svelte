@@ -34,9 +34,8 @@
     eventOrValue: Event | V,
     key: K
   ) {
-    const value = typeof eventOrValue === 'object' && eventOrValue
-      ? (eventOrValue.target as HTMLInputElement).value
-      : eventOrValue;
+    const value =
+      typeof eventOrValue === 'object' && eventOrValue ? (eventOrValue.target as HTMLInputElement).value : eventOrValue;
 
     const newSettings: DownloaderSettings = {
       ...$downloaderStore,
@@ -64,9 +63,10 @@
         await Legendary.login(account);
       }
 
-      toast.success(accountId
-        ? $t('settings.downloaderSettings.account.switched')
-        : $t('settings.downloaderSettings.account.loggedOut')
+      toast.success(
+        accountId
+          ? $t('settings.downloaderSettings.account.switched')
+          : $t('settings.downloaderSettings.account.loggedOut')
       );
     } catch (error) {
       handleError({
@@ -81,7 +81,7 @@
   }
 
   onMount(async () => {
-    downloaderAccountId = await Legendary.getAccount() || undefined;
+    downloaderAccountId = (await Legendary.getAccount()) || undefined;
     loadingAccount = false;
 
     await tick();

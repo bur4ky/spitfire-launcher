@@ -89,19 +89,19 @@
 
 <PageContent>
   {#snippet title()}
-    <h2 class="max-xs:text-3xl text-4xl font-bold max-xs:max-w-64">
+    <h2 class="text-4xl font-bold max-xs:max-w-64 max-xs:text-3xl">
       {$t('deviceAuth.page.title')}
     </h2>
 
     <PlusIcon
-      class="ml-1 size-10 cursor-pointer {isGenerating || isFetching ? 'opacity-50 !cursor-not-allowed' : ''}"
+      class="ml-1 size-10 cursor-pointer {isGenerating || isFetching ? '!cursor-not-allowed opacity-50' : ''}"
       onclick={generateDeviceAuth}
     />
 
     <Separator class="h-10" orientation="vertical" />
 
     <RefreshCwIcon
-      class="ml-1.5 size-8 cursor-pointer {isFetching ? 'animate-spin opacity-50 !cursor-not-allowed' : ''}"
+      class="ml-1.5 size-8 cursor-pointer {isFetching ? 'animate-spin !cursor-not-allowed opacity-50' : ''}"
       onclick={() => fetchDeviceAuths($activeAccount, true)}
     />
   {/snippet}
@@ -111,7 +111,7 @@
       {$t('deviceAuth.failedToFetch')}
     </p>
   {:else}
-    <div class="grid grid-cols-1 md:grid-cols-2 place-items-center gap-4">
+    <div class="grid grid-cols-1 place-items-center gap-4 md:grid-cols-2">
       {#if !isFetching}
         {#each deviceAuths as auth (auth.deviceId)}
           <DeviceAuthCard {allDeviceAuths} {auth} />

@@ -5,10 +5,13 @@ export type AppFilterValue = 'hidden' | 'installed' | 'updatesAvailable';
 
 export type LegendaryList = Array<{
   metadata: {
-    customAttributes: Record<string, {
-      type: string;
-      value: string;
-    }>
+    customAttributes: Record<
+      string,
+      {
+        type: string;
+        value: string;
+      }
+    >;
     categories: Array<{
       path: string;
     }>;
@@ -29,15 +32,18 @@ export type LegendaryList = Array<{
     title: string;
     unsearchable: boolean;
   };
-  asset_infos: Record<string, {
-    app_name: string;
-    asset_id: string;
-    build_version: string;
-    catalog_item_id: string;
-    label_name: string;
-    namespace: string;
-    metadata: Record<string, any>;
-  }>
+  asset_infos: Record<
+    string,
+    {
+      app_name: string;
+      asset_id: string;
+      build_version: string;
+      catalog_item_id: string;
+      label_name: string;
+      namespace: string;
+      metadata: Record<string, any>;
+    }
+  >;
   app_name: string;
   app_title: string;
 }>;

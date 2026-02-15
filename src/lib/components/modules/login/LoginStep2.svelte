@@ -6,7 +6,7 @@
   const activeAccount = accountStore.getActiveStore();
 </script>
 
-<div class="flex flex-col items-center justify-center text-center mt-12">
+<div class="mt-12 flex flex-col items-center justify-center text-center">
   <div class="mb-4 rounded-full bg-muted p-4">
     <CheckCircleIcon class="size-10 text-muted-foreground" />
   </div>

@@ -61,8 +61,13 @@
 
       const accessToken = await AuthSession.new($activeAccount!).getAccessToken(true);
       const oldExchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
-      const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(oldExchangeData.code, launcherAppClient2);
-      const launcherExchangeData = await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
+      const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(
+        oldExchangeData.code,
+        launcherAppClient2
+      );
+      const launcherExchangeData = await Authentication.getExchangeCodeUsingAccessToken(
+        launcherAccessTokenData.access_token
+      );
 
       launchData.game_parameters = manifestData?.launchCommand.split(' ') || [];
       launchData.user_parameters = settings.app?.launchArguments?.split(' ') || [];
@@ -116,9 +121,9 @@
 </script>
 
 <Button
-  class="flex items-center justify-between gap-x-2 shrink-0"
+  class="flex shrink-0 items-center justify-between gap-x-2"
   disabled={!$activeAccount || (isLaunching && !runningAppIds.has(fortniteAppId)) || isStopping}
-  onclick={() => runningAppIds.has(fortniteAppId) ? stopFortnite() : launchFortnite()}
+  onclick={() => (runningAppIds.has(fortniteAppId) ? stopFortnite() : launchFortnite())}
   variant={runningAppIds.has(fortniteAppId) ? 'destructive' : 'default'}
 >
   {#if runningAppIds.has(fortniteAppId)}

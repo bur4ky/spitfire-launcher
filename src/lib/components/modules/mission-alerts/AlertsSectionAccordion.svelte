@@ -10,11 +10,7 @@
     showAlertClaimedBorder?: boolean;
   };
 
-  const {
-    missions,
-    claimedMissionAlerts = new Set(),
-    showAlertClaimedBorder = true
-  }: Props = $props();
+  const { missions, claimedMissionAlerts = new Set(), showAlertClaimedBorder = true }: Props = $props();
 
   const parsedMissions = $derived.by(() => {
     // eslint-disable-next-line svelte/prefer-svelte-reactivity
@@ -51,30 +47,32 @@
   }
 </script>
 
-<Accordion.Root class="grid sm:grid-cols-2 gap-1" type="multiple">
+<Accordion.Root class="grid gap-1 sm:grid-cols-2" type="multiple">
   {#each parsedMissions as mission (mission.guid)}
     <Accordion.Item value={mission.guid}>
       <Accordion.Trigger
         class={cn(
-          'flex items-center justify-between px-2 h-10 bg-card rounded-sm',
-          mission.alert && claimedMissionAlerts.has(mission.alert.guid) && showAlertClaimedBorder && 'border border-green-500'
+          'flex h-10 items-center justify-between rounded-sm bg-card px-2',
+          mission.alert &&
+            claimedMissionAlerts.has(mission.alert.guid) &&
+            showAlertClaimedBorder &&
+            'border border-green-500'
         )}
       >
-
-        <span class="flex gap-1 items-center py-0.5">
+        <span class="flex items-center gap-1 py-0.5">
           {#if mission.zone.iconUrl}
             <img class="size-5" alt="World icon" src={mission.zone.iconUrl} />
           {:else}
             <span
               style="border-color: {mission.zone.color}; color: {mission.zone.color};"
-              class="border flex shrink-0 font-bold items-center justify-center relative rounded size-5 text-xs uppercase"
+              class="relative flex size-5 shrink-0 items-center justify-center rounded border text-xs font-bold uppercase"
             >
               {mission.zone.letter}
             </span>
           {/if}
 
           <img class="size-6" alt="Zone icon" src={mission.zone.type.imageUrl} />
-          <span class="border shrink-0 pl-0.5 pr-2 py-1 rounded text-xs">⚡{mission.powerLevel}</span>
+          <span class="shrink-0 rounded border py-1 pr-2 pl-0.5 text-xs">⚡{mission.powerLevel}</span>
 
           <span class="flex gap-x-2">
             {#if mission.allRewards.length}
@@ -102,11 +100,7 @@
 
               <div class="flex gap-1">
                 {#each mission.missionModifiers as modifier (modifier.id)}
-                  <img
-                    class="size-6"
-                    alt="Modifier icon"
-                    src={modifier.imageUrl}
-                  />
+                  <img class="size-6" alt="Modifier icon" src={modifier.imageUrl} />
                 {/each}
               </div>
             {/if}
@@ -114,18 +108,14 @@
         </span>
       </Accordion.Trigger>
 
-      <Accordion.Content class="text-sm mt-1 bg-card rounded-sm grid grid-cols-2 px-4 py-2">
+      <Accordion.Content class="mt-1 grid grid-cols-2 rounded-sm bg-card px-4 py-2 text-sm">
         {#if mission.alert?.rewards?.length}
           <div class="flex flex-col gap-y-1">
             <h2 class="font-medium">{$t('stwMissionAlerts.alertRewards')}</h2>
             <div class="flex flex-col gap-x-1">
               {#each mission.alert.rewards as reward (reward.itemId)}
                 <div class="flex items-center gap-1">
-                  <img
-                    class="size-4"
-                    alt="Alert timer"
-                    src="/world/alert.png"
-                  />
+                  <img class="size-4" alt="Alert timer" src="/world/alert.png" />
 
                   <img class="size-6" alt="Reward icon" src={reward.imageUrl} />
 

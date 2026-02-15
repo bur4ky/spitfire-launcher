@@ -13,7 +13,7 @@
 <AccordionPrimitive.Content
   {...restProps}
   class={cn(
-    "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm",
+    'overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
     className
   )}
   data-slot="accordion-content"

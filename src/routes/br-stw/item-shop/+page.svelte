@@ -60,7 +60,9 @@
         }
 
         if (selectedFilters.includes('longestWait')) {
-          items = items.filter((item) => item.dates.lastSeen && now - new Date(item.dates.lastSeen).getTime() > longestWaitMs);
+          items = items.filter(
+            (item) => item.dates.lastSeen && now - new Date(item.dates.lastSeen).getTime() > longestWaitMs
+          );
         }
 
         if (searchQuery && items.length) {
@@ -77,7 +79,7 @@
     shopSections = null;
 
     try {
-      const response = (!forceRefresh && $brShopStore) || await Shop.fetch();
+      const response = (!forceRefresh && $brShopStore) || (await Shop.fetch());
       shopSections = Shop.groupBySections(response.offers).map((section) => ({
         ...section,
         items: section.items.sort((a, b) => b.sortPriority - a.sortPriority)
@@ -105,7 +107,9 @@
     if (athena.status === 'fulfilled') {
       const profile = athena.value.profileChanges[0].profile;
       const items = Object.values(profile.items);
-      const ownedItems = items.filter((item) => item.attributes.item_seen != null).map((item) => item.templateId.split(':')[1].toLowerCase());
+      const ownedItems = items
+        .filter((item) => item.attributes.item_seen != null)
+        .map((item) => item.templateId.split(':')[1].toLowerCase());
 
       ownedItemsStore.update((accounts) => {
         accounts[account.accountId] = new Set<string>(ownedItems);
@@ -129,7 +133,10 @@
     }
 
     if (friends.status === 'fulfilled') {
-      const accountsData = await Lookup.fetchByIds(account, friends.value.map((friend) => friend.accountId));
+      const accountsData = await Lookup.fetchByIds(
+        account,
+        friends.value.map((friend) => friend.accountId)
+      );
 
       accountData.friends = accountsData
         .sort((a, b) => (a.displayName || a.id).localeCompare(b.displayName || b.id))
@@ -160,7 +167,7 @@
 
   onMount(() => {
     let isFetching = true;
-    fetchShop().finally(() => isFetching = false);
+    fetchShop().finally(() => (isFetching = false));
 
     let intervalId = setInterval(() => {
       const nextResetDate = getResetDate();
@@ -192,12 +199,14 @@
 
 <PageContent
   class="mt-2"
-  description={remainingTime ? $t('itemShop.nextRotation', { time: formatRemainingDuration(remainingTime) }) : undefined}
+  description={remainingTime
+    ? $t('itemShop.nextRotation', { time: formatRemainingDuration(remainingTime) })
+    : undefined}
   title={$t('itemShop.page.title')}
 >
-  <div class="flex max-xs:flex-col items-center gap-2">
+  <div class="flex items-center gap-2 max-xs:flex-col">
     <Input
-      class="max-w-64 max-xs:max-w-full w-full"
+      class="w-full max-w-64 max-xs:max-w-full"
       placeholder={$t('itemShop.searchPlaceholder')}
       type="search"
       bind:value={searchQuery}

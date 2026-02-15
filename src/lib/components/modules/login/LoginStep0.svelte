@@ -46,7 +46,7 @@
       {@const Icon = method.icon}
 
       <button
-        class="flex flex-col items-center rounded-lg border bg-background p-4 hover:bg-muted/50 transition"
+        class="flex flex-col items-center rounded-lg border bg-background p-4 transition hover:bg-muted/50"
         onclick={() => selectLoginMethod(method.id)}
       >
         <span class="mb-3 rounded-full bg-muted p-3">

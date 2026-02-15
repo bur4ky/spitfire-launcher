@@ -27,37 +27,39 @@
     xpStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
-    await Promise.allSettled(accounts.map(async (account) => {
-      const state: XPState = {
-        accountId: account.accountId,
-        displayName: account.displayName,
-        data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 }
-      };
-      xpStates.push(state);
+    await Promise.allSettled(
+      accounts.map(async (account) => {
+        const state: XPState = {
+          accountId: account.accountId,
+          displayName: account.displayName,
+          data: { battleRoyale: 0, saveTheWorld: 0, creative: 0 }
+        };
+        xpStates.push(state);
 
-      const [athena, campaign] = await Promise.allSettled([
-        MCP.queryProfile(account, 'athena'),
-        MCP.queryProfile(account, 'campaign')
-      ]);
+        const [athena, campaign] = await Promise.allSettled([
+          MCP.queryProfile(account, 'athena'),
+          MCP.queryProfile(account, 'campaign')
+        ]);
 
-      if (athena.status === 'fulfilled') {
-        const attributes = athena.value.profileChanges[0].profile.stats.attributes;
-        state.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
-        state.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
-      } else {
-        handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
-      }
-
-      if (campaign.status === 'fulfilled') {
-        const items = Object.values(campaign.value.profileChanges[0].profile.items);
-        const xpItem = items.find((item) => item.templateId === 'Token:stw_accolade_tracker');
-        if (xpItem) {
-          state.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
+        if (athena.status === 'fulfilled') {
+          const attributes = athena.value.profileChanges[0].profile.stats.attributes;
+          state.data.creative = attributes.creative_dynamic_xp?.currentWeekXp || 0;
+          state.data.battleRoyale = attributes.playtime_xp?.currentWeekXp || 0;
+        } else {
+          handleError({ error: athena.reason, message: 'Failed to fetch Athena profile', account, toastId: false });
         }
-      } else {
-        handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false });
-      }
-    }));
+
+        if (campaign.status === 'fulfilled') {
+          const items = Object.values(campaign.value.profileChanges[0].profile.items);
+          const xpItem = items.find((item) => item.templateId === 'Token:stw_accolade_tracker');
+          if (xpItem) {
+            state.data.saveTheWorld = xpItem.attributes?.weekly_xp || 0;
+          }
+        } else {
+          handleError({ error: campaign.reason, message: 'Failed to fetch Campaign profile', account, toastId: false });
+        }
+      })
+    );
 
     isFetching = false;
   }
@@ -76,17 +78,9 @@
   }
 </script>
 
-<PageContent
-  center={true}
-  description={$t('earnedXP.page.description')}
-  title={$t('earnedXP.page.title')}
->
+<PageContent center={true} description={$t('earnedXP.page.description')} title={$t('earnedXP.page.title')}>
   <form class="flex flex-col gap-y-4" onsubmit={fetchXPData}>
-    <AccountCombobox
-      disabled={isFetching}
-      type="multiple"
-      bind:value={selectedAccounts}
-    />
+    <AccountCombobox disabled={isFetching} type="multiple" bind:value={selectedAccounts} />
 
     <Button
       disabled={!selectedAccounts?.length || isFetching}
@@ -122,38 +116,36 @@
           }
         ]}
 
-        <div class="bg-muted/30 p-3 space-y-6">
+        <div class="space-y-6 bg-muted/30 p-3">
           {#each gamemodes as gamemode (gamemode.id)}
             {@const resetDate = gamemode.id === 'saveTheWorld' ? getNextDayOfWeek(4, 0) : getNextDayOfWeek(0, 13)}
 
             <div class="space-y-1">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1.5">
-                  <img
-                    class="size-4"
-                    alt="XP Icon"
-                    src="/misc/battle-royale-xp.png"
-                  />
+                  <img class="size-4" alt="XP Icon" src="/misc/battle-royale-xp.png" />
                   <span class="font-medium">{gamemode.name}</span>
                 </div>
 
                 <div class="text-sm">
                   <span class="font-medium">{gamemode.value.toLocaleString($language)}</span>
-                  <span class="text-muted-foreground">/ {new Intl.NumberFormat($language, {
-                    notation: 'compact',
-                    compactDisplay: 'short'
-                  }).format(gamemode.limit)}</span>
+                  <span class="text-muted-foreground">
+                    / {new Intl.NumberFormat($language, {
+                      notation: 'compact',
+                      compactDisplay: 'short'
+                    }).format(gamemode.limit)}
+                  </span>
                 </div>
               </div>
 
-              <div class="h-2 w-full bg-muted rounded-full overflow-hidden">
+              <div class="h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
                   style="width: {Math.min(100, (gamemode.value / gamemode.limit) * 100)}%"
                   class="h-full bg-primary"
                 ></div>
               </div>
 
-              <div class="text-sm text-muted-foreground mt-1">
+              <div class="mt-1 text-sm text-muted-foreground">
                 {$t('earnedXP.resetsAt', { time: resetDate.toLocaleString($language) })}
               </div>
             </div>

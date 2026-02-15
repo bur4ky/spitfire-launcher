@@ -1,0 +1,11 @@
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+bun.lockb
+
+/static/
+/src-tauri/
+/src/lib/paraglide/
+/build/
+/.svelte-kit/

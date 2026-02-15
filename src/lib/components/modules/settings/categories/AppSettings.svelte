@@ -26,14 +26,15 @@
   ];
 
   const startingPageValues = Object.values<string>(appSettingsSchema.shape.startingPage.def.innerType.def.entries);
-  const startingPageOptions = $derived(SidebarCategories
-    .map((category) => category.items)
-    .flat()
-    .filter((item) => startingPageValues.includes(item.key))
-    .map((item) => ({
-      label: $t(`${item.key}.page.title`),
-      value: item.key
-    })));
+  const startingPageOptions = $derived(
+    SidebarCategories.map((category) => category.items)
+      .flat()
+      .filter((item) => startingPageValues.includes(item.key))
+      .map((item) => ({
+        label: $t(`${item.key}.page.title`),
+        value: item.key
+      }))
+  );
 
   type SettingKey = keyof NonNullable<AllSettings['app']>;
   type SettingValue = string | number | boolean | undefined;
@@ -42,9 +43,7 @@
     eventOrValue: Event | V,
     key: K
   ) {
-    const value = typeof eventOrValue === 'object'
-      ? (eventOrValue.target as HTMLInputElement).value
-      : eventOrValue;
+    const value = typeof eventOrValue === 'object' ? (eventOrValue.target as HTMLInputElement).value : eventOrValue;
 
     const newSettings: AllSettings = {
       ...$settingsStore,
@@ -67,17 +66,9 @@
 </script>
 
 <div class="space-y-6">
-  <SettingItem
-    labelFor="language"
-    orientation="vertical"
-    title={$t('settings.appSettings.language')}
-  >
-    <Select.Root
-      onValueChange={(value) => settingsStore.setLanguage(value as Locale)}
-      type="single"
-      value={$language}
-    >
-      <Select.Trigger id="language" class="w-full flex items-center gap-2">
+  <SettingItem labelFor="language" orientation="vertical" title={$t('settings.appSettings.language')}>
+    <Select.Root onValueChange={(value) => settingsStore.setLanguage(value as Locale)} type="single" value={$language}>
+      <Select.Trigger id="language" class="flex w-full items-center gap-2">
         {@const locale = locales.find((l) => l.locale === $language)}
         <img class="size-5 rounded-sm" alt={locale?.country} src="/flags/{locale?.country}.svg" />
         <span class="truncate">{$t('language', {}, { locale: $language })}</span>
@@ -95,11 +86,7 @@
   </SettingItem>
 
   {#if currentPlatform === 'windows'}
-    <SettingItem
-      labelFor="gamePath"
-      orientation="vertical"
-      title={$t('settings.appSettings.gamePath')}
-    >
+    <SettingItem labelFor="gamePath" orientation="vertical" title={$t('settings.appSettings.gamePath')}>
       <SettingsFolderPicker
         id="gamePath"
         defaultPath={$settingsStore.app?.gamePath || 'C:/Program Files/Epic Games'}
@@ -181,11 +168,7 @@
   </SettingItem>
 
   {#if isDesktop}
-    <SettingItem
-      labelFor="discordStatus"
-      orientation="horizontal"
-      title={$t('settings.appSettings.discordStatus')}
-    >
+    <SettingItem labelFor="discordStatus" orientation="horizontal" title={$t('settings.appSettings.discordStatus')}>
       <Switch
         id="discordStatus"
         checked={$settingsStore.app?.discordStatus}
@@ -193,11 +176,7 @@
       />
     </SettingItem>
 
-    <SettingItem
-      labelFor="hideToTray"
-      orientation="horizontal"
-      title={$t('settings.appSettings.hideToTray')}
-    >
+    <SettingItem labelFor="hideToTray" orientation="horizontal" title={$t('settings.appSettings.hideToTray')}>
       <Switch
         id="hideToTray"
         checked={$settingsStore.app?.hideToTray}
@@ -206,11 +185,7 @@
     </SettingItem>
   {/if}
 
-  <SettingItem
-    labelFor="checkForUpdates"
-    orientation="horizontal"
-    title={$t('settings.appSettings.checkForUpdates')}
-  >
+  <SettingItem labelFor="checkForUpdates" orientation="horizontal" title={$t('settings.appSettings.checkForUpdates')}>
     <Switch
       id="checkForUpdates"
       checked={$settingsStore.app?.checkForUpdates}
@@ -218,11 +193,7 @@
     />
   </SettingItem>
 
-  <SettingItem
-    labelFor="debugLogs"
-    orientation="horizontal"
-    title={$t('settings.appSettings.debugLogs')}
-  >
+  <SettingItem labelFor="debugLogs" orientation="horizontal" title={$t('settings.appSettings.debugLogs')}>
     <Switch
       id="debugLogs"
       checked={$settingsStore.app?.debugLogs}

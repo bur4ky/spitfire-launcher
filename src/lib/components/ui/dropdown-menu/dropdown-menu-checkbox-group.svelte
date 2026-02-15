@@ -8,9 +8,4 @@
   }: DropdownMenuPrimitive.CheckboxGroupProps = $props();
 </script>
 
-<DropdownMenuPrimitive.CheckboxGroup
-  {...restProps}
-  data-slot="dropdown-menu-checkbox-group"
-  bind:ref
-  bind:value
-/>
+<DropdownMenuPrimitive.CheckboxGroup {...restProps} data-slot="dropdown-menu-checkbox-group" bind:ref bind:value />

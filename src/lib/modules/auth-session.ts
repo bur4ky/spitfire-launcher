@@ -139,8 +139,8 @@ export class AuthSession {
     if (!(error instanceof EpicAPIError)) return false;
 
     if (
-      error.errorCode === 'errors.com.epicgames.common.authentication.token_verification_failed'
-      || error.errorCode === 'errors.com.epicgames.common.oauth.invalid_token'
+      error.errorCode === 'errors.com.epicgames.common.authentication.token_verification_failed' ||
+      error.errorCode === 'errors.com.epicgames.common.oauth.invalid_token'
     ) {
       return true;
     }
@@ -149,13 +149,19 @@ export class AuthSession {
     const name = this.account.displayName;
     const translate = get(t);
 
-    if (error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials' && this.shouldNotify(`${id}:${error.errorCode}`)) {
+    if (
+      error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials' &&
+      this.shouldNotify(`${id}:${error.errorCode}`)
+    ) {
       logger.warn('Removing account due to invalid credentials', { accountId: id });
       accountStore.remove(id);
       toast.error(translate('errors.loginExpired', { accountName: name }));
     }
 
-    if (error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' && this.shouldNotify(`${id}:${error.errorCode}`)) {
+    if (
+      error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' &&
+      this.shouldNotify(`${id}:${error.errorCode}`)
+    ) {
       logger.warn('Account requires EULA acceptance', { accountId: id });
       toast.error(translate('errors.eulaRequired', { accountName: name }));
     }

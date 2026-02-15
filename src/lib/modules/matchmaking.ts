@@ -10,9 +10,9 @@ const logger = getChildLogger('MatchmakingManager');
 
 export class Matchmaking {
   static async findPlayer(account: AccountData, accountToFind: string) {
-    const data = await AuthSession.ky(account, matchmakingService).get<MatchmakingTrackResponse>(
-      `findPlayer/${accountToFind}`
-    ).json();
+    const data = await AuthSession.ky(account, matchmakingService)
+      .get<MatchmakingTrackResponse>(`findPlayer/${accountToFind}`)
+      .json();
 
     const notCachedPlayers = data?.[0]?.publicPlayers.filter((x) => !displayNamesCache.has(x));
     if (notCachedPlayers?.length) {

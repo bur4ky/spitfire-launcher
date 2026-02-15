@@ -45,30 +45,31 @@ export class WorldInfo {
   static async getWorldInfoData(accessToken?: string) {
     const token = accessToken || (await Authentication.getAccessTokenUsingClientCredentials()).access_token;
 
-    return baseGameService.get<WorldInfoData>('world/info', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).json();
+    return baseGameService
+      .get<WorldInfoData>('world/info', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .json();
   }
 
   static parseWorldInfo(worldInfoData: WorldInfoData): ParsedWorldInfo {
-    const validWorlds: string[] = [
-      Theaters.Stonewood,
-      Theaters.Plankerton,
-      Theaters.CannyValley,
-      Theaters.TwinePeaks
-    ];
+    const validWorlds: string[] = [Theaters.Stonewood, Theaters.Plankerton, Theaters.CannyValley, Theaters.TwinePeaks];
 
     const worldInfo = new Map<World, Map<string, WorldParsedMission>>();
 
-    const theaterData = new Map<string, {
-      missions: Map<number, string>;
-      theater: WorldInfoTheater
-    }>();
+    const theaterData = new Map<
+      string,
+      {
+        missions: Map<number, string>;
+        theater: WorldInfoTheater;
+      }
+    >();
 
     for (const theater of worldInfoData.theaters) {
-      const isValidWorld = validWorlds.includes(theater.uniqueId) || theater.missionRewardNamedWeightsRowName === 'Theater.Phoenix';
+      const isValidWorld =
+        validWorlds.includes(theater.uniqueId) || theater.missionRewardNamedWeightsRowName === 'Theater.Phoenix';
       if (!isValidWorld) continue;
 
       const missions = new Map<number, string>();
@@ -81,7 +82,12 @@ export class WorldInfo {
         if (!rawZone) continue;
 
         const zone = rawZone.replace('Theater_', '').replace('_Group', '');
-        const newZone = zone === WorldStormKingZones.CannyValley ? 'Hard_Zone5' : zone === WorldStormKingZones.TwinePeaks ? 'Endgame_Zone5' : zone;
+        const newZone =
+          zone === WorldStormKingZones.CannyValley
+            ? 'Hard_Zone5'
+            : zone === WorldStormKingZones.TwinePeaks
+              ? 'Endgame_Zone5'
+              : zone;
 
         for (const tileIndex of region.tileIndices) {
           missions.set(tileIndex, newZone);
@@ -132,8 +138,11 @@ export class WorldInfo {
         const currentAlert = alertByTile.get(mission.tileIndex);
 
         const zoneLetter = (WorldLettersByTheaters as any)[theaterId] || WorldLetters.Ventures;
-        const modifiers = currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfo.parseModifier(modifier.itemType)) || null;
-        const powerLevel = (WorldPowerLevels as any)[theaterId]?.[zone] ?? (WorldPowerLevels.ventures as any)?.[zone] ?? -1;
+        const modifiers =
+          currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfo.parseModifier(modifier.itemType)) ||
+          null;
+        const powerLevel =
+          (WorldPowerLevels as any)[theaterId]?.[zone] ?? (WorldPowerLevels.ventures as any)?.[zone] ?? -1;
         const filters: string[] = [];
 
         const alertRewards = currentAlert?.missionAlertRewards.items
@@ -187,10 +196,7 @@ export class WorldInfo {
               WorldInfo.isEvolutionMaterial(parsedResource.itemType) &&
               WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
             ) {
-              isHard = !(
-                parsedResource.itemType.endsWith('_veryhigh') ||
-                parsedResource.itemType.endsWith('_extreme')
-              );
+              isHard = !(parsedResource.itemType.endsWith('_veryhigh') || parsedResource.itemType.endsWith('_extreme'));
             }
 
             return {
@@ -219,27 +225,33 @@ export class WorldInfo {
             }
           },
           powerLevel,
-          alert: currentAlert && alertRewards?.length ? {
-            guid: currentAlert.missionAlertGuid,
-            rewards: alertRewards
-          } : null
+          alert:
+            currentAlert && alertRewards?.length
+              ? {
+                  guid: currentAlert.missionAlertGuid,
+                  rewards: alertRewards
+                }
+              : null
         });
       }
 
-      const parsedMissions = new Map(theater.entries().toArray().sort((entryA, entryB) => {
-        const a = entryA[1];
-        const b = entryB[1];
+      const parsedMissions = new Map(
+        theater
+          .entries()
+          .toArray()
+          .sort((entryA, entryB) => {
+            const a = entryA[1];
+            const b = entryB[1];
 
-        const missionAGroup = a.generator.toLowerCase().includes('group') ? 1 : 0;
-        const missionBGroup = b.generator.toLowerCase().includes('group') ? 1 : 0;
+            const missionAGroup = a.generator.toLowerCase().includes('group') ? 1 : 0;
+            const missionBGroup = b.generator.toLowerCase().includes('group') ? 1 : 0;
 
-        const missionAAlert = a.alert ? 1 : 0;
-        const missionBAlert = b.alert ? 1 : 0;
+            const missionAAlert = a.alert ? 1 : 0;
+            const missionBAlert = b.alert ? 1 : 0;
 
-        return b.powerLevel - a.powerLevel
-          || missionBGroup - missionAGroup
-          || missionBAlert - missionAAlert;
-      }));
+            return b.powerLevel - a.powerLevel || missionBGroup - missionAGroup || missionBAlert - missionAAlert;
+          })
+      );
 
       worldInfo.set(theaterId as World, parsedMissions);
     }
@@ -270,12 +282,11 @@ export class WorldInfo {
     const isGroup = missionGenerator.toLowerCase().includes('group');
 
     return {
-      imageUrl:
-        key ?
-          isGroup && GroupZones.includes(key as keyof typeof ZoneCategories)
-            ? `/world/${key}-group.png`
-            : `/world/${key}.png`
-          : '/world/quest.png',
+      imageUrl: key
+        ? isGroup && GroupZones.includes(key as keyof typeof ZoneCategories)
+          ? `/world/${key}-group.png`
+          : `/world/${key}.png`
+        : '/world/quest.png',
       type: key as keyof typeof ZoneCategories | null
     };
   }
@@ -320,11 +331,7 @@ export class WorldInfo {
           newKey.startsWith('eventcurrency_')) ||
         newKey === 'campaign_event_currency';
 
-      const unknownTickets = [
-        'campaign_event_currency',
-        'eventcurrency_spring',
-        'eventcurrency_summer'
-      ];
+      const unknownTickets = ['campaign_event_currency', 'eventcurrency_spring', 'eventcurrency_summer'];
 
       const extension = unknownTickets.includes(resourceId) ? 'gif' : 'png';
 

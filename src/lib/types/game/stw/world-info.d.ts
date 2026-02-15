@@ -63,20 +63,7 @@ export type WorldInfoTheater = {
   regions: Array<Region>;
 };
 
-type AvailableLocales =
-  | 'de'
-  | 'ru'
-  | 'ko'
-  | 'pt-br'
-  | 'en'
-  | 'it'
-  | 'fr'
-  | 'es'
-  | 'ar'
-  | 'ja'
-  | 'pl'
-  | 'es-419'
-  | 'tr';
+type AvailableLocales = 'de' | 'ru' | 'ko' | 'pt-br' | 'en' | 'it' | 'fr' | 'es' | 'ar' | 'ja' | 'pl' | 'es-419' | 'tr';
 
 type Region = {
   displayName: Record<AvailableLocales, string>;

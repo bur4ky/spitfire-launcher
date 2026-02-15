@@ -29,7 +29,9 @@
 
 <!-- TODO: Could use `padding-top: env(safe-area-inset-top)` but it still overlaps, same for sidebar -->
 <header
-  class="{isMobile ? 'pt-6 h-22' : 'h-16'} bg-card border-b border-border flex items-center justify-between md:justify-end px-4 select-none sticky top-0 z-10"
+  class="{isMobile
+    ? 'h-22 pt-6'
+    : 'h-16'} sticky top-0 z-10 flex items-center justify-between border-b border-border bg-card px-4 select-none md:justify-end"
   data-tauri-drag-region
 >
   <SidebarBurger />
@@ -45,10 +47,10 @@
 
     {#if !isMobile}
       <div class="flex items-center space-x-2 max-sm:hidden">
-        <button class="p-2 hover:bg-accent rounded transition-colors duration-200" onclick={minimizeOrHide}>
+        <button class="rounded p-2 transition-colors duration-200 hover:bg-accent" onclick={minimizeOrHide}>
           <MinusIcon />
         </button>
-        <button class="p-2 hover:bg-red-500/80 hover:text-white rounded transition-colors duration-200" onclick={close}>
+        <button class="rounded p-2 transition-colors duration-200 hover:bg-red-500/80 hover:text-white" onclick={close}>
           <XIcon />
         </button>
       </div>

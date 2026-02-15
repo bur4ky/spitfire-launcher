@@ -42,8 +42,7 @@
   export type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
 
   export type InputProps = WithElementRef<
-    Omit<HTMLInputAttributes, 'type'> &
-    ({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined })
+    Omit<HTMLInputAttributes, 'type'> & ({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined })
   > &
     InputVariants;
 </script>
@@ -64,10 +63,7 @@
 {#if type === 'file'}
   <input
     bind:this={ref}
-    class={cn(
-      inputVariants({ size, file: true }),
-      className
-    )}
+    class={cn(inputVariants({ size, file: true }), className)}
     data-slot={dataSlot}
     type="file"
     bind:files
@@ -77,10 +73,7 @@
 {:else}
   <input
     bind:this={ref}
-    class={cn(
-      inputVariants({ size, file: false }),
-      className
-    )}
+    class={cn(inputVariants({ size, file: false }), className)}
     data-slot={dataSlot}
     {type}
     bind:value

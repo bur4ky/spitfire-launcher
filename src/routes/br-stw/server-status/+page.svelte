@@ -1,22 +1,12 @@
 <script lang="ts" module>
   type ServiceStatus = {
-    status:
-      | 'UP'
-      | 'DOWN'
-      | 'MAJOR_OUTAGE'
-      | 'PARTIAL_OUTAGE'
-      | 'UNDER_MAINTENANCE';
+    status: 'UP' | 'DOWN' | 'MAJOR_OUTAGE' | 'PARTIAL_OUTAGE' | 'UNDER_MAINTENANCE';
     message: string;
   };
 
   type StatusPageStatus = {
     name: string;
-    status:
-      | 'operational'
-      | 'degraded_performance'
-      | 'partial_outage'
-      | 'major_outage'
-      | 'under_maintenance';
+    status: 'operational' | 'degraded_performance' | 'partial_outage' | 'major_outage' | 'under_maintenance';
   };
 
   let isLoading = $state(true);
@@ -114,7 +104,10 @@
     return 'UP';
   }
 
-  function getStatusData(status: ServiceStatus['status'] | StatusPageStatus['status']): { text: string; color: AlertColor; } {
+  function getStatusData(status: ServiceStatus['status'] | StatusPageStatus['status']): {
+    text: string;
+    color: AlertColor;
+  } {
     switch (status.toLowerCase()) {
       case 'up':
       case 'operational':
@@ -149,7 +142,7 @@
 
 <PageContent class="mt-2" title={$t('serverStatus.page.title')}>
   <div class="flex flex-col gap-4">
-    <div class="flex justify-between items-center">
+    <div class="flex items-center justify-between">
       <p class="text-sm text-muted-foreground">
         {$t('serverStatus.lastUpdated', { date: lastUpdated ? lastUpdated.toLocaleTimeString($language) : '...' })}
       </p>
@@ -179,7 +172,7 @@
           </Tooltip.Trigger>
 
           <Tooltip.Content>
-            <p class="text-sm max-w-xs">
+            <p class="max-w-xs text-sm">
               {$t('serverStatus.notifyMe.description')}
             </p>
           </Tooltip.Content>
@@ -202,13 +195,13 @@
       title={$t('serverStatus.status', { status: getStatusData(serviceStatus.status).text })}
     />
   {:else}
-    <div class="rounded-lg p-3 mb-2 bg-muted/30 skeleton-loader">
+    <div class="skeleton-loader mb-2 rounded-lg bg-muted/30 p-3">
       <div class="flex items-center gap-2">
         <div class="size-4 rounded-full bg-muted/80"></div>
-        <div class="font-medium bg-muted/80 rounded w-32 h-5"></div>
+        <div class="h-5 w-32 rounded bg-muted/80 font-medium"></div>
       </div>
 
-      <div class="h-4 bg-muted/80 rounded w-30 mt-3"></div>
+      <div class="mt-3 h-4 w-30 rounded bg-muted/80"></div>
     </div>
   {/if}
 
@@ -225,20 +218,20 @@
   {#if isLoading && !statusPageServices.length}
     <div class="space-y-3">
       <div class="flex items-center gap-2 text-muted-foreground">
-        <div class="size-4 rounded-full skeleton-loader"></div>
-        <div class="h-4 w-40 rounded skeleton-loader"></div>
+        <div class="skeleton-loader size-4 rounded-full"></div>
+        <div class="skeleton-loader h-4 w-40 rounded"></div>
       </div>
 
       <div class="space-y-3">
         <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
         {#each Array(4) as _, i (i)}
-          <div class="bg-muted/30 p-4 rounded-lg skeleton-loader">
-            <div class="flex justify-between items-center">
+          <div class="skeleton-loader rounded-lg bg-muted/30 p-4">
+            <div class="flex items-center justify-between">
               <div class="flex items-center gap-3 truncate">
-                <div class="size-4 rounded-full skeleton-loader"></div>
-                <div class="h-6 w-32 rounded skeleton-loader max-xs:w-24"></div>
+                <div class="skeleton-loader size-4 rounded-full"></div>
+                <div class="skeleton-loader h-6 w-32 rounded max-xs:w-24"></div>
               </div>
-              <div class="h-6 w-20 rounded skeleton-loader"></div>
+              <div class="skeleton-loader h-6 w-20 rounded"></div>
             </div>
           </div>
         {/each}
@@ -248,20 +241,17 @@
     <div class="space-y-2">
       <div class="flex items-center gap-2 text-muted-foreground">
         <ExternalLinkIcon class="size-4" />
-        <ExternalLink
-          class="text-sm font-medium hover:underline"
-          href="https://status.epicgames.com"
-        >
+        <ExternalLink class="text-sm font-medium hover:underline" href="https://status.epicgames.com">
           status.epicgames.com
         </ExternalLink>
       </div>
 
       <div class="space-y-3">
         {#each statusPageServices as service (service.name)}
-          <div class="bg-card p-4 rounded-lg flex justify-between items-center">
+          <div class="flex items-center justify-between rounded-lg bg-card p-4">
             <div class="flex items-center gap-3 truncate">
               <div class="size-3 rounded-full bg-{getStatusData(service.status).color}-500"></div>
-              <span class="font-medium truncate max-xs:text-sm">{service.name}</span>
+              <span class="truncate font-medium max-xs:text-sm">{service.name}</span>
             </div>
 
             <div class="text-sm">

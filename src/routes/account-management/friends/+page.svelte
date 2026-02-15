@@ -4,23 +4,23 @@
 </script>
 
 <script lang="ts">
-  import PageContent from "$components/layout/PageContent.svelte";
-  import FriendsList, { type ListType } from "$components/modules/friends/FriendsList.svelte";
-  import { Button } from "$components/ui/button";
-  import * as Tabs from "$components/ui/tabs";
-  import { Friends } from "$lib/modules/friends";
-  import { Lookup } from "$lib/modules/lookup";
-  import { XMPPManager } from "$lib/modules/xmpp";
-  import LoaderCircleIcon from "@lucide/svelte/icons/loader-circle";
-  import UserPlusIcon from "@lucide/svelte/icons/user-plus";
-  import { friendsStore } from "$lib/stores";
-  import InputWithAutocomplete from "$components/ui/InputWithAutocomplete.svelte";
-  import { handleError } from "$lib/utils";
-  import { t } from "$lib/i18n";
-  import { toast } from "svelte-sonner";
-  import { untrack } from "svelte";
-  import SkeletonFriendCard from "$components/modules/friends/SkeletonFriendCard.svelte";
-  import { accountStore } from "$lib/storage";
+  import PageContent from '$components/layout/PageContent.svelte';
+  import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Tabs from '$components/ui/tabs';
+  import { Friends } from '$lib/modules/friends';
+  import { Lookup } from '$lib/modules/lookup';
+  import { XMPPManager } from '$lib/modules/xmpp';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
+  import { friendsStore } from '$lib/stores';
+  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
+  import { handleError } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { toast } from 'svelte-sonner';
+  import { untrack } from 'svelte';
+  import SkeletonFriendCard from '$components/modules/friends/SkeletonFriendCard.svelte';
+  import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();
 
@@ -31,10 +31,10 @@
   };
 
   const tabs = $derived([
-    getTab("friends"),
-    getTab("incoming"),
-    getTab("outgoing"),
-    getTab("blocklist"),
+    getTab('friends'),
+    getTab('incoming'),
+    getTab('outgoing'),
+    getTab('blocklist')
   ] satisfies Tab[]);
 
   // svelte-ignore state_referenced_locally
@@ -47,7 +47,7 @@
     return {
       id: listType,
       name: $t(`friendsManagement.lists.${listType}`),
-      count: list?.size || 0,
+      count: list?.size || 0
     };
   }
 
@@ -63,17 +63,17 @@
 
       try {
         await Friends.addFriend($activeAccount, lookupData.accountId);
-        searchQuery = "";
-        toast.success($t("friendsManagement.sentFriendRequest"));
+        searchQuery = '';
+        toast.success($t('friendsManagement.sentFriendRequest'));
       } catch (error) {
         handleError({
           error,
-          message: $t("friendsManagement.failedToAdd"),
-          account: $activeAccount,
+          message: $t('friendsManagement.failedToAdd'),
+          account: $activeAccount
         });
       }
     } catch (error) {
-      handleError({ error, message: $t("lookupPlayers.notFound"), account: $activeAccount });
+      handleError({ error, message: $t('lookupPlayers.notFound'), account: $activeAccount });
     } finally {
       isSendingRequest = false;
     }
@@ -90,7 +90,7 @@
       isLoading = false;
     });
 
-    XMPPManager.new($activeAccount, "friendsManagement").then((xmpp) => {
+    XMPPManager.new($activeAccount, 'friendsManagement').then((xmpp) => {
       xmpp.connect();
     });
   });
@@ -98,7 +98,7 @@
 
 <svelte:window
   onkeydown={(event) => {
-    if (event.key === "F5") {
+    if (event.key === 'F5') {
       event.preventDefault();
       isLoading = true;
       Friends.getSummary($activeAccount).finally(() => {
@@ -108,11 +108,11 @@
   }}
 />
 
-<PageContent title={$t("friendsManagement.page.title")}>
+<PageContent title={$t('friendsManagement.page.title')}>
   <form class="flex items-center gap-x-2" onsubmit={searchAndAdd}>
     <InputWithAutocomplete
       disabled={isLoading}
-      placeholder={$t("lookupPlayers.search")}
+      placeholder={$t('lookupPlayers.search')}
       type="search"
       bind:value={searchQuery}
     />
@@ -120,7 +120,7 @@
     <Button
       class="p-2"
       disabled={isLoading || isSendingRequest || !searchQuery || searchQuery.length < 3}
-      title={$t("friendsManagement.sendFriendRequest")}
+      title={$t('friendsManagement.sendFriendRequest')}
       type="submit"
     >
       {#if isSendingRequest}
@@ -138,7 +138,9 @@
           <Tabs.Trigger disabled={!tab.count} value={tab.id}>
             {tab.name}
             {#if tab.count}
-              <span class="ml-1 inline-flex items-center justify-center h-5 min-w-5  rounded-full bg-muted px-1.5 text-xs font-medium">
+              <span
+                class="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium"
+              >
                 {tab.count}
               </span>
             {/if}
@@ -148,7 +150,7 @@
     </Tabs.Root>
 
     {#if isLoading}
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
         {#each Array(3) as _, index (index)}
           <SkeletonFriendCard />

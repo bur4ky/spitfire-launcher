@@ -49,7 +49,10 @@
           }
         }
 
-        if (theaterId === Theaters.TwinePeaks && mission.powerLevel === WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6) {
+        if (
+          theaterId === Theaters.TwinePeaks &&
+          mission.powerLevel === WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6
+        ) {
           twinePeaks.push(mission);
         }
 
@@ -113,7 +116,10 @@
     WorldInfo.setCache();
   }
 
-  function countMissionReward(missions: WorldParsedMission[] | undefined, idOrValidator: string | ((id: string) => boolean)) {
+  function countMissionReward(
+    missions: WorldParsedMission[] | undefined,
+    idOrValidator: string | ((id: string) => boolean)
+  ) {
     return (missions || []).reduce((acc, crr) => {
       const alertReward = crr.alert?.rewards.find((reward) =>
         typeof idOrValidator === 'function' ? idOrValidator(reward.itemId) : reward.itemId.includes(idOrValidator)
@@ -143,7 +149,8 @@
 
     MCP.queryProfile($activeAccount, 'campaign').then((queryProfile) => {
       const attributes = queryProfile.profileChanges[0].profile.stats.attributes;
-      const doneMissionAlerts = attributes.mission_alert_redemption_record?.claimData?.map((claimData) => claimData.missionAlertId) || [];
+      const doneMissionAlerts =
+        attributes.mission_alert_redemption_record?.claimData?.map((claimData) => claimData.missionAlertId) || [];
 
       claimedMissionAlerts.set($activeAccount.accountId, new Set(doneMissionAlerts));
     });
@@ -170,7 +177,7 @@
 
 <PageContent title={$t('stwMissionAlerts.page.title')}>
   <div class="flex flex-col">
-    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 p-4 pt-0">
+    <div class="grid grid-cols-1 gap-4 p-4 pt-0 xs:grid-cols-2 md:grid-cols-4">
       <AlertsOverviewItem
         name={$t('vbucks')}
         amount={countMissionReward(filteredMissions?.vbucks, 'currency_mtxswap')}

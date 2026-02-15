@@ -9,27 +9,27 @@ export class DeviceAuth {
     const token = 'accessToken' in account ? account.accessToken : null;
     const service = 'accessToken' in account ? publicAccountService : AuthSession.ky(account, publicAccountService);
 
-    return service.post<EpicDeviceAuthData>(
-      `${account.accountId}/deviceAuth`,
-      token ? { headers: { Authorization: `Bearer ${token}` } } : {}
-    ).json();
+    return service
+      .post<EpicDeviceAuthData>(
+        `${account.accountId}/deviceAuth`,
+        token ? { headers: { Authorization: `Bearer ${token}` } } : {}
+      )
+      .json();
   }
 
   static get(account: AccountData, deviceId: string) {
-    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient).get<EpicDeviceAuthData>(
-      `${account.accountId}/deviceAuth/${deviceId}`
-    ).json();
+    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient)
+      .get<EpicDeviceAuthData>(`${account.accountId}/deviceAuth/${deviceId}`)
+      .json();
   }
 
   static getAll(account: AccountData) {
-    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient).get<EpicDeviceAuthData[]>(
-      `${account.accountId}/deviceAuth`
-    ).json();
+    return AuthSession.ky(account, publicAccountService, fortnitePCGameClient)
+      .get<EpicDeviceAuthData[]>(`${account.accountId}/deviceAuth`)
+      .json();
   }
 
   static delete(account: AccountData, deviceId: string) {
-    return AuthSession.ky(account, publicAccountService).delete(
-      `${account.accountId}/deviceAuth/${deviceId}`
-    );
+    return AuthSession.ky(account, publicAccountService).delete(`${account.accountId}/deviceAuth/${deviceId}`);
   }
 }

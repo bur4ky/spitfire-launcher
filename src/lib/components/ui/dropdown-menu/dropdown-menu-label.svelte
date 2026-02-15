@@ -16,7 +16,7 @@
 <div
   {...restProps}
   bind:this={ref}
-  class={cn("px-2 py-1.5 text-sm font-semibold data-[inset]:ps-8", className)}
+  class={cn('px-2 py-1.5 text-sm font-semibold data-[inset]:ps-8', className)}
   data-inset={inset}
   data-slot="dropdown-menu-label"
 >

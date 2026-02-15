@@ -10,13 +10,9 @@ export class Avatar {
     const session = AuthSession.ky(account, avatarService);
     const MAX_IDS_PER_REQUEST = 100;
 
-    const avatarData = await processChunks(
-      friendIds,
-      MAX_IDS_PER_REQUEST,
-      async (ids) => {
-        return session.get<AvatarData[]>(`?accountIds=${ids.join(',')}`).json();
-      }
-    );
+    const avatarData = await processChunks(friendIds, MAX_IDS_PER_REQUEST, async (ids) => {
+      return session.get<AvatarData[]>(`?accountIds=${ids.join(',')}`).json();
+    });
 
     for (const avatar of avatarData) {
       if (avatar.namespace.toLowerCase() !== 'fortnite') continue;

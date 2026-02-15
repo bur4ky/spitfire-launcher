@@ -7,9 +7,9 @@
   const { title, videoId }: Props = $props();
 </script>
 
-<div class="aspect-video w-full mt-4">
+<div class="mt-4 aspect-video w-full">
   <iframe
-    class="border-none size-full"
+    class="size-full border-none"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
     allowfullscreen
     src="https://www.youtube-nocookie.com/embed/{videoId}"

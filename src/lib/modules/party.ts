@@ -9,9 +9,9 @@ import type { FetchPartyResponse, InviterPartyResponse } from '$types/game/party
 
 export class Party {
   static async get(account: AccountData) {
-    const data = await AuthSession.ky(account, partyService).get<FetchPartyResponse>(
-      `user/${account.accountId}`
-    ).json();
+    const data = await AuthSession.ky(account, partyService)
+      .get<FetchPartyResponse>(`user/${account.accountId}`)
+      .json();
 
     const partyData = data.current[0];
     if (partyData) {
@@ -28,7 +28,10 @@ export class Party {
           const loadout = JSON.parse(loadoutJ).AthenaCosmeticLoadout;
           const equippedCharacterId = loadout?.characterPrimaryAssetId?.split(':')[1];
           if (equippedCharacterId) {
-            avatarCache.set(member.account_id, `https://fortnite-api.com/images/cosmetics/br/${equippedCharacterId}/smallicon.png`);
+            avatarCache.set(
+              member.account_id,
+              `https://fortnite-api.com/images/cosmetics/br/${equippedCharacterId}/smallicon.png`
+            );
           }
         }
       }
@@ -38,9 +41,7 @@ export class Party {
   }
 
   static kick(account: AccountData, partyId: string, accountToKick: string) {
-    return AuthSession.ky(account, partyService).delete(
-      `parties/${partyId}/members/${accountToKick}`
-    ).json();
+    return AuthSession.ky(account, partyService).delete(`parties/${partyId}/members/${accountToKick}`).json();
   }
 
   static leave(account: AccountData, partyId: string) {
@@ -48,9 +49,7 @@ export class Party {
   }
 
   static promote(account: AccountData, partyId: string, accountToPromote: string) {
-    return AuthSession.ky(account, partyService).post(
-      `parties/${partyId}/members/${accountToPromote}/promote`
-    ).json();
+    return AuthSession.ky(account, partyService).post(`parties/${partyId}/members/${accountToPromote}/promote`).json();
   }
 
   static patchParty(account: AccountData, partyId: string, revision: number, update: Record<string, string>) {
@@ -82,7 +81,9 @@ export class Party {
       if (error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.social.party.stale_revision') {
         const newRevision = Number.parseInt(error.messageVars[1]);
         if (!Number.isNaN(newRevision)) {
-          return AuthSession.ky(account, partyService).patch(url,{ json: { ...body, revision: newRevision } }).json();
+          return AuthSession.ky(account, partyService)
+            .patch(url, { json: { ...body, revision: newRevision } })
+            .json();
         }
       }
 
@@ -91,26 +92,30 @@ export class Party {
   }
 
   static invite(account: AccountData, partyId: string, friendToInvite: string) {
-    return AuthSession.ky(account, partyService).post(
-      `parties/${partyId}/invites/${friendToInvite}?sendPing=true`,
-      {
+    return AuthSession.ky(account, partyService)
+      .post(`parties/${partyId}/invites/${friendToInvite}?sendPing=true`, {
         json: {
           'urn:epic:invite:platformdata_s': ''
         }
-      }
-    ).json();
+      })
+      .json();
   }
 
   static getInviterParty(account: AccountData, senderId: string) {
-    return AuthSession.ky(account, partyService).get<[InviterPartyResponse]>(
-      `user/${account.accountId}/pings/${senderId}/parties`
-    ).json();
+    return AuthSession.ky(account, partyService)
+      .get<[InviterPartyResponse]>(`user/${account.accountId}/pings/${senderId}/parties`)
+      .json();
   }
 
-  static async acceptInvite(account: AccountData, partyId: string, senderId: string, jid: string, meta: Record<string, string> = {}) {
-    await AuthSession.ky(account, partyService).post(
-      `parties/${partyId}/members/${account.accountId}/join`,
-      {
+  static async acceptInvite(
+    account: AccountData,
+    partyId: string,
+    senderId: string,
+    jid: string,
+    meta: Record<string, string> = {}
+  ) {
+    await AuthSession.ky(account, partyService)
+      .post(`parties/${partyId}/members/${account.accountId}/join`, {
         json: {
           connection: {
             id: jid,
@@ -139,8 +144,8 @@ export class Party {
             })
           }
         }
-      }
-    ).json();
+      })
+      .json();
 
     await AuthSession.ky(account, partyService).delete(`user/${account.accountId}/pings/${senderId}`);
   }

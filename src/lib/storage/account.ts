@@ -74,12 +74,7 @@ export class AccountStore extends FileStore<AccountDataFile> {
   }
 
   private async cleanupAccount(account: AccountData) {
-    const [
-      { AutoKickBase },
-      { XMPPManager },
-      { DeviceAuth },
-      { Legendary }
-    ] = await Promise.all([
+    const [{ AutoKickBase }, { XMPPManager }, { DeviceAuth }, { Legendary }] = await Promise.all([
       import('$lib/modules/autokick/base'),
       import('$lib/modules/xmpp'),
       import('$lib/modules/device-auth'),

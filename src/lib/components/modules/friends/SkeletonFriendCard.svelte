@@ -1,4 +1,4 @@
-<div class="flex items-center px-3 py-2 rounded-md bg-card border skeleton-loader">
+<div class="skeleton-loader flex items-center rounded-md border bg-card px-3 py-2">
   <div class="flex items-center gap-2">
     <div class="size-8 rounded-full bg-muted"></div>
 

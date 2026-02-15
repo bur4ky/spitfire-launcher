@@ -27,25 +27,29 @@
     vbucksStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
-    await Promise.allSettled(accounts.map(async (account) => {
-      const state: VBucksState = {
-        accountId: account.accountId,
-        displayName: account.displayName,
-        data: { vbucksAmount: 0 }
-      };
-      vbucksStates.push(state);
+    await Promise.allSettled(
+      accounts.map(async (account) => {
+        const state: VBucksState = {
+          accountId: account.accountId,
+          displayName: account.displayName,
+          data: { vbucksAmount: 0 }
+        };
+        vbucksStates.push(state);
 
-      try {
-        const queryProfile = await MCP.queryProfile(account, 'common_core');
-        state.data.vbucksAmount = calculateVbucks(queryProfile);
-      } catch (error) {
-        handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });
+        try {
+          const queryProfile = await MCP.queryProfile(account, 'common_core');
+          state.data.vbucksAmount = calculateVbucks(queryProfile);
+        } catch (error) {
+          handleError({ error, message: 'Failed to fetch V-Bucks information', account, toastId: false });
 
-        state.data.error = error instanceof EpicAPIError && error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
-          ? $t('vbucksInformation.loginExpired')
-          : $t('vbucksInformation.unknownError');
-      }
-    }));
+          state.data.error =
+            error instanceof EpicAPIError &&
+            error.errorCode === 'errors.com.epicgames.account.invalid_account_credentials'
+              ? $t('vbucksInformation.loginExpired')
+              : $t('vbucksInformation.unknownError');
+        }
+      })
+    );
 
     isFetching = false;
   }
@@ -53,11 +57,7 @@
 
 <PageContent center={true} title={$t('vbucksInformation.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={fetchVbucksData}>
-    <AccountCombobox
-      disabled={isFetching}
-      type="multiple"
-      bind:value={selectedAccounts}
-    />
+    <AccountCombobox disabled={isFetching} type="multiple" bind:value={selectedAccounts} />
 
     <Button
       class="mt-2"
@@ -71,7 +71,7 @@
   </form>
 
   {#if !isFetching && vbucksStates.length}
-    <div class="flex flex-col p-2 border rounded-md">
+    <div class="flex flex-col rounded-md border p-2">
       {#each vbucksStates as state (state.accountId)}
         <div class="flex gap-x-2">
           <p class="font-medium">{state.displayName}:</p>
@@ -81,11 +81,7 @@
           {:else}
             <div class="flex items-center gap-x-1">
               <p>{state.data.vbucksAmount!.toLocaleString($language)}</p>
-              <img
-                class="size-5"
-                alt="V-Bucks"
-                src="/resources/currency_mtxswap.png"
-              />
+              <img class="size-5" alt="V-Bucks" src="/resources/currency_mtxswap.png" />
             </div>
           {/if}
         </div>

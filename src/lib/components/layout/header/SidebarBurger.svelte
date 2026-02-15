@@ -7,9 +7,6 @@
   }
 </script>
 
-<button
-  class="p-2 rounded hover:bg-accent transition-colors duration-200 lg:hidden mr-auto"
-  onclick={toggleSidebar}
->
+<button class="mr-auto rounded p-2 transition-colors duration-200 hover:bg-accent lg:hidden" onclick={toggleSidebar}>
   <MenuIcon class="size-6" />
 </button>

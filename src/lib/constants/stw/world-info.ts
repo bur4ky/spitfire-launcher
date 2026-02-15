@@ -165,35 +165,40 @@ export const ZoneCategories = Object.freeze({
   rtd: ['RetrieveTheData', 'RtD'],
   rtl: ['LaunchTheBalloon', 'LtB', 'RideTheLightning', 'RtL'],
   rts: ['PowerTheStormShield', 'RtS'],
-  stn: ['SurviveTheNight'], 'storm-shield': ['Outpost'],
+  stn: ['SurviveTheNight'],
+  'storm-shield': ['Outpost'],
   tts: ['TrapTheStorm']
 } as const);
 
-export const ZoneNames = derived([language, t], ([$language, $t]) => ({
-  atlas: missions.fightTheStorm.names[$language],
-  'atlas-c2': missions.fightCategory2Storm.names[$language],
-  'atlas-c3': missions.fightCategory3Storm.names[$language],
-  'atlas-c4': missions.fightCategory4Storm.names[$language],
-  dtb: missions.deliverTheBomb.names[$language],
-  dte: missions.destroyTheEncampments.names[$language],
-  eac: missions.eliminateAndCollect.names[$language],
-  ets: missions.evacuateTheShelter.names[$language],
-  htm: missions.huntTheTitan.names[$language],
-  htr: missions.hitTheRoad.names[$language],
-  ptp: missions.protectThePresents.names[$language],
-  radar: missions.buildTheRadarGrid.names[$language],
-  refuel: missions.refuelTheHomebase.names[$language],
-  rescue: missions.rescueTheSurvivors.names[$language],
-  resupply: missions.resupply.names[$language],
-  rocket: missions.launchTheRocket.names[$language],
-  rtd: missions.retrieveTheData.names[$language],
-  rtl: missions.rideTheLightning.names[$language],
-  rts: missions.repairTheShelter.names[$language],
-  stn: missions.surviveTheStorm.names[$language],
-  'storm-shield': missions.homebaseStormShield.names[$language],
-  tts: missions.trapTheStorm.names[$language],
-  quest: $t('quest')
-} as Record<string, string>));
+export const ZoneNames = derived(
+  [language, t],
+  ([$language, $t]) =>
+    ({
+      atlas: missions.fightTheStorm.names[$language],
+      'atlas-c2': missions.fightCategory2Storm.names[$language],
+      'atlas-c3': missions.fightCategory3Storm.names[$language],
+      'atlas-c4': missions.fightCategory4Storm.names[$language],
+      dtb: missions.deliverTheBomb.names[$language],
+      dte: missions.destroyTheEncampments.names[$language],
+      eac: missions.eliminateAndCollect.names[$language],
+      ets: missions.evacuateTheShelter.names[$language],
+      htm: missions.huntTheTitan.names[$language],
+      htr: missions.hitTheRoad.names[$language],
+      ptp: missions.protectThePresents.names[$language],
+      radar: missions.buildTheRadarGrid.names[$language],
+      refuel: missions.refuelTheHomebase.names[$language],
+      rescue: missions.rescueTheSurvivors.names[$language],
+      resupply: missions.resupply.names[$language],
+      rocket: missions.launchTheRocket.names[$language],
+      rtd: missions.retrieveTheData.names[$language],
+      rtl: missions.rideTheLightning.names[$language],
+      rts: missions.repairTheShelter.names[$language],
+      stn: missions.surviveTheStorm.names[$language],
+      'storm-shield': missions.homebaseStormShield.names[$language],
+      tts: missions.trapTheStorm.names[$language],
+      quest: $t('quest')
+    }) as Record<string, string>
+);
 
 export const GroupZones = Object.freeze([
   'atlas',

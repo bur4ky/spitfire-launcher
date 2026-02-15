@@ -25,12 +25,12 @@
   {...restProps}
   class={cn(
     buttonVariants({
-      variant: isActive ? "outline" : "ghost",
-      size,
+      variant: isActive ? 'outline' : 'ghost',
+      size
     }),
     className
   )}
-  aria-current={isActive ? "page" : undefined}
+  aria-current={isActive ? 'page' : undefined}
   children={children || Fallback}
   data-active={isActive}
   data-slot="pagination-link"

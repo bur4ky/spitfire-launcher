@@ -63,8 +63,8 @@
     <Select.Root type="single" bind:value={selectedTokenType}>
       <Select.Trigger class="w-full">
         <KeyRound class="size-5" />
-        {tokenTypeOptions.find((option) => option.value === selectedTokenType)?.label
-          || $t('accessToken.selectTokenType')}
+        {tokenTypeOptions.find((option) => option.value === selectedTokenType)?.label ||
+          $t('accessToken.selectTokenType')}
       </Select.Trigger>
 
       <Select.Content>
@@ -79,8 +79,7 @@
     <Select.Root type="single" bind:value={selectedClient}>
       <Select.Trigger class="w-full">
         <MonitorSmartphone class="size-5" />
-        {clientOptions.find((option) => option.value === selectedClient)?.label
-          || $t('accessToken.selectClient')}
+        {clientOptions.find((option) => option.value === selectedClient)?.label || $t('accessToken.selectClient')}
       </Select.Trigger>
 
       <Select.Content>

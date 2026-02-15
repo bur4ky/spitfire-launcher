@@ -34,19 +34,16 @@
 </script>
 
 <Dialog.Root>
-  <Dialog.Trigger class="p-2 rounded-md hover:bg-accent">
+  <Dialog.Trigger class="rounded-md p-2 hover:bg-accent">
     <SettingsIcon class="size-6" />
   </Dialog.Trigger>
 
-  <Dialog.Content class="!max-w-[calc(100%-2rem)] sm:!max-w-200 max-xs:w-full flex flex-col sm:flex-row">
-    <div class="sm:w-50 sm:pr-6 sm:border-r">
-      <div class="flex flex-wrap sm:flex-nowrap sm:flex-col gap-2 mb-2 sm:mb-0">
+  <Dialog.Content class="flex !max-w-[calc(100%-2rem)] flex-col max-xs:w-full sm:!max-w-200 sm:flex-row">
+    <div class="sm:w-50 sm:border-r sm:pr-6">
+      <div class="mb-2 flex flex-wrap gap-2 sm:mb-0 sm:flex-col sm:flex-nowrap">
         {#each categories as category (category.id)}
           <Button
-            class={cn(
-              'w-full justify-start',
-              activeTab === category.id && 'bg-accent'
-            )}
+            class={cn('w-full justify-start', activeTab === category.id && 'bg-accent')}
             onclick={() => (activeTab = category.id)}
             variant="ghost"
           >
@@ -56,7 +53,7 @@
       </div>
     </div>
 
-    <div class="flex-1 min-h-114 max-h-114 max-xs:h-128 overflow-y-auto">
+    <div class="max-h-114 min-h-114 flex-1 overflow-y-auto max-xs:h-128">
       <div>
         {#each categories as category (category.id)}
           {#if activeTab === category.id}

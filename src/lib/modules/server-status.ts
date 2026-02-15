@@ -5,19 +5,20 @@ import type { LightswitchData, ServerStatusSummaryData, WaitingRoomData } from '
 export class ServerStatus {
   static async getLightswitch() {
     const token = (await Authentication.getAccessTokenUsingClientCredentials()).access_token;
-    return lightswitchService.get<LightswitchData>(
-      'Fortnite/status',
-      {
+    return lightswitchService
+      .get<LightswitchData>('Fortnite/status', {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }
-    ).json();
+      })
+      .json();
   }
 
   static getWaitingRoom() {
     return epicService
-      .get<WaitingRoomData>('https://fortnitewaitingroom-public-service-prod.ol.epicgames.com/waitingroom/api/waitingroom')
+      .get<WaitingRoomData>(
+        'https://fortnitewaitingroom-public-service-prod.ol.epicgames.com/waitingroom/api/waitingroom'
+      )
       .json()
       .catch(() => null);
   }

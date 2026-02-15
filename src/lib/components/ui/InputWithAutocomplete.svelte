@@ -22,7 +22,9 @@
   const autocompleteData = $derived.by(() => {
     if (!value) return [];
 
-    return displayNamesCache.entries().toArray()
+    return displayNamesCache
+      .entries()
+      .toArray()
       .filter(([id, name]) => name?.toLowerCase().includes(value.toLowerCase()) || id === value)
       .sort(([idA, nameA], [idB, nameB]) => {
         const isFriendA = avatarCache.has(idA);
@@ -51,27 +53,19 @@
 </script>
 
 <div class="relative w-full">
-  <Input
-    {...restProps}
-    oninput={handleInput}
-    bind:ref={inputElement}
-    bind:value
-  />
+  <Input {...restProps} oninput={handleInput} bind:ref={inputElement} bind:value />
 
   <DropdownMenu.Root
-    bind:open={
-     () => dropdownAvailable && hasAutoComplete && !selectedItemId,
-     () => dropdownAvailable = false
-    }
+    bind:open={() => dropdownAvailable && hasAutoComplete && !selectedItemId, () => (dropdownAvailable = false)}
   >
     <DropdownMenu.Content
-      class="w-(--bits-floating-anchor-width) max-h-72"
+      class="max-h-72 w-(--bits-floating-anchor-width)"
       customAnchor={inputElement}
       onOpenAutoFocus={(event) => event.preventDefault()}
     >
       {#each autocompleteData as [accountId, name] (accountId)}
         <DropdownMenu.Item
-          class="grow w-full"
+          class="w-full grow"
           onclick={() => {
             value = name;
             selectedItemId = accountId;
@@ -79,7 +73,7 @@
           }}
         >
           <img
-            class="size-6 rounded-full mr-2"
+            class="mr-2 size-6 rounded-full"
             alt={name}
             src={avatarCache.get(accountId) || '/misc/default-outfit-icon.png'}
           />

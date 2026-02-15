@@ -46,7 +46,9 @@
         await DeviceAuth.delete($activeAccount, deviceId);
       }
 
-      allDeviceAuths[$activeAccount.accountId] = allDeviceAuths[$activeAccount.accountId].filter((auth) => auth.deviceId !== deviceId);
+      allDeviceAuths[$activeAccount.accountId] = allDeviceAuths[$activeAccount.accountId].filter(
+        (auth) => auth.deviceId !== deviceId
+      );
       toast.success(isCurrentDevice ? $t('deviceAuth.deletedAndLoggedOut') : $t('deviceAuth.deleted'), { id: toastId });
 
       if (isCurrentDevice) {
@@ -75,12 +77,12 @@
   }
 </script>
 
-<div class="border rounded-md p-4 relative size-full bg-card">
-  <div class="flex justify-between items-start">
+<div class="relative size-full rounded-md border bg-card p-4">
+  <div class="flex items-start justify-between">
     <div class="flex flex-col gap-y-1">
-      <div class="flex items-center gap-2 w-fit mb-1">
+      <div class="mb-1 flex w-fit items-center gap-2">
         <span
-          class="font-semibold outline-none hover:underline underline-offset-2"
+          class="font-semibold underline-offset-2 outline-none hover:underline"
           contenteditable
           onblur={(event) => saveDeviceName(event, auth.deviceId)}
           onkeydown={(event) => event.key === 'Enter' && event.preventDefault()}
@@ -94,7 +96,7 @@
         {#if auth.deviceId === $activeAccount.deviceId}
           <Tooltip.Root>
             <Tooltip.Trigger>
-              <div class="size-2 bg-green-500 rounded-full shrink-0"></div>
+              <div class="size-2 shrink-0 rounded-full bg-green-500"></div>
             </Tooltip.Trigger>
             <Tooltip.Content>
               {$t('deviceAuth.authInfo.activeAuth')}
@@ -104,23 +106,16 @@
       </div>
 
       <div class="flex flex-col gap-y-2">
-        {#each [
-          { title: $t('deviceAuth.authInfo.id'), value: auth.deviceId },
-          { title: 'User-Agent', value: auth.userAgent },
-          { title: 'Secret', value: auth.secret }
-        ] as { title, value } (value)}
+        {#each [{ title: $t('deviceAuth.authInfo.id'), value: auth.deviceId }, { title: 'User-Agent', value: auth.userAgent }, { title: 'Secret', value: auth.secret }] as { title, value } (value)}
           {#if value}
-            <div class="text-sm flex flex-col">
+            <div class="flex flex-col text-sm">
               <span class="font-semibold">{title}</span>
               <span class="text-muted-foreground">{value}</span>
             </div>
           {/if}
         {/each}
 
-        {#each [
-          { title: $t('deviceAuth.authInfo.created'), data: auth.created },
-          { title: $t('deviceAuth.authInfo.lastAccess'), data: auth.lastAccess }
-        ] as { title, data } (title)}
+        {#each [{ title: $t('deviceAuth.authInfo.created'), data: auth.created }, { title: $t('deviceAuth.authInfo.lastAccess'), data: auth.lastAccess }] as { title, data } (title)}
           {#if data}
             <div>
               <span class="font-semibold">{title}</span>

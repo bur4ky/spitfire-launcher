@@ -21,11 +21,4 @@ await Promise.all([
   taxiStore.init()
 ]);
 
-export {
-  accountStore,
-  automationStore,
-  deviceAuthsStore,
-  downloaderStore,
-  settingsStore,
-  taxiStore
-};
+export { accountStore, automationStore, deviceAuthsStore, downloaderStore, settingsStore, taxiStore };

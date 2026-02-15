@@ -19,7 +19,7 @@
   const { dailyQuests }: Props = $props();
 </script>
 
-<Accordion.Root class="grid sm:grid-cols-2 gap-1" type="multiple">
+<Accordion.Root class="grid gap-1 sm:grid-cols-2" type="multiple">
   {#each dailyQuests as quest (quest.id)}
     {@const rewards = [
       {
@@ -43,13 +43,13 @@
     ]}
 
     <Accordion.Item value={quest.id}>
-      <Accordion.Trigger class="flex items-center justify-between px-2 h-10 bg-secondary rounded-sm">
-        <span class="text-start font-medium break-after-all">
+      <Accordion.Trigger class="flex h-10 items-center justify-between rounded-sm bg-secondary px-2">
+        <span class="break-after-all text-start font-medium">
           {quest.names[$language]} - {quest.completionProgress} /{quest.limit}
         </span>
       </Accordion.Trigger>
 
-      <Accordion.Content class="text-sm mt-1 bg-secondary rounded-sm flex flex-col gap-y-1 px-4 py-2">
+      <Accordion.Content class="mt-1 flex flex-col gap-y-1 rounded-sm bg-secondary px-4 py-2 text-sm">
         <h2 class="font-medium">{$t('lookupPlayers.dailyQuests.rewards')}</h2>
         <div class="flex flex-col gap-x-1">
           {#each rewards as reward (reward.id)}

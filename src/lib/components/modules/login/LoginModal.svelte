@@ -62,11 +62,7 @@
       {#if currentStep === 0}
         <LoginStep0 {selectLoginMethod} />
       {:else if currentStep === 1}
-        <LoginStep1
-          {goToNextStep}
-          {goToPreviousStep}
-          selectedMethod={selectedMethod!}
-        />
+        <LoginStep1 {goToNextStep} {goToPreviousStep} selectedMethod={selectedMethod!} />
       {:else if currentStep === 2}
         <LoginStep2 />
       {/if}

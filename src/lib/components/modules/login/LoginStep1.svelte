@@ -23,11 +23,7 @@
     goToNextStep: () => void;
   };
 
-  const {
-    selectedMethod,
-    goToPreviousStep,
-    goToNextStep
-  }: Props = $props();
+  const { selectedMethod, goToPreviousStep, goToNextStep }: Props = $props();
 
   let exchangeCode = $state<string>();
   let exchangeForm = $state<HTMLFormElement>();
@@ -79,12 +75,14 @@
 
   async function generateDeviceCodeLink() {
     const clientToken = await Authentication.getAccessTokenUsingClientCredentials(fortniteNewSwitchGameClient);
-    const deviceCodeResponse = await oauthService.post<DeviceCodeLoginData>('deviceAuthorization', {
-      body: new URLSearchParams({ prompt: 'login' }).toString(),
-      headers: {
-        Authorization: `Bearer ${clientToken.access_token}`
-      }
-    }).json();
+    const deviceCodeResponse = await oauthService
+      .post<DeviceCodeLoginData>('deviceAuthorization', {
+        body: new URLSearchParams({ prompt: 'login' }).toString(),
+        headers: {
+          Authorization: `Bearer ${clientToken.access_token}`
+        }
+      })
+      .json();
 
     deviceCodeData = {
       code: deviceCodeResponse.device_code,
@@ -101,7 +99,9 @@
         fortniteNewSwitchGameClient
       );
 
-      const newSwitchExchangeCode = await Authentication.getExchangeCodeUsingAccessToken(newSwitchAccessTokenData.access_token);
+      const newSwitchExchangeCode = await Authentication.getExchangeCodeUsingAccessToken(
+        newSwitchAccessTokenData.access_token
+      );
       const androidAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(newSwitchExchangeCode.code);
 
       await handleLogin(androidAccessTokenData);
@@ -163,7 +163,7 @@
 
     <div class="mb-6 rounded-lg">
       <Button
-        class="flex justify-center items-center gap-x-2 w-full"
+        class="flex w-full items-center justify-center gap-x-2"
         disabled={!deviceCodeData?.verificationUrl}
         loading={!deviceCodeData?.verificationUrl}
         loadingText={$t('accountManager.loginMethods.webConfirmation.generatingURL')}
@@ -178,9 +178,7 @@
     {#if !deviceCodeVerifyButtonDisabled}
       <Button
         class="w-full"
-        disabled={isLoggingIn ||
-          deviceCodeVerifyButtonDisabled ||
-          !deviceCodeData?.verificationUrl}
+        disabled={isLoggingIn || deviceCodeVerifyButtonDisabled || !deviceCodeData?.verificationUrl}
         loading={isLoggingIn}
         loadingText={$t('accountManager.verifying')}
         onclick={handleWebConfirmation}
@@ -197,7 +195,8 @@
     </p>
 
     <form
-      bind:this={exchangeForm} class="flex flex-col gap-y-4 flex-1 justify-between h-full"
+      bind:this={exchangeForm}
+      class="flex h-full flex-1 flex-col justify-between gap-y-4"
       onsubmit={handleExchangeCodeSubmit}
     >
       <Input
@@ -211,10 +210,8 @@
       <div class="flex-1"></div>
 
       <Button
-        class="w-full flex items-center justify-center gap-2 mt-auto"
-        disabled={!exchangeCode?.trim() ||
-          exchangeCode?.trim().length !== 32 ||
-          isLoggingIn}
+        class="mt-auto flex w-full items-center justify-center gap-2"
+        disabled={!exchangeCode?.trim() || exchangeCode?.trim().length !== 32 || isLoggingIn}
         loading={isLoggingIn}
         loadingText={$t('accountManager.verifying')}
         type="submit"

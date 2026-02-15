@@ -34,9 +34,11 @@
     showLoginModal = pageState.showLoginModal || false;
   });
 
-  const filteredAccounts = $derived(searchTerm
-    ? allAccounts.filter((account) => account.displayName.toLowerCase().includes(searchTerm!.toLowerCase()))
-    : allAccounts);
+  const filteredAccounts = $derived(
+    searchTerm
+      ? allAccounts.filter((account) => account.displayName.toLowerCase().includes(searchTerm!.toLowerCase()))
+      : allAccounts
+  );
 
   function closeDropdown() {
     dropdownOpen = false;
@@ -81,25 +83,21 @@
 
 <DropdownMenu.Root bind:open={dropdownOpen}>
   <DropdownMenu.Trigger class="w-full">
-    <Button
-      class="w-full py-6"
-      onclick={closeDropdown}
-      variant="ghost"
-    >
+    <Button class="w-full py-6" onclick={closeDropdown} variant="ghost">
       <img
         class="size-8 rounded-full"
         alt={$activeAccount?.displayName}
         src={($activeAccount && avatarCache.get($activeAccount.accountId)) || '/misc/default-outfit-icon.png'}
       />
 
-      <span class="text-base font-medium truncate">
+      <span class="truncate text-base font-medium">
         {$activeAccount?.displayName || $t('accountManager.noAccount')}
       </span>
 
       <ChevronDownIcon
         class={cn(
-          'size-7 ml-auto transition-transform duration-200 rounded-md p-1',
-          dropdownOpen ? dropdownSide === 'right' ? '-rotate-90' : 'rotate-180' : ''
+          'ml-auto size-7 rounded-md p-1 transition-transform duration-200',
+          dropdownOpen ? (dropdownSide === 'right' ? '-rotate-90' : 'rotate-180') : ''
         )}
       />
     </Button>
@@ -108,7 +106,7 @@
   <DropdownMenu.Content class="p-2" side={dropdownSide}>
     {#if allAccounts.length}
       <input
-        class="w-full px-3 py-2 text-sm rounded-md bg-input border-input focus:outline-none focus:ring-2 focus:ring-ring"
+        class="w-full rounded-md border-input bg-input px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:outline-none"
         onkeydown={handleKeyPress}
         onkeyup={handleKeyPress}
         placeholder={$t('accountManager.searchAccounts')}
@@ -119,7 +117,7 @@
     {/if}
 
     {#if filteredAccounts.length}
-      <div class="py-2 max-h-64 overflow-y-auto">
+      <div class="max-h-64 overflow-y-auto py-2">
         {#each filteredAccounts as account (account.accountId)}
           <DropdownMenu.Item class="duration-0" onclick={() => changeAccounts(account)}>
             <img
@@ -131,7 +129,7 @@
             <span class="truncate">{account.displayName}</span>
 
             {#if $activeAccount?.accountId === account.accountId}
-              <CheckIcon class="size-5 ml-auto" />
+              <CheckIcon class="ml-auto size-5" />
             {/if}
           </DropdownMenu.Item>
         {/each}
@@ -139,11 +137,7 @@
     {/if}
 
     <div
-      class={[
-        'space-y-1',
-        { 'pt-2': !!allAccounts.length },
-        { 'border-t border-border': !!filteredAccounts.length }
-      ]}
+      class={['space-y-1', { 'pt-2': !!allAccounts.length }, { 'border-t border-border': !!filteredAccounts.length }]}
     >
       <DropdownMenu.Item onclick={addNewAccount}>
         <PlusIcon class="size-4 shrink-0" />
@@ -151,10 +145,7 @@
       </DropdownMenu.Item>
 
       {#if $activeAccount}
-        <DropdownMenu.Item
-          class="hover:bg-destructive hover:text-destructive-foreground"
-          onclick={logout}
-        >
+        <DropdownMenu.Item class="hover:bg-destructive hover:text-destructive-foreground" onclick={logout}>
           <LogOutIcon class="size-4 shrink-0" />
           <span class="truncate">{$t('accountManager.logout')}</span>
         </DropdownMenu.Item>

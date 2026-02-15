@@ -24,21 +24,16 @@ import type { IconProps } from '@lucide/svelte';
 const platform = getPlatform();
 
 type Category = {
-  key: typeof SidebarCategoryKeys[number];
+  key: (typeof SidebarCategoryKeys)[number];
   items: {
-    key: typeof SidebarItemKeys[number];
+    key: (typeof SidebarItemKeys)[number];
     href: string;
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     icon: Component<IconProps, {}, ''>;
   }[];
 };
 
-export const SidebarCategoryKeys = Object.freeze([
-  'account',
-  'brStw',
-  'downloader',
-  'authentication'
-] as const);
+export const SidebarCategoryKeys = Object.freeze(['account', 'brStw', 'downloader', 'authentication'] as const);
 
 export const SidebarItemKeys = Object.freeze([
   'vbucksInformation',
@@ -66,125 +61,127 @@ export const SidebarItemKeys = Object.freeze([
   'deviceAuth'
 ] as const);
 
-export const SidebarCategories = Object.freeze([
-  {
-    key: 'account',
-    items: [
-      {
-        key: 'vbucksInformation',
-        href: '/account-management/vbucks-information',
-        icon: WalletIcon
-      },
-      {
-        key: 'friendsManagement',
-        href: '/account-management/friends-management',
-        icon: UsersIcon
-      },
-      {
-        key: 'redeemCodes',
-        href: '/account-management/redeem-codes',
-        icon: TicketIcon
-      },
-      {
-        key: 'epicGamesWebsite',
-        href: '/account-management/epic-games-website',
-        icon: GlobeIcon
-      },
-      {
-        key: 'eula',
-        href: '/account-management/eula',
-        icon: FileTextIcon
-      }
-    ]
-  },
-  {
-    key: 'brStw',
-    items: [
-      {
-        key: 'autoKick',
-        href: '/br-stw/auto-kick',
-        icon: UserXIcon
-      },
-      {
-        key: 'taxiService',
-        href: '/br-stw/taxi-service',
-        icon: CarIcon
-      },
-      {
-        key: 'customStatus',
-        href: '/br-stw/custom-status',
-        icon: MessageSquareIcon
-      },
-      {
-        key: 'partyManagement',
-        href: '/br-stw/party-management',
-        icon: PartyPopperIcon
-      },
-      {
-        key: 'serverStatus',
-        href: '/br-stw/server-status',
-        icon: ServerIcon
-      },
-      {
-        key: 'itemShop',
-        href: '/br-stw/item-shop',
-        icon: ShoppingBagIcon
-      },
-      {
-        key: 'earnedXP',
-        href: '/br-stw/earned-xp',
-        icon: TrendingUpIcon
-      },
-      {
-        key: 'dailyQuests',
-        href: '/br-stw/daily-quests',
-        icon: ListChecksIcon
-      },
-      {
-        key: 'stwMissionAlerts',
-        href: '/br-stw/stw-mission-alerts',
-        icon: BellIcon
-      },
-      {
-        key: 'lookupPlayers',
-        href: '/br-stw/lookup-players',
-        icon: SearchIcon
-      }
-    ]
-  },
-  platform === 'windows' && {
-    key: 'downloader',
-    items: [
-      {
-        key: 'library',
-        href: '/downloader/library',
-        icon: LibraryIcon
-      },
-      {
-        key: 'downloads',
-        href: '/downloader/downloads',
-        icon: DownloadIcon
-      }
-    ]
-  },
-  {
-    key: 'authentication',
-    items: [
-      {
-        key: 'exchangeCode',
-        href: '/authentication/exchange-code',
-        icon: KeyRoundIcon
-      },
-      {
-        key: 'accessToken',
-        href: '/authentication/access-token',
-        icon: KeyIcon
-      },
-      {
-        key: 'deviceAuth',
-        href: '/authentication/device-auth',
-        icon: SmartphoneIcon
-      }
-    ]
-  }
-].filter(Boolean) as Category[]);
+export const SidebarCategories = Object.freeze(
+  [
+    {
+      key: 'account',
+      items: [
+        {
+          key: 'vbucksInformation',
+          href: '/account-management/vbucks',
+          icon: WalletIcon
+        },
+        {
+          key: 'friendsManagement',
+          href: '/account-management/friends',
+          icon: UsersIcon
+        },
+        {
+          key: 'redeemCodes',
+          href: '/account-management/redeem-codes',
+          icon: TicketIcon
+        },
+        {
+          key: 'epicGamesWebsite',
+          href: '/account-management/epic-games-website',
+          icon: GlobeIcon
+        },
+        {
+          key: 'eula',
+          href: '/account-management/eula',
+          icon: FileTextIcon
+        }
+      ]
+    },
+    {
+      key: 'brStw',
+      items: [
+        {
+          key: 'autoKick',
+          href: '/br-stw/auto-kick',
+          icon: UserXIcon
+        },
+        {
+          key: 'taxiService',
+          href: '/br-stw/taxi-service',
+          icon: CarIcon
+        },
+        {
+          key: 'customStatus',
+          href: '/br-stw/custom-status',
+          icon: MessageSquareIcon
+        },
+        {
+          key: 'partyManagement',
+          href: '/br-stw/party',
+          icon: PartyPopperIcon
+        },
+        {
+          key: 'serverStatus',
+          href: '/br-stw/server-status',
+          icon: ServerIcon
+        },
+        {
+          key: 'itemShop',
+          href: '/br-stw/item-shop',
+          icon: ShoppingBagIcon
+        },
+        {
+          key: 'earnedXP',
+          href: '/br-stw/earned-xp',
+          icon: TrendingUpIcon
+        },
+        {
+          key: 'dailyQuests',
+          href: '/br-stw/daily-quests',
+          icon: ListChecksIcon
+        },
+        {
+          key: 'stwMissionAlerts',
+          href: '/br-stw/stw-mission-alerts',
+          icon: BellIcon
+        },
+        {
+          key: 'lookupPlayers',
+          href: '/br-stw/lookup-players',
+          icon: SearchIcon
+        }
+      ]
+    },
+    platform === 'windows' && {
+      key: 'downloader',
+      items: [
+        {
+          key: 'library',
+          href: '/downloader/library',
+          icon: LibraryIcon
+        },
+        {
+          key: 'downloads',
+          href: '/downloader/downloads',
+          icon: DownloadIcon
+        }
+      ]
+    },
+    {
+      key: 'authentication',
+      items: [
+        {
+          key: 'exchangeCode',
+          href: '/authentication/exchange-code',
+          icon: KeyRoundIcon
+        },
+        {
+          key: 'accessToken',
+          href: '/authentication/access-token',
+          icon: KeyIcon
+        },
+        {
+          key: 'deviceAuth',
+          href: '/authentication/device-auth',
+          icon: SmartphoneIcon
+        }
+      ]
+    }
+  ].filter((x) => !!x) as Category[]
+);

@@ -7,6 +7,7 @@ import globals from 'globals';
 import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 import stylistic from '@stylistic/eslint-plugin';
+import prettier from 'eslint-config-prettier';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
@@ -15,6 +16,8 @@ export default defineConfig(
   js.configs.recommended,
   ...ts.configs.recommended,
   ...svelte.configs.recommended,
+  prettier,
+  ...svelte.configs.prettier,
   {
     plugins: {
       '@stylistic': stylistic
@@ -48,7 +51,6 @@ export default defineConfig(
   {
     files: ['**/*.ts', '**/*.js'],
     rules: {
-      '@stylistic/indent': ['error', 2],
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/comma-dangle': ['error', 'never']
@@ -57,11 +59,9 @@ export default defineConfig(
   {
     files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
     rules: {
-      'svelte/indent': ['error', { indent: 2 }],
       'svelte/no-spaces-around-equal-signs-in-attribute': 'error',
       'svelte/spaced-html-comment': ['error', 'always'],
       'svelte/sort-attributes': 'error',
-      'svelte/first-attribute-linebreak': ['error'],
       'svelte/no-at-html-tags': 'off',
       'svelte/derived-has-same-inputs-outputs': ['error'],
       'svelte/html-closing-bracket-new-line': ['error', { singleline: 'never', multiline: 'always' }],

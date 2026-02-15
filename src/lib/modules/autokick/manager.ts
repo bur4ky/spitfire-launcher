@@ -25,7 +25,10 @@ export class AutoKickManager {
   private previousStarted = false;
   private lastKick?: Date;
 
-  private constructor(private account: AccountData, private xmpp: XMPPManager) {}
+  private constructor(
+    private account: AccountData,
+    private xmpp: XMPPManager
+  ) {}
 
   static async new(account: AccountData) {
     const accountId = account.accountId;
@@ -40,65 +43,89 @@ export class AutoKickManager {
     const manager = new AutoKickManager(account, xmpp);
     const signal = manager.abortController.signal;
 
-    xmpp.on(ConnectionEvents.SessionStarted, async () => {
-      AutoKickBase.updateStatus(accountId, 'ACTIVE');
+    xmpp.on(
+      ConnectionEvents.SessionStarted,
+      async () => {
+        AutoKickBase.updateStatus(accountId, 'ACTIVE');
 
-      const state = await manager.checkMissionState();
-      manager.currentState = state;
+        const state = await manager.checkMissionState();
+        manager.currentState = state;
 
-      if (state === 'pregame') {
-        manager.scheduleMissionChecker(60_000);
-      }
+        if (state === 'pregame') {
+          manager.scheduleMissionChecker(60_000);
+        }
 
-      if (state === 'mission') {
-        manager.startMissionChecker();
-      }
+        if (state === 'mission') {
+          manager.startMissionChecker();
+        }
 
-      if (state === 'endgame') {
+        if (state === 'endgame') {
+          manager.resetState();
+          await manager.postMissionActions();
+        }
+      },
+      { signal }
+    );
+
+    xmpp.on(
+      ConnectionEvents.Disconnected,
+      () => {
+        AutoKickBase.updateStatus(accountId, 'DISCONNECTED');
         manager.resetState();
-        await manager.postMissionActions();
-      }
-    }, { signal });
+      },
+      { signal }
+    );
 
-    xmpp.on(ConnectionEvents.Disconnected, () => {
-      AutoKickBase.updateStatus(accountId, 'DISCONNECTED');
-      manager.resetState();
-    }, { signal });
+    xmpp.on(
+      EpicEvents.MemberDisconnected,
+      (data) => {
+        if (data.account_id !== accountId) return;
 
-    xmpp.on(EpicEvents.MemberDisconnected, (data) => {
-      if (data.account_id !== accountId) return;
+        manager.resetState();
+      },
+      { signal }
+    );
 
-      manager.resetState();
-    }, { signal });
+    xmpp.on(
+      EpicEvents.MemberExpired,
+      (data) => {
+        if (data.account_id !== accountId) return;
 
-    xmpp.on(EpicEvents.MemberExpired, (data) => {
-      if (data.account_id !== accountId) return;
+        manager.resetState();
+      },
+      { signal }
+    );
 
-      manager.resetState();
-    }, { signal });
+    xmpp.on(
+      EpicEvents.MemberJoined,
+      (data) => {
+        if (data.account_id !== accountId) return;
 
-    xmpp.on(EpicEvents.MemberJoined, (data) => {
-      if (data.account_id !== accountId) return;
+        AutoKickBase.updateStatus(accountId, 'ACTIVE');
 
-      AutoKickBase.updateStatus(accountId, 'ACTIVE');
+        // On lobby return after a kick, the game automatically creates a party and fires EpicEvents.MemberJoined
+        // So, we delay the mission checker to avoid false mission detection
+        if (!manager.lastKick || Date.now() - manager.lastKick.getTime() > 20_000) {
+          const delay = 20_000;
+          logger.debug('Scheduling mission checker after party join', { delay });
+          manager.scheduleMissionChecker(delay);
+        }
+      },
+      { signal }
+    );
 
-      // On lobby return after a kick, the game automatically creates a party and fires EpicEvents.MemberJoined
-      // So, we delay the mission checker to avoid false mission detection
-      if (!manager.lastKick || Date.now() - manager.lastKick.getTime() > 20_000) {
-        const delay = 20_000;
-        logger.debug('Scheduling mission checker after party join', { delay });
-        manager.scheduleMissionChecker(delay);
-      }
-    }, { signal });
-
-    xmpp.on(EpicEvents.PartyUpdated, async (data) => {
-      const partyState = data.party_state_updated?.['Default:PartyState_s'];
-      if (partyState === 'PostMatchmaking') {
-        const delay = 60_000;
-        logger.debug('PostMatchmaking detected, scheduling checker', { delay });
-        manager.scheduleMissionChecker(delay);
-      }
-    }, { signal });
+    xmpp.on(
+      EpicEvents.PartyUpdated,
+      async (data) => {
+        const partyState = data.party_state_updated?.['Default:PartyState_s'];
+        if (partyState === 'PostMatchmaking') {
+          const delay = 60_000;
+          logger.debug('PostMatchmaking detected, scheduling checker', { delay });
+          manager.scheduleMissionChecker(delay);
+        }
+      },
+      { signal }
+    );
 
     try {
       await xmpp.connect();
@@ -229,11 +256,11 @@ export class AutoKickManager {
     }
 
     if (
-      party
-      && settings.autoKick
-      && settings.autoInvite
-      && party.members.find((x) => x.account_id === this.account.accountId)?.role === 'CAPTAIN'
-      && party.members.some((x) => x.account_id !== this.account.accountId)
+      party &&
+      settings.autoKick &&
+      settings.autoInvite &&
+      party.members.find((x) => x.account_id === this.account.accountId)?.role === 'CAPTAIN' &&
+      party.members.some((x) => x.account_id !== this.account.accountId)
     ) {
       logger.debug('Running auto-invite', { accountId });
 
@@ -257,9 +284,7 @@ export class AutoKickManager {
 
     if (leaderAccount) {
       await Promise.allSettled(
-        noAutoKickIds
-          .filter((id) => id !== this.account.accountId)
-          .map((id) => Party.kick(leaderAccount, party.id, id))
+        noAutoKickIds.filter((id) => id !== this.account.accountId).map((id) => Party.kick(leaderAccount, party.id, id))
       );
 
       return Party.leave(this.account, party.id);
@@ -275,10 +300,7 @@ export class AutoKickManager {
     await this.xmpp.waitForEvent(EpicEvents.MemberJoined, (x) => x.account_id === this.account.accountId, 20_000);
     await sleep(10_000);
 
-    const [partyData, friends] = await Promise.allSettled([
-      Party.get(this.account),
-      Friends.getFriends(this.account)
-    ]);
+    const [partyData, friends] = await Promise.allSettled([Party.get(this.account), Friends.getFriends(this.account)]);
 
     const party = partyData.status === 'fulfilled' ? partyData?.value.current[0] : null;
     if (!party || friends.status === 'rejected' || !friends.value.length) return;

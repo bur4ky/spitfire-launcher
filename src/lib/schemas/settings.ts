@@ -2,32 +2,48 @@ import { SidebarItemKeys } from '$lib/constants/sidebar';
 import { locales } from '$lib/paraglide/runtime';
 import { z } from 'zod';
 
-type SidebarItem = typeof SidebarItemKeys[number];
+type SidebarItem = (typeof SidebarItemKeys)[number];
 
-export const appSettingsSchema = z.object({
-  language: z.enum(locales).nullish(),
-  gamePath: z.string(),
-  launchArguments: z.string(),
-  missionCheckInterval: z.number().positive(),
-  claimRewardsDelay: z.number().positive(),
-  startingPage: z.enum(['autoKick', 'itemShop', 'stwMissionAlerts', 'taxiService', 'dailyQuests', 'library'] satisfies SidebarItem[]),
-  discordStatus: z.boolean(),
-  hideToTray: z.boolean(),
-  checkForUpdates: z.boolean(),
-  debugLogs: z.boolean()
-}).partial();
+export const appSettingsSchema = z
+  .object({
+    language: z.enum(locales).nullish(),
+    gamePath: z.string(),
+    launchArguments: z.string(),
+    missionCheckInterval: z.number().positive(),
+    claimRewardsDelay: z.number().positive(),
+    startingPage: z.enum([
+      'autoKick',
+      'itemShop',
+      'stwMissionAlerts',
+      'taxiService',
+      'dailyQuests',
+      'library'
+    ] satisfies SidebarItem[]),
+    discordStatus: z.boolean(),
+    hideToTray: z.boolean(),
+    checkForUpdates: z.boolean(),
+    debugLogs: z.boolean()
+  })
+  .partial();
 
-export const customizableMenuSettingsSchema = z.object(
-  SidebarItemKeys.reduce((acc, item) => {
-    acc[item] = z.boolean().optional();
-    return acc;
-  }, {} as Record<SidebarItem, z.ZodOptional<z.ZodBoolean>>)
-).partial();
+export const customizableMenuSettingsSchema = z
+  .object(
+    SidebarItemKeys.reduce(
+      (acc, item) => {
+        acc[item] = z.boolean().optional();
+        return acc;
+      },
+      {} as Record<SidebarItem, z.ZodOptional<z.ZodBoolean>>
+    )
+  )
+  .partial();
 
-export const allSettingsSchema = z.object({
-  app: appSettingsSchema,
-  customizableMenu: customizableMenuSettingsSchema
-}).partial();
+export const allSettingsSchema = z
+  .object({
+    app: appSettingsSchema,
+    customizableMenu: customizableMenuSettingsSchema
+  })
+  .partial();
 
 export const automationSettingSchema = z.object({
   accountId: z.string(),
@@ -39,10 +55,12 @@ export const automationSettingSchema = z.object({
 
 export const automationSettingsSchema = z.array(automationSettingSchema);
 
-export const deviceAuthsSettingsSchema = z.array(z.object({
-  deviceId: z.string(),
-  customName: z.string()
-}));
+export const deviceAuthsSettingsSchema = z.array(
+  z.object({
+    deviceId: z.string(),
+    customName: z.string()
+  })
+);
 
 export const taxiSettingSchema = z.object({
   accountId: z.string(),
@@ -75,13 +93,15 @@ export const queueItemSchema = z.object({
   completedAt: z.number().optional()
 });
 
-export const downloaderSettingsSchema = z.object({
-  downloadPath: z.string(),
-  noHTTPS: z.boolean(),
-  autoUpdate: z.boolean(),
-  sendNotifications: z.boolean(),
-  favoriteApps: z.array(z.string()),
-  hiddenApps: z.array(z.string()),
-  perAppAutoUpdate: z.record(z.string(), z.boolean()),
-  queue: z.record(z.string(), z.array(queueItemSchema))
-}).partial();
+export const downloaderSettingsSchema = z
+  .object({
+    downloadPath: z.string(),
+    noHTTPS: z.boolean(),
+    autoUpdate: z.boolean(),
+    sendNotifications: z.boolean(),
+    favoriteApps: z.array(z.string()),
+    hiddenApps: z.array(z.string()),
+    perAppAutoUpdate: z.record(z.string(), z.boolean()),
+    queue: z.record(z.string(), z.array(queueItemSchema))
+  })
+  .partial();

@@ -17,7 +17,7 @@
   let { value = $bindable() }: Props = $props();
 </script>
 
-<Select.Root allowDeselect={true} type="multiple" bind:value={value}>
+<Select.Root allowDeselect={true} type="multiple" bind:value>
   <Select.Trigger class="min-w-40">
     <FilterIcon class="size-5" />
     {filters.find((x) => x.value === value?.at(-1))?.label || $t('itemShop.selectFilter')}

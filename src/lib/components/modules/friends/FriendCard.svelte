@@ -17,7 +17,7 @@
   type Props = {
     listType: ListType;
     friend: Friend;
-  }
+  };
 
   const { listType, friend }: Props = $props();
   const activeAccount = accountStore.getActiveStore();
@@ -76,14 +76,9 @@
   }
 </script>
 
-<div class="flex items-center px-3 py-2 rounded-md bg-card text-card-foreground border group">
+<div class="group flex items-center rounded-md border bg-card px-3 py-2 text-card-foreground">
   <div class="flex items-center gap-2">
-    <img
-      class="size-8 rounded-full"
-      alt={friend.displayName}
-      loading="lazy"
-      src={friend.avatarUrl}
-    />
+    <img class="size-8 rounded-full" alt={friend.displayName} loading="lazy" src={friend.avatarUrl} />
 
     <div class="flex flex-col">
       <span class="text-sm font-medium break-all">{friend.displayName}</span>
@@ -91,7 +86,7 @@
   </div>
 
   <DropdownMenu.Root>
-    <DropdownMenu.Trigger class="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 ml-auto transition">
+    <DropdownMenu.Trigger class="ml-auto opacity-0 transition group-hover:opacity-100 data-[state=open]:opacity-100">
       <EllipsisIcon class="size-4.5 cursor-pointer text-muted-foreground" />
     </DropdownMenu.Trigger>
 
@@ -123,10 +118,7 @@
 {/snippet}
 
 {#snippet AddFriendDropdownItem(friendId: string)}
-  <DropdownMenu.Item
-    disabled={isAdding}
-    onclick={() => acceptOrAddFriend(friendId)}
-  >
+  <DropdownMenu.Item disabled={isAdding} onclick={() => acceptOrAddFriend(friendId)}>
     {#if isAdding}
       <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
@@ -138,10 +130,7 @@
 {/snippet}
 
 {#snippet RemoveFriendDropdownItem(friendId: string, type: 'friend' | 'outgoing' | 'incoming')}
-  <DropdownMenu.Item
-    disabled={isRemoving}
-    onclick={() => denyOrRemoveFriend(friendId)}
-  >
+  <DropdownMenu.Item disabled={isRemoving} onclick={() => denyOrRemoveFriend(friendId)}>
     {#if isRemoving}
       <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
@@ -159,10 +148,7 @@
 {/snippet}
 
 {#snippet BlockDropdownItem(accountId: string)}
-  <DropdownMenu.Item
-    disabled={isBlocking}
-    onclick={() => blockUser(accountId)}
-  >
+  <DropdownMenu.Item disabled={isBlocking} onclick={() => blockUser(accountId)}>
     {#if isBlocking}
       <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
@@ -174,10 +160,7 @@
 {/snippet}
 
 {#snippet UnblockDropdownItem(accountId: string)}
-  <DropdownMenu.Item
-    disabled={isUnblocking}
-    onclick={() => unblockUser(accountId)}
-  >
+  <DropdownMenu.Item disabled={isUnblocking} onclick={() => unblockUser(accountId)}>
     {#if isUnblocking}
       <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}

@@ -8,20 +8,11 @@
     children: Snippet;
   };
 
-  let {
-    ref = $bindable(null),
-    href,
-    children,
-    ...restProps
-  }: ExternalLinkProps = $props();
+  let { ref = $bindable(null), href, children, ...restProps }: ExternalLinkProps = $props();
 </script>
 
 {#if href?.startsWith('/')}
-  <a
-    bind:this={ref}
-    {href}
-    {...restProps}
-  >
+  <a bind:this={ref} {href} {...restProps}>
     {@render children()}
   </a>
 {:else}

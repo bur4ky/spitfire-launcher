@@ -12,7 +12,7 @@
 
 <SelectPrimitive.ScrollUpButton
   {...restProps}
-  class={cn("flex cursor-default items-center justify-center py-1", className)}
+  class={cn('flex cursor-default items-center justify-center py-1', className)}
   data-slot="select-scroll-up-button"
   bind:ref
 >

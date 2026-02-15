@@ -103,9 +103,7 @@ class DownloadManagerC {
     const currentQueuePosition = queueIndexes.findIndex((i) => this.queue[i].item.id === appId);
     if (currentQueuePosition === -1) return;
 
-    const newQueuePosition = direction === 'up'
-      ? currentQueuePosition - 1
-      : currentQueuePosition + 1;
+    const newQueuePosition = direction === 'up' ? currentQueuePosition - 1 : currentQueuePosition + 1;
 
     if (newQueuePosition < 0 || newQueuePosition >= queueIndexes.length) {
       return;
@@ -120,10 +118,9 @@ class DownloadManagerC {
   }
 
   isInQueue(appId: string): boolean {
-    return this.queue.some(({
-      item,
-      status
-    }) => item.id === appId && ['queued', 'downloading', 'paused'].includes(status));
+    return this.queue.some(
+      ({ item, status }) => item.id === appId && ['queued', 'downloading', 'paused'].includes(status)
+    );
   }
 
   async processQueue(processPaused = false) {
@@ -177,7 +174,11 @@ class DownloadManagerC {
             item.completedAt = Date.now();
 
             const notificationMessage = get(t)(
-              type === 'repair' ? 'library.app.repaired' : type === 'update' ? 'library.app.updated' : 'library.app.installed',
+              type === 'repair'
+                ? 'library.app.repaired'
+                : type === 'update'
+                  ? 'library.app.updated'
+                  : 'library.app.installed',
               { name: app.title }
             );
 
@@ -271,7 +272,11 @@ class DownloadManagerC {
 
     const app = item.item;
     const errorMessage = get(t)(
-      type === 'repair' ? 'library.app.failedToRepair' : type === 'update' ? 'library.app.failedToUpdate' : 'library.app.failedToInstall',
+      type === 'repair'
+        ? 'library.app.failedToRepair'
+        : type === 'update'
+          ? 'library.app.failedToUpdate'
+          : 'library.app.failedToInstall',
       { name: app.title }
     );
 
@@ -284,7 +289,15 @@ class DownloadManagerC {
   private async startInstallation(app: ParsedApp, callbacks: DownloadCallbacks = {}) {
     const settings = downloaderStore.get();
     const streamId = `install_${app.id}_${Date.now()}`;
-    const args = [app.requiresRepair ? 'repair' : 'install', app.id, '-y', '--skip-sdl', '--skip-dlcs', '--base-path', settings.downloadPath!];
+    const args = [
+      app.requiresRepair ? 'repair' : 'install',
+      app.id,
+      '-y',
+      '--skip-sdl',
+      '--skip-dlcs',
+      '--base-path',
+      settings.downloadPath!
+    ];
 
     if (settings.noHTTPS) {
       args.push('--no-https');
@@ -385,7 +398,7 @@ class DownloadManagerC {
     match = output.match(/ETA: (\d{2}:\d{2}:\d{2})/);
     if (match) {
       const [h, m, s] = match[1].split(':').map(Number);
-      result.etaMs = ((h * 3600) + (m * 60) + s) * 1000;
+      result.etaMs = (h * 3600 + m * 60 + s) * 1000;
       return result;
     }
 
@@ -394,7 +407,7 @@ class DownloadManagerC {
       const downloaded = MiBtoBytes(match[1]);
       const totalDownloaded = downloaded + this.progress.actualDownloadSize! - this.progress.currentDownloadSize!;
 
-      result.percent = totalDownloaded / this.progress.actualDownloadSize! * 100;
+      result.percent = (totalDownloaded / this.progress.actualDownloadSize!) * 100;
       result.downloaded = totalDownloaded;
       return result;
     }

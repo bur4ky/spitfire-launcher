@@ -12,28 +12,13 @@
     children: Snippet;
   };
 
-  let {
-    type,
-    value = $bindable(),
-    disabled,
-    loading,
-    onclick,
-    children
-  }: Props = $props();
-
+  let { type, value = $bindable(), disabled, loading, onclick, children }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4 border rounded-md p-4">
-  <AccountCombobox
-    type={type as never}
-    bind:value={value as never}
-  />
+<div class="flex flex-col gap-4 rounded-md border p-4">
+  <AccountCombobox type={type as never} bind:value={value as never} />
 
-  <Button
-    {disabled}
-    {loading}
-    {onclick}
-  >
+  <Button {disabled} {loading} {onclick}>
     {@render children()}
   </Button>
 </div>
