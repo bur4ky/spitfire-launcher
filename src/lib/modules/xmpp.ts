@@ -25,6 +25,7 @@ import type {
 } from '$types/game/events';
 import type { PartyMember } from '$types/game/party';
 import { type Agent, createClient } from 'stanza';
+import { SvelteMap } from 'svelte/reactivity';
 
 type EventMap = {
   [EpicEvents.MemberConnected]: EpicEventMemberConnected;
@@ -51,16 +52,24 @@ type AccountOptions = AccountData & {
   accessToken: string;
 };
 
-type Purpose = 'autoKick' | 'taxiService' | 'customStatus' | 'partyManagement' | 'friendsManagement';
+type Purpose = 'autoKick' | 'taxiService' | 'customStatus' | 'party' | 'friends';
 
 const MAX_RECONNECT_ATTEMPTS = 50;
 const connectionLocks = new Map<string, AsyncLock>();
 const logger = getChildLogger('XMPPManager');
 
+export type FriendPresence = {
+  jid: string;
+  type: 'online' | 'away' | 'offline';
+  status?: string;
+  delay?: Date;
+};
+
 export class XMPPManager extends EventEmitter<EventMap> {
   public static instances = new Map<string, XMPPManager>();
   public connection?: Agent;
   private purposes = new Set<Purpose>();
+  public presences = new SvelteMap<string, FriendPresence>();
 
   private reconnectTimeout?: number;
   private intentionalDisconnect = false;
@@ -101,7 +110,6 @@ export class XMPPManager extends EventEmitter<EventMap> {
     logger.debug('Connecting to XMPP', { accountId: this.account.accountId });
 
     const server = 'prod.ol.epicgames.com';
-
     const resourceHash = window.crypto
       .getRandomValues(new Uint8Array(16))
       .reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
@@ -216,6 +224,7 @@ export class XMPPManager extends EventEmitter<EventMap> {
 
         this.emit(ConnectionEvents.Destroyed, undefined);
 
+        this.presences.clear();
         this.connection?.removeAllListeners();
         this.connection = undefined;
         this.removeAllListeners();
@@ -276,6 +285,44 @@ export class XMPPManager extends EventEmitter<EventMap> {
       }
 
       this.emit(type, body);
+    });
+
+    this.connection.on('session:bound', async () => {
+      const roster = await this.connection!.getRoster();
+      const jids = roster.items.map((item) => item.jid);
+
+      for (const jid of jids) {
+        this.connection!.sendPresence({ to: jid, type: 'probe' });
+      }
+    });
+
+    this.connection.on('presence', (pres) => {
+      let status: string | undefined;
+      try {
+        status = JSON.parse(pres.status || '').Status;
+      } catch {
+        /* empty */
+      }
+
+      const jid = pres.from.split('/')[0];
+      const accountId = jid.split('@')[0];
+
+      if (pres.type === 'unavailable' || pres.type === 'error') {
+        this.presences.delete(accountId);
+        return;
+      }
+
+      const oldPresence = this.presences.get(accountId);
+      if (oldPresence?.delay && oldPresence.delay > (pres.delay?.timestamp || new Date())) {
+        return;
+      }
+
+      this.presences.set(accountId, {
+        jid,
+        type: pres.show === 'away' ? 'away' : status || status === '' ? 'online' : 'offline',
+        status,
+        delay: pres.delay?.timestamp
+      });
     });
   }
 

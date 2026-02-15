@@ -90,7 +90,7 @@
       isLoading = false;
     });
 
-    XMPPManager.new($activeAccount, 'friendsManagement').then((xmpp) => {
+    XMPPManager.new($activeAccount, 'friends').then((xmpp) => {
       xmpp.connect();
     });
   });

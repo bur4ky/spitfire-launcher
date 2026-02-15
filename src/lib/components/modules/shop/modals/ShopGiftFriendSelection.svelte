@@ -119,7 +119,7 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <AccountCombobox customList={friends} disabled={!friends?.length} type="multiple" bind:value={selectedFriends}></AccountCombobox>
+    <AccountCombobox customList={friends} disabled={!friends?.length} type="multiple" bind:value={selectedFriends} />
 
     <Dialog.Footer class="flex w-full items-center justify-center gap-2">
       <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>

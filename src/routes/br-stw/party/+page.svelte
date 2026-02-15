@@ -268,7 +268,7 @@
   async function inviteMembers(account: AccountData, members: PartyData['members']) {
     if (!members?.length) return;
 
-    const xmpp = await XMPPManager.new(account, 'partyManagement');
+    const xmpp = await XMPPManager.new(account, 'party');
     await xmpp.waitForEvent(EpicEvents.MemberJoined, (data) => data.account_id === account.accountId, 20000);
     await sleep(10_000);
 
@@ -375,7 +375,7 @@
 
   $effect(() => {
     fetchPartyData($activeAccount);
-    XMPPManager.new($activeAccount, 'partyManagement').then((xmpp) => {
+    XMPPManager.new($activeAccount, 'party').then((xmpp) => {
       xmpp.connect();
     });
 
