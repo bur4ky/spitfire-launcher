@@ -19,7 +19,7 @@ import {
   WorldStormKingZones,
   ZoneCategories
 } from '$lib/constants/stw/world-info';
-import Authentication from '$lib/modules/authentication';
+import { Authentication } from '$lib/modules/authentication';
 import { baseGameService } from '$lib/services/epic';
 import { worldInfoCache } from '$lib/stores';
 import type { ParsedModifierData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
@@ -35,7 +35,7 @@ import { get } from 'svelte/store';
 
 type World = keyof typeof Theaters;
 
-export default class WorldInfo {
+export class WorldInfo {
   static async setCache() {
     const worldInfoData = await WorldInfo.getWorldInfoData();
     const parsedWorldInfo = WorldInfo.parseWorldInfo(worldInfoData);

@@ -1,10 +1,10 @@
-import MCP from '$lib/modules/mcp';
+import { MCP } from '$lib/modules/mcp';
 import { settingsStore } from '$lib/storage';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/account';
 import type { CampaignProfile } from '$types/game/mcp';
 
-export default async function claimRewards(account: AccountData, skipDelay = false) {
+export async function claimRewards(account: AccountData, skipDelay = false) {
   const delaySeconds = settingsStore.get().app?.claimRewardsDelay;
   if (!skipDelay && delaySeconds) {
     await sleep(delaySeconds * 1000);

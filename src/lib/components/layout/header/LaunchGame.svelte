@@ -2,12 +2,12 @@
   import { Button } from '$components/ui/button';
   import { launcherAppClient2 } from '$lib/constants/clients';
   import { t } from '$lib/i18n';
-  import AuthSession from '$lib/modules/auth-session';
-  import Authentication from '$lib/modules/authentication';
-  import Manifest from '$lib/modules/manifest';
+  import { AuthSession } from '$lib/modules/auth-session';
+  import { Authentication } from '$lib/modules/authentication';
+  import { Manifest } from '$lib/modules/manifest';
   import { accountStore, settingsStore } from '$lib/storage';
   import { runningAppIds } from '$lib/stores';
-  import Tauri, { type LaunchAppOptions } from '$lib/tauri';
+  import { type LaunchAppOptions, Tauri } from '$lib/tauri';
   import { handleError, sleep } from '$lib/utils';
   import { path } from '@tauri-apps/api';
   import { toast } from 'svelte-sonner';

@@ -15,11 +15,11 @@
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import DeviceAuth from '$lib/modules/device-auth';
+  import { DeviceAuth } from '$lib/modules/device-auth';
   import { handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
   import type { AccountData } from '$types/account';
-  import logger from '$lib/logger';
+  import { logger } from '$lib/logger';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();

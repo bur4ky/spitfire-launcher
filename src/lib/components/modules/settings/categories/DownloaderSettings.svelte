@@ -4,8 +4,8 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Switch } from '$components/ui/switch';
   import { t } from '$lib/i18n';
-  import DownloadManager from '$lib/modules/download.svelte.js';
-  import Legendary from '$lib/modules/legendary';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
+  import { Legendary } from '$lib/modules/legendary';
   import { downloaderSettingsSchema } from '$lib/schemas/settings';
   import { accountStore, downloaderStore } from '$lib/storage';
   import { handleError } from '$lib/utils';

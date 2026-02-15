@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import debounce from '$lib/debounce';
+import { debounce } from '$lib/debounce';
 import { getChildLogger } from '$lib/logger';
 import * as path from '@tauri-apps/api/path';
 import { dataDir } from '@tauri-apps/api/path';
@@ -15,7 +15,7 @@ export const dataDirectory = platform() === 'android'
   ? await dataDir()
   : await path.join(await dataDir(), 'spitfire-launcher');
 
-export default abstract class FileStore<T> implements Readable<T> {
+export abstract class FileStore<T> implements Readable<T> {
   private path: string;
   private state: T = null!;
   private readonly defaults: T;

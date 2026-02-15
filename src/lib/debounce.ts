@@ -1,4 +1,4 @@
-export default function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: any[]) => any>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {

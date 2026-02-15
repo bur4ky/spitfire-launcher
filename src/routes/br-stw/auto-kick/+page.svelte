@@ -6,7 +6,7 @@
   import { Button } from '$components/ui/button';
   import { Switch } from '$components/ui/switch';
   import { t } from '$lib/i18n';
-  import AutoKickBase from '$lib/modules/autokick/base';
+  import { AutoKickBase } from '$lib/modules/autokick/base';
   import { accountStore } from '$lib/storage';
   import { cn } from '$lib/utils';
   import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';

@@ -1,7 +1,7 @@
 import { defaultClient } from '$lib/constants/clients';
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import Manifest from '$lib/modules/manifest';
-import tauriKy from '$lib/services/tauri-ky';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+import { Manifest } from '$lib/modules/manifest';
+import { tauriKy } from '$lib/services/tauri-ky';
 import type { EpicAPIErrorData } from '$types/game/authorizations';
 import { getVersion } from '@tauri-apps/api/app';
 import { arch, platform } from '@tauri-apps/plugin-os';

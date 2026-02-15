@@ -1,10 +1,10 @@
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import AuthSession from '$lib/modules/auth-session';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+import { AuthSession } from '$lib/modules/auth-session';
 import { baseGameService } from '$lib/services/epic';
 import type { AccountData } from '$types/account';
 import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';
 
-export default class MCP {
+export class MCP {
   static compose<T>(account: AccountData, operation: MCPOperation, profile: MCPProfileId, data: Record<string, any>) {
     const route = operation === 'QueryPublicProfile' ? 'public' : 'client';
     return AuthSession.ky(account, baseGameService).post<T>(

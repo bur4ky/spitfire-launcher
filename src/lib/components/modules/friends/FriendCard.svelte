@@ -2,7 +2,7 @@
   import type { Friend, ListType } from '$components/modules/friends/FriendsList.svelte';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import { t } from '$lib/i18n';
-  import Friends from '$lib/modules/friends';
+  import { Friends } from '$lib/modules/friends';
   import { accountStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
   import BanIcon from '@lucide/svelte/icons/ban';

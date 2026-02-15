@@ -2,9 +2,9 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button, buttonVariants } from '$components/ui/button';
   import * as Dialog from '$components/ui/dialog';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { language, t } from '$lib/i18n';
-  import MCP from '$lib/modules/mcp';
+  import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountCacheStore } from '$lib/stores';
   import { cn } from '$lib/utils';

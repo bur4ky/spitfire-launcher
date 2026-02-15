@@ -1,8 +1,8 @@
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
 import { getChildLogger } from '$lib/logger';
-import AuthSession from '$lib/modules/auth-session';
-import Avatar from '$lib/modules/avatar';
-import Lookup from '$lib/modules/lookup';
+import { AuthSession } from '$lib/modules/auth-session';
+import { Avatar } from '$lib/modules/avatar';
+import { Lookup } from '$lib/modules/lookup';
 import { friendService } from '$lib/services/epic';
 import { avatarCache, displayNamesCache, type FriendsEntry, friendsStore } from '$lib/stores';
 import { processChunks } from '$lib/utils';
@@ -18,7 +18,7 @@ import { SvelteMap } from 'svelte/reactivity';
 
 const logger = getChildLogger('FriendsManager');
 
-export default class Friends {
+export class Friends {
   static async getFriend(account: AccountData, friendId: string) {
     try {
       const friendData = await AuthSession.ky(account, friendService).get<FriendData>(`${account.accountId}/friends/${friendId}`).json();

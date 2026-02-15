@@ -1,12 +1,12 @@
 import { getChildLogger } from '$lib/logger';
 import { accountDataFileSchema } from '$lib/schemas/account';
-import FileStore from '$lib/storage/file-store';
+import { FileStore } from '$lib/storage/file-store';
 import type { AccountData, AccountDataFile } from '$types/account';
 import { derived, type Readable } from 'svelte/store';
 
 const logger = getChildLogger('AccountStore');
 
-export default class AccountStore extends FileStore<AccountDataFile> {
+export class AccountStore extends FileStore<AccountDataFile> {
   constructor() {
     super('accounts', { accounts: [] }, accountDataFileSchema);
   }
@@ -75,10 +75,10 @@ export default class AccountStore extends FileStore<AccountDataFile> {
 
   private async cleanupAccount(account: AccountData) {
     const [
-      { default: AutoKickBase },
-      { default: XMPPManager },
-      { default: DeviceAuth },
-      { default: Legendary }
+      { AutoKickBase },
+      { XMPPManager },
+      { DeviceAuth },
+      { Legendary }
     ] = await Promise.all([
       import('$lib/modules/autokick/base'),
       import('$lib/modules/xmpp'),

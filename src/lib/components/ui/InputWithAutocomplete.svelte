@@ -1,8 +1,8 @@
 <script lang="ts">
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import { Input, type InputProps } from '$components/ui/input';
-  import debounce from '$lib/debounce';
-  import Lookup from '$lib/modules/lookup';
+  import { debounce } from '$lib/debounce';
+  import { Lookup } from '$lib/modules/lookup';
   import { accountStore } from '$lib/storage';
   import { avatarCache, displayNamesCache } from '$lib/stores';
 

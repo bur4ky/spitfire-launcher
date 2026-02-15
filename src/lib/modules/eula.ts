@@ -1,9 +1,9 @@
-import AuthSession from '$lib/modules/auth-session';
+import { AuthSession } from '$lib/modules/auth-session';
 import { eulaService } from '$lib/services/epic';
 import type { AccountData } from '$types/account';
 import type { EULACheckData } from '$types/game/eula';
 
-export default class EULA {
+export class EULA {
   // Returns null if EULA is accepted
   static async check(account: AccountData) {
     const response = await AuthSession.ky(account, eulaService).get<EULACheckData>(

@@ -32,8 +32,8 @@
   import { ExternalLink } from '$components/ui/external-link';
   import { Switch } from '$components/ui/switch';
   import * as Tooltip from '$components/ui/tooltip';
-  import Notification from '$lib/modules/notification';
-  import ServerStatus from '$lib/modules/server-status';
+  import { Notification } from '$lib/modules/notification';
+  import { ServerStatus } from '$lib/modules/server-status';
   import type { LightswitchData } from '$types/game/server-status';
   import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';

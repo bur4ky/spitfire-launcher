@@ -33,7 +33,7 @@
   import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
   import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
-  import Matchmaking from '$lib/modules/matchmaking';
+  import { Matchmaking } from '$lib/modules/matchmaking';
   import { avatarCache, worldInfoCache } from '$lib/stores';
   import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';
   import { Button } from '$components/ui/button';
@@ -42,14 +42,14 @@
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import SearchIcon from '@lucide/svelte/icons/search';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import Lookup from '$lib/modules/lookup';
+  import { Lookup } from '$lib/modules/lookup';
   import { toast } from 'svelte-sonner';
   import { handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
-  import MCP from '$lib/modules/mcp';
+  import { MCP } from '$lib/modules/mcp';
   import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
-  import logger from '$lib/logger';
+  import { logger } from '$lib/logger';
   import { accountStore } from '$lib/storage';
   import { language } from '$lib/i18n';
 

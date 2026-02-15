@@ -12,10 +12,10 @@
   import ShopSection from '$components/modules/shop/ShopSection.svelte';
   import SkeletonShopSection from '$components/modules/shop/skeletons/SkeletonShopSection.svelte';
   import { Input } from '$components/ui/input';
-  import Friends from '$lib/modules/friends';
-  import Lookup from '$lib/modules/lookup';
-  import MCP from '$lib/modules/mcp';
-  import Shop from '$lib/modules/shop';
+  import { Friends } from '$lib/modules/friends';
+  import { Lookup } from '$lib/modules/lookup';
+  import { MCP } from '$lib/modules/mcp';
+  import { Shop } from '$lib/modules/shop';
   import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
   import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
@@ -23,7 +23,7 @@
   import type { SpitfireShopSection } from '$types/game/shop';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
-  import logger from '$lib/logger';
+  import { logger } from '$lib/logger';
   import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore(true);

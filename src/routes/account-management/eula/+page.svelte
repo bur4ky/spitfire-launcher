@@ -16,11 +16,11 @@
   import { Button } from '$components/ui/button';
   import { ExternalLink } from '$components/ui/external-link';
   import { launcherAppClient2 } from '$lib/constants/clients';
-  import EULA from '$lib/modules/eula';
+  import { EULA } from '$lib/modules/eula';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { toast } from 'svelte-sonner';
-  import Authentication from '$lib/modules/authentication';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { Authentication } from '$lib/modules/authentication';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { getAccountsFromSelection, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
 

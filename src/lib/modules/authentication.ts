@@ -9,7 +9,7 @@ import type {
   EpicTokenType
 } from '$types/game/authorizations';
 
-export default class Authentication {
+export class Authentication {
   static getAccessTokenUsingDeviceAuth(deviceAuthData: DeviceAuthData, tokenType: EpicTokenType = 'eg1') {
     return oauthService.post<EpicDeviceAuthLoginData>('token', {
       body: new URLSearchParams({

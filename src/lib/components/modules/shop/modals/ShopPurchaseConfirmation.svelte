@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Button, buttonVariants } from '$components/ui/button';
   import * as Dialog from '$components/ui/dialog';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { language, t } from '$lib/i18n';
-  import MCP from '$lib/modules/mcp';
+  import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountCacheStore, ownedItemsStore } from '$lib/stores';
   import { calculateDiscountedShopPrice, cn } from '$lib/utils';

@@ -8,9 +8,9 @@
   import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
   import { Button } from '$components/ui/button';
   import * as Tabs from '$components/ui/tabs';
-  import Friends from '$lib/modules/friends';
-  import Lookup from '$lib/modules/lookup';
-  import XMPPManager from '$lib/modules/xmpp';
+  import { Friends } from '$lib/modules/friends';
+  import { Lookup } from '$lib/modules/lookup';
+  import { XMPPManager } from '$lib/modules/xmpp';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import { friendsStore } from '$lib/stores';

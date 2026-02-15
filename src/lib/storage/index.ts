@@ -1,9 +1,9 @@
-import AccountStore from '$lib/storage/account';
-import AutomationStore from '$lib/storage/automation';
-import DeviceAuthsStore from '$lib/storage/device-auths';
-import DownloaderStore from '$lib/storage/downloader';
-import SettingsStore from '$lib/storage/settings';
-import TaxiStore from '$lib/storage/taxi';
+import { AccountStore } from '$lib/storage/account';
+import { AutomationStore } from '$lib/storage/automation';
+import { DeviceAuthsStore } from '$lib/storage/device-auths';
+import { DownloaderStore } from '$lib/storage/downloader';
+import { SettingsStore } from '$lib/storage/settings';
+import { TaxiStore } from '$lib/storage/taxi';
 
 const accountStore = new AccountStore();
 const automationStore = new AutomationStore();

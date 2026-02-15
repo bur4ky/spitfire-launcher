@@ -1,4 +1,4 @@
-import AutoKickManager from '$lib/modules/autokick/manager';
+import { AutoKickManager } from '$lib/modules/autokick/manager';
 import { accountStore, automationStore } from '$lib/storage';
 import type { AccountData } from '$types/account';
 import type { AutomationSetting } from '$types/settings';
@@ -11,7 +11,7 @@ export type AutomationAccount = {
   manager?: AutoKickManager;
 };
 
-export default class AutoKickBase {
+export class AutoKickBase {
   static accounts = new SvelteMap<string, AutomationAccount>();
 
   static async init() {

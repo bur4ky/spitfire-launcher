@@ -8,8 +8,8 @@
 <script lang="ts">
   import * as Dialog from '$components/ui/dialog';
   import { ownedApps } from '$lib/stores';
-  import Legendary from '$lib/modules/legendary';
-  import DownloadManager from '$lib/modules/download.svelte.js';
+  import { Legendary } from '$lib/modules/legendary';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { bytesToSize, cn } from '$lib/utils';
   import { t } from '$lib/i18n';
   import { Progress } from '$components/ui/progress';
@@ -20,10 +20,10 @@
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
   import DownloadStartedToast from '$components/modules/downloader/DownloadStartedToast.svelte';
-  import logger from '$lib/logger';
+  import { logger } from '$lib/logger';
   import { Button, buttonVariants } from '$components/ui/button';
   import { downloaderStore } from '$lib/storage';
-  import Tauri from '$lib/tauri';
+  import { Tauri } from '$lib/tauri';
 
   type Props = {
     id: string;

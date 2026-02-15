@@ -1,12 +1,12 @@
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import { getChildLogger } from '$lib/logger';
-import AutoKickBase from '$lib/modules/autokick/base';
-import claimRewards from '$lib/modules/autokick/claim-rewards';
-import transferBuildingMaterials from '$lib/modules/autokick/transfer-building-materials';
-import Friends from '$lib/modules/friends';
-import Matchmaking from '$lib/modules/matchmaking';
-import Party from '$lib/modules/party';
-import XMPPManager from '$lib/modules/xmpp';
+import { AutoKickBase } from '$lib/modules/autokick/base';
+import { claimRewards } from '$lib/modules/autokick/claim-rewards';
+import { transferBuildingMaterials } from '$lib/modules/autokick/transfer-building-materials';
+import { Friends } from '$lib/modules/friends';
+import { Matchmaking } from '$lib/modules/matchmaking';
+import { Party } from '$lib/modules/party';
+import { XMPPManager } from '$lib/modules/xmpp';
 import { accountStore, settingsStore } from '$lib/storage';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/account';
@@ -16,7 +16,7 @@ const logger = getChildLogger('AutoKickManager');
 
 type State = 'lobby' | 'pregame' | 'mission' | 'endgame';
 
-export default class AutoKickManager {
+export class AutoKickManager {
   private abortController = new AbortController();
   private scheduleTimeout?: number;
   private checkerInterval?: number;

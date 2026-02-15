@@ -2,7 +2,7 @@ import { spitfireService } from '$lib/services/epic';
 import { brShopStore } from '$lib/stores';
 import type { SpitfireShop, SpitfireShopItem, SpitfireShopSection } from '$types/game/shop';
 
-export default class Shop {
+export class Shop {
   static async fetch() {
     const response = await spitfireService.get<SpitfireShop>('epic/shop').json();
     brShopStore.set(response);

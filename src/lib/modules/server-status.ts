@@ -1,8 +1,8 @@
-import Authentication from '$lib/modules/authentication';
+import { Authentication } from '$lib/modules/authentication';
 import { epicService, lightswitchService } from '$lib/services/epic';
 import type { LightswitchData, ServerStatusSummaryData, WaitingRoomData } from '$types/game/server-status';
 
-export default class ServerStatus {
+export class ServerStatus {
   static async getLightswitch() {
     const token = (await Authentication.getAccessTokenUsingClientCredentials()).access_token;
     return lightswitchService.get<LightswitchData>(

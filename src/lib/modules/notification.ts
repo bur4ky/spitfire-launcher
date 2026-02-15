@@ -1,7 +1,7 @@
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/plugin-notification';
 import { toast } from 'svelte-sonner';
 
-export default class Notification {
+export class Notification {
   static async requestPermission() {
     if (await isPermissionGranted()) return true;
 

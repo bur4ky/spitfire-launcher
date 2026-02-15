@@ -2,7 +2,7 @@
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
   import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
-  import DownloadManager from '$lib/modules/download.svelte.js';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { settingsStore } from '$lib/storage';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import XIcon from '@lucide/svelte/icons/x';

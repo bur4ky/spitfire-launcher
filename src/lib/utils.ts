@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation';
 import { t } from '$lib/i18n';
-import logger from '$lib/logger';
+import { logger } from '$lib/logger';
 import { accountStore } from '$lib/storage';
 import { ownedItemsStore } from '$lib/stores';
 import type { AccountData } from '$types/account';

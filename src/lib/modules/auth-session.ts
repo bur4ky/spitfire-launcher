@@ -1,9 +1,9 @@
-import AsyncLock from '$lib/async-lock';
+import { AsyncLock } from '$lib/async-lock';
 import { defaultClient, type ClientCredentials } from '$lib/constants/clients';
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
 import { t } from '$lib/i18n';
 import { getChildLogger } from '$lib/logger';
-import Authentication from '$lib/modules/authentication';
+import { Authentication } from '$lib/modules/authentication';
 import { accountStore } from '$lib/storage';
 import type { AccountData } from '$types/account';
 import type { KyInstance } from 'ky';
@@ -19,7 +19,7 @@ type AuthState = {
   lock: AsyncLock;
 };
 
-export default class AuthSession {
+export class AuthSession {
   // accountId -> clientId -> AuthState
   private static states = new Map<string, Map<string, AuthState>>();
   // Used for preventing duplicate error toasts when the same error occurs repeatedly in a short time period

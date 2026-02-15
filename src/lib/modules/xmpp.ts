@@ -1,10 +1,10 @@
-import AsyncLock from '$lib/async-lock';
+import { AsyncLock } from '$lib/async-lock';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
-import EventEmitter from '$lib/event-emitter';
+import { EventEmitter } from '$lib/event-emitter';
 import { getChildLogger } from '$lib/logger';
-import AuthSession from '$lib/modules/auth-session';
-import Friends, { FriendsStore } from '$lib/modules/friends';
-import Party from '$lib/modules/party';
+import { AuthSession } from '$lib/modules/auth-session';
+import { FriendsStore, Friends } from '$lib/modules/friends';
+import { Party } from '$lib/modules/party';
 import { accountStore } from '$lib/storage';
 import { accountPartiesStore } from '$lib/stores';
 import type { AccountData } from '$types/account';
@@ -57,7 +57,7 @@ const MAX_RECONNECT_ATTEMPTS = 50;
 const connectionLocks = new Map<string, AsyncLock>();
 const logger = getChildLogger('XMPPManager');
 
-export default class XMPPManager extends EventEmitter<EventMap> {
+export class XMPPManager extends EventEmitter<EventMap> {
   public static instances = new Map<string, XMPPManager>();
   public connection?: Agent;
   private purposes = new Set<Purpose>();

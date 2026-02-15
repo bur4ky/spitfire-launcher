@@ -1,11 +1,11 @@
-import AuthSession from '$lib/modules/auth-session';
+import { AuthSession } from '$lib/modules/auth-session';
 import { avatarService } from '$lib/services/epic';
 import { avatarCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';
 import type { AvatarData } from '$types/game/avatar';
 
-export default class Avatar {
+export class Avatar {
   static async fetchAvatars(account: AccountData, friendIds: string[]) {
     const session = AuthSession.ky(account, avatarService);
     const MAX_IDS_PER_REQUEST = 100;

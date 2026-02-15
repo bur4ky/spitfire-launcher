@@ -1,12 +1,12 @@
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import AuthSession from '$lib/modules/auth-session';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+import { AuthSession } from '$lib/modules/auth-session';
 import { publicAccountService, userSearchService } from '$lib/services/epic';
 import { displayNamesCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';
 import type { EpicAccountById, EpicAccountByName, EpicAccountSearch } from '$types/game/lookup';
 
-export default class Lookup {
+export class Lookup {
   static async fetchById(account: AccountData, accountId: string) {
     const data = await AuthSession.ky(account, publicAccountService).get<EpicAccountById>(accountId).json();
     displayNamesCache.set(data.id, data.displayName);

@@ -18,7 +18,7 @@ export function getLevel(level: LogLevel) {
   return lvl in logLevel ? logLevel[lvl] : logLevel.info;
 }
 
-const logger = new Logger({
+export const logger = new Logger({
   minLevel: getLevel('info'),
   type: 'pretty',
 
@@ -48,5 +48,3 @@ export function getChildLogger(name: string) {
   childLoggers.push(childLogger);
   return childLogger;
 }
-
-export default logger;

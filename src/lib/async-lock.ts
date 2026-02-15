@@ -1,4 +1,4 @@
-export default class AsyncLock {
+export class AsyncLock {
   private queue: Array<() => void> = [];
   private locked = false;
 

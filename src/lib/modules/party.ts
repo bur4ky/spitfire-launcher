@@ -1,13 +1,13 @@
 import defaultPartyMemberMeta from '$lib/data/default-party-member-meta.json';
 import defaultPartyMeta from '$lib/data/default-party-meta.json';
-import EpicAPIError from '$lib/exceptions/EpicAPIError';
-import AuthSession from '$lib/modules/auth-session';
+import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+import { AuthSession } from '$lib/modules/auth-session';
 import { partyService } from '$lib/services/epic';
 import { accountPartiesStore, avatarCache, displayNamesCache } from '$lib/stores';
 import type { AccountData } from '$types/account';
 import type { FetchPartyResponse, InviterPartyResponse } from '$types/game/party';
 
-export default class Party {
+export class Party {
   static async get(account: AccountData) {
     const data = await AuthSession.ky(account, partyService).get<FetchPartyResponse>(
       `user/${account.accountId}`

@@ -6,8 +6,8 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/modules/authentication';
-  import AuthSession from '$lib/modules/auth-session';
+  import { Authentication } from '$lib/modules/authentication';
+  import { AuthSession } from '$lib/modules/auth-session';
   import { openUrl } from '@tauri-apps/plugin-opener';
   import { toast } from 'svelte-sonner';
   import { handleError } from '$lib/utils';

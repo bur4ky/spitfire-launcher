@@ -7,8 +7,8 @@
   import SkeletonAppCard from '$components/modules/downloader/skeletons/SkeletonAppCard.svelte';
   import { Input } from '$components/ui/input';
   import { t } from '$lib/i18n';
-  import DownloadManager from '$lib/modules/download.svelte';
-  import Legendary from '$lib/modules/legendary';
+  import { DownloadManager } from '$lib/modules/download.svelte';
+  import { Legendary } from '$lib/modules/legendary';
   import { accountStore, downloaderStore } from '$lib/storage';
   import { ownedApps } from '$lib/stores';
   import { handleError } from '$lib/utils';

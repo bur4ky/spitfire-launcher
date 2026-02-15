@@ -2,7 +2,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 import ky from 'ky';
 
 // Used to avoid CORS issues
-export default ky.create({
+export const tauriKy = ky.create({
   timeout: 30_000,
   retry: 0,
   fetch: async (input, init = {}) => {

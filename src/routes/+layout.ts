@@ -1,7 +1,7 @@
 import { setLogLevel } from '$lib/logger';
 import { baseLocale, locales } from '$lib/paraglide/runtime';
 import { settingsStore } from '$lib/storage';
-import Tauri from '$lib/tauri';
+import { Tauri } from '$lib/tauri';
 
 export const prerender = true;
 export const ssr = false;

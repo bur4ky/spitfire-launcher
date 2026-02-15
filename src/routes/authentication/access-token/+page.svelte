@@ -5,7 +5,7 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import Authentication from '$lib/modules/authentication';
+  import { Authentication } from '$lib/modules/authentication';
   import { toast } from 'svelte-sonner';
   import { handleError } from '$lib/utils';
   import { t } from '$lib/i18n';

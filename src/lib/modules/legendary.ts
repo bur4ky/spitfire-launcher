@@ -1,11 +1,11 @@
 import { dev } from '$app/environment';
-import LegendaryError from '$lib/exceptions/LegendaryError';
+import { LegendaryError } from '$lib/exceptions/LegendaryError';
 import { getChildLogger } from '$lib/logger';
-import AuthSession from '$lib/modules/auth-session';
-import Authentication from '$lib/modules/authentication';
+import { AuthSession } from '$lib/modules/auth-session';
+import { Authentication } from '$lib/modules/authentication';
 import { dataDirectory } from '$lib/storage/file-store';
 import { ownedApps } from '$lib/stores';
-import Tauri from '$lib/tauri';
+import { Tauri } from '$lib/tauri';
 import type { AccountData } from '$types/account';
 import type { EpicOAuthData } from '$types/game/authorizations';
 import type {
@@ -29,7 +29,7 @@ type ExecuteResult<T = any> = {
   stderr: string;
 };
 
-export default class Legendary {
+export class Legendary {
   private static cachedApps = false;
   private static caches: {
     status?: LegendaryStatus;

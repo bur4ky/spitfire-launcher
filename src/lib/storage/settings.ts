@@ -1,9 +1,9 @@
 import type { Locale } from '$lib/paraglide/runtime';
 import { allSettingsSchema } from '$lib/schemas/settings';
-import FileStore from '$lib/storage/file-store';
+import { FileStore } from '$lib/storage/file-store';
 import type { AllSettings } from '$types/settings';
 
-export default class SettingsStore extends FileStore<AllSettings> {
+export class SettingsStore extends FileStore<AllSettings> {
   constructor() {
     super('settings', {
       app: {

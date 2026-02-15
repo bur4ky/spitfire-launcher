@@ -3,7 +3,7 @@
   import { Button } from '$components/ui/button';
   import * as Tooltip from '$components/ui/tooltip';
   import { language, t } from '$lib/i18n';
-  import DeviceAuth from '$lib/modules/device-auth';
+  import { DeviceAuth } from '$lib/modules/device-auth';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
   import type { EpicDeviceAuthData } from '$types/game/authorizations';

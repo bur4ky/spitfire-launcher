@@ -17,8 +17,8 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
   import { TagInput } from '$components/ui/tag-input';
-  import Code from '$lib/modules/code';
-  import EpicAPIError from '$lib/exceptions/EpicAPIError';
+  import { Code } from '$lib/modules/code';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { getAccountsFromSelection, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';

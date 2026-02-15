@@ -75,7 +75,7 @@ export type UpdateDiscordRPCOptions = {
   details: string;
 };
 
-export default class Tauri {
+export class Tauri {
   static getLocale() {
     return invoke<string>('get_locale');
   }

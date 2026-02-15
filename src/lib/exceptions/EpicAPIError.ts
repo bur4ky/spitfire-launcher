@@ -1,7 +1,7 @@
 import type { EpicAPIErrorData } from '$types/game/authorizations';
 import type { KyRequest } from 'ky';
 
-export default class EpicAPIError extends Error implements EpicAPIErrorData {
+export class EpicAPIError extends Error implements EpicAPIErrorData {
   public errorCode: string;
   public errorMessage: string;
   public numericErrorCode: number;

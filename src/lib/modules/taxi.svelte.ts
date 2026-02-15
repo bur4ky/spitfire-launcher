@@ -2,9 +2,9 @@ import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { t } from '$lib/i18n';
 import { getChildLogger } from '$lib/logger';
-import Friends from '$lib/modules/friends';
-import Party from '$lib/modules/party';
-import XMPPManager from '$lib/modules/xmpp';
+import { Friends } from '$lib/modules/friends';
+import { Party } from '$lib/modules/party';
+import { XMPPManager } from '$lib/modules/xmpp';
 import { accountPartiesStore } from '$lib/stores';
 import type { AccountData } from '$types/account';
 import type {
@@ -30,7 +30,7 @@ const FORT_STATS_KEYS = [
 
 const logger = getChildLogger('TaxiManager');
 
-export default class TaxiManager {
+export class TaxiManager {
   public static readonly taxiAccountIds = new SvelteSet<string>();
   public active = $state(false);
   public isStarting = $state(false);

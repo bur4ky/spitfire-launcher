@@ -2,11 +2,11 @@
   import { Button } from '$components/ui/button';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
   import { t } from '$lib/i18n';
-  import DownloadManager from '$lib/modules/download.svelte.js';
-  import Legendary from '$lib/modules/legendary';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
+  import { Legendary } from '$lib/modules/legendary';
   import { downloaderStore } from '$lib/storage';
   import { ownedApps, runningAppIds } from '$lib/stores';
-  import Tauri from '$lib/tauri';
+  import { Tauri } from '$lib/tauri';
   import { bytesToSize, handleError, sleep } from '$lib/utils';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
   import DownloadIcon from '@lucide/svelte/icons/download';

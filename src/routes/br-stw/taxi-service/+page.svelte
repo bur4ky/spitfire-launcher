@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import TaxiManager from '$lib/modules/taxi.svelte.js';
+  import { TaxiManager } from '$lib/modules/taxi.svelte.js';
   import { SvelteMap } from 'svelte/reactivity';
 
   const taxiManagers = new SvelteMap<string, TaxiManager>();

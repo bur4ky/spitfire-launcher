@@ -1,4 +1,4 @@
-import logger from '$lib/logger';
+import { logger } from '$lib/logger';
 import * as path from '@tauri-apps/api/path';
 import { readDir, readTextFile } from '@tauri-apps/plugin-fs';
 import { platform } from '@tauri-apps/plugin-os';
@@ -26,7 +26,7 @@ export type EpicManifest = {
 const manifestsDir = 'C:/ProgramData/Epic/EpicGamesLauncher/Data/Manifests';
 const platformName = platform();
 
-export default class Manifest {
+export class Manifest {
   private static fortnite: EpicManifest | null = null;
 
   static async getFortniteManifest() {

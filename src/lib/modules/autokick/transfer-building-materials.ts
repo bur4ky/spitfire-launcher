@@ -1,4 +1,4 @@
-import MCP from '$lib/modules/mcp';
+import { MCP } from '$lib/modules/mcp';
 import { settingsStore } from '$lib/storage';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/account';
@@ -17,7 +17,7 @@ type BuildingMaterialData = {
 
 const MAX_BUILDING_MATERIALS = 5000;
 
-export default async function transferBuildingMaterials(account: AccountData, skipDelay = false) {
+export async function transferBuildingMaterials(account: AccountData, skipDelay = false) {
   if (!skipDelay) {
     const delaySeconds = settingsStore.get().app?.claimRewardsDelay;
     await sleep((delaySeconds || 1.5) * 1000);

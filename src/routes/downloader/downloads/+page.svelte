@@ -5,8 +5,8 @@
   import { Progress } from '$components/ui/progress';
   import * as Tooltip from '$components/ui/tooltip';
   import { language, t } from '$lib/i18n';
-  import logger from '$lib/logger';
-  import DownloadManager, { type DownloadProgress } from '$lib/modules/download.svelte';
+  import { logger } from '$lib/logger';
+  import { DownloadManager, type DownloadProgress } from '$lib/modules/download.svelte';
   import { bytesToSize, formatRemainingDuration } from '$lib/utils';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
   import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';

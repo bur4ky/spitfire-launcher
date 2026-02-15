@@ -12,13 +12,13 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import CustomStatusTutorial from '$components/modules/docs/tutorials/CustomStatus.svelte';
-  import TaxiManager from '$lib/modules/taxi.svelte.js';
+  import { TaxiManager } from '$lib/modules/taxi.svelte.js';
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
   import { toast } from 'svelte-sonner';
   import { handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
-  import XMPPManager from '$lib/modules/xmpp';
+  import { XMPPManager } from '$lib/modules/xmpp';
   import MoonIcon from '@lucide/svelte/icons/moon';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import XIcon from '@lucide/svelte/icons/x';
