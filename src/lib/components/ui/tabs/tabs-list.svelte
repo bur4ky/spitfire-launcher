@@ -12,7 +12,7 @@
 <TabsPrimitive.List
   {...restProps}
   class={cn(
-    "text-muted-foreground inline-flex h-9 w-full items-center p-[3px] border-b",
+    "text-muted-foreground inline-flex h-9 w-full items-center p-0.75 space-x-1",
     className
   )}
   data-slot="tabs-list"

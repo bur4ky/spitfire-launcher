@@ -569,7 +569,7 @@
       "friends": "Freunde",
       "incoming": "Eingehend",
       "outgoing": "Ausgehend",
-      "blocklist": "Blockliste"
+      "blocklist": "Gesperrt"
     },
     "failedToAdd": "Freund konnte nicht hinzugefügt oder Anfrage akzeptiert werden",
     "failedToRemove": "Freund konnte nicht entfernt oder Anfrage abgelehnt werden",

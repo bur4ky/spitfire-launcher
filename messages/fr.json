@@ -567,9 +567,9 @@
     },
     "lists": {
       "friends": "Amis",
-      "incoming": "Demandes reçues",
-      "outgoing": "Demandes envoyées",
-      "blocklist": "Liste de blocage"
+      "incoming": "Entrantes",
+      "outgoing": "Sortants",
+      "blocklist": "Bloqués"
     },
     "failedToAdd": "Impossible d'ajouter un ami ou d'accepter la demande",
     "failedToRemove": "Impossible de supprimer l'ami ou de refuser la demande",

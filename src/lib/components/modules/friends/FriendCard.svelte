@@ -76,26 +76,23 @@
   }
 </script>
 
-<div class="flex items-center justify-between p-4 rounded-md bg-accent text-accent-foreground">
-  <div class="flex items-center gap-4">
+<div class="flex items-center px-3 py-2 rounded-md bg-card text-card-foreground border group">
+  <div class="flex items-center gap-2">
     <img
-      class="size-10 rounded-full"
+      class="size-8 rounded-full"
       alt={friend.displayName}
       loading="lazy"
       src={friend.avatarUrl}
     />
 
     <div class="flex flex-col">
-      <span class="font-medium break-all">{friend.displayName}</span>
-      {#if friend.nickname}
-        <span class="text-sm text-muted-foreground break-all">{friend.nickname}</span>
-      {/if}
+      <span class="text-sm font-medium break-all">{friend.displayName}</span>
     </div>
   </div>
 
   <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      <EllipsisIcon class="size-6 cursor-pointer" />
+    <DropdownMenu.Trigger class="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 ml-auto transition">
+      <EllipsisIcon class="size-5 cursor-pointer text-muted-foreground" />
     </DropdownMenu.Trigger>
 
     <DropdownMenu.Content>

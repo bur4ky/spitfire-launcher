@@ -567,9 +567,9 @@
     },
     "lists": {
       "friends": "Arkadaşlar",
-      "incoming": "Gelen İstekler",
-      "outgoing": "Giden İstekler",
-      "blocklist": "Engelliler"
+      "incoming": "Gelen",
+      "outgoing": "Giden",
+      "blocklist": "Engellenen"
     },
     "failedToAdd": "Arkadaş eklenemedi veya istek kabul edilemedi",
     "failedToRemove": "Arkadaş silinemedi veya istek reddedilemedi",

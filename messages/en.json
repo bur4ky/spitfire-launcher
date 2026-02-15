@@ -567,9 +567,9 @@
     },
     "lists": {
       "friends": "Friends",
-      "incoming": "Incoming Requests",
-      "outgoing": "Outgoing Requests",
-      "blocklist": "Blocklist"
+      "incoming": "Incoming",
+      "outgoing": "Outgoing",
+      "blocklist": "Blocked"
     },
     "failedToAdd": "Failed to add friend or accept request",
     "failedToRemove": "Failed to remove friend or deny request",

@@ -567,9 +567,9 @@
     },
     "lists": {
       "friends": "Amigos",
-      "incoming": "Solicitudes Entrantes",
-      "outgoing": "Solicitudes Salientes",
-      "blocklist": "Lista de bloqueos"
+      "incoming": "Entrantes",
+      "outgoing": "Salientes",
+      "blocklist": "Bloqueados"
     },
     "failedToAdd": "No se pudo agregar amigo o aceptar solicitud",
     "failedToRemove": "No se pudo agregar amigo o aceptar solicitud",

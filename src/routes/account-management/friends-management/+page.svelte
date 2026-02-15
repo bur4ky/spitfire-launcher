@@ -4,39 +4,51 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/layout/PageContent.svelte';
-  import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
-  import { Button } from '$components/ui/button';
-  import * as Tabs from '$components/ui/tabs';
-  import { Friends } from '$lib/modules/friends';
-  import { Lookup } from '$lib/modules/lookup';
-  import { XMPPManager } from '$lib/modules/xmpp';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
-  import { friendsStore } from '$lib/stores';
-  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { toast } from 'svelte-sonner';
-  import { untrack } from 'svelte';
-  import SkeletonFriendCard from '$components/modules/friends/SkeletonFriendCard.svelte';
-  import { accountStore } from '$lib/storage';
+  import PageContent from "$components/layout/PageContent.svelte";
+  import FriendsList, { type ListType } from "$components/modules/friends/FriendsList.svelte";
+  import { Button } from "$components/ui/button";
+  import * as Tabs from "$components/ui/tabs";
+  import { Friends } from "$lib/modules/friends";
+  import { Lookup } from "$lib/modules/lookup";
+  import { XMPPManager } from "$lib/modules/xmpp";
+  import LoaderCircleIcon from "@lucide/svelte/icons/loader-circle";
+  import UserPlusIcon from "@lucide/svelte/icons/user-plus";
+  import { friendsStore } from "$lib/stores";
+  import InputWithAutocomplete from "$components/ui/InputWithAutocomplete.svelte";
+  import { handleError } from "$lib/utils";
+  import { t } from "$lib/i18n";
+  import { toast } from "svelte-sonner";
+  import { untrack } from "svelte";
+  import SkeletonFriendCard from "$components/modules/friends/SkeletonFriendCard.svelte";
+  import { accountStore } from "$lib/storage";
 
   const activeAccount = accountStore.getActiveStore();
 
+  type Tab = {
+    id: ListType;
+    name: string;
+    count: number;
+  };
+
   const tabs = $derived([
-    { id: 'friends', name: $t('friendsManagement.lists.friends'), disabled: !hasFriendsInList('friends') },
-    { id: 'incoming', name: $t('friendsManagement.lists.incoming'), disabled: !hasFriendsInList('incoming') },
-    { id: 'outgoing', name: $t('friendsManagement.lists.outgoing'), disabled: !hasFriendsInList('outgoing') },
-    { id: 'blocklist', name: $t('friendsManagement.lists.blocklist'), disabled: !hasFriendsInList('blocklist') }
-  ] satisfies { id: ListType; name: string, disabled: boolean }[]);
+    getTab("friends"),
+    getTab("incoming"),
+    getTab("outgoing"),
+    getTab("blocklist"),
+  ] satisfies Tab[]);
 
   // svelte-ignore state_referenced_locally
   let activeTab = $state(tabs[0].id as ListType);
   let searchQuery = $state<string>();
 
-  function hasFriendsInList(listType: ListType) {
-    return !!friendsStore.get($activeAccount.accountId)?.[listType]?.size;
+  function getTab(listType: ListType): Tab {
+    const list = friendsStore.get($activeAccount.accountId)?.[listType];
+
+    return {
+      id: listType,
+      name: $t(`friendsManagement.lists.${listType}`),
+      count: list?.size || 0,
+    };
   }
 
   async function searchAndAdd(event: SubmitEvent) {
@@ -51,13 +63,17 @@
 
       try {
         await Friends.addFriend($activeAccount, lookupData.accountId);
-        searchQuery = '';
-        toast.success($t('friendsManagement.sentFriendRequest'));
+        searchQuery = "";
+        toast.success($t("friendsManagement.sentFriendRequest"));
       } catch (error) {
-        handleError({ error, message: $t('friendsManagement.failedToAdd'), account: $activeAccount });
+        handleError({
+          error,
+          message: $t("friendsManagement.failedToAdd"),
+          account: $activeAccount,
+        });
       }
     } catch (error) {
-      handleError({ error, message: $t('lookupPlayers.notFound'), account: $activeAccount });
+      handleError({ error, message: $t("lookupPlayers.notFound"), account: $activeAccount });
     } finally {
       isSendingRequest = false;
     }
@@ -65,7 +81,7 @@
 
   $effect(() => {
     untrack(() => {
-      if (!hasFriendsInList(activeTab)) {
+      if (!friendsStore.get($activeAccount.accountId)?.[activeTab]?.size) {
         isLoading = true;
       }
     });
@@ -74,7 +90,7 @@
       isLoading = false;
     });
 
-    XMPPManager.new($activeAccount, 'friendsManagement').then((xmpp) => {
+    XMPPManager.new($activeAccount, "friendsManagement").then((xmpp) => {
       xmpp.connect();
     });
   });
@@ -82,7 +98,7 @@
 
 <svelte:window
   onkeydown={(event) => {
-    if (event.key === 'F5') {
+    if (event.key === "F5") {
       event.preventDefault();
       isLoading = true;
       Friends.getSummary($activeAccount).finally(() => {
@@ -92,11 +108,11 @@
   }}
 />
 
-<PageContent title={$t('friendsManagement.page.title')}>
+<PageContent title={$t("friendsManagement.page.title")}>
   <form class="flex items-center gap-x-2" onsubmit={searchAndAdd}>
     <InputWithAutocomplete
       disabled={isLoading}
-      placeholder={$t('lookupPlayers.search')}
+      placeholder={$t("lookupPlayers.search")}
       type="search"
       bind:value={searchQuery}
     />
@@ -104,7 +120,7 @@
     <Button
       class="p-2"
       disabled={isLoading || isSendingRequest || !searchQuery || searchQuery.length < 3}
-      title={$t('friendsManagement.sendFriendRequest')}
+      title={$t("friendsManagement.sendFriendRequest")}
       type="submit"
     >
       {#if isSendingRequest}
@@ -119,8 +135,13 @@
     <Tabs.Root class="mb-4" bind:value={activeTab}>
       <Tabs.List>
         {#each tabs as tab (tab.id)}
-          <Tabs.Trigger disabled={tab.disabled} value={tab.id}>
+          <Tabs.Trigger disabled={!tab.count} value={tab.id}>
             {tab.name}
+            {#if tab.count}
+              <span class="ml-1 inline-flex items-center justify-center h-5 min-w-5  rounded-full bg-muted px-1.5 text-xs font-medium">
+                {tab.count}
+              </span>
+            {/if}
           </Tabs.Trigger>
         {/each}
       </Tabs.List>
