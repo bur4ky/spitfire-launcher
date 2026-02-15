@@ -151,10 +151,19 @@
 
     {#if isLoading}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-        {#each Array(3) as _, index (index)}
-          <SkeletonFriendCard />
-        {/each}
+        <div class="hidden sm:contents">
+          <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
+          {#each Array(12) as _, index (index)}
+            <SkeletonFriendCard />
+          {/each}
+        </div>
+
+        <div class="hidden not-sm:contents">
+          <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
+          {#each Array(6) as _, index (index)}
+            <SkeletonFriendCard />
+          {/each}
+        </div>
       </div>
     {:else}
       <FriendsList listType={activeTab} bind:searchQuery />
