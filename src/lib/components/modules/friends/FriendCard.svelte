@@ -92,7 +92,7 @@
 
   <DropdownMenu.Root>
     <DropdownMenu.Trigger class="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 ml-auto transition">
-      <EllipsisIcon class="size-5 cursor-pointer text-muted-foreground" />
+      <EllipsisIcon class="size-4.5 cursor-pointer text-muted-foreground" />
     </DropdownMenu.Trigger>
 
     <DropdownMenu.Content>
@@ -117,7 +117,7 @@
 
 {#snippet CopyIdDropdownItem(friendId: string)}
   <DropdownMenu.Item onclick={() => writeText(friendId)}>
-    <CopyIcon class="size-5" />
+    <CopyIcon class="size-4.5" />
     {$t('friendsManagement.copyId')}
   </DropdownMenu.Item>
 {/snippet}
@@ -128,10 +128,11 @@
     onclick={() => acceptOrAddFriend(friendId)}
   >
     {#if isAdding}
-      <LoaderCircleIcon class="size-5 animate-spin" />
+      <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
-      <UserPlusIcon class="size-5" />
+      <UserPlusIcon class="size-4.5" />
     {/if}
+
     {$t('friendsManagement.acceptRequest')}
   </DropdownMenu.Item>
 {/snippet}
@@ -142,11 +143,18 @@
     onclick={() => denyOrRemoveFriend(friendId)}
   >
     {#if isRemoving}
-      <LoaderCircleIcon class="size-5 animate-spin" />
+      <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
-      <UserMinusIcon class="size-5" />
+      <UserMinusIcon class="size-4.5" />
     {/if}
-    {type === 'friend' ? $t('friendsManagement.removeFriend') : type === 'outgoing' ? $t('friendsManagement.cancelRequest') : $t('friendsManagement.denyRequest')}
+
+    {#if type === 'friend'}
+      {$t('friendsManagement.removeFriend')}
+    {:else if type === 'outgoing'}
+      {$t('friendsManagement.cancelRequest')}
+    {:else}
+      {$t('friendsManagement.denyRequest')}
+    {/if}
   </DropdownMenu.Item>
 {/snippet}
 
@@ -156,10 +164,11 @@
     onclick={() => blockUser(accountId)}
   >
     {#if isBlocking}
-      <LoaderCircleIcon class="size-5 animate-spin" />
+      <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
-      <BanIcon class="size-5" />
+      <BanIcon class="size-4.5" />
     {/if}
+
     {$t('friendsManagement.blockUser')}
   </DropdownMenu.Item>
 {/snippet}
@@ -170,10 +179,11 @@
     onclick={() => unblockUser(accountId)}
   >
     {#if isUnblocking}
-      <LoaderCircleIcon class="size-5 animate-spin" />
+      <LoaderCircleIcon class="size-4.5 animate-spin" />
     {:else}
-      <ShieldMinus class="size-5" />
+      <ShieldMinus class="size-4.5" />
     {/if}
+
     {$t('friendsManagement.unblockUser')}
   </DropdownMenu.Item>
 {/snippet}
