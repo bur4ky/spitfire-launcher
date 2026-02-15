@@ -106,7 +106,7 @@
 
     <div class="flex items-center gap-2">
       <Button
-        class="w-full"
+        class="flex-1"
         disabled={isSettingStatus || !customStatus?.trim() || isCustomStatusInUse}
         loading={isSettingStatus}
         loadingText={$t('customStatus.settingStatus')}
