@@ -118,10 +118,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "V-Papel Bilgileri"
+      "title": "V-Papel"
     },
-    "getInformation": "V-Papel Bilgilerini Al",
-    "loading": "V-Papel Bilgileri Alınıyor",
+    "getInformation": "V-Bucks Al",
+    "loading": "V-Bucks Yükleniyor",
     "loginExpired": "Oturumunuz süresi doldu. Lütfen tekrar giriş yapın.",
     "unknownError": "Bilinmeyen hata"
   },
@@ -396,7 +396,7 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Grup Yönetimi"
+      "title": "Grup"
     },
     "tabs": {
       "stwActions": "STW Eylemleri",
@@ -563,7 +563,7 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Arkadaş Yönetimi"
+      "title": "Arkadaşlar"
     },
     "lists": {
       "friends": "Arkadaşlar",

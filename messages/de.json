@@ -118,7 +118,7 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "V-Bucks Informationen"
+      "title": "V-Bucks"
     },
     "getInformation": "V-Bucks abrufen",
     "loading": "V-Bucks werden geladen",
@@ -396,7 +396,7 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gruppenverwaltung"
+      "title": "Gruppen"
     },
     "tabs": {
       "stwActions": "STW Aktionen",
@@ -563,7 +563,7 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Freundeverwaltung"
+      "title": "Freunde"
     },
     "lists": {
       "friends": "Freunde",

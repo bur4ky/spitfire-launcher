@@ -118,10 +118,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "Información de PaVos"
+      "title": "PaVos"
     },
-    "getInformation": "Obtener Información de PaVos",
-    "loading": "Cargando información de PaVos",
+    "getInformation": "Obtener V-Bucks",
+    "loading": "Cargando V-Bucks",
     "loginExpired": "Código expirado. Por favor inicia otra vez.",
     "unknownError": "Código desconocido"
   },
@@ -396,7 +396,7 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gestión de grupos"
+      "title": "Grupos"
     },
     "tabs": {
       "stwActions": "Acciones STW",
@@ -563,7 +563,7 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Gestión de Amigos"
+      "title": "Amigos"
     },
     "lists": {
       "friends": "Amigos",

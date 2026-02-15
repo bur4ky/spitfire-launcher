@@ -118,10 +118,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "Informações de V-Bucks"
+      "title": "V-Bucks"
     },
-    "getInformation": "Obter informações de V-Bucks",
-    "loading": "Carregando informações de V-Bucks",
+    "getInformation": "Obter V-Bucks",
+    "loading": "Carregando V-Bucks",
     "loginExpired": "Login expirado. Por favor, faz login novamente.",
     "unknownError": "Erro desconhecido"
   },
@@ -396,7 +396,7 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gerenciamento do Grupo"
+      "title": "Grupo"
     },
     "tabs": {
       "stwActions": "Ações STW",
@@ -563,7 +563,7 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Gerenciador de Amigos"
+      "title": "Amigos"
     },
     "lists": {
       "friends": "Amigos",

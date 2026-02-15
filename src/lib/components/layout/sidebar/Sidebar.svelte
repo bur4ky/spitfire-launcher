@@ -10,20 +10,15 @@
   import { ExternalLink } from '$components/ui/external-link';
   import { getVersion } from '@tauri-apps/api/app';
   import { Separator } from '$components/ui/separator';
-  import { slide } from 'svelte/transition';
-  import { cubicInOut } from 'svelte/easing';
   import { platform } from '@tauri-apps/plugin-os';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
   import { t } from '$lib/i18n';
   import { cn } from '$lib/utils';
   import { page } from '$app/state';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { SvelteSet } from 'svelte/reactivity';
   import { settingsStore } from '$lib/storage';
 
   const currentPlatform = platform();
   const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
-  const notExpandedCategories = new SvelteSet<string>();
 
   const externalLinks = $derived([
     {
@@ -37,14 +32,6 @@
       icon: '/icons/github.svg'
     }
   ]);
-
-  function toggleCategory(id: string) {
-    if (!notExpandedCategories.has(id)) {
-      notExpandedCategories.add(id);
-    } else {
-      notExpandedCategories.delete(id);
-    }
-  }
 
   function isCategoryVisible(key: string) {
     return SidebarCategories
@@ -68,7 +55,7 @@
 
 <aside
   class={cn(
-    'w-60 sm:w-72 h-screen bg-card flex flex-col overflow-hidden select-none',
+    'w-60 sm:w-64 h-screen bg-card flex flex-col overflow-hidden select-none',
     'fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out',
     'lg:sticky lg:top-0 lg:translate-x-0',
     $sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -82,54 +69,38 @@
   </div>
 
   <nav class="flex-1 overflow-y-auto py-4 border-r">
-    <ul class="space-y-1.5 px-2">
+    <div class="space-y-4 px-3">
       {#each SidebarCategories as category (category.key)}
         {#if isCategoryVisible(category.key)}
-          <li>
-            <Button
-              class="w-full justify-between"
-              onclick={() => toggleCategory(category.key)}
-              size="sm"
-              variant="ghost"
-            >
-              <span>{$t(`sidebar.categories.${category.key}`)}</span>
-              <ChevronDownIcon
-                class={cn(
-                  'size-4 transition-transform duration-200',
-                  !notExpandedCategories.has(category.key) && 'rotate-180'
-                )}
-              />
-            </Button>
+          <div>
+            <p class="px-3 mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              {$t(`sidebar.categories.${category.key}`)}
+            </p>
 
-            {#if !notExpandedCategories.has(category.key)}
-              <ul
-                class="mt-1 ml-4 space-y-1 border-l border-border pl-2"
-                transition:slide|local={{ duration: 200, easing: cubicInOut }}
-              >
-                {#each category.items as item (item.key)}
-                  {#if isItemVisible(item.key)}
-                    <li>
-                      <Button
-                        class={cn(
-                          'text-sm px-3 py-1 h-7 font-normal w-full justify-start',
-                          page.url.pathname === item.href && 'bg-accent text-accent-foreground'
-                        )}
-                        href={item.href}
-                        onclick={() => sidebarOpen.set(false)}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        {$t(`${item.key}.page.title`)}
-                      </Button>
-                    </li>
-                  {/if}
-                {/each}
-              </ul>
-            {/if}
-          </li>
+            <div class="space-y-0.5">
+              {#each category.items as item (item.key)}
+                {#if isItemVisible(item.key)}
+                  <Button
+                    class={cn(
+                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-normal justify-start',
+                      page.url.pathname === item.href
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-foreground/70 hover:bg-accent hover:text-foreground'
+                    )}
+                    href={item.href}
+                    onclick={() => sidebarOpen.set(false)}
+                    variant="ghost"
+                  >
+                    <item.icon class="size-4" />
+                    {$t(`${item.key}.page.title`)}
+                  </Button>
+                {/if}
+              {/each}
+            </div>
+          </div>
         {/if}
       {/each}
-    </ul>
+    </div>
   </nav>
 
   <div class="border-t space-y-2 p-3">

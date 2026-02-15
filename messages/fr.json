@@ -120,8 +120,8 @@
     "page": {
       "title": "V-Bucks"
     },
-    "getInformation": "Obtenir des informations sur les V-Bucks",
-    "loading": "Chargement des informations sur les V-Bucks",
+    "getInformation": "Obtenir des V-Bucks",
+    "loading": "Chargement des V-Bucks",
     "loginExpired": "Connexion expirée. Veuillez vous reconnecter.",
     "unknownError": "Erreur inconnue"
   },
@@ -396,7 +396,7 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gestion de groupe"
+      "title": "Groupe"
     },
     "tabs": {
       "stwActions": "Actions SLM",
@@ -563,7 +563,7 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Gestion d'ami"
+      "title": "Amis"
     },
     "lists": {
       "friends": "Amis",
