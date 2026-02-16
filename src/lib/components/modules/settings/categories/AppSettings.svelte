@@ -13,8 +13,7 @@
   import { type } from '@tauri-apps/plugin-os';
   import { toast } from 'svelte-sonner';
 
-  const currentPlatform = type();
-  const isDesktop = ['windows', 'macos', 'linux'].includes(currentPlatform);
+  const isDesktop = ['windows', 'macos', 'linux'].includes(type());
 
   const locales: { locale: Locale; country: string }[] = [
     { locale: 'de', country: 'germany' },
@@ -85,7 +84,7 @@
     </Select.Root>
   </SettingItem>
 
-  {#if currentPlatform === 'windows'}
+  {#if type() === 'windows'}
     <SettingItem labelFor="gamePath" orientation="vertical" title={$t('settings.appSettings.gamePath')}>
       <SettingsFolderPicker
         id="gamePath"

@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "Bu sayfaya erişmek için giriş yapmalısınız.",
     "externalLinks": {
       "discord": "Discord Sunucusu",
       "repository": "GitHub Sayfası"

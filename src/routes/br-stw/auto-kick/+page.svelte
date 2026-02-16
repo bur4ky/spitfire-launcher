@@ -19,7 +19,6 @@
 
   const allAccounts = $derived($accountStore.accounts);
   const autoKickDisabledAccounts = $derived(allAccounts.filter((x) => !AutoKickBase.accounts.has(x.accountId)));
-  const currentPlatform = platform();
 
   function handleAccountSelect(accountId: string) {
     if (!accountId) return;
@@ -59,7 +58,7 @@
   docsComponent={AutoKickTutorial}
   title={$t('autoKick.page.title')}
 >
-  {#if currentPlatform === 'android' || currentPlatform === 'ios'}
+  {#if platform() === 'android' || platform() === 'ios'}
     <Alert
       color="yellow"
       icon={AlertTriangleIcon}

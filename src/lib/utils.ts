@@ -24,7 +24,7 @@ export async function checkLogin() {
   const hasAccount = accountStore.getActive();
   if (hasAccount) return true;
 
-  await goto('/br-stw/stw-mission-alerts', { state: { showLoginModal: true } });
+  await goto('/br-stw/stw-mission-alerts');
   toast.error(get(t)('errors.notLoggedIn'));
   return false;
 }
@@ -87,22 +87,22 @@ export function formatRemainingDuration(ms: number) {
   const parts = [];
 
   if (days) {
-    const key = days === 1 ? 'one' : ('other' as const);
+    const key = days === 1 ? 'one' : 'other';
     parts.push(translate(`times.days.${key}`, { count: days }));
   }
 
   if (hours) {
-    const key = hours === 1 ? 'one' : ('other' as const);
+    const key = hours === 1 ? 'one' : 'other';
     parts.push(translate(`times.hours.${key}`, { count: hours }));
   }
 
   if (minutes) {
-    const key = minutes === 1 ? 'one' : ('other' as const);
+    const key = minutes === 1 ? 'one' : 'other';
     parts.push(translate(`times.minutes.${key}`, { count: minutes }));
   }
 
   if (seconds) {
-    const key = seconds === 1 ? 'one' : ('other' as const);
+    const key = seconds === 1 ? 'one' : 'other';
     parts.push(translate(`times.seconds.${key}`, { count: seconds }));
   }
 

@@ -2,6 +2,7 @@
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
   import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
+  import { useSidebar } from '$components/ui/sidebar';
   import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { settingsStore } from '$lib/storage';
   import MinusIcon from '@lucide/svelte/icons/minus';
@@ -10,8 +11,7 @@
   import { platform } from '@tauri-apps/plugin-os';
 
   const appWindow = getCurrentWindow();
-  const currentPlatform = platform();
-  const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
+  const sidebar = useSidebar();
 
   async function minimizeOrHide() {
     if (settingsStore.get().app?.hideToTray) {
@@ -27,25 +27,22 @@
   }
 </script>
 
-<!-- TODO: Could use `padding-top: env(safe-area-inset-top)` but it still overlaps, same for sidebar -->
 <header
-  class="{isMobile
-    ? 'h-22 pt-6'
-    : 'h-16'} sticky top-0 z-10 flex items-center justify-between border-b border-border bg-card px-4 select-none md:justify-end"
+  class="pt-safe sticky top-0 z-10 flex h-[calc(4rem+env(safe-area-inset-top))] items-center justify-between border-b bg-card px-4 select-none md:justify-end"
   data-tauri-drag-region
 >
   <SidebarBurger />
 
   <div class="flex items-center gap-x-2">
     <div class="flex items-center gap-x-2">
-      {#if currentPlatform === 'windows'}
+      {#if platform() === 'windows'}
         <LaunchGame />
       {/if}
 
       <SettingsModal />
     </div>
 
-    {#if !isMobile}
+    {#if !sidebar.isMobile}
       <div class="flex items-center space-x-2 max-sm:hidden">
         <button class="rounded p-2 transition-colors duration-200 hover:bg-accent" onclick={minimizeOrHide}>
           <MinusIcon />

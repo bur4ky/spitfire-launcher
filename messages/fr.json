@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "Veuillez vous connecter pour continuer.",
     "externalLinks": {
       "discord": "Serveur Discord",
       "repository": "Répertoire GitHub"

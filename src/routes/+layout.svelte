@@ -2,6 +2,7 @@
   import './layout.css';
   import Header from '$components/layout/header/Header.svelte';
   import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
+  import { SidebarProvider } from '$components/ui/sidebar';
   import { Button } from '$components/ui/button';
   import * as Dialog from '$components/ui/dialog';
   import * as Tooltip from '$components/ui/tooltip';
@@ -215,8 +216,8 @@
   });
 </script>
 
-<Tooltip.Provider>
-  <div class="flex">
+<SidebarProvider style="--sidebar-width: 18rem;" class="flex">
+  <Tooltip.Provider>
     <Toaster
       position="bottom-center"
       toastOptions={{
@@ -243,8 +244,8 @@
         </main>
       </div>
     </div>
-  </div>
-</Tooltip.Provider>
+  </Tooltip.Provider>
+</SidebarProvider>
 
 <Dialog.Root bind:open={hasNewVersion}>
   <Dialog.Content>

@@ -1,24 +1,28 @@
-<script lang="ts" module>
-  import { writable } from 'svelte/store';
-
-  export const sidebarOpen = writable(false);
-</script>
-
 <script lang="ts">
   import AccountSwitcher from '$components/layout/sidebar/AccountSwitcher.svelte';
-  import { Button } from '$components/ui/button';
   import { ExternalLink } from '$components/ui/external-link';
-  import { getVersion } from '@tauri-apps/api/app';
   import { Separator } from '$components/ui/separator';
-  import { platform } from '@tauri-apps/plugin-os';
-  import { t } from '$lib/i18n';
-  import { cn } from '$lib/utils';
+  import { Button } from '$components/ui/button';
+  import * as Sidebar from '$components/ui/sidebar';
+  import * as Tooltip from '$components/ui/tooltip';
   import { page } from '$app/state';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { settingsStore } from '$lib/storage';
+  import { accountStore, settingsStore } from '$lib/storage';
+  import { cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { getVersion } from '@tauri-apps/api/app';
 
-  const currentPlatform = platform();
-  const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
+  const sidebar = Sidebar.useSidebar();
+  const activeAccount = accountStore.getActiveStore(true);
+
+  function isCategoryVisible(key: string) {
+    return SidebarCategories.find((c) => c.key === key)?.items.some((item) => isItemVisible(item.key));
+  }
+
+  function isItemVisible(key: string) {
+    const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
+    return menu[key] !== false;
+  }
 
   const externalLinks = $derived([
     {
@@ -32,81 +36,70 @@
       icon: '/icons/github.svg'
     }
   ]);
-
-  function isCategoryVisible(key: string) {
-    return SidebarCategories.find((category) => category.key === key)?.items.some((item) => isItemVisible(item.key));
-  }
-
-  function isItemVisible(key: string) {
-    const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
-    return menu[key] !== false;
-  }
 </script>
 
-<div
-  class="fixed inset-0 z-40 bg-black/50 lg:hidden"
-  class:block={$sidebarOpen}
-  class:hidden={!$sidebarOpen}
-  onclick={() => sidebarOpen.set(false)}
-  onkeydown={(e) => e.key === 'Escape' && sidebarOpen.set(false)}
-  role="button"
-  tabindex="0"
-></div>
+<Sidebar.Root>
+  <Sidebar.Header class="flex h-16 items-center justify-center border-r border-b">
+    <a class="pt-safe text-2xl font-bold select-none" href="/">Spitfire Launcher</a>
+  </Sidebar.Header>
 
-<aside
-  class={cn(
-    'flex h-screen w-60 flex-col overflow-hidden bg-card select-none sm:w-64',
-    'fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out',
-    'lg:sticky lg:top-0 lg:translate-x-0',
-    $sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-  )}
->
-  <div
-    class="flex items-center justify-center border-r border-b {isMobile ? 'h-22 pt-6' : 'h-16'}"
-    data-tauri-drag-region
-  >
-    <a class="text-2xl font-bold max-xs:text-xl" href="/">Spitfire Launcher</a>
-  </div>
+  <Sidebar.Content class="gap-0">
+    {#each SidebarCategories as category (category.key)}
+      {#if isCategoryVisible(category.key)}
+        <Sidebar.Group>
+          <Sidebar.GroupLabel class="tracking-wider text-muted-foreground/60 uppercase">
+            {$t(`sidebar.categories.${category.key}`)}
+          </Sidebar.GroupLabel>
 
-  <nav class="flex-1 overflow-y-auto border-r py-4">
-    <div class="space-y-4 px-3">
-      {#each SidebarCategories as category (category.key)}
-        {#if isCategoryVisible(category.key)}
-          <div>
-            <p class="mb-1.5 px-3 text-xs font-semibold tracking-wider text-muted-foreground/60 uppercase">
-              {$t(`sidebar.categories.${category.key}`)}
-            </p>
+          <Sidebar.Menu>
+            {#each category.items as item (item.key)}
+              {#if isItemVisible(item.key)}
+                {@const isActive = page.url.pathname === item.href}
+                {@const isDisabled = item.requiresLogin && !$activeAccount}
 
-            <div class="space-y-0.5">
-              {#each category.items as item (item.key)}
-                {#if isItemVisible(item.key)}
-                  <Button
-                    class={cn(
-                      'flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 text-sm font-normal',
-                      page.url.pathname === item.href
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-foreground/70 hover:bg-accent hover:text-foreground'
-                    )}
-                    href={item.href}
-                    onclick={() => sidebarOpen.set(false)}
-                    variant="ghost"
-                  >
-                    <item.icon class="size-4" />
-                    {$t(`${item.key}.page.title`)}
-                  </Button>
-                {/if}
-              {/each}
-            </div>
-          </div>
-        {/if}
-      {/each}
-    </div>
-  </nav>
+                <Sidebar.MenuItem>
+                  <Sidebar.MenuButton {isActive}>
+                    {#snippet child({ props })}
+                      <Tooltip.Root>
+                        <Tooltip.Trigger class="w-full {isDisabled && 'cursor-default'}">
+                          <Button
+                            {...props}
+                            class={cn(
+                              'h-7 w-full justify-start px-3 py-1 text-sm font-normal',
+                              isActive
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-foreground/70 hover:bg-accent hover:text-foreground'
+                            )}
+                            disabled={isDisabled}
+                            href={item.href}
+                            onclick={() => sidebar.setOpenMobile(false)}
+                            size="sm"
+                            variant="ghost"
+                          >
+                            <item.icon class="size-4" />
+                            {$t(`${item.key}.page.title`)}
+                          </Button>
+                        </Tooltip.Trigger>
 
-  <div class="space-y-2 border-t p-3">
+                        {#if isDisabled}
+                          <Tooltip.Content>{$t('sidebar.loginRequired')}</Tooltip.Content>
+                        {/if}
+                      </Tooltip.Root>
+                    {/snippet}
+                  </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+              {/if}
+            {/each}
+          </Sidebar.Menu>
+        </Sidebar.Group>
+      {/if}
+    {/each}
+  </Sidebar.Content>
+
+  <Sidebar.Footer class="border-t">
     <AccountSwitcher />
 
-    <div class="flex items-center justify-center gap-4 border-t pt-2">
+    <div class="pb-safe flex items-center justify-center gap-4 border-t pt-2">
       <div class="flex items-center gap-3">
         {#each externalLinks as link (link.name)}
           <ExternalLink class="text-muted-foreground" href={link.href}>
@@ -128,5 +121,5 @@
         </ExternalLink>
       {/await}
     </div>
-  </div>
-</aside>
+  </Sidebar.Footer>
+</Sidebar.Root>

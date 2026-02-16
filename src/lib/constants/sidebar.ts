@@ -1,4 +1,4 @@
-import { platform as getPlatform } from '@tauri-apps/plugin-os';
+import { platform } from '@tauri-apps/plugin-os';
 import UsersIcon from '@lucide/svelte/icons/users';
 import TicketIcon from '@lucide/svelte/icons/ticket';
 import FileTextIcon from '@lucide/svelte/icons/file-text';
@@ -21,7 +21,6 @@ import ListChecksIcon from '@lucide/svelte/icons/list-checks';
 import SearchIcon from '@lucide/svelte/icons/search';
 import type { Component } from 'svelte';
 import type { IconProps } from '@lucide/svelte';
-const platform = getPlatform();
 
 type Category = {
   key: (typeof SidebarCategoryKeys)[number];
@@ -30,6 +29,7 @@ type Category = {
     href: string;
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     icon: Component<IconProps, {}, ''>;
+    requiresLogin?: boolean;
   }[];
 };
 
@@ -69,27 +69,32 @@ export const SidebarCategories = Object.freeze(
         {
           key: 'vbucksInformation',
           href: '/account-management/vbucks',
-          icon: WalletIcon
+          icon: WalletIcon,
+          requiresLogin: true
         },
         {
           key: 'friendsManagement',
           href: '/account-management/friends',
-          icon: UsersIcon
+          icon: UsersIcon,
+          requiresLogin: true
         },
         {
           key: 'redeemCodes',
           href: '/account-management/redeem-codes',
-          icon: TicketIcon
+          icon: TicketIcon,
+          requiresLogin: true
         },
         {
           key: 'epicGamesWebsite',
           href: '/account-management/epic-games-website',
-          icon: GlobeIcon
+          icon: GlobeIcon,
+          requiresLogin: true
         },
         {
           key: 'eula',
           href: '/account-management/eula',
-          icon: FileTextIcon
+          icon: FileTextIcon,
+          requiresLogin: true
         }
       ]
     },
@@ -99,22 +104,26 @@ export const SidebarCategories = Object.freeze(
         {
           key: 'autoKick',
           href: '/br-stw/auto-kick',
-          icon: UserXIcon
+          icon: UserXIcon,
+          requiresLogin: true
         },
         {
           key: 'taxiService',
           href: '/br-stw/taxi-service',
-          icon: CarIcon
+          icon: CarIcon,
+          requiresLogin: true
         },
         {
           key: 'customStatus',
           href: '/br-stw/custom-status',
-          icon: MessageSquareIcon
+          icon: MessageSquareIcon,
+          requiresLogin: true
         },
         {
           key: 'partyManagement',
           href: '/br-stw/party',
-          icon: PartyPopperIcon
+          icon: PartyPopperIcon,
+          requiresLogin: true
         },
         {
           key: 'serverStatus',
@@ -129,12 +138,14 @@ export const SidebarCategories = Object.freeze(
         {
           key: 'earnedXP',
           href: '/br-stw/earned-xp',
-          icon: TrendingUpIcon
+          icon: TrendingUpIcon,
+          requiresLogin: true
         },
         {
           key: 'dailyQuests',
           href: '/br-stw/daily-quests',
-          icon: ListChecksIcon
+          icon: ListChecksIcon,
+          requiresLogin: true
         },
         {
           key: 'stwMissionAlerts',
@@ -148,18 +159,20 @@ export const SidebarCategories = Object.freeze(
         }
       ]
     },
-    platform === 'windows' && {
+    platform() === 'windows' && {
       key: 'downloader',
       items: [
         {
           key: 'library',
           href: '/downloader/library',
-          icon: LibraryIcon
+          icon: LibraryIcon,
+          requiresLogin: true
         },
         {
           key: 'downloads',
           href: '/downloader/downloads',
-          icon: DownloadIcon
+          icon: DownloadIcon,
+          requiresLogin: true
         }
       ]
     },
@@ -169,17 +182,20 @@ export const SidebarCategories = Object.freeze(
         {
           key: 'exchangeCode',
           href: '/authentication/exchange-code',
-          icon: KeyRoundIcon
+          icon: KeyRoundIcon,
+          requiresLogin: true
         },
         {
           key: 'accessToken',
           href: '/authentication/access-token',
-          icon: KeyIcon
+          icon: KeyIcon,
+          requiresLogin: true
         },
         {
           key: 'deviceAuth',
           href: '/authentication/device-auth',
-          icon: SmartphoneIcon
+          icon: SmartphoneIcon,
+          requiresLogin: true
         }
       ]
     }

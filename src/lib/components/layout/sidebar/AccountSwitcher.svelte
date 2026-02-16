@@ -15,10 +15,6 @@
   import { toast } from 'svelte-sonner';
   import { MediaQuery } from 'svelte/reactivity';
 
-  type PageState = {
-    showLoginModal?: boolean;
-  };
-
   const allAccounts = $derived($accountStore.accounts);
   const activeAccount = accountStore.getActiveStore(true);
 
@@ -29,20 +25,11 @@
   let isSmall = new MediaQuery('max-width: 640px');
   let dropdownSide: 'top' | 'right' = $derived(isSmall.current ? 'top' : 'right');
 
-  $effect(() => {
-    const pageState = page.state as PageState;
-    showLoginModal = pageState.showLoginModal || false;
-  });
-
   const filteredAccounts = $derived(
     searchTerm
       ? allAccounts.filter((account) => account.displayName.toLowerCase().includes(searchTerm!.toLowerCase()))
       : allAccounts
   );
-
-  function closeDropdown() {
-    dropdownOpen = false;
-  }
 
   async function changeAccounts(account: AccountData) {
     dropdownOpen = false;
@@ -83,7 +70,7 @@
 
 <DropdownMenu.Root bind:open={dropdownOpen}>
   <DropdownMenu.Trigger class="w-full">
-    <Button class="w-full py-6" onclick={closeDropdown} variant="ghost">
+    <Button class="w-full py-6" variant="ghost">
       <img
         class="size-8 rounded-full"
         alt={$activeAccount?.displayName}

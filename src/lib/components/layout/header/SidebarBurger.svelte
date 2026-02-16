@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { sidebarOpen } from '$components/layout/sidebar/Sidebar.svelte';
+  import { useSidebar } from '$components/ui/sidebar';
   import MenuIcon from '@lucide/svelte/icons/menu';
 
-  function toggleSidebar() {
-    sidebarOpen.update((value) => !value);
-  }
+  const sidebar = useSidebar();
 </script>
 
-<button class="mr-auto rounded p-2 transition-colors duration-200 hover:bg-accent lg:hidden" onclick={toggleSidebar}>
+<button class="mr-auto rounded p-2 hover:bg-accent" class:hidden={!sidebar.isMobile} onclick={sidebar.toggle}>
   <MenuIcon class="size-6" />
 </button>

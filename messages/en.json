@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "You must login to access this page.",
     "externalLinks": {
       "discord": "Discord Server",
       "repository": "GitHub Repository"

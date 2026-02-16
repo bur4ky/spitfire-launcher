@@ -7,10 +7,8 @@
   import { t } from '$lib/i18n';
   import { cn } from '$lib/utils';
   import SettingsIcon from '@lucide/svelte/icons/settings';
-  import { platform as getPlatform } from '@tauri-apps/plugin-os';
+  import { platform } from '@tauri-apps/plugin-os';
   import type { Component } from 'svelte';
-
-  const platform = getPlatform();
 
   const categories = $derived.by(() => {
     const categories: { id: string; name: string; component: Component }[] = [
@@ -18,7 +16,7 @@
       { id: 'customizableMenu', name: $t('settings.tabs.customizableMenu'), component: CustomizableMenu }
     ];
 
-    if (platform === 'windows') {
+    if (platform() === 'windows') {
       categories.push({
         id: 'downloaderSettings',
         name: $t('settings.tabs.downloaderSettings'),
