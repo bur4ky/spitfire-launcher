@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import LoginModal from '$components/modules/login/LoginModal.svelte';
   import { Button } from '$components/ui/button';
   import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import { IsMobile } from '$lib/hooks/is-mobile.svelte';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
   import { avatarCache } from '$lib/stores';
@@ -13,7 +13,6 @@
   import LogOutIcon from '@lucide/svelte/icons/log-out';
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { toast } from 'svelte-sonner';
-  import { MediaQuery } from 'svelte/reactivity';
 
   const allAccounts = $derived($accountStore.accounts);
   const activeAccount = accountStore.getActiveStore(true);
@@ -22,7 +21,7 @@
   let searchTerm = $state<string>();
   let showLoginModal = $state(false);
 
-  let isSmall = new MediaQuery('max-width: 640px');
+  let isSmall = new IsMobile(640);
   let dropdownSide: 'top' | 'right' = $derived(isSmall.current ? 'top' : 'right');
 
   const filteredAccounts = $derived(

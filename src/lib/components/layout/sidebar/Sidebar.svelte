@@ -39,7 +39,7 @@
 </script>
 
 <Sidebar.Root>
-  <Sidebar.Header class="flex h-16 items-center justify-center border-r border-b">
+  <Sidebar.Header class="flex h-[calc(4rem+env(safe-area-inset-top))] items-center justify-center border-r border-b">
     <a class="pt-safe text-2xl font-bold select-none" href="/">Spitfire Launcher</a>
   </Sidebar.Header>
 
