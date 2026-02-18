@@ -6,7 +6,7 @@
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountCacheStore, ownedItemsStore } from '$lib/stores';
-  import { calculateDiscountedShopPrice, cn } from '$lib/utils';
+  import { calculateDiscountedShopPrice } from '$lib/utils';
   import type { SpitfireShopItem } from '$types/game/shop';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
@@ -108,12 +108,12 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
+    <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+      <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
         {$t('cancel')}
       </Dialog.Close>
 
-      <Button class="flex-1" disabled={isPurchasing} onclick={purchaseItem}>
+      <Button disabled={isPurchasing} onclick={purchaseItem}>
         {#if isPurchasing}
           <LoaderCircleIcon class="mr-2 size-5 animate-spin" />
           {$t('itemShop.purchasing')}

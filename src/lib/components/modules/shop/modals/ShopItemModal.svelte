@@ -146,11 +146,11 @@
     {#if $accountStore.activeAccountId}
       <Separator />
 
-      <div class="flex w-full gap-3">
+      <div class="grid w-full grid-cols-2 gap-2">
         <Tooltip.Root>
-          <Tooltip.Trigger class="w-full" tabindex={-1}>
+          <Tooltip.Trigger tabindex={-1}>
             <Button
-              class="flex w-full items-center justify-center gap-x-2"
+              class="flex w-full items-center justify-center gap-2"
               disabled={isPurchasing || ownedVbucks < $discountedPrice || isItemOwned}
               onclick={() => (isPurchaseDialogOpen = true)}
             >
@@ -170,7 +170,7 @@
         </Tooltip.Root>
 
         <Tooltip.Root>
-          <Tooltip.Trigger class="w-full" tabindex={-1}>
+          <Tooltip.Trigger tabindex={-1}>
             <Button
               class="flex w-full items-center justify-center gap-x-2"
               disabled={isSendingGifts ||

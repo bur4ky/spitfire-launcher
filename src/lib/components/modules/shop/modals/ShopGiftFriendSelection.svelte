@@ -7,7 +7,6 @@
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountCacheStore } from '$lib/stores';
-  import { cn } from '$lib/utils';
   import type { AccountCacheData } from '$types/account';
   import type { SpitfireShopItem } from '$types/game/shop';
   import GiftIcon from '@lucide/svelte/icons/gift';
@@ -121,13 +120,13 @@
 
     <AccountCombobox customList={friends} disabled={!friends?.length} type="multiple" bind:value={selectedFriends} />
 
-    <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
+    <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+      <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
         {$t('cancel')}
       </Dialog.Close>
 
       <Button
-        class="flex flex-1 items-center gap-2"
+        class="flex items-center gap-2"
         disabled={!selectedFriends.length ||
           isSendingGifts ||
           ownedVbucks < item.price.final * (selectedFriends.length || 1)}
