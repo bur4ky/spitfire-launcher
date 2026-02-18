@@ -404,9 +404,18 @@
       "partyMembers": "Gruppenmitglieder"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Belohnungen beanspruchen",
-      "transferMaterialsAfterLeaving": "Materialien übertragen",
-      "inviteAfterLeaving": "Einladen",
+      "claimRewardsAfterLeaving": {
+        "title": "Belohnungen beanspruchen",
+        "description": "Belohnungen für das Konto beanspruchen, nachdem die Gruppe verlassen wurde."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Materialien übertragen",
+        "description": "Baumaterialien nach dem Verlassen der Gruppe in den Rucksack übertragen."
+      },
+      "inviteAfterLeaving": {
+        "title": "Mitglieder einladen",
+        "description": "Mitglieder nach dem Rauswerfen oder Verlassen erneut in die Gruppe einladen."
+      },
       "kickAll": "Alle Kicken",
       "leaveParty": "Gruppe Verlassen",
       "claimRewards": "Belohnungen",

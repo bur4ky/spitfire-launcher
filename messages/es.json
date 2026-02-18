@@ -404,9 +404,18 @@
       "partyMembers": "Miembro del Grupo"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Reclamar recompensas",
-      "transferMaterialsAfterLeaving": "Transferir materiales",
-      "inviteAfterLeaving": "Invitar",
+      "claimRewardsAfterLeaving": {
+        "title": "Reclamar recompensas",
+        "description": "Reclamar las recompensas de la cuenta después de salir del grupo."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Transferir materiales",
+        "description": "Transferir los materiales de construcción a la mochila después de salir del grupo."
+      },
+      "inviteAfterLeaving": {
+        "title": "Invitar miembros",
+        "description": "Invitar nuevamente a los miembros al grupo después de expulsarlos o salir."
+      },
       "kickAll": "Expulsar todos",
       "leaveParty": "Abandonar grupo",
       "claimRewards": "Reclamar",

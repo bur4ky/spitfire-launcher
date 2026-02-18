@@ -73,7 +73,7 @@
      so we use Input to control the value ourselves -->
     <Input class="pr-10 pl-10" onclick={() => (open = true)} {placeholder} bind:value={searchValue} />
 
-    <Combobox.Trigger class="absolute end-0 top-1/2 -translate-y-1/2 border-none !bg-transparent text-muted-foreground">
+    <Combobox.Trigger class="absolute end-0 top-1/2 -translate-y-1/2 border-none !bg-inherit text-muted-foreground">
       <ChevronsUpDown class="size-5" />
     </Combobox.Trigger>
   </div>

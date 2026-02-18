@@ -15,7 +15,7 @@
   let { type, value = $bindable(), disabled, loading, onclick, children }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4 rounded-md border p-4">
+<div class="flex flex-col gap-4 rounded-md border bg-card p-4">
   <AccountCombobox type={type as never} bind:value={value as never} />
 
   <Button {disabled} {loading} {onclick}>

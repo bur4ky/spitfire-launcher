@@ -23,8 +23,6 @@
   import PageContent from '$components/layout/PageContent.svelte';
   import MemberCard, { type PartyMember } from '$components/modules/party/MemberCard.svelte';
   import PartyAccountSelection from '$components/modules/party/PartyAccountSelection.svelte';
-  import { Label } from '$components/ui/label';
-  import { Switch } from '$components/ui/switch';
   import * as Tabs from '$components/ui/tabs';
   import { Friends } from '$lib/modules/friends';
   import { XMPPManager } from '$lib/modules/xmpp';
@@ -41,26 +39,12 @@
   import { EpicEvents } from '$lib/constants/events';
   import { logger } from '$lib/logger';
   import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
-
-  type PartySummary = {
-    maxSize: number;
-    region: string;
-    createdAt: Date;
-  };
+  import SettingSwitch from '$components/modules/party/SettingSwitch.svelte';
 
   const allAccounts = $derived($accountStore.accounts);
   const activeAccount = accountStore.getActiveStore();
   const currentAccountParty = $derived(accountPartiesStore.get($activeAccount.accountId));
   const isDoingSomething = $derived(isKicking || isLeaving || isClaiming);
-
-  const partyData = $derived<PartySummary | undefined>(
-    currentAccountParty && {
-      maxSize: currentAccountParty.config.max_size,
-      region: currentAccountParty.meta['Default:RegionId_s'],
-      createdAt: new Date(currentAccountParty.created_at)
-    }
-  );
 
   const partyMembers = $derived<PartyMember[] | undefined>(
     currentAccountParty?.members
@@ -385,13 +369,13 @@
   });
 </script>
 
-<PageContent class="mt-2" title={$t('partyManagement.page.title')}>
+<PageContent title={$t('partyManagement.page.title')}>
   <Tabs.Root value="stwActions">
     <Tabs.List class="mb-2">
       <Tabs.Trigger value="stwActions">
         {$t('partyManagement.tabs.stwActions')}
       </Tabs.Trigger>
-      <Tabs.Trigger disabled={!partyData && !partyMembers?.length} value="partyMembers">
+      <Tabs.Trigger disabled={!partyMembers?.length} value="partyMembers">
         {$t('partyManagement.tabs.partyMembers')}
       </Tabs.Trigger>
     </Tabs.List>
@@ -407,25 +391,31 @@
 </PageContent>
 
 {#snippet STWActions()}
-  <div class="flex flex-col gap-2">
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <Switch id="shouldClaimRewards" bind:checked={shouldClaimRewards} />
-        <Label for="shouldClaimRewards">{$t('partyManagement.stwActions.claimRewardsAfterLeaving')}</Label>
-      </div>
+  <div class="flex flex-col gap-4">
+    <div class="divide-y divide-border rounded-md border bg-card px-4">
+      <SettingSwitch
+        id="claimRewardsAfterLeaving"
+        description={$t('partyManagement.stwActions.claimRewardsAfterLeaving.description')}
+        label={$t('partyManagement.stwActions.claimRewardsAfterLeaving.title')}
+        bind:checked={shouldClaimRewards}
+      />
 
-      <div class="flex items-center gap-2">
-        <Switch id="shouldTransferMaterials" bind:checked={shouldTransferMaterials} />
-        <Label for="shouldTransferMaterials">{$t('partyManagement.stwActions.transferMaterialsAfterLeaving')}</Label>
-      </div>
+      <SettingSwitch
+        id="transferMaterialsAfterLeaving"
+        description={$t('partyManagement.stwActions.transferMaterialsAfterLeaving.description')}
+        label={$t('partyManagement.stwActions.transferMaterialsAfterLeaving.title')}
+        bind:checked={shouldTransferMaterials}
+      />
 
-      <div class="flex items-center gap-2">
-        <Switch id="inviteAfterLeaving" bind:checked={shouldInvite} />
-        <Label for="inviteAfterLeaving">{$t('partyManagement.stwActions.inviteAfterLeaving')}</Label>
-      </div>
+      <SettingSwitch
+        id="inviteAfterLeaving"
+        description={$t('partyManagement.stwActions.inviteAfterLeaving.description')}
+        label={$t('partyManagement.stwActions.inviteAfterLeaving.title')}
+        bind:checked={shouldInvite}
+      />
     </div>
 
-    <div class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       <PartyAccountSelection
         disabled={isDoingSomething || !kickAllSelectedAccount}
         loading={isKicking}
@@ -460,57 +450,36 @@
 {/snippet}
 
 {#snippet PartyMembers()}
-  <div class="space-y-4">
-    {#if partyData}
-      <div>
-        <div class="flex items-center gap-1">
-          <span class="text-muted-foreground">{$t('partyManagement.partyMembers.size')}:</span>
-          <span>{partyMembers?.length || 0}/{partyData.maxSize}</span>
-        </div>
+  {#if partyMembers}
+    <div class="grid grid-cols-1 place-items-center gap-2 lg:grid-cols-2 xl:grid-cols-3">
+      {#each partyMembers as member (member.accountId)}
+        {@const isRegisteredAccount = allAccounts.some((account) => account.accountId === member.accountId)}
+        {@const canLeave = isRegisteredAccount && !member.isLeader}
+        {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
+        {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
+        {@const accountFriends = friendsStore.get($activeAccount.accountId)}
+        {@const canAddFriend =
+          !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
 
-        <div class="flex items-center gap-1">
-          <span class="text-muted-foreground">{$t('partyManagement.partyMembers.region')}:</span>
-          <span>{partyData.region}</span>
-        </div>
-
-        <div class="flex items-center gap-1">
-          <span class="text-muted-foreground">{$t('partyManagement.partyMembers.createdAt')}:</span>
-          <span>{partyData.createdAt.toLocaleString($language)}</span>
-        </div>
-      </div>
-    {/if}
-
-    {#if partyMembers}
-      <div class="grid gap-4 max-[40rem]:place-items-center min-[40rem]:grid-cols-2 min-[75rem]:grid-cols-3">
-        {#each partyMembers as member (member.accountId)}
-          {@const isRegisteredAccount = allAccounts.some((account) => account.accountId === member.accountId)}
-          {@const canLeave = isRegisteredAccount && !member.isLeader}
-          {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
-          {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
-          {@const accountFriends = friendsStore.get($activeAccount.accountId)}
-          {@const canAddFriend =
-            !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
-
-          <!-- Maybe this wasn't a good idea -->
-          <MemberCard
-            {canAddFriend}
-            {canBePromoted}
-            {canKick}
-            {canLeave}
-            {isAddingFriend}
-            {isLeaving}
-            {isRemovingFriend}
-            {kickMember}
-            {kickingMemberIds}
-            {leaveParty}
-            {member}
-            {promote}
-            {promotingMemberId}
-            {removeFriend}
-            {sendFriendRequest}
-          />
-        {/each}
-      </div>
-    {/if}
-  </div>
+        <!-- Maybe this wasn't a good idea -->
+        <MemberCard
+          {canAddFriend}
+          {canBePromoted}
+          {canKick}
+          {canLeave}
+          {isAddingFriend}
+          {isLeaving}
+          {isRemovingFriend}
+          {kickMember}
+          {kickingMemberIds}
+          {leaveParty}
+          {member}
+          {promote}
+          {promotingMemberId}
+          {removeFriend}
+          {sendFriendRequest}
+        />
+      {/each}
+    </div>
+  {/if}
 {/snippet}

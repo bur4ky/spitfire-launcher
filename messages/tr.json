@@ -404,9 +404,18 @@
       "partyMembers": "Grup Üyeleri"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Ödülleri al",
-      "transferMaterialsAfterLeaving": "Malzemeleri aktar",
-      "inviteAfterLeaving": "Davet et",
+      "claimRewardsAfterLeaving": {
+        "title": "Ödülleri al",
+        "description": "Gruptan ayrıldıktan sonra hesap için ödülleri al."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Malzemeleri aktar",
+        "description": "Gruptan ayrıldıktan sonra yapı malzemelerini sırt çantasına aktar."
+      },
+      "inviteAfterLeaving": {
+        "title": "Üyeleri davet et",
+        "description": "Üyeleri attıktan veya ayrıldıktan sonra grba yeniden davet et."
+      },
       "kickAll": "Herkesi At",
       "leaveParty": "Gruptan Çık",
       "claimRewards": "Ödülleri Al",

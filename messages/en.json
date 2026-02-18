@@ -404,9 +404,18 @@
       "partyMembers": "Party Members"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Claim rewards",
-      "transferMaterialsAfterLeaving": "Transfer materials",
-      "inviteAfterLeaving": "Invite",
+      "claimRewardsAfterLeaving": {
+        "title": "Claim rewards",
+        "description": "Claim rewards for the account after leaving the party."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Transfer materials",
+        "description": "Transfer building materials to the backpack after leaving the party."
+      },
+      "inviteAfterLeaving": {
+        "title": "Invite members",
+        "description": "Invite members back to the party after kicking them or leaving."
+      },
       "kickAll": "Kick All",
       "leaveParty": "Leave Party",
       "claimRewards": "Claim Rewards",

@@ -189,16 +189,15 @@
     </ExternalLink>
   </div>
 
-  <div class="flex flex-1 flex-col gap-4 text-sm">
-    <div class="flex flex-col">
-      <div class="flex items-center gap-1">
-        <span class="text-muted-foreground">{$t('partyManagement.partyMembers.platform')}:</span>
-        <span>{member.platform}</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <span class="text-muted-foreground">{$t('partyManagement.partyMembers.ownsSTW')}:</span>
-        <span>{member.ownsSaveTheWorld ? $t('yes') : $t('no')}</span>
-      </div>
+  <div class="flex flex-col text-sm">
+    <div class="flex items-center gap-1">
+      <span class="text-muted-foreground">{$t('partyManagement.partyMembers.platform')}:</span>
+      <span>{member.platform}</span>
+    </div>
+
+    <div class="flex items-center gap-1">
+      <span class="text-muted-foreground">{$t('partyManagement.partyMembers.ownsSTW')}:</span>
+      <span>{member.ownsSaveTheWorld ? $t('yes') : $t('no')}</span>
     </div>
 
     {#if member.loadout.length}
