@@ -162,7 +162,7 @@
                 <h3 class="font-medium">{quest.names[$language]}</h3>
                 <span class="ml-auto font-medium">{quest.completionProgress}/{quest.limit}</span>
 
-                {#if canReroll[state.accountId] || true}
+                {#if canReroll[state.accountId]}
                   <Button
                     class="flex size-8 items-center justify-center"
                     disabled={!!rerollingQuestId}
