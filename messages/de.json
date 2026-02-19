@@ -458,12 +458,13 @@
   "settings": {
     "title": "Einstellungen",
     "tabs": {
-      "appSettings": "App-Einstellungen",
-      "customizableMenu": "Anpassbares Menü",
-      "downloaderSettings": "Downloader-Einstellungen"
+      "general": "Allgemein",
+      "customizableMenu": "Seitenleiste",
+      "downloader": "Downloader",
+      "advanced": "Erweitert"
     },
     "invalidValue": "Du hast einen ungültigen Wert eingegeben.",
-    "appSettings": {
+    "general": {
       "language": "Sprache",
       "gamePath": "Benutzerdefinierter Spielpfad",
       "launchArguments": {
@@ -487,7 +488,7 @@
       "checkForUpdates": "Auf Updates Prüfen",
       "debugLogs": "Debug-Protokolle aktivieren"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Download-Pfad",
         "description": "Wähle den Pfad aus, in den der Launcher Spiele herunterladen wird."

@@ -458,12 +458,13 @@
   "settings": {
     "title": "Ayarlar",
     "tabs": {
-      "appSettings": "Uygulama Ayarları",
-      "customizableMenu": "Özelleştirilebilir Menü",
-      "downloaderSettings": "İndirme Ayarları"
+      "general": "Genel",
+      "customizableMenu": "Kenar Çubuğu",
+      "downloader": "İndirici",
+      "advanced": "Gelişmiş"
     },
     "invalidValue": "Geçersiz bir değer girdiniz.",
-    "appSettings": {
+    "general": {
       "language": "Dil",
       "gamePath": "Özel Oyun Dosya Yolu",
       "launchArguments": {
@@ -487,7 +488,7 @@
       "checkForUpdates": "Güncellemeleri Kontrol Et",
       "debugLogs": "Hata ayıklama günlüklerini etkinleştir"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "İndirme Yolu",
         "description": "Başlatıcının oyunları indireceği yolu seçin."

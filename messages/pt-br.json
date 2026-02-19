@@ -458,12 +458,13 @@
   "settings": {
     "title": "Configurações",
     "tabs": {
-      "appSettings": "Configurações da App",
-      "customizableMenu": "Menu Customizável",
-      "downloaderSettings": "Configurações do Downloader"
+      "general": "Geral",
+      "customizableMenu": "Barra lateral",
+      "downloader": "Baixador",
+      "advanced": "Avançado"
     },
     "invalidValue": "Valor invalido.",
-    "appSettings": {
+    "general": {
       "language": "Idioma",
       "gamePath": "Local de Jogo Personalizado",
       "launchArguments": {
@@ -487,7 +488,7 @@
       "checkForUpdates": "Procurar por Atualizações",
       "debugLogs": "Ativar logs de depuração"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Local do download",
         "description": "Selecionar local onde o launcher baixará jogos."

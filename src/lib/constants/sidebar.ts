@@ -19,16 +19,14 @@ import ServerIcon from '@lucide/svelte/icons/server';
 import TrendingUpIcon from '@lucide/svelte/icons/trending-up';
 import ListChecksIcon from '@lucide/svelte/icons/list-checks';
 import SearchIcon from '@lucide/svelte/icons/search';
-import type { Component } from 'svelte';
-import type { IconProps } from '@lucide/svelte';
+import type { LucideIcon } from '$types';
 
 type Category = {
   key: (typeof SidebarCategoryKeys)[number];
   items: {
     key: (typeof SidebarItemKeys)[number];
     href: string;
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    icon: Component<IconProps, {}, ''>;
+    icon: LucideIcon;
     requiresLogin?: boolean;
   }[];
 };

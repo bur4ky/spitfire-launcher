@@ -1,12 +1,13 @@
 <script lang="ts">
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
-  import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
+  import { Button } from '$components/ui/button';
   import { useSidebar } from '$components/ui/sidebar';
   import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { settingsStore } from '$lib/storage';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import XIcon from '@lucide/svelte/icons/x';
+  import SettingsIcon from '@lucide/svelte/icons/settings';
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { platform } from '@tauri-apps/plugin-os';
 
@@ -39,7 +40,9 @@
         <LaunchGame />
       {/if}
 
-      <SettingsModal />
+      <Button class="rounded-md p-2! hover:bg-accent!" href="/settings" variant="ghost">
+        <SettingsIcon class="size-6" />
+      </Button>
     </div>
 
     {#if !sidebar.isMobile}

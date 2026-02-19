@@ -4,6 +4,7 @@
 
 <script lang="ts">
   import { t } from '$lib/i18n';
+  import type { LucideIcon } from '$types';
   import GlobeIcon from '@lucide/svelte/icons/globe';
   import KeyIcon from '@lucide/svelte/icons/key';
 
@@ -17,7 +18,7 @@
     id: LoginMethod;
     name: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     recommended?: boolean;
   }[] = $derived([
     {

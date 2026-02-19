@@ -458,12 +458,13 @@
   "settings": {
     "title": "Settings",
     "tabs": {
-      "appSettings": "App Settings",
-      "customizableMenu": "Customizable Menu",
-      "downloaderSettings": "Downloader Settings"
+      "general": "General",
+      "customizableMenu": "Sidebar",
+      "downloader": "Downloader",
+      "advanced": "Advanced"
     },
     "invalidValue": "You have entered an invalid value.",
-    "appSettings": {
+    "general": {
       "language": "Language",
       "gamePath": "Custom Game Path",
       "launchArguments": {
@@ -487,7 +488,7 @@
       "checkForUpdates": "Check for Updates",
       "debugLogs": "Enable Debug Logs"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Download Path",
         "description": "Select the path where the launcher will download games."

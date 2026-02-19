@@ -1,17 +1,45 @@
+<script lang="ts" module>
+  import { settingsStore } from '$lib/storage';
+  import { t } from '$lib/i18n';
+
+  type SettingKey = keyof NonNullable<AllSettings['app']>;
+  type SettingValue = string | number | boolean | undefined;
+
+  export function handleSettingChange<K extends SettingKey, V extends SettingValue = SettingValue>(
+    eventOrValue: Event | V,
+    key: K
+  ) {
+    const value = typeof eventOrValue === 'object' ? (eventOrValue.target as HTMLInputElement).value : eventOrValue;
+
+    const newSettings: AllSettings = {
+      ...get(settingsStore),
+      app: {
+        ...get(settingsStore).app,
+        [key]: value
+      }
+    };
+
+    if (!allSettingsSchema.safeParse(newSettings).success) {
+      return toast.error(get(t)('settings.invalidValue'));
+    }
+
+    settingsStore.set(() => newSettings);
+  }
+</script>
+
 <script lang="ts">
   import SettingItem from '$components/modules/settings/SettingItem.svelte';
   import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
-  import { Input } from '$components/ui/input';
   import * as Select from '$components/ui/select';
   import { Switch } from '$components/ui/switch';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { language, t } from '$lib/i18n';
+  import { language } from '$lib/i18n';
   import type { Locale } from '$lib/paraglide/runtime';
   import { allSettingsSchema, appSettingsSchema } from '$lib/schemas/settings';
-  import { settingsStore } from '$lib/storage';
   import type { AllSettings } from '$types/settings';
   import { type } from '@tauri-apps/plugin-os';
   import { toast } from 'svelte-sonner';
+  import { get } from 'svelte/store';
 
   const isDesktop = ['windows', 'macos', 'linux'].includes(type());
 
@@ -34,38 +62,10 @@
         value: item.key
       }))
   );
-
-  type SettingKey = keyof NonNullable<AllSettings['app']>;
-  type SettingValue = string | number | boolean | undefined;
-
-  function handleSettingChange<K extends SettingKey, V extends SettingValue = SettingValue>(
-    eventOrValue: Event | V,
-    key: K
-  ) {
-    const value = typeof eventOrValue === 'object' ? (eventOrValue.target as HTMLInputElement).value : eventOrValue;
-
-    const newSettings: AllSettings = {
-      ...$settingsStore,
-      app: {
-        ...$settingsStore.app,
-        [key]: value
-      }
-    };
-
-    if (!allSettingsSchema.safeParse(newSettings).success) {
-      return toast.error($t('settings.invalidValue'));
-    }
-
-    settingsStore.set(() => newSettings);
-  }
-
-  function convertToNumber(event: Event) {
-    return Number.parseFloat((event.target as HTMLInputElement).value);
-  }
 </script>
 
 <div class="space-y-6">
-  <SettingItem labelFor="language" orientation="vertical" title={$t('settings.appSettings.language')}>
+  <SettingItem labelFor="language" orientation="vertical" title={$t('settings.general.language')}>
     <Select.Root onValueChange={(value) => settingsStore.setLanguage(value as Locale)} type="single" value={$language}>
       <Select.Trigger id="language" class="flex w-full items-center gap-2">
         {@const locale = locales.find((l) => l.locale === $language)}
@@ -85,7 +85,7 @@
   </SettingItem>
 
   {#if type() === 'windows'}
-    <SettingItem labelFor="gamePath" orientation="vertical" title={$t('settings.appSettings.gamePath')}>
+    <SettingItem labelFor="gamePath" orientation="vertical" title={$t('settings.general.gamePath')}>
       <SettingsFolderPicker
         id="gamePath"
         defaultPath={$settingsStore.app?.gamePath || 'C:/Program Files/Epic Games'}
@@ -94,58 +94,13 @@
         value={$settingsStore.app?.gamePath}
       />
     </SettingItem>
-
-    <SettingItem
-      description={$t('settings.appSettings.launchArguments.description')}
-      labelFor="launchArguments"
-      orientation="vertical"
-      title={$t('settings.appSettings.launchArguments.title')}
-    >
-      <Input
-        id="launchArguments"
-        onchange={(e) => handleSettingChange(e, 'launchArguments')}
-        value={$settingsStore.app?.launchArguments}
-      />
-    </SettingItem>
   {/if}
 
   <SettingItem
-    description={$t('settings.appSettings.missionCheckInterval.description')}
-    labelFor="missionCheckInterval"
-    orientation="vertical"
-    title={$t('settings.appSettings.missionCheckInterval.title')}
-  >
-    <Input
-      id="missionCheckInterval"
-      max={10}
-      min={1}
-      onchange={(e) => handleSettingChange(convertToNumber(e), 'missionCheckInterval')}
-      type="number"
-      value={$settingsStore.app?.missionCheckInterval}
-    />
-  </SettingItem>
-
-  <SettingItem
-    description={$t('settings.appSettings.claimRewardsDelay.description')}
-    labelFor="claimRewardsDelay"
-    orientation="vertical"
-    title={$t('settings.appSettings.claimRewardsDelay.title')}
-  >
-    <Input
-      id="claimRewardsDelay"
-      max={10}
-      min={1}
-      onchange={(e) => handleSettingChange(convertToNumber(e), 'claimRewardsDelay')}
-      type="number"
-      value={$settingsStore.app?.claimRewardsDelay}
-    />
-  </SettingItem>
-
-  <SettingItem
-    description={$t('settings.appSettings.startingPage.description')}
+    description={$t('settings.general.startingPage.description')}
     labelFor="startingPage"
     orientation="vertical"
-    title={$t('settings.appSettings.startingPage.title')}
+    title={$t('settings.general.startingPage.title')}
   >
     <Select.Root
       onValueChange={(value) => handleSettingChange(value, 'startingPage')}
@@ -167,7 +122,7 @@
   </SettingItem>
 
   {#if isDesktop}
-    <SettingItem labelFor="discordStatus" orientation="horizontal" title={$t('settings.appSettings.discordStatus')}>
+    <SettingItem labelFor="discordStatus" orientation="horizontal" title={$t('settings.general.discordStatus')}>
       <Switch
         id="discordStatus"
         checked={$settingsStore.app?.discordStatus}
@@ -175,7 +130,7 @@
       />
     </SettingItem>
 
-    <SettingItem labelFor="hideToTray" orientation="horizontal" title={$t('settings.appSettings.hideToTray')}>
+    <SettingItem labelFor="hideToTray" orientation="horizontal" title={$t('settings.general.hideToTray')}>
       <Switch
         id="hideToTray"
         checked={$settingsStore.app?.hideToTray}
@@ -184,19 +139,11 @@
     </SettingItem>
   {/if}
 
-  <SettingItem labelFor="checkForUpdates" orientation="horizontal" title={$t('settings.appSettings.checkForUpdates')}>
+  <SettingItem labelFor="checkForUpdates" orientation="horizontal" title={$t('settings.general.checkForUpdates')}>
     <Switch
       id="checkForUpdates"
       checked={$settingsStore.app?.checkForUpdates}
       onCheckedChange={(checked) => handleSettingChange(checked, 'checkForUpdates')}
-    />
-  </SettingItem>
-
-  <SettingItem labelFor="debugLogs" orientation="horizontal" title={$t('settings.appSettings.debugLogs')}>
-    <Switch
-      id="debugLogs"
-      checked={$settingsStore.app?.debugLogs}
-      onCheckedChange={(checked) => handleSettingChange(checked, 'debugLogs')}
     />
   </SettingItem>
 </div>

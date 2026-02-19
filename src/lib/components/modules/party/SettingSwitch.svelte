@@ -15,7 +15,7 @@
 <div class="flex items-center justify-between gap-4 py-3">
   <Label class="flex flex-col items-start gap-0" for={id}>
     <p class="text-sm font-medium text-foreground">{label}</p>
-    <p class="text-xs text-muted-foreground font-normal">{description}</p>
+    <p class="text-xs font-normal text-muted-foreground">{description}</p>
   </Label>
 
   <Switch {id} bind:checked />
