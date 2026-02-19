@@ -25,14 +25,14 @@
   import { getAccountsFromSelection, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
 
-  const humanizedErrors: Record<string, string> = {
+  const humanizedErrors = $derived<Record<string, string>>({
     'errors.com.epicgames.coderedemption.code_not_found': $t('redeemCodes.redeemErrors.notFound'),
     'errors.com.epicgames.coderedemption.codeUse_already_used': $t('redeemCodes.redeemErrors.itemsAlreadyOwned'),
     'errors.com.epicgames.coderedemption.multiple_redemptions_not_allowed': $t(
       'redeemCodes.redeemErrors.itemsAlreadyOwned'
     ),
     'errors.com.epicgames.coderedemption.code_used': $t('redeemCodes.redeemErrors.alreadyUsed')
-  };
+  });
 
   async function redeemCodes(event: SubmitEvent) {
     event.preventDefault();

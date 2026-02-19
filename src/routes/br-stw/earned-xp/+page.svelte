@@ -15,6 +15,7 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
+  import { Progress } from '$components/ui/progress';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { getAccountsFromSelection, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
@@ -138,12 +139,7 @@
                 </div>
               </div>
 
-              <div class="h-2 w-full overflow-hidden rounded-full bg-muted">
-                <div
-                  style="width: {Math.min(100, (gamemode.value / gamemode.limit) * 100)}%"
-                  class="h-full bg-primary"
-                ></div>
-              </div>
+              <Progress value={(gamemode.value / gamemode.limit) * 100} />
 
               <div class="mt-1 text-sm text-muted-foreground">
                 {$t('earnedXP.resetsAt', { time: resetDate.toLocaleString($language) })}

@@ -19,6 +19,7 @@
   import { MCP } from '$lib/modules/mcp';
   import { calculateVbucks, getAccountsFromSelection, handleError } from '$lib/utils';
   import { language, t } from '$lib/i18n';
+  import { avatarCache } from '$lib/stores';
 
   async function fetchVbucksData(event: SubmitEvent) {
     event.preventDefault();
@@ -71,17 +72,22 @@
   </form>
 
   {#if !isFetching && vbucksStates.length}
-    <div class="flex flex-col rounded-md border p-2">
+    <div class="flex flex-col gap-2 rounded-md border bg-card p-2">
       {#each vbucksStates as state (state.accountId)}
-        <div class="flex gap-x-2">
-          <p class="font-medium">{state.displayName}:</p>
+        <div class="flex items-center gap-2">
+          <img
+            class="size-6 rounded-full"
+            alt="Avatar"
+            src={avatarCache.get(state.accountId) || '/misc/default-outfit-icon.png'}
+          />
+          <p class="text-sm font-medium">{state.displayName}:</p>
 
           {#if state.data.error}
-            <p class="text-red-500">{state.data.error}</p>
+            <p class="text-sm text-red-500">{state.data.error}</p>
           {:else}
-            <div class="flex items-center gap-x-1">
-              <p>{state.data.vbucksAmount!.toLocaleString($language)}</p>
-              <img class="size-5" alt="V-Bucks" src="/resources/currency_mtxswap.png" />
+            <div class="flex items-center gap-1">
+              <p class="text-sm">{state.data.vbucksAmount!.toLocaleString($language)}</p>
+              <img class="size-4" alt="V-Bucks" src="/resources/currency_mtxswap.png" />
             </div>
           {/if}
         </div>

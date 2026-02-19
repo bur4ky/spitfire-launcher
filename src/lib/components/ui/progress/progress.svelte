@@ -13,7 +13,7 @@
 
 <ProgressPrimitive.Root
   {...restProps}
-  class={cn('relative h-2 w-full overflow-hidden rounded-full bg-primary/20', className)}
+  class={cn('relative h-2 w-full overflow-hidden rounded-full bg-muted', className)}
   data-slot="progress"
   {max}
   {value}
