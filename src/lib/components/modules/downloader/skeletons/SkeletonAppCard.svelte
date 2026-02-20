@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="skeleton-loader h-60 rounded-t-md"></div>
 
-    <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-3">
+    <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black to-transparent p-3">
       <div class="skeleton-loader mt-6 h-4 w-3/4 rounded"></div>
     </div>
   </div>
