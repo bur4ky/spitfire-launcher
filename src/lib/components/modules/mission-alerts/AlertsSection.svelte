@@ -1,37 +1,28 @@
 <script lang="ts">
-  import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
+  import MissionRow from '$components/modules/mission-alerts/MissionRow.svelte';
   import { t } from '$lib/i18n';
-  import { accountStore } from '$lib/storage';
-  import { worldInfoCache } from '$lib/stores';
   import type { WorldParsedMission } from '$types/game/stw/world-info';
 
   type Props = {
     title: string;
     missions: WorldParsedMission[];
-    claimedMissionAlerts: Map<string, Set<string>>;
   };
 
-  const { title, missions, claimedMissionAlerts }: Props = $props();
+  const { title, missions }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-y-1">
-  <h1 class="font-bold">{title}</h1>
+<div class="rounded-md border bg-card">
+  <h3 class="border-b border-border/50 px-4 py-2.5 text-sm font-semibold text-foreground">{title}</h3>
 
-  {#if missions.length}
-    <AlertsSectionAccordion
-      claimedMissionAlerts={claimedMissionAlerts.get($accountStore?.activeAccountId || '') || new Set()}
-      {missions}
-    />
-  {:else if !$worldInfoCache.size}
-    <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-    {#each Array(Math.max(1, Math.floor(Math.random() * 3) + 1)) as _, index (index)}
-      <div class="skeleton-loader flex h-8 items-center justify-between rounded-sm bg-muted-foreground/5 px-2"></div>
-    {/each}
-  {:else}
-    <div class="flex h-10 items-center justify-center rounded-sm bg-muted-foreground/5 px-2">
-      <span class="text-muted-foreground">
+  <div class="divide-y divide-border/20">
+    {#if !missions.length}
+      <div class="py-4 text-center text-xs text-muted-foreground">
         {$t('stwMissionAlerts.noMissions')}
-      </span>
-    </div>
-  {/if}
+      </div>
+    {:else}
+      {#each missions as mission (mission.guid)}
+        <MissionRow {mission} />
+      {/each}
+    {/if}
+  </div>
 </div>

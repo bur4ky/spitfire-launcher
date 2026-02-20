@@ -24,8 +24,8 @@
 
     return displayNamesCache
       .entries()
-      .toArray()
       .filter(([id, name]) => name?.toLowerCase().includes(value.toLowerCase()) || id === value)
+      .toArray()
       .sort(([idA, nameA], [idB, nameB]) => {
         const isFriendA = avatarCache.has(idA);
         const isFriendB = avatarCache.has(idB);
@@ -73,7 +73,7 @@
           }}
         >
           <img
-            class="mr-2 size-6 rounded-full"
+            class="size-6 rounded-full"
             alt={name}
             src={avatarCache.get(accountId) || '/misc/default-outfit-icon.png'}
           />

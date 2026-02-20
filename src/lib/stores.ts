@@ -18,6 +18,7 @@ export const ownedApps = writable<ParsedApp[]>([]);
 export const displayNamesCache = new SvelteMap<string, string>();
 export const avatarCache = new SvelteMap<string, string>();
 export const worldInfoCache = writable<ParsedWorldInfo>(new Map());
+export const claimedMissionAlerts = new SvelteMap<string, SvelteSet<string>>();
 export const brShopStore = writable<SpitfireShop>();
 export const accountPartiesStore = new SvelteMap<string, PartyData>();
 export const accountCacheStore = writable<Record<string, AccountCacheData>>({});

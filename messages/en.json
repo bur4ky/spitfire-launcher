@@ -314,10 +314,15 @@
     "page": {
       "title": "STW Mission Alerts"
     },
+    "overview": {
+      "survivors": "Survivors",
+      "upgradeLlamas": "Upgrade Llamas",
+      "perkup": "PERK-UP!"
+    },
     "sections": {
       "survivors": "Legendary/Mythic Survivors",
-      "twinePeaks": "Twine Peaks ⚡160",
-      "ventures": "Ventures ⚡140",
+      "twinePeaks": "Twine Peaks",
+      "ventures": "Ventures",
       "upgradeLlamaTokens": "Upgrade Llama Tokens",
       "perkup": "Legendary PERK-UP!"
     },

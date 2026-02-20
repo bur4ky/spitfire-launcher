@@ -95,6 +95,7 @@ type Tile = {
 };
 
 export type WorldParsedMission = {
+  theaterId: string;
   filters: string[];
   guid: string;
   generator: string;
@@ -113,7 +114,6 @@ export type WorldParsedMission = {
   zone: {
     color: string;
     iconUrl?: string;
-    letter: string;
     theme: string;
     type: {
       id?: keyof typeof ZoneCategories;

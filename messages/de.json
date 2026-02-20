@@ -314,10 +314,15 @@
     "page": {
       "title": "STW Missionsalarme"
     },
+    "overview": {
+      "survivors": "Überlebende",
+      "upgradeLlamas": "Upgrade-Lamas",
+      "perkup": "Vorteil-Plus!"
+    },
     "sections": {
       "survivors": "Legendäre/Mystische Überlebende",
-      "twinePeaks": "Twine Peaks ⚡160",
-      "ventures": "Ventures ⚡140",
+      "twinePeaks": "Twine Peaks",
+      "ventures": "Ventures",
       "upgradeLlamaTokens": "Upgrade Lama-Token",
       "perkup": "Legendäres Vorteil-Plus!"
     },

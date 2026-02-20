@@ -314,10 +314,15 @@
     "page": {
       "title": "Alertas de Missão STW"
     },
+    "overview": {
+      "survivors": "Sobreviventes",
+      "upgradeLlamas": "Lhamas de aprimoramento",
+      "perkup": "PERK-UP!"
+    },
     "sections": {
       "survivors": "Sobreviventes Lendários/Míticos",
-      "twinePeaks": "Twine Peaks ⚡160",
-      "ventures": "Aventura⚡140",
+      "twinePeaks": "Twine Peaks",
+      "ventures": "Aventura",
       "upgradeLlamaTokens": "Tokens de Llama de Aprimoramento",
       "perkup": "Perk-up Lendário!"
     },

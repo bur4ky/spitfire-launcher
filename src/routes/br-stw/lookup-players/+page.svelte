@@ -1,5 +1,4 @@
 <script lang="ts" module>
-  import type { DailyQuest } from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
   import type { LoadoutData, MissionData, MissionPlayers } from '$components/modules/lookup-players/STWDetails.svelte';
   import { FounderEditions, gadgets, heroes, teamPerks } from '$lib/constants/stw/resources';
 
@@ -15,7 +14,6 @@
       boostedXp: number;
       boostAmount: number;
     };
-    claimedMissionAlertIds: Set<string>;
   };
 
   let isLoading = $state(false);
@@ -25,20 +23,15 @@
   let missionPlayers = $state<MissionPlayers>([]);
   let mission = $state<MissionData>();
   let loadoutData = $state<LoadoutData[]>([]);
-  let dailyQuests = $state<DailyQuest[]>([]);
 </script>
 
 <script lang="ts">
-  import DailyQuestAccordion from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
   import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
-  import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
   import { Matchmaking } from '$lib/modules/matchmaking';
   import { avatarCache, worldInfoCache } from '$lib/stores';
-  import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';
   import { Button } from '$components/ui/button';
   import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import SearchIcon from '@lucide/svelte/icons/search';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
@@ -54,23 +47,6 @@
   import { language } from '$lib/i18n';
 
   const activeAccount = accountStore.getActiveStore();
-  const claimedMissionAlerts = $derived.by(() => {
-    if (!$worldInfoCache.size || !stwData?.claimedMissionAlertIds?.size) {
-      return [];
-    }
-
-    const result = [];
-
-    for (const worldMissions of $worldInfoCache.values()) {
-      for (const mission of worldMissions.values()) {
-        if (mission.alert && stwData.claimedMissionAlertIds.has(mission.alert.guid)) {
-          result.push(mission);
-        }
-      }
-    }
-
-    return result;
-  });
 
   let searchQuery = $state<string>();
 
@@ -119,19 +95,13 @@
     const items = Object.entries(profile.items);
     const attributes = profile.stats.attributes;
 
-    const claimedMissionAlerts =
-      attributes.mission_alert_redemption_record?.claimData
-        ?.sort((a, b) => new Date(b.redemptionDateUtc).getTime() - new Date(a.redemptionDateUtc).getTime())
-        .map((claimData) => claimData.missionAlertId) || [];
-
     stwData = {
       commanderLevel: {
         current: attributes.level,
         pastMaximum: attributes.rewards_claimed_post_max_level || 0
       },
       founderEdition: getFounderEdition(Object.values(profile.items)),
-      xpBoosts: getXPBoosts(Object.values(profile.items)),
-      claimedMissionAlertIds: new Set(claimedMissionAlerts)
+      xpBoosts: getXPBoosts(Object.values(profile.items))
     };
 
     loadoutData = [];
@@ -139,10 +109,6 @@
     for (const [itemGuid, itemData] of items) {
       if (itemData.attributes.loadout_index != null) {
         handleLoadoutItem(profile, itemGuid, itemData);
-      }
-
-      if (itemData.templateId.startsWith('Quest:') && itemData.attributes.quest_state === 'Active') {
-        handleQuestItem(profile, itemGuid, itemData);
       }
     }
   }
@@ -209,23 +175,6 @@
     loadoutData = loadoutData.sort((a, b) => a.index - b.index);
   }
 
-  function handleQuestItem(profile: CampaignProfile, itemId: string, itemData: ProfileItem) {
-    const quest = dailyQuestsResource[itemData.templateId.split(':')[1].toLowerCase()];
-    if (!quest) return;
-
-    const hasFounder = Object.values(profile.items).some((item) => item.templateId === 'Token:receivemtxcurrency');
-
-    const completionKey = Object.keys(itemData.attributes).find((attr) => attr.includes('completion'))!;
-    const completionProgress = itemData.attributes[completionKey] || 0;
-
-    dailyQuests.push({
-      ...quest,
-      id: itemId,
-      completionProgress,
-      hasFounder
-    });
-  }
-
   async function getMatchmakingData(accountId: string) {
     const [matchmakingData] = await Matchmaking.findPlayer($activeAccount, accountId);
     if (!matchmakingData) return;
@@ -276,7 +225,6 @@
     missionPlayers = [];
     mission = undefined;
     loadoutData = [];
-    dailyQuests = [];
     heroLoadoutPage = 1;
   }
 </script>
@@ -369,26 +317,6 @@
       </div>
 
       <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers} />
-
-      {#if stwData && stwData?.claimedMissionAlertIds.size > 0 && claimedMissionAlerts && claimedMissionAlerts.length}
-        <Separator orientation="horizontal" />
-
-        <h3 class="text-center text-lg font-semibold">{$t('lookupPlayers.claimedAlerts.title')}</h3>
-
-        <AlertsSectionAccordion
-          claimedMissionAlerts={stwData?.claimedMissionAlertIds}
-          missions={claimedMissionAlerts}
-          showAlertClaimedBorder={false}
-        />
-      {/if}
-
-      {#if stwData && dailyQuests.length}
-        <Separator orientation="horizontal" />
-
-        <h3 class="text-center text-lg font-semibold">{$t('lookupPlayers.dailyQuests.title')}</h3>
-
-        <DailyQuestAccordion {dailyQuests} />
-      {/if}
     </div>
   {/if}
 </div>

@@ -314,10 +314,15 @@
     "page": {
       "title": "Alertas de Misión"
     },
+    "overview": {
+      "survivors": "Supervivientes",
+      "upgradeLlamas": "Llamas de mejora",
+      "perkup": "¡PERK-UP!"
+    },
     "sections": {
       "survivors": "Supervivientes legendarios/míticos",
-      "twinePeaks": "Cumbres Leñosas ⚡160",
-      "ventures": "Aventura⚡140",
+      "twinePeaks": "Cumbres Leñosas",
+      "ventures": "Aventura",
       "upgradeLlamaTokens": "Tokens de Llamas",
       "perkup": "¡PERK Legendario!"
     },

@@ -314,10 +314,15 @@
     "page": {
       "title": "STW Görev Uyarıları"
     },
+    "overview": {
+      "survivors": "Felaketzedeler",
+      "upgradeLlamas": "Geliştirme Lamaları",
+      "perkup": "YÜKSELTİCİ!"
+    },
     "sections": {
       "survivors": "Efsanevi/Eşsiz Felaketzedeler",
-      "twinePeaks": "Dikiz Tepeler ⚡160",
-      "ventures": "Macera ⚡140",
+      "twinePeaks": "Dikiz Tepeler",
+      "ventures": "Macera",
       "upgradeLlamaTokens": "Geliştirme Laması Jetonu",
       "perkup": "Efsanevi YÜKSELTİCİ!"
     },

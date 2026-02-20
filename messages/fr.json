@@ -314,10 +314,15 @@
     "page": {
       "title": "Alertes de mission SLM"
     },
+    "overview": {
+      "survivors": "Survivants",
+      "upgradeLlamas": "Lamas d'amélioration",
+      "perkup": "Décuplateur"
+    },
     "sections": {
       "survivors": "Survivants légendaires/mythiques",
-      "twinePeaks": "Pics Hardis ⚡️160",
-      "ventures": "Aventures ⚡️140",
+      "twinePeaks": "Pics Hardis",
+      "ventures": "Aventures",
       "upgradeLlamaTokens": "Jetons de mise à niveau de lama",
       "perkup": "Décuplateur légendaire"
     },

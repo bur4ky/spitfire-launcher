@@ -10,13 +10,10 @@ import {
 import {
   GroupZones,
   Theaters,
-  WorldColors,
-  WorldColorsByTheater,
-  WorldLetters,
-  WorldLettersByTheaters,
-  WorldModifiers,
-  WorldPowerLevels,
-  WorldStormKingZones,
+  TheaterColors,
+  ZoneModifiers,
+  TheaterPowerLevels,
+  TheaterStormKingZones,
   ZoneCategories
 } from '$lib/constants/stw/world-info';
 import { Authentication } from '$lib/modules/authentication';
@@ -83,9 +80,9 @@ export class WorldInfo {
 
         const zone = rawZone.replace('Theater_', '').replace('_Group', '');
         const newZone =
-          zone === WorldStormKingZones.CannyValley
+          zone === TheaterStormKingZones[Theaters.CannyValley]
             ? 'Hard_Zone5'
-            : zone === WorldStormKingZones.TwinePeaks
+            : zone === TheaterStormKingZones[Theaters.TwinePeaks]
               ? 'Endgame_Zone5'
               : zone;
 
@@ -137,12 +134,11 @@ export class WorldInfo {
         const zoneInfo = WorldInfo.parseZone(mission.missionGenerator);
         const currentAlert = alertByTile.get(mission.tileIndex);
 
-        const zoneLetter = (WorldLettersByTheaters as any)[theaterId] || WorldLetters.Ventures;
         const modifiers =
           currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfo.parseModifier(modifier.itemType)) ||
           null;
         const powerLevel =
-          (WorldPowerLevels as any)[theaterId]?.[zone] ?? (WorldPowerLevels.ventures as any)?.[zone] ?? -1;
+          (TheaterPowerLevels as any)[theaterId]?.[zone] ?? (TheaterPowerLevels.Ventures as any)?.[zone] ?? -1;
         const filters: string[] = [];
 
         const alertRewards = currentAlert?.missionAlertRewards.items
@@ -194,7 +190,7 @@ export class WorldInfo {
 
             if (
               WorldInfo.isEvolutionMaterial(parsedResource.itemType) &&
-              WorldPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
+              TheaterPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
             ) {
               isHard = !(parsedResource.itemType.endsWith('_veryhigh') || parsedResource.itemType.endsWith('_extreme'));
             }
@@ -209,6 +205,7 @@ export class WorldInfo {
           });
 
         theater.set(mission.missionGuid, {
+          theaterId,
           filters,
           guid: mission.missionGuid,
           generator: mission.missionGenerator,
@@ -216,8 +213,7 @@ export class WorldInfo {
           modifiers,
           rewards: missionRewards,
           zone: {
-            color: (WorldColorsByTheater as any)[theaterId] ?? WorldColors.Ventures,
-            letter: zoneLetter,
+            color: (TheaterColors as any)[theaterId] ?? TheaterColors.Ventures,
             theme: worldInfoData.theaters.find((x) => x.uniqueId === theaterId)!.tiles[mission.tileIndex].zoneTheme,
             type: {
               id: zoneInfo.type as keyof typeof ZoneCategories | undefined,
@@ -266,7 +262,7 @@ export class WorldInfo {
     };
 
     const newKey = key.replace('GameplayModifier:', '');
-    if (Object.values(WorldModifiers).includes(newKey as any)) {
+    if (Object.values(ZoneModifiers).includes(newKey as any)) {
       data.imageUrl = `/modifiers/${newKey}.png`;
     }
 
