@@ -35,10 +35,10 @@ export const TheaterNames = derived(language, ($language) => ({
 }));
 
 export const TheaterColors = Object.freeze({
-  [Theaters.Stonewood]: '#34D375',
-  [Theaters.Plankerton]: '#4DA2DD',
-  [Theaters.CannyValley]: '#9C72F7',
-  [Theaters.TwinePeaks]: '#DFA12A',
+  [Theaters.Stonewood]: '#4CAF50',
+  [Theaters.Plankerton]: '#E67E22',
+  [Theaters.CannyValley]: '#E4B169',
+  [Theaters.TwinePeaks]: '#E74C3C',
   Ventures: '#3CD8E3'
 } as const);
 

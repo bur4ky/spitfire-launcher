@@ -72,9 +72,10 @@
   </div>
 </div>
 
+<!-- Mobile -->
 <div class="flex flex-col gap-1 px-3 py-2 transition hover:bg-accent/50 sm:hidden">
   <div class="flex items-center gap-2">
-    <img class="size-6" alt="World" src={mission.zone.type.imageUrl} />
+    <img class="size-6" alt={zoneName} src={mission.zone.type.imageUrl} />
 
     <span class="text-xs font-semibold text-muted-foreground">
       ⚡{mission.powerLevel}

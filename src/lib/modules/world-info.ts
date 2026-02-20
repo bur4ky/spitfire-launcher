@@ -10,7 +10,6 @@ import {
 import {
   GroupZones,
   Theaters,
-  TheaterColors,
   ZoneModifiers,
   TheaterPowerLevels,
   TheaterStormKingZones,
@@ -213,7 +212,6 @@ export class WorldInfo {
           modifiers,
           rewards: missionRewards,
           zone: {
-            color: (TheaterColors as any)[theaterId] ?? TheaterColors.Ventures,
             theme: worldInfoData.theaters.find((x) => x.uniqueId === theaterId)!.tiles[mission.tileIndex].zoneTheme,
             type: {
               id: zoneInfo.type as keyof typeof ZoneCategories | undefined,

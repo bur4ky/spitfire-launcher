@@ -112,7 +112,6 @@ export type WorldParsedMission = {
     quantity: number;
   }>;
   zone: {
-    color: string;
     iconUrl?: string;
     theme: string;
     type: {
