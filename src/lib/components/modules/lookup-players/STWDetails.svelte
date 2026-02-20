@@ -1,21 +1,5 @@
 <script lang="ts" module>
-  import { Theaters } from '$lib/constants/stw/world-info';
-  import type { RarityType, ZoneThemeData } from '$types/game/stw/resources';
-
-  type Theater = (typeof Theaters)[keyof typeof Theaters];
-
-  export type MissionPlayers = Array<{
-    accountId: string;
-    name: string;
-  }>;
-
-  export type MissionData = {
-    nameId?: string;
-    icon?: string;
-    powerLevel?: number;
-    zone?: ZoneThemeData;
-    theaterId: Theater;
-  };
+  import type { RarityType } from '$types/game/stw/resources';
 
   export type LoadoutData = {
     guid: string;
@@ -43,109 +27,27 @@
 </script>
 
 <script lang="ts">
-  import { ExternalLink } from '$components/ui/external-link';
   import Pagination from '$components/ui/Pagination.svelte';
   import { RarityColors } from '$lib/constants/stw/resources';
-  import { TheaterNames, ZoneNames } from '$lib/constants/stw/world-info';
   import { Separator } from '$components/ui/separator';
-  import { language, t } from '$lib/i18n';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import CopyIcon from '@lucide/svelte/icons/copy';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import { SvelteSet } from 'svelte/reactivity';
-  import CheckIcon from '@lucide/svelte/icons/check';
+  import { t } from '$lib/i18n';
 
   type Props = {
-    missionPlayers?: MissionPlayers;
-    mission?: MissionData;
     loadoutData?: LoadoutData[];
     heroLoadoutPage: number;
   };
 
-  let { missionPlayers, mission, loadoutData, heroLoadoutPage }: Props = $props();
+  let { loadoutData, heroLoadoutPage = $bindable() }: Props = $props();
 
   const selectedHeroLoadout = $derived(loadoutData?.[heroLoadoutPage - 1]);
-  const copiedIds = new SvelteSet<string>();
-
-  async function copyAccountId(accountId: string) {
-    if (copiedIds.has(accountId)) return;
-
-    await writeText(accountId);
-    copiedIds.add(accountId);
-
-    setTimeout(() => {
-      copiedIds.delete(accountId);
-    }, 2000);
-  }
 </script>
 
-{#if missionPlayers?.length || mission || loadoutData?.length}
+{#if loadoutData?.length}
   <Separator orientation="horizontal" />
 
   <h3 class="text-center text-lg font-semibold">{$t('lookupPlayers.stwDetails.title')}</h3>
 
-  {#if missionPlayers?.length || mission}
-    <div class="grid grid-cols-1 gap-4 xs:grid-cols-2">
-      {#if missionPlayers?.length}
-        <div>
-          <h4 class="text-lg font-semibold">{$t('lookupPlayers.stwDetails.players')}</h4>
-          {#each missionPlayers as member (member.accountId)}
-            <div class="flex items-center gap-1">
-              <span class="mr-1">{member.name}</span>
-
-              <ExternalLink
-                class="text-muted-foreground transition hover:text-primary"
-                href="https://fortnitedb.com/profile/{member.accountId}"
-              >
-                <ExternalLinkIcon class="size-4" />
-              </ExternalLink>
-
-              {#if copiedIds.has(member.accountId)}
-                <CheckIcon class="size-4 text-muted-foreground" />
-              {:else}
-                <CopyIcon
-                  class="size-4 cursor-pointer text-muted-foreground transition hover:text-primary"
-                  onclick={() => copyAccountId(member.accountId)}
-                />
-              {/if}
-            </div>
-          {/each}
-        </div>
-      {/if}
-
-      {#if mission}
-        <div>
-          <h4 class="text-lg font-semibold">{$t('lookupPlayers.stwDetails.missionInformation.title')}</h4>
-
-          {#if mission.nameId && $ZoneNames[mission.nameId]}
-            <div class="flex items-center gap-1">
-              <span class="text-muted-foreground">{$t('lookupPlayers.stwDetails.missionInformation.name')}:</span>
-              <img class="size-5" alt={$ZoneNames[mission.nameId]} src={mission.icon} />
-              <span>{$ZoneNames[mission.nameId]}{mission.powerLevel != null ? ` ⚡ ${mission.powerLevel}` : ''}</span>
-            </div>
-          {/if}
-
-          <div class="flex items-center gap-1">
-            <span class="text-muted-foreground">{$t('lookupPlayers.stwDetails.missionInformation.world')}:</span>
-            <span>{$TheaterNames[mission.theaterId]}</span>
-          </div>
-
-          {#if mission.zone}
-            <div class="flex items-center gap-1">
-              <span class="text-muted-foreground">{$t('lookupPlayers.stwDetails.missionInformation.zone')}:</span>
-              <span>{mission.zone?.names[$language]}</span>
-            </div>
-          {/if}
-        </div>
-      {/if}
-    </div>
-  {/if}
-
   {#if selectedHeroLoadout && loadoutData?.length}
-    {#if missionPlayers?.length || mission}
-      <Separator orientation="horizontal" />
-    {/if}
-
     <div class="flex flex-col items-center gap-4">
       {#if selectedHeroLoadout}
         <div class="grid grid-cols-1 place-items-center max-md:gap-4 xs:grid-cols-2 md:grid-cols-4">

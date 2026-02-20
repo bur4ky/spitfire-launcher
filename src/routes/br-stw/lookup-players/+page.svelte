@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { LoadoutData, MissionData, MissionPlayers } from '$components/modules/lookup-players/STWDetails.svelte';
+  import type { LoadoutData } from '$components/modules/lookup-players/STWDetails.svelte';
   import { FounderEditions, gadgets, heroes, teamPerks } from '$lib/constants/stw/resources';
 
   type FounderEdition = (typeof FounderEditions)[keyof typeof FounderEditions];
@@ -20,16 +20,13 @@
   let heroLoadoutPage = $state(1);
   let lookupData = $state<{ accountId: string; displayName: string }>();
   let stwData = $state<STWData>();
-  let missionPlayers = $state<MissionPlayers>([]);
-  let mission = $state<MissionData>();
   let loadoutData = $state<LoadoutData[]>([]);
 </script>
 
 <script lang="ts">
   import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
-  import { Matchmaking } from '$lib/modules/matchmaking';
-  import { avatarCache, worldInfoCache } from '$lib/stores';
+  import { avatarCache } from '$lib/stores';
   import { Button } from '$components/ui/button';
   import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
@@ -41,7 +38,7 @@
   import { t } from '$lib/i18n';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
   import { MCP } from '$lib/modules/mcp';
-  import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
+  import { FounderEditionNames, RarityTypes } from '$lib/constants/stw/resources';
   import { logger } from '$lib/logger';
   import { accountStore } from '$lib/storage';
   import { language } from '$lib/i18n';
@@ -61,24 +58,14 @@
     try {
       const internalLookupData = await Lookup.fetchByNameOrId($activeAccount, searchQuery);
 
-      const [stwDataResult, matchmakingDataResult] = await Promise.allSettled([
-        getSTWData(internalLookupData.accountId),
-        getMatchmakingData(internalLookupData.accountId)
-      ]);
-
-      if (stwDataResult.status === 'rejected') {
+      try {
+        await getSTWData(internalLookupData.accountId);
+      } catch (error) {
         logger.warn('Failed to fetch STW data', {
           accountId: internalLookupData.accountId,
-          error: stwDataResult.reason
+          error
         });
         toast.error($t('lookupPlayers.stwStatsPrivate'));
-      }
-
-      if (matchmakingDataResult.status === 'rejected') {
-        logger.warn('Failed to fetch Matchmaking data', {
-          accountId: internalLookupData.accountId,
-          error: matchmakingDataResult.reason
-        });
       }
 
       lookupData = internalLookupData;
@@ -175,33 +162,6 @@
     loadoutData = loadoutData.sort((a, b) => a.index - b.index);
   }
 
-  async function getMatchmakingData(accountId: string) {
-    const [matchmakingData] = await Matchmaking.findPlayer($activeAccount, accountId);
-    if (!matchmakingData) return;
-
-    const zoneData =
-      matchmakingData.attributes.ZONEINSTANCEID_s && JSON.parse(matchmakingData.attributes.ZONEINSTANCEID_s);
-    if (zoneData) {
-      const theaterData = $worldInfoCache?.get(zoneData.theaterId);
-      const missionData = theaterData?.get(zoneData.theaterMissionId);
-      const isStormShield = zoneData.zoneThemeClass.includes('TheOutpost');
-
-      mission = {
-        nameId: isStormShield ? 'storm-shield' : missionData?.zone.type.id,
-        icon: isStormShield ? '/world/storm-shield.png' : missionData?.zone.type.imageUrl,
-        powerLevel: missionData?.powerLevel,
-        zone: zoneThemes[missionData?.zone.theme?.split('.')[1].toLowerCase() as never],
-        theaterId: zoneData.theaterId
-      };
-    }
-
-    const playerNames = await Lookup.fetchByIds($activeAccount, matchmakingData.publicPlayers);
-    missionPlayers = playerNames.map((player) => ({
-      accountId: player.id,
-      name: player.displayName
-    }));
-  }
-
   function getFounderEdition(items: ProfileItem[]): FounderEdition | null {
     const editions = Object.entries(FounderEditions).toReversed();
 
@@ -222,8 +182,6 @@
   function resetData() {
     lookupData = undefined;
     stwData = undefined;
-    missionPlayers = [];
-    mission = undefined;
     loadoutData = [];
     heroLoadoutPage = 1;
   }
@@ -316,7 +274,7 @@
         </div>
       </div>
 
-      <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers} />
+      <STWDetails {loadoutData} bind:heroLoadoutPage />
     </div>
   {/if}
 </div>
