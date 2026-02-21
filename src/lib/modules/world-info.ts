@@ -54,7 +54,12 @@ export class WorldInfo {
 
   static parse(data: WorldInfoData): ParsedWorldInfo {
     const worldInfo = new Map<Theater, Map<string, WorldParsedMission>>();
-    const validTheaters: string[] = [Theaters.Stonewood, Theaters.Plankerton, Theaters.CannyValley, Theaters.TwinePeaks];
+    const validTheaters: string[] = [
+      Theaters.Stonewood,
+      Theaters.Plankerton,
+      Theaters.CannyValley,
+      Theaters.TwinePeaks
+    ];
 
     for (const theater of data.theaters) {
       const theaterId = theater.uniqueId as Theater;
@@ -211,7 +216,7 @@ export class WorldInfo {
     };
   }
 
-  private static parseZone(generator: string) {
+  private static parseZone(generator: string): ParsedModifierData {
     const entry = Object.entries(ZoneCategories).find(([, patterns]) => patterns.some((p) => generator.includes(p)));
     const key = entry?.[0] as keyof typeof ZoneCategories | undefined;
     const isGroup = generator.toLowerCase().includes('group');
