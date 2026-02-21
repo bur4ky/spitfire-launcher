@@ -28,20 +28,29 @@
 
     for (const [theaterId, worldMissions] of $worldInfoCache.entries()) {
       for (const mission of worldMissions.values()) {
+        let hasVbucks = false;
+        let hasSurvivor = false;
+        let hasUpgradeToken = false;
+        let hasPerkUp = false;
+
         for (const id of mission.filters) {
-          if (id.includes('currency_mtxswap')) {
+          if (!hasVbucks && id.includes('currency_mtxswap')) {
+            hasVbucks = true;
             vbucks.push(mission);
           }
 
-          if (isLegendaryOrMythicSurvivor(id)) {
+          if (!hasSurvivor && isLegendaryOrMythicSurvivor(id)) {
+            hasSurvivor = true;
             survivors.push(mission);
           }
 
-          if (id.includes('voucher_cardpack_bronze')) {
+          if (!hasUpgradeToken && id.includes('voucher_cardpack_bronze')) {
+            hasUpgradeToken = true;
             upgradeLlamaTokens.push(mission);
           }
 
-          if (id.includes('alteration_upgrade_sr')) {
+          if (!hasPerkUp && id.includes('alteration_upgrade_sr')) {
+            hasPerkUp = true;
             perkUp.push(mission);
           }
         }
