@@ -29,278 +29,211 @@ import type {
 } from '$types/game/stw/world-info';
 import { get } from 'svelte/store';
 
-type World = keyof typeof Theaters;
+type Theater = keyof typeof Theaters;
+
+type RewardItem = {
+  itemType: string;
+  quantity: number;
+  attributes?: unknown;
+};
 
 export class WorldInfo {
   static async setCache() {
-    const worldInfoData = await WorldInfo.getWorldInfoData();
-    const parsedWorldInfo = WorldInfo.parseWorldInfo(worldInfoData);
-    worldInfoCache.set(parsedWorldInfo);
+    worldInfoCache.set(WorldInfo.parse(await WorldInfo.get()));
   }
 
-  static async getWorldInfoData(accessToken?: string) {
+  static async get(accessToken?: string) {
     const token = accessToken || (await Authentication.getAccessTokenUsingClientCredentials()).access_token;
 
     return baseGameService
       .get<WorldInfoData>('world/info', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       })
       .json();
   }
 
-  static parseWorldInfo(worldInfoData: WorldInfoData): ParsedWorldInfo {
-    const validWorlds: string[] = [Theaters.Stonewood, Theaters.Plankerton, Theaters.CannyValley, Theaters.TwinePeaks];
+  static parse(data: WorldInfoData): ParsedWorldInfo {
+    const worldInfo = new Map<Theater, Map<string, WorldParsedMission>>();
+    const validTheaters: string[] = [Theaters.Stonewood, Theaters.Plankerton, Theaters.CannyValley, Theaters.TwinePeaks];
 
-    const worldInfo = new Map<World, Map<string, WorldParsedMission>>();
-
-    const theaterData = new Map<
-      string,
-      {
-        missions: Map<number, string>;
-        theater: WorldInfoTheater;
-      }
-    >();
-
-    for (const theater of worldInfoData.theaters) {
-      const isValidWorld =
-        validWorlds.includes(theater.uniqueId) || theater.missionRewardNamedWeightsRowName === 'Theater.Phoenix';
-      if (!isValidWorld) continue;
-
-      const missions = new Map<number, string>();
-
-      for (const region of theater.regions) {
-        const isValidRegion = !['mission', 'outpost'].includes(region.uniqueId.toLowerCase());
-        if (!isValidRegion) continue;
-
-        const rawZone = region.missionData?.difficultyWeights?.[0]?.difficultyInfo?.rowName?.trim();
-        if (!rawZone) continue;
-
-        const zone = rawZone.replace('Theater_', '').replace('_Group', '');
-        const newZone =
-          zone === TheaterStormKingZones[Theaters.CannyValley]
-            ? 'Hard_Zone5'
-            : zone === TheaterStormKingZones[Theaters.TwinePeaks]
-              ? 'Endgame_Zone5'
-              : zone;
-
-        for (const tileIndex of region.tileIndices) {
-          missions.set(tileIndex, newZone);
-        }
+    for (const theater of data.theaters) {
+      const theaterId = theater.uniqueId as Theater;
+      if (!validTheaters.includes(theaterId) && theater.missionRewardNamedWeightsRowName !== 'Theater.Phoenix') {
+        continue;
       }
 
-      theaterData.set(theater.uniqueId, {
-        missions,
-        theater
-      });
+      const theaterMissions = data.missions.find((x) => x.theaterId === theaterId && x.availableMissions?.length);
+      if (!theaterMissions) continue;
 
-      worldInfo.set(theater.uniqueId as World, new Map());
-    }
-
-    const missionByTheater = new Map<string, WorldInfoMission>();
-    const alertByTheater = new Map<string, WorldInfoMissionAlert>();
-
-    for (const mission of worldInfoData.missions) {
-      if (mission.availableMissions?.length) {
-        missionByTheater.set(mission.theaterId, mission);
-      }
-    }
-
-    for (const alert of worldInfoData.missionAlerts) {
-      if (alert.availableMissionAlerts?.length) {
-        alertByTheater.set(alert.theaterId, alert);
-      }
-    }
-
-    for (const [theaterId, data] of theaterData) {
-      const theater = worldInfo.get(theaterId as World)!;
-      const missions = missionByTheater.get(theaterId);
-      const alerts = alertByTheater.get(theaterId);
-      if (!missions) continue;
-
-      const alertByTile = new Map<number, WorldInfoMissionAlert['availableMissionAlerts'][number]>();
-      if (alerts) {
-        for (const alert of alerts.availableMissionAlerts) {
-          alertByTile.set(alert.tileIndex, alert);
-        }
-      }
-
-      for (const mission of missions.availableMissions) {
-        const zone = data.missions.get(mission.tileIndex);
-        if (!zone) continue;
-
-        const zoneInfo = WorldInfo.parseZone(mission.missionGenerator);
-        const currentAlert = alertByTile.get(mission.tileIndex);
-
-        const modifiers =
-          currentAlert?.missionAlertModifiers?.items.map((modifier) => WorldInfo.parseModifier(modifier.itemType)) ||
-          null;
-        const powerLevel =
-          (TheaterPowerLevels as any)[theaterId]?.[zone] ?? (TheaterPowerLevels.Ventures as any)?.[zone] ?? -1;
-        const filters: string[] = [];
-
-        const alertRewards = currentAlert?.missionAlertRewards.items
-          .reduce<typeof currentAlert.missionAlertRewards.items>((acc, crr) => {
-            const item = acc.find((item) => item.itemType === crr.itemType);
-            if (!item) {
-              acc.push(crr);
-            } else {
-              item.quantity += crr.quantity;
-            }
-
-            return acc;
-          }, [])
-          .map((item) => {
-            const parsedResource = WorldInfo.parseResource(item.itemType, item.quantity);
-
-            filters.push(item.itemType);
-
-            if (item.attributes?.Alteration?.LootTierGroup) {
-              filters.push(item.attributes?.Alteration?.LootTierGroup);
-            }
-
-            return {
-              imageUrl: parsedResource.imageUrl,
-              itemId: item.itemType,
-              quantity: item.quantity ?? 1,
-              rarity: parsedResource.rarity,
-              type: parsedResource.type
-            } satisfies NonNullable<WorldParsedMission['alert']>['rewards'][number];
-          });
-
-        const missionRewards = mission.missionRewards.items
-          .reduce<typeof mission.missionRewards.items>((acc, crr) => {
-            const item = acc.find((item) => item.itemType === crr.itemType);
-            if (!item) {
-              acc.push(crr);
-            } else {
-              item.quantity += crr.quantity;
-            }
-
-            return acc;
-          }, [])
-          .map((item) => {
-            const parsedResource = WorldInfo.parseResource(item.itemType, item.quantity);
-
-            let isHard = false;
-
-            filters.push(item.itemType);
-
-            if (
-              WorldInfo.isEvolutionMaterial(parsedResource.itemType) &&
-              TheaterPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 === powerLevel
-            ) {
-              isHard = !(parsedResource.itemType.endsWith('_veryhigh') || parsedResource.itemType.endsWith('_extreme'));
-            }
-
-            return {
-              isHard,
-              imageUrl: parsedResource.imageUrl,
-              itemId: item.itemType,
-              key: parsedResource.key,
-              quantity: item.quantity ?? 1
-            } satisfies WorldParsedMission['rewards'][number];
-          });
-
-        theater.set(mission.missionGuid, {
-          theaterId,
-          filters,
-          guid: mission.missionGuid,
-          generator: mission.missionGenerator,
-          tileIndex: mission.tileIndex,
-          modifiers,
-          rewards: missionRewards,
-          zone: {
-            theme: worldInfoData.theaters.find((x) => x.uniqueId === theaterId)!.tiles[mission.tileIndex].zoneTheme,
-            type: {
-              id: zoneInfo.type as keyof typeof ZoneCategories | undefined,
-              imageUrl: zoneInfo.imageUrl
-            }
-          },
-          powerLevel,
-          alert:
-            currentAlert && alertRewards?.length
-              ? {
-                  guid: currentAlert.missionAlertGuid,
-                  rewards: alertRewards
-                }
-              : null
-        });
-      }
-
-      const parsedMissions = new Map(
-        theater
-          .entries()
-          .toArray()
-          .sort((entryA, entryB) => {
-            const a = entryA[1];
-            const b = entryB[1];
-
-            const missionAGroup = a.generator.toLowerCase().includes('group') ? 1 : 0;
-            const missionBGroup = b.generator.toLowerCase().includes('group') ? 1 : 0;
-
-            const missionAAlert = a.alert ? 1 : 0;
-            const missionBAlert = b.alert ? 1 : 0;
-
-            return b.powerLevel - a.powerLevel || missionBGroup - missionAGroup || missionBAlert - missionAAlert;
-          })
+      const theaterAlerts = data.missionAlerts.find(
+        (x) => x.theaterId === theaterId && x.availableMissionAlerts?.length
       );
 
-      worldInfo.set(theaterId as World, parsedMissions);
+      const missions = new Map<string, WorldParsedMission>();
+
+      for (const mission of theaterMissions.availableMissions) {
+        const region = theater.regions.find((region) => {
+          if (region.uniqueId === 'mission' || region.uniqueId === 'outpost') return false;
+
+          const raw = region.missionData?.difficultyWeights?.[0]?.difficultyInfo?.rowName;
+          if (!raw) return false;
+
+          return region.tileIndices.includes(mission.tileIndex);
+        });
+
+        if (!region) continue;
+
+        const raw = region.missionData!.difficultyWeights![0]!.difficultyInfo!.rowName!;
+        let zone = raw.replace('Theater_', '').replace('_Group', '');
+        if (zone === TheaterStormKingZones[Theaters.CannyValley]) {
+          zone = 'Hard_Zone5';
+        } else if (zone === TheaterStormKingZones[Theaters.TwinePeaks]) {
+          zone = 'Endgame_Zone5';
+        }
+
+        const alert = theaterAlerts?.availableMissionAlerts.find((a) => a.tileIndex === mission.tileIndex);
+        missions.set(mission.missionGuid, WorldInfo.parseMission(theater, mission, zone, alert));
+      }
+
+      worldInfo.set(
+        theaterId,
+        new Map(
+          missions
+            .entries()
+            .toArray()
+            .sort((entryA, entryB) => {
+              const a = entryA[1];
+              const b = entryB[1];
+
+              return (
+                b.powerLevel - a.powerLevel ||
+                Number(b.generator.includes('group')) - Number(a.generator.includes('group')) ||
+                Number(!!b.alert) - Number(!!a.alert)
+              );
+            })
+        )
+      );
     }
 
     return worldInfo;
   }
 
-  private static parseModifier(key: string) {
-    const data: ParsedModifierData = {
-      id: key,
-      imageUrl: '/world/question.png'
-    };
+  private static parseMission(
+    theater: WorldInfoTheater,
+    mission: WorldInfoMission['availableMissions'][number],
+    zone: string,
+    alert?: WorldInfoMissionAlert['availableMissionAlerts'][number]
+  ): WorldParsedMission {
+    const zoneInfo = WorldInfo.parseZone(mission.missionGenerator);
 
-    const newKey = key.replace('GameplayModifier:', '');
-    if (Object.values(ZoneModifiers).includes(newKey as any)) {
-      data.imageUrl = `/modifiers/${newKey}.png`;
+    const powerLevel =
+      TheaterPowerLevels[theater.uniqueId as keyof typeof TheaterPowerLevels]?.[zone as never] ??
+      TheaterPowerLevels.Ventures?.[zone as never] ??
+      -1;
+
+    const rewardIds: string[] = [];
+    const missionRewards = WorldInfo.mergeItems(mission.missionRewards.items).map((item) => {
+      rewardIds.push(item.itemType);
+
+      const parsed = WorldInfo.parseResource(item.itemType, item.quantity);
+      const isHard =
+        parsed.itemType.includes('reagent_c_t0') &&
+        powerLevel === TheaterPowerLevels[Theaters.TwinePeaks].Endgame_Zone6 &&
+        !parsed.itemType.endsWith('_veryhigh') &&
+        !parsed.itemType.endsWith('_extreme');
+
+      return {
+        isHard,
+        imageUrl: parsed.imageUrl,
+        itemId: item.itemType,
+        key: parsed.key,
+        quantity: item.quantity ?? 1
+      };
+    });
+
+    const alertRewards =
+      alert &&
+      WorldInfo.mergeItems(alert.missionAlertRewards.items).map((item) => {
+        rewardIds.push(item.itemType);
+
+        const parsed = WorldInfo.parseResource(item.itemType, item.quantity);
+        return {
+          imageUrl: parsed.imageUrl,
+          itemId: item.itemType,
+          quantity: item.quantity ?? 1,
+          rarity: parsed.rarity,
+          type: parsed.type
+        };
+      });
+
+    const modifiers = alert?.missionAlertModifiers?.items.map((m) => WorldInfo.parseModifier(m.itemType)) ?? null;
+    return {
+      theaterId: theater.uniqueId,
+      guid: mission.missionGuid,
+      generator: mission.missionGenerator,
+      tileIndex: mission.tileIndex,
+      rewardIds,
+      rewards: missionRewards,
+      modifiers,
+      powerLevel,
+      zone: {
+        theme: theater.tiles[mission.tileIndex].zoneTheme,
+        type: zoneInfo
+      },
+      alert:
+        alert && alertRewards?.length
+          ? {
+              guid: alert.missionAlertGuid,
+              rewards: alertRewards
+            }
+          : null
+    };
+  }
+
+  private static mergeItems(items: RewardItem[]) {
+    const map = new Map<string, RewardItem>();
+
+    for (const item of items) {
+      const existing = map.get(item.itemType);
+      if (existing) existing.quantity += item.quantity;
+      else map.set(item.itemType, { ...item });
     }
 
-    return data;
+    return map.values().toArray();
   }
 
-  private static parseZone(missionGenerator: string) {
-    const category = Object.entries(ZoneCategories).find(([, patterns]) =>
-      patterns.some((pattern) => missionGenerator.includes(pattern))
-    );
-
-    const key = category?.[0];
-    const isGroup = missionGenerator.toLowerCase().includes('group');
+  private static parseModifier(key: string): ParsedModifierData {
+    const id = key.replace('GameplayModifier:', '');
 
     return {
-      imageUrl: key
-        ? isGroup && GroupZones.includes(key as keyof typeof ZoneCategories)
-          ? `/world/${key}-group.png`
-          : `/world/${key}.png`
-        : '/world/quest.png',
-      type: key as keyof typeof ZoneCategories | null
+      id: key,
+      imageUrl: Object.values(ZoneModifiers).includes(id as any) ? `/modifiers/${id}.png` : '/world/question.png'
     };
   }
 
-  private static isEvolutionMaterial(key: string) {
-    return (
-      key.includes('reagent_c_t01') ||
-      key.includes('reagent_c_t02') ||
-      key.includes('reagent_c_t03') ||
-      key.includes('reagent_c_t04')
-    );
+  private static parseZone(generator: string) {
+    const entry = Object.entries(ZoneCategories).find(([, patterns]) => patterns.some((p) => generator.includes(p)));
+    const key = entry?.[0] as keyof typeof ZoneCategories | undefined;
+    const isGroup = generator.toLowerCase().includes('group');
+
+    return {
+      id: key ?? null,
+      imageUrl: key
+        ? isGroup && GroupZones.includes(key)
+          ? `/world/${key}-group.png`
+          : `/world/${key}.png`
+        : '/world/quest.png'
+    };
   }
 
-  private static parseResource(key: string, quantity: number) {
+  private static parseResource(key: string, quantity: number): ParsedResourceData {
     const newKey = key
-      .replace(/_((very)?low|medium|(very)?high|extreme)$/gi, '')
+      .replace(/_((very)?low|medium|(very)?high|extreme)$/i, '')
       .replace('AccountResource:', '')
       .replace('CardPack:zcp_', '');
 
     const rarity = WorldInfo.parseRarity(newKey);
+    const rarityName = get(RarityNames)[rarity.rarity];
     const data: ParsedResourceData = {
       key,
       quantity,
@@ -311,102 +244,95 @@ export class WorldInfo {
       type: null
     };
 
-    function getKey<T>(key: string, resource: Record<string, T>) {
-      return Object.entries(resource).find(([id]) => key.includes(id));
-    }
+    for (const [id, resource] of Object.entries(resources)) {
+      if (!newKey.includes(id)) continue;
 
-    const resource = getKey(newKey, resources);
-
-    if (resource) {
-      const [resourceId, resourceData] = resource;
       const isEventCurrency =
         (newKey !== 'eventcurrency_scaling' &&
           newKey !== 'eventcurrency_founders' &&
           newKey.startsWith('eventcurrency_')) ||
         newKey === 'campaign_event_currency';
 
-      const unknownTickets = ['campaign_event_currency', 'eventcurrency_spring', 'eventcurrency_summer'];
-
-      const extension = unknownTickets.includes(resourceId) ? 'gif' : 'png';
-
-      data.imageUrl = `${isEventCurrency ? '/currency' : '/resources'}/${resourceId}.${extension}`;
-      data.name = resourceData.name;
+      const isUnknown =
+        id === 'campaign_event_currency' || id === 'eventcurrency_spring' || id === 'eventcurrency_summer';
+      data.imageUrl = `${isEventCurrency ? '/currency' : '/resources'}/${id}.${isUnknown ? 'gif' : 'png'}`;
+      data.name = resource.name;
       data.type = 'resource';
 
       return data;
     }
 
-    const ingredient = getKey(newKey, ingredients);
+    for (const [id, ingredient] of Object.entries(ingredients)) {
+      if (!newKey.includes(id)) continue;
 
-    if (ingredient) {
-      const [ingredientId, ingredientData] = ingredient;
-
-      data.imageUrl = `/ingredients/${ingredientId}.png`;
-      data.name = ingredientData.name;
+      data.imageUrl = `/ingredients/${id}.png`;
+      data.name = ingredient.name;
       data.type = 'ingredient';
 
       return data;
     }
 
-    const survivor = getKey(newKey, survivors);
-    const mythicSurvivor = getKey(newKey, survivorsMythicLeads);
-    const isWorker = newKey.startsWith('Worker:');
+    for (const id of Object.keys(survivorsMythicLeads)) {
+      if (!newKey.includes(id)) continue;
 
-    if (survivor || mythicSurvivor || isWorker) {
-      if (mythicSurvivor) {
-        const [survivorId] = mythicSurvivor;
-
-        data.imageUrl = `/survivors/unique-leads/${survivorId}.png`;
-        data.name = `${get(RarityNames)[RarityTypes.Mythic]} Lead`;
-      } else if (survivor) {
-        const [survivorId, survivorData] = survivor;
-
-        data.imageUrl = `/survivors/${survivorId}.png`;
-        data.name = survivorData.name || `${get(RarityNames)[rarity.rarity]} Survivor`;
-      } else {
-        data.imageUrl = `/resources/voucher_generic_${newKey.includes('manager') ? 'manager' : 'worker'}_${rarity.rarity}.png`;
-        data.name = `${get(RarityNames)[rarity.rarity]} Survivor`;
-      }
-
+      data.imageUrl = `/survivors/unique-leads/${id}.png`;
+      data.name = `${get(RarityNames)[RarityTypes.Mythic]} Lead`;
       data.type = 'worker';
 
       return data;
     }
 
-    const isHero = newKey.startsWith('Hero:');
+    for (const [id, survivor] of Object.entries(survivors)) {
+      if (!newKey.includes(id)) continue;
 
-    if (isHero) {
+      data.imageUrl = `/survivors/${id}.png`;
+      data.name = survivor.name || `${rarityName} Survivor`;
+      data.type = 'worker';
+
+      return data;
+    }
+
+    if (newKey.startsWith('Worker:')) {
+      const isManager = newKey.includes('manager');
+
+      data.imageUrl = `/resources/voucher_generic_${isManager ? 'manager' : 'worker'}_${rarity.rarity}.png`;
+      data.name = `${rarityName} Survivor`;
+      data.type = 'worker';
+
+      return data;
+    }
+
+    if (newKey.startsWith('Hero:')) {
       data.imageUrl = `/resources/voucher_generic_hero_${rarity.rarity}.png`;
-      data.name = `${get(RarityNames)[rarity.rarity]} Hero`;
+
+      data.name = `${rarityName} Hero`;
       data.type = 'hero';
 
       return data;
     }
 
-    const isDefender = newKey.startsWith('Defender:');
-
-    if (isDefender) {
+    if (newKey.startsWith('Defender:')) {
       data.imageUrl = `/resources/voucher_generic_defender_${rarity.rarity}.png`;
-      data.name = `${get(RarityNames)[rarity.rarity]} Defender`;
+
+      data.name = `${rarityName} Defender`;
       data.type = 'defender';
 
       return data;
     }
 
-    const trap = getKey(newKey, traps);
-    const isSchematic = newKey.startsWith('Schematic:');
+    for (const [id, trap] of Object.entries(traps)) {
+      if (!newKey.includes(id)) continue;
 
-    if (trap || isSchematic) {
-      if (trap) {
-        const [trapId, trapData] = trap;
+      data.imageUrl = `/traps/${id}.png`;
+      data.name = `${rarityName} ${trap.name}`;
+      data.type = 'trap';
 
-        data.imageUrl = `/traps/${trapId}.png`;
-        data.name = `${get(RarityNames)[rarity.rarity]} ${trapData.name}`;
-        data.type = 'trap';
-      } else {
-        data.imageUrl = `/resources/voucher_generic_schematic_${rarity.rarity}.png`;
-        data.name = `${get(RarityNames)[rarity.rarity]} Schematic`;
-      }
+      return data;
+    }
+
+    if (newKey.startsWith('Schematic:')) {
+      data.imageUrl = `/resources/voucher_generic_schematic_${rarity.rarity}.png`;
+      data.name = `${rarityName} Schematic`;
 
       return data;
     }
@@ -414,23 +340,20 @@ export class WorldInfo {
     return data;
   }
 
-  private static parseRarity(value: string) {
-    const type = value.split(':')[0];
-    const id = value.includes(':') ? value.split(':')[1] : value;
-    const data = {
-      type,
-      name: get(RarityNames)[RarityTypes.Common],
-      rarity: RarityTypes.Common as RarityType
-    };
+  private static parseRarity(key: string) {
+    let rarity: RarityType = RarityTypes.Common;
 
-    for (const rarityType of Object.values(RarityTypes)) {
-      if (id.includes(`_${rarityType}`)) {
-        data.name = get(RarityNames)[rarityType];
-        data.rarity = rarityType;
+    for (const r of Object.values(RarityTypes)) {
+      if (key.includes(`_${r}`)) {
+        rarity = r;
         break;
       }
     }
 
-    return data;
+    return {
+      type: key.split(':')[0],
+      name: get(RarityNames)[rarity],
+      rarity
+    };
   }
 }

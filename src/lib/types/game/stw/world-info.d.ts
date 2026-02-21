@@ -96,7 +96,7 @@ type Tile = {
 
 export type WorldParsedMission = {
   theaterId: string;
-  filters: string[];
+  rewardIds: string[];
   guid: string;
   generator: string;
   tileIndex: number;

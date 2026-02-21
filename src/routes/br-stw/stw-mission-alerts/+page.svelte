@@ -33,7 +33,7 @@
         let hasUpgradeToken = false;
         let hasPerkUp = false;
 
-        for (const id of mission.filters) {
+        for (const id of mission.rewardIds) {
           if (!hasVbucks && id.includes('currency_mtxswap')) {
             hasVbucks = true;
             vbucks.push(mission);
