@@ -8,7 +8,7 @@
 
 <script lang="ts">
   import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
-  import SkeletonDeviceAuthCard from '$components/modules/device-auth/SkeletonDeviceAuthCard.svelte';
+  import DeviceAuthCardSkeleton from '$components/modules/device-auth/DeviceAuthCardSkeleton.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
@@ -108,8 +108,8 @@
           <DeviceAuthCard {allDeviceAuths} {auth} />
         {/each}
       {:else}
-        <SkeletonDeviceAuthCard />
-        <SkeletonDeviceAuthCard />
+        <DeviceAuthCardSkeleton />
+        <DeviceAuthCardSkeleton />
       {/if}
     </div>
   {/if}

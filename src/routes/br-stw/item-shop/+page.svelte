@@ -10,7 +10,7 @@
   import ShopItemModal from '$components/modules/shop/modals/ShopItemModal.svelte';
   import ShopFilter from '$components/modules/shop/ShopFilter.svelte';
   import ShopSection from '$components/modules/shop/ShopSection.svelte';
-  import SkeletonShopSection from '$components/modules/shop/skeletons/SkeletonShopSection.svelte';
+  import ShopSectionSkeleton from '$components/modules/shop/skeletons/ShopSectionSkeleton.svelte';
   import { Input } from '$components/ui/input';
   import { Friends } from '$lib/modules/friends';
   import { Lookup } from '$lib/modules/lookup';
@@ -222,7 +222,7 @@
         <div class="space-y-9">
           <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
           {#each Array(2) as _, index (index)}
-            <SkeletonShopSection />
+            <ShopSectionSkeleton />
           {/each}
         </div>
       {/if}

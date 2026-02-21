@@ -6,6 +6,7 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
+  import FriendCardSkeleton from '$components/modules/friends/FriendCardSkeleton.svelte';
   import { Button } from '$components/ui/button';
   import * as Tabs from '$components/ui/tabs';
   import { Friends } from '$lib/modules/friends';
@@ -19,7 +20,6 @@
   import { t } from '$lib/i18n';
   import { toast } from 'svelte-sonner';
   import { untrack } from 'svelte';
-  import SkeletonFriendCard from '$components/modules/friends/SkeletonFriendCard.svelte';
   import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();
@@ -154,14 +154,14 @@
         <div class="hidden sm:contents">
           <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
           {#each Array(12) as _, index (index)}
-            <SkeletonFriendCard />
+            <FriendCardSkeleton />
           {/each}
         </div>
 
         <div class="hidden not-sm:contents">
           <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
           {#each Array(6) as _, index (index)}
-            <SkeletonFriendCard />
+            <FriendCardSkeleton />
           {/each}
         </div>
       </div>

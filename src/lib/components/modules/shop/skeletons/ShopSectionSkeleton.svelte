@@ -1,9 +1,9 @@
 <script lang="ts">
-  import SkeletonShopItemCard from '$components/modules/shop/skeletons/SkeletonShopItemCard.svelte';
+  import ShopItemCardSkeleton from '$components/modules/shop/skeletons/ShopItemCardSkeleton.svelte';
 
-  const mininumItemCount = 2;
-  const maximumItemCount = 4;
-  const itemCount = Math.floor(Math.random() * (maximumItemCount - mininumItemCount + 1)) + mininumItemCount;
+  const min = 2;
+  const max = 4;
+  const itemCount = Math.floor(Math.random() * (max - min + 1)) + min;
 </script>
 
 <div class="flex w-full flex-col items-center">
@@ -14,7 +14,7 @@
     >
       <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
       {#each Array(itemCount) as _, index (index)}
-        <SkeletonShopItemCard />
+        <ShopItemCardSkeleton />
       {/each}
     </div>
   </div>

@@ -15,7 +15,7 @@
   import HardDriveIcon from '@lucide/svelte/icons/hard-drive';
   import HeartIcon from '@lucide/svelte/icons/heart';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal';
+  import EllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
   import PlayIcon from '@lucide/svelte/icons/play';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
@@ -127,7 +127,7 @@
 </script>
 
 <div
-  class="group mt-3 flex w-44 flex-col rounded-md bg-card transition-transform hover:scale-[102%]"
+  class="group mt-3 flex w-44 flex-col rounded-md bg-card"
   oncontextmenu={(e) => {
     e.preventDefault();
     dropdownOpen = true;
@@ -173,7 +173,7 @@
     </div>
 
     <div
-      class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
     >
       <h3 class="mt-6 font-semibold text-white">
         {app.title}
@@ -195,8 +195,8 @@
 
       <DropdownMenu.Root bind:open={dropdownOpen}>
         <DropdownMenu.Trigger>
-          <Button class="ml-auto font-medium" size="sm" variant="ghost">
-            <MoreHorizontalIcon class="size-6" />
+          <Button class="ml-auto font-medium" size="icon" variant="outline">
+            <EllipsisVertical />
           </Button>
         </DropdownMenu.Trigger>
 
