@@ -72,12 +72,7 @@
       {$t('epicGamesWebsite.login')}
     </Button>
 
-    <Button
-      disabled={isLoggingIn || isCopying}
-      onclick={copyWebsiteLink}
-      size="icon"
-      variant="secondary"
-    >
+    <Button disabled={isLoggingIn || isCopying} onclick={copyWebsiteLink} size="icon" variant="secondary">
       {#if isCopying}
         <LoaderCircleIcon class="size-4 animate-spin" />
       {:else}

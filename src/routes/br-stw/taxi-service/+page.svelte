@@ -62,15 +62,15 @@
     taxiManager.handleFriendRequests();
   }
 
-  function handleTaxiLevelChange(
-    event: Event & { currentTarget: HTMLInputElement }
-  ) {
+  function handleTaxiLevelChange(event: Event & { currentTarget: HTMLInputElement }) {
     const value = event.currentTarget.value;
     if (!value) return;
 
     const oldLevel = taxiManager.level;
     const valueNumber = Number.parseInt(value);
-    taxiManager.level = Number.isNaN(valueNumber) ? MAX_POWER_LEVEL : Math.min(Math.max(valueNumber, MIN_POWER_LEVEL), MAX_POWER_LEVEL);
+    taxiManager.level = Number.isNaN(valueNumber)
+      ? MAX_POWER_LEVEL
+      : Math.min(Math.max(valueNumber, MIN_POWER_LEVEL), MAX_POWER_LEVEL);
 
     if (taxiManager.level === oldLevel) return;
 
@@ -87,8 +87,9 @@
     const oldStatus = statusType === 'available' ? taxiManager.availableStatus : taxiManager.busyStatus;
     if (value === oldStatus) return;
 
-    let settings = $taxiStore.find((s) => s.accountId === $activeAccount.accountId)
-      || { accountId: $activeAccount.accountId };
+    let settings = $taxiStore.find((s) => s.accountId === $activeAccount.accountId) || {
+      accountId: $activeAccount.accountId
+    };
 
     if (statusType === 'available') {
       taxiManager.availableStatus = value;
@@ -176,10 +177,8 @@
       class="flex items-center gap-x-2"
       disabled={taxiManager.isStarting || taxiManager.isStopping}
       loading={taxiManager.isStarting || taxiManager.isStopping}
-      loadingText={taxiManager.isStarting
-        ? $t('taxiService.starting')
-        : $t('taxiService.stopping')}
-      onclick={() => taxiManager.active ? stopTaxiService() : startTaxiService()}
+      loadingText={taxiManager.isStarting ? $t('taxiService.starting') : $t('taxiService.stopping')}
+      onclick={() => (taxiManager.active ? stopTaxiService() : startTaxiService())}
       variant={taxiManager.active ? 'destructive' : 'default'}
     >
       {#if taxiManager.active}

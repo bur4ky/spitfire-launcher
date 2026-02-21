@@ -7,30 +7,39 @@ import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/m
 export class MCP {
   static compose<T>(account: AccountData, operation: MCPOperation, profile: MCPProfileId, data: Record<string, any>) {
     const route = operation === 'QueryPublicProfile' ? 'public' : 'client';
-    return AuthSession.ky(account, baseGameService).post<T>(
-      `profile/${account.accountId}/${route}/${operation}?profileId=${profile}&rvn=-1`,
-      { json: data }
-    ).json();
+    return AuthSession.ky(account, baseGameService)
+      .post<T>(`profile/${account.accountId}/${route}/${operation}?profileId=${profile}&rvn=-1`, { json: data })
+      .json();
   }
 
   static queryProfile<T extends MCPProfileId>(account: AccountData, profile: T) {
     return this.compose<FullQueryProfile<T>>(account, 'QueryProfile', profile, {});
   }
 
-  static queryPublicProfile<T extends Extract<MCPProfileId, 'campaign' | 'common_public'>>(account: AccountData, targetAccountId: string, profile: T) {
-    return AuthSession.ky(account, baseGameService).post<FullQueryProfile<T>>(
-      `profile/${targetAccountId}/public/QueryPublicProfile?profileId=${profile}&rvn=-1`,
-      { json: {} }
-    ).json();
+  static queryPublicProfile<T extends Extract<MCPProfileId, 'campaign' | 'common_public'>>(
+    account: AccountData,
+    targetAccountId: string,
+    profile: T
+  ) {
+    return AuthSession.ky(account, baseGameService)
+      .post<
+        FullQueryProfile<T>
+      >(`profile/${targetAccountId}/public/QueryPublicProfile?profileId=${profile}&rvn=-1`, { json: {} })
+      .json();
   }
 
   static clientQuestLogin<T extends Extract<MCPProfileId, 'athena' | 'campaign'>>(account: AccountData, profile: T) {
     return this.compose<FullQueryProfile<T>>(account, 'ClientQuestLogin', profile, { streamingAppKey: '' });
   }
 
-  static async purchaseCatalogEntry(account: AccountData, offerId: string, price: number, isPriceRetry?: boolean): Promise<{
+  static async purchaseCatalogEntry(
+    account: AccountData,
+    offerId: string,
+    price: number,
+    isPriceRetry?: boolean
+  ): Promise<{
     vbucksSpent: number;
-    data: any
+    data: any;
   }> {
     try {
       const purchaseData = await MCP.compose(account, 'PurchaseCatalogEntry', 'common_core', {
@@ -58,9 +67,15 @@ export class MCP {
     }
   }
 
-  static async giftCatalogEntry(account: AccountData, offerId: string, receivers: string[], price: number, isPriceRetry?: boolean): Promise<{
+  static async giftCatalogEntry(
+    account: AccountData,
+    offerId: string,
+    receivers: string[],
+    price: number,
+    isPriceRetry?: boolean
+  ): Promise<{
     vbucksSpent: number;
-    data: any
+    data: any;
   }> {
     try {
       const purchaseData = await MCP.compose(account, 'GiftCatalogEntry', 'common_core', {
@@ -91,8 +106,10 @@ export class MCP {
   }
 
   private static isPriceMismatchError(error: EpicAPIError) {
-    return error.errorCode === 'errors.com.epicgames.modules.gamesubcatalog.catalog_out_of_date'
-      && error.errorMessage.toLowerCase().includes('did not match actual price')
-      && !Number.isNaN(Number.parseInt(error.messageVars[1]));
+    return (
+      error.errorCode === 'errors.com.epicgames.modules.gamesubcatalog.catalog_out_of_date' &&
+      error.errorMessage.toLowerCase().includes('did not match actual price') &&
+      !Number.isNaN(Number.parseInt(error.messageVars[1]))
+    );
   }
 }

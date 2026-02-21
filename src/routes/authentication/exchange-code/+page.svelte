@@ -31,11 +31,7 @@
   }
 </script>
 
-<PageContent
-  center={true}
-  description={$t('exchangeCode.page.description')}
-  title={$t('exchangeCode.page.title')}
->
+<PageContent center={true} description={$t('exchangeCode.page.description')} title={$t('exchangeCode.page.title')}>
   <Button
     disabled={generatingExchangeCode}
     loading={generatingExchangeCode}

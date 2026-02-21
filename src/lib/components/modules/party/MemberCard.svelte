@@ -78,7 +78,7 @@
   }
 </script>
 
-<div class="flex flex-col gap-3 p-4 border rounded-md w-60 relative bg-card">
+<div class="relative flex w-60 flex-col gap-3 rounded-md border bg-card p-4">
   {#if canLeave || canKick || canBePromoted}
     <div class="absolute top-3 right-3">
       <DropdownMenu.Root>
@@ -90,10 +90,10 @@
           {#if canLeave || canKick}
             <DropdownMenu.Item
               disabled={isLeaving || kickingMemberIds.has(member.accountId)}
-              onclick={() => canKick
-                ? kickMember(currentAccountParty?.id || '', member.accountId)
-                : leaveParty(false, member.accountId)
-              }
+              onclick={() =>
+                canKick
+                  ? kickMember(currentAccountParty?.id || '', member.accountId)
+                  : leaveParty(false, member.accountId)}
             >
               {#if canKick}
                 {#if kickingMemberIds.has(member.accountId)}
@@ -116,10 +116,7 @@
           {/if}
 
           {#if canBePromoted}
-            <DropdownMenu.Item
-              disabled={!!promotingMemberId}
-              onclick={() => promote(member.accountId)}
-            >
+            <DropdownMenu.Item disabled={!!promotingMemberId} onclick={() => promote(member.accountId)}>
               {#if promotingMemberId === member.accountId}
                 <LoaderCircleIcon class="size-5 animate-spin" />
                 {$t('partyManagement.partyMembers.promoting')}
@@ -133,7 +130,7 @@
           {#if member.accountId !== $activeAccount.accountId}
             <DropdownMenu.Item
               disabled={isAddingFriend || isRemovingFriend}
-              onclick={() => canAddFriend ? sendFriendRequest(member.accountId) : removeFriend(member.accountId)}
+              onclick={() => (canAddFriend ? sendFriendRequest(member.accountId) : removeFriend(member.accountId))}
             >
               {#if canAddFriend}
                 {#if isAddingFriend}
@@ -160,20 +157,13 @@
   {/if}
 
   <div class="flex items-center gap-2">
-    <div class="size-10 relative">
+    <div class="relative size-10">
       {#if member.avatarUrl}
-        <img
-          class="rounded-md"
-          alt={member.displayName}
-          onerror={hideImageOnError}
-          src={member.avatarUrl}
-        />
+        <img class="rounded-md" alt={member.displayName} onerror={hideImageOnError} src={member.avatarUrl} />
       {/if}
 
       {#if member.isLeader}
-        <div class="absolute -bottom-2 -right-2 select-none" title="Leader">
-          👑
-        </div>
+        <div class="absolute -right-2 -bottom-2 select-none" title="Leader">👑</div>
       {/if}
     </div>
 
@@ -197,19 +187,17 @@
         <ExternalLinkIcon class="size-4 text-muted-foreground" />
       {/if}
     </ExternalLink>
-
   </div>
 
-  <div class="flex-1 flex flex-col gap-4 text-sm">
-    <div class="flex flex-col">
-      <div class="flex items-center gap-1">
-        <span class="text-muted-foreground">{$t('partyManagement.partyMembers.platform')}:</span>
-        <span>{member.platform}</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <span class="text-muted-foreground">{$t('partyManagement.partyMembers.ownsSTW')}:</span>
-        <span>{member.ownsSaveTheWorld ? $t('yes') : $t('no')}</span>
-      </div>
+  <div class="flex flex-col text-sm">
+    <div class="flex items-center gap-1">
+      <span class="text-muted-foreground">{$t('partyManagement.partyMembers.platform')}:</span>
+      <span>{member.platform}</span>
+    </div>
+
+    <div class="flex items-center gap-1">
+      <span class="text-muted-foreground">{$t('partyManagement.partyMembers.ownsSTW')}:</span>
+      <span>{member.ownsSaveTheWorld ? $t('yes') : $t('no')}</span>
     </div>
 
     {#if member.loadout.length}
@@ -217,12 +205,7 @@
         <span class="text-muted-foreground">{$t('partyManagement.partyMembers.loadout')}:</span>
         <div class="flex gap-1">
           {#each member.loadout as item (item.type)}
-            <img
-              class="size-8 rounded-md"
-              alt={item.type}
-              onerror={hideImageOnError}
-              src={item.icon}
-            />
+            <img class="size-8 rounded-md" alt={item.type} onerror={hideImageOnError} src={item.icon} />
           {/each}
         </div>
       </div>
@@ -232,20 +215,12 @@
   <div class="flex items-center justify-between">
     <div class="flex gap-2 text-sm font-medium">
       <div class="flex items-center gap-1">
-        <img
-          class="size-5"
-          alt="Battle Pass Icon"
-          src="/misc/battle-pass-upgraded.png"
-        />
+        <img class="size-5" alt="Battle Pass Icon" src="/misc/battle-pass-upgraded.png" />
         <span>{member.battlePassLevel}</span>
       </div>
 
       <div class="flex items-center gap-1">
-        <img
-          class="size-5"
-          alt="Crown Icon"
-          src="/misc/crown.png"
-        />
+        <img class="size-5" alt="Crown Icon" src="/misc/crown.png" />
         <span>{member.crownedWins}</span>
       </div>
     </div>
@@ -256,10 +231,7 @@
         member.isReady ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
       ]}
     >
-      {member.isReady
-        ? $t('partyManagement.partyMembers.ready')
-        : $t('partyManagement.partyMembers.notReady')
-      }
+      {member.isReady ? $t('partyManagement.partyMembers.ready') : $t('partyManagement.partyMembers.notReady')}
     </div>
   </div>
 </div>

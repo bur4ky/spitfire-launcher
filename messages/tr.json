@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "Bu sayfaya erişmek için giriş yapmalısınız.",
     "externalLinks": {
       "discord": "Discord Sunucusu",
       "repository": "GitHub Sayfası"
@@ -118,10 +119,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "V-Papel Bilgileri"
+      "title": "V-Papel"
     },
     "getInformation": "V-Papel Bilgilerini Al",
-    "loading": "V-Papel Bilgileri Alınıyor",
+    "loading": "V-Papeller Yükleniyor",
     "loginExpired": "Oturumunuz süresi doldu. Lütfen tekrar giriş yapın.",
     "unknownError": "Bilinmeyen hata"
   },
@@ -313,10 +314,15 @@
     "page": {
       "title": "STW Görev Uyarıları"
     },
+    "overview": {
+      "survivors": "Felaketzedeler",
+      "upgradeLlamas": "Geliştirme Lamaları",
+      "perkup": "YÜKSELTİCİ!"
+    },
     "sections": {
       "survivors": "Efsanevi/Eşsiz Felaketzedeler",
-      "twinePeaks": "Dikiz Tepeler ⚡160",
-      "ventures": "Macera ⚡140",
+      "twinePeaks": "Dikiz Tepeler",
+      "ventures": "Macera",
       "upgradeLlamaTokens": "Geliştirme Laması Jetonu",
       "perkup": "Efsanevi YÜKSELTİCİ!"
     },
@@ -396,16 +402,25 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Grup Yönetimi"
+      "title": "Grup"
     },
     "tabs": {
       "stwActions": "STW Eylemleri",
       "partyMembers": "Grup Üyeleri"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Ödülleri al",
-      "transferMaterialsAfterLeaving": "Malzemeleri aktar",
-      "inviteAfterLeaving": "Davet et",
+      "claimRewardsAfterLeaving": {
+        "title": "Ödülleri al",
+        "description": "Gruptan ayrıldıktan sonra hesap için ödülleri al."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Malzemeleri aktar",
+        "description": "Gruptan ayrıldıktan sonra yapı malzemelerini sırt çantasına aktar."
+      },
+      "inviteAfterLeaving": {
+        "title": "Üyeleri davet et",
+        "description": "Üyeleri attıktan veya ayrıldıktan sonra grba yeniden davet et."
+      },
       "kickAll": "Herkesi At",
       "leaveParty": "Gruptan Çık",
       "claimRewards": "Ödülleri Al",
@@ -448,12 +463,13 @@
   "settings": {
     "title": "Ayarlar",
     "tabs": {
-      "appSettings": "Uygulama Ayarları",
-      "customizableMenu": "Özelleştirilebilir Menü",
-      "downloaderSettings": "İndirme Ayarları"
+      "general": "Genel",
+      "customizableMenu": "Kenar Çubuğu",
+      "downloader": "İndirici",
+      "advanced": "Gelişmiş"
     },
     "invalidValue": "Geçersiz bir değer girdiniz.",
-    "appSettings": {
+    "general": {
       "language": "Dil",
       "gamePath": "Özel Oyun Dosya Yolu",
       "launchArguments": {
@@ -477,7 +493,7 @@
       "checkForUpdates": "Güncellemeleri Kontrol Et",
       "debugLogs": "Hata ayıklama günlüklerini etkinleştir"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "İndirme Yolu",
         "description": "Başlatıcının oyunları indireceği yolu seçin."
@@ -563,13 +579,13 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Arkadaş Yönetimi"
+      "title": "Arkadaşlar"
     },
     "lists": {
       "friends": "Arkadaşlar",
-      "incoming": "Gelen İstekler",
-      "outgoing": "Giden İstekler",
-      "blocklist": "Engelliler"
+      "incoming": "Gelen",
+      "outgoing": "Giden",
+      "blocklist": "Engellenen"
     },
     "failedToAdd": "Arkadaş eklenemedi veya istek kabul edilemedi",
     "failedToRemove": "Arkadaş silinemedi veya istek reddedilemedi",

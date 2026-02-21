@@ -24,7 +24,6 @@ export type EpicManifest = {
 };
 
 const manifestsDir = 'C:/ProgramData/Epic/EpicGamesLauncher/Data/Manifests';
-const platformName = platform();
 
 export class Manifest {
   private static fortnite: EpicManifest | null = null;
@@ -37,7 +36,7 @@ export class Manifest {
   }
 
   static async getManifestByName(name: string): Promise<EpicManifest | null> {
-    if (platformName !== 'windows') return null;
+    if (platform() !== 'windows') return null;
 
     const entries = await readDir(manifestsDir);
     for (const entry of entries) {

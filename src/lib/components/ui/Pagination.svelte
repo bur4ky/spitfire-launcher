@@ -17,7 +17,7 @@
       </Pagination.Item>
 
       {#each pages as page (page.key)}
-        {#if page.type === "ellipsis"}
+        {#if page.type === 'ellipsis'}
           <Pagination.Item>
             <Pagination.Ellipsis />
           </Pagination.Item>

@@ -19,7 +19,8 @@
   const isItemOwned = $derived($ownedItemsStore[$activeAccount?.accountId || '']?.has(item.id?.toLowerCase()));
   const discountedPrice = jsDerived(
     [activeAccount, ownedItemsStore],
-    ([$activeAccount]) => !$activeAccount ? item.price.final : calculateDiscountedShopPrice($activeAccount.accountId, item),
+    ([$activeAccount]) =>
+      !$activeAccount ? item.price.final : calculateDiscountedShopPrice($activeAccount.accountId, item),
     0
   );
 
@@ -39,7 +40,7 @@
 
 <div
   style="background-color: {backgroundColorHex}"
-  class="relative pb-[100%] rounded-xl overflow-hidden transition-all duration-300 w-full hover:scale-105 focus:scale-105 cursor-pointer"
+  class="relative w-full cursor-pointer overflow-hidden rounded-xl pb-[100%] transition-all duration-300 hover:scale-105 focus:scale-105"
   onclick={showItemModal}
   onkeydown={(event) => event.key === 'Enter' && showItemModal()}
   role="button"
@@ -47,7 +48,7 @@
 >
   {#if imageUrl}
     <img
-      class="absolute inset-0 size-full select-none object-cover"
+      class="absolute inset-0 size-full object-cover select-none"
       alt={item.name}
       draggable="false"
       loading="lazy"
@@ -55,20 +56,17 @@
     />
   {/if}
 
-  <div class="absolute bottom-0 left-0 right-0 p-2.5 bg-gradient-to-t from-black/80 to-transparent">
-    <h3
-      style="text-shadow: 0 2px 4px #000000"
-      class="text-white text-lg font-bold mb-2 leading-none text-left"
-    >
+  <div class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-2.5">
+    <h3 style="text-shadow: 0 2px 4px #000000" class="mb-2 text-left text-lg leading-none font-bold text-white">
       {item.name}
     </h3>
 
     <div class="relative flex items-center justify-start pl-6">
       {#if isItemOwned}
-        <CheckIcon class="absolute left-0 top-1/2 -translate-y-1/2 size-5 text-green-500" />
+        <CheckIcon class="absolute top-1/2 left-0 size-5 -translate-y-1/2 text-green-500" />
       {:else}
         <img
-          class="absolute left-0 top-1/2 -translate-y-1/2 size-5"
+          class="absolute top-1/2 left-0 size-5 -translate-y-1/2"
           alt={$t('vbucks')}
           draggable="false"
           src="/resources/currency_mtxswap.png"
@@ -77,13 +75,15 @@
 
       <span
         style="text-shadow: 0 2px 4px #000000"
-        class="text-sm font-bold pb-0.5" class:text-green-500={isItemOwned} class:text-white={!isItemOwned}
+        class="pb-0.5 text-sm font-bold"
+        class:text-green-500={isItemOwned}
+        class:text-white={!isItemOwned}
       >
         {#if isItemOwned}
           {$t('itemShop.owned')}
         {:else if $discountedPrice !== item.price.final}
           {$discountedPrice.toLocaleString($language)}
-          <span class="line-through text-white/95">{item.price.final.toLocaleString($language)}</span>
+          <span class="text-white/95 line-through">{item.price.final.toLocaleString($language)}</span>
         {:else}
           {item.price.final.toLocaleString($language)}
         {/if}

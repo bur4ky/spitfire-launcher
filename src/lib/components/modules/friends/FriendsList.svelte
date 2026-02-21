@@ -28,10 +28,7 @@
     searchQuery?: string;
   };
 
-  const {
-    listType,
-    searchQuery = $bindable()
-  }: Props = $props();
+  const { listType, searchQuery = $bindable() }: Props = $props();
 
   const list = $derived(
     (friendsStore.get($accountStore.activeAccountId!)?.[listType]?.values().toArray() || [])
@@ -53,14 +50,14 @@
 </script>
 
 {#if list?.length}
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
     {#each list as friend (friend.accountId)}
       <FriendCard {friend} {listType} />
     {/each}
   </div>
 {:else}
-  <div class="flex flex-col items-center justify-center p-4 gap-1">
-    <div class="rounded-full bg-muted p-4 mb-2">
+  <div class="flex flex-col items-center justify-center gap-1 p-4">
+    <div class="mb-2 rounded-full bg-muted p-4">
       <BanIcon class="size-10 text-muted-foreground" />
     </div>
 

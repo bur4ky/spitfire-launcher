@@ -84,29 +84,31 @@
       />
 
       <Button
-        class="absolute top-1/2 right-10 -translate-y-1/2 !p-1.5 h-auto {onlineType === 'online' && 'bg-accent'} rounded-sm"
-        onclick={() => onlineType = 'online'}
+        class="absolute top-1/2 right-10 h-auto -translate-y-1/2 !p-1.5 {onlineType === 'online' &&
+          'bg-accent'} rounded-sm"
+        onclick={() => (onlineType = 'online')}
         title={$t('customStatus.onlineTypes.online')}
         type="button"
         variant="ghost"
       >
-        <span class="block size-4 bg-[#43a25a] rounded-full"></span>
+        <span class="block size-4 rounded-full bg-[#43a25a]"></span>
       </Button>
 
       <Button
-        class="absolute top-1/2 right-2 -translate-y-1/2 !p-1.5 h-auto {onlineType === 'away' && 'bg-accent'} rounded-sm"
-        onclick={() => onlineType = 'away'}
+        class="absolute top-1/2 right-2 h-auto -translate-y-1/2 !p-1.5 {onlineType === 'away' &&
+          'bg-accent'} rounded-sm"
+        onclick={() => (onlineType = 'away')}
         title={$t('customStatus.onlineTypes.away')}
         type="button"
         variant="ghost"
       >
-        <MoonIcon class="size-4 text-orange-400 fill-orange-400 fill-orange-40" />
+        <MoonIcon class="fill-orange-40 size-4 fill-orange-400 text-orange-400" />
       </Button>
     </div>
 
     <div class="flex items-center gap-2">
       <Button
-        class="w-full"
+        class="flex-1"
         disabled={isSettingStatus || !customStatus?.trim() || isCustomStatusInUse}
         loading={isSettingStatus}
         loadingText={$t('customStatus.settingStatus')}

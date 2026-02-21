@@ -19,7 +19,6 @@
 
   const allAccounts = $derived($accountStore.accounts);
   const autoKickDisabledAccounts = $derived(allAccounts.filter((x) => !AutoKickBase.accounts.has(x.accountId)));
-  const currentPlatform = platform();
 
   function handleAccountSelect(accountId: string) {
     if (!accountId) return;
@@ -33,7 +32,7 @@
     });
   }
 
-  const settings: { id: AutomationSetting; label: string; }[] = $derived([
+  const settings: { id: AutomationSetting; label: string }[] = $derived([
     {
       id: 'autoKick',
       label: $t('autoKick.settings.kick')
@@ -59,7 +58,7 @@
   docsComponent={AutoKickTutorial}
   title={$t('autoKick.page.title')}
 >
-  {#if currentPlatform === 'android' || currentPlatform === 'ios'}
+  {#if platform() === 'android' || platform() === 'ios'}
     <Alert
       color="yellow"
       icon={AlertTriangleIcon}
@@ -68,7 +67,7 @@
     />
   {/if}
 
-  <div class="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-2 text-muted-foreground text-sm">
+  <div class="flex flex-col gap-x-6 gap-y-2 text-sm text-muted-foreground sm:flex-row sm:items-center">
     <div class="flex items-center gap-x-2">
       <div class="size-2 rounded-full bg-green-500"></div>
       <span>{$t('autoKick.accountStatus.active')}</span>
@@ -93,12 +92,12 @@
   />
 
   {#if AutoKickBase.accounts.size}
-    <div class="grid grid-cols-1 place-items-center @md:grid-cols-2 @lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 place-items-center gap-4 @md:grid-cols-2 @lg:grid-cols-3">
       {#each AutoKickBase.accounts as [accountId, automationAccount] (accountId)}
         {@const isLoading = automationAccount.status === 'LOADING'}
 
-        <div class="border rounded-lg shadow-sm overflow-hidden w-56">
-          <div class="bg-muted p-4 flex items-center justify-between h-12">
+        <div class="w-56 overflow-hidden rounded-lg border shadow-sm">
+          <div class="flex h-12 items-center justify-between bg-muted p-4">
             <div class="flex items-center gap-2">
               <div
                 class={cn(
@@ -108,28 +107,30 @@
                   automationAccount.status === 'INVALID_CREDENTIALS' && 'bg-red-500'
                 )}
               ></div>
-              <span class="font-medium">{allAccounts.find((x) => x.accountId === accountId)?.displayName || accountId}</span>
+              <span class="font-medium">
+                {allAccounts.find((x) => x.accountId === accountId)?.displayName || accountId}
+              </span>
             </div>
 
             <Button
-              class="flex items-center justify-center hover:bg-muted-foreground/50 hover:text-destructive size-8"
+              class="flex size-8 items-center justify-center hover:bg-muted-foreground/50 hover:text-destructive"
               disabled={isLoading}
               onclick={() => AutoKickBase.removeAccount(accountId)}
               size="sm"
               variant="ghost"
             >
               {#if isLoading}
-                <RefreshCwIcon class="size-4 animate-spin opacity-50 !cursor-not-allowed" />
+                <RefreshCwIcon class="size-4 animate-spin !cursor-not-allowed opacity-50" />
               {:else}
                 <Trash2Icon class="size-4" />
               {/if}
             </Button>
           </div>
 
-          <div class="px-4 py-2 space-y-1">
+          <div class="space-y-1 px-4 py-2">
             {#each settings as setting (setting.id)}
               <div class="flex items-center justify-between py-1.5">
-                <span class="text-sm mr-5">{setting.label}</span>
+                <span class="mr-5 text-sm">{setting.label}</span>
                 <Switch
                   checked={automationAccount.settings[setting.id]}
                   disabled={isLoading || (setting.id === 'autoInvite' && !automationAccount.settings.autoKick)}

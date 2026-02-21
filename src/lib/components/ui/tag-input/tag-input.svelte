@@ -6,10 +6,7 @@
     placeholder?: string;
   };
 
-  let {
-    items = $bindable<string[]>([]),
-    placeholder = 'Enter items and press Enter'
-  }: Props = $props();
+  let { items = $bindable<string[]>([]), placeholder = 'Enter items and press Enter' }: Props = $props();
 
   let currentInput = $state<string>();
 
@@ -39,13 +36,15 @@
   }
 </script>
 
-<div class="flex flex-col gap-2 w-full">
-  <div class="relative border rounded-md p-2 flex flex-wrap gap-2 items-center cursor-text overflow-hidden bg-card">
+<div class="flex w-full flex-col gap-2">
+  <div class="relative flex cursor-text flex-wrap items-center gap-2 overflow-hidden rounded-md border bg-card p-2">
     {#each items as item, i (i)}
-      <div class="bg-muted flex items-center gap-2 px-1 py-0.5 rounded-md text-sm select-none cursor-default max-w-full">
-        <span class="whitespace-normal break-words overflow-hidden">{item}</span>
+      <div
+        class="flex max-w-full cursor-default items-center gap-2 rounded-md bg-muted px-1 py-0.5 text-sm select-none"
+      >
+        <span class="overflow-hidden break-words whitespace-normal">{item}</span>
         <button
-          class="text-muted-foreground hover:text-foreground shrink-0 ml-auto"
+          class="ml-auto shrink-0 text-muted-foreground hover:text-foreground"
           onclick={(e) => removeItem(i, e)}
           type="button"
         >
@@ -55,7 +54,7 @@
     {/each}
 
     <textarea
-      class="outline-none resize-none bg-transparent field-sizing-content text-sm placeholder:text-muted-foreground"
+      class="field-sizing-content resize-none bg-transparent text-sm outline-none placeholder:text-muted-foreground"
       class:min-w-20={items.length}
       class:min-w-full={!items.length}
       onkeydown={handleKeyDown}

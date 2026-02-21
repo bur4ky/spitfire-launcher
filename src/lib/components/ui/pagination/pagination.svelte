@@ -15,7 +15,7 @@
 
 <PaginationPrimitive.Root
   {...restProps}
-  class={cn("mx-auto flex w-full justify-center", className)}
+  class={cn('mx-auto flex w-full justify-center', className)}
   aria-label="pagination"
   {count}
   data-slot="pagination"

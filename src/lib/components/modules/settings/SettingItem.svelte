@@ -13,7 +13,9 @@
   const { title, description, labelFor, orientation, children }: Props = $props();
 </script>
 
-<div class="flex {orientation === 'horizontal' ? 'flex-row justify-between items-center gap-x-4' : 'flex-col gap-y-2'}">
+<div
+  class={['flex', orientation === 'horizontal' ? 'flex-row items-center justify-between gap-x-4' : 'flex-col gap-y-2']}
+>
   <Label class="flex flex-col items-start" for={labelFor}>
     {title}
     {#if description}

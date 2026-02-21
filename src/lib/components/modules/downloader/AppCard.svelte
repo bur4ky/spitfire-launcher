@@ -15,7 +15,7 @@
   import HardDriveIcon from '@lucide/svelte/icons/hard-drive';
   import HeartIcon from '@lucide/svelte/icons/heart';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal';
+  import EllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
   import PlayIcon from '@lucide/svelte/icons/play';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
@@ -36,11 +36,7 @@
   let isDeleting = $state(false);
   let isVerifying = $state(false);
 
-  let {
-    appId,
-    installDialogAppId = $bindable(),
-    uninstallDialogAppId = $bindable()
-  }: Props = $props();
+  let { appId, installDialogAppId = $bindable(), uninstallDialogAppId = $bindable() }: Props = $props();
 
   const app = $derived($ownedApps.find((x) => x.id === appId)!);
 
@@ -131,7 +127,7 @@
 </script>
 
 <div
-  class="w-44 bg-card mt-3 rounded-md hover:scale-[102%] transition-transform group flex flex-col"
+  class="group mt-3 flex w-44 flex-col rounded-md bg-card"
   oncontextmenu={(e) => {
     e.preventDefault();
     dropdownOpen = true;
@@ -140,73 +136,67 @@
   tabindex="0"
 >
   <div class="relative">
-    <img
-      class="size-full h-60 object-cover rounded-t-md"
-      alt="Thumbnail"
-      loading="lazy"
-      src={app.images.tall}
-    />
+    <img class="size-full h-60 rounded-t-md object-cover" alt="Thumbnail" loading="lazy" src={app.images.tall} />
 
     <div class="absolute top-2 right-2 flex flex-col space-y-2">
       {#if $downloaderStore.favoriteApps?.includes(app.id)}
-        <button class="bg-black rounded-full p-1.5" onclick={toggleFavorite} title={$t('library.app.unfavorite')}>
-          <HeartIcon class="text-red-500 size-4.5" fill="red" />
+        <button class="rounded-full bg-black p-1.5" onclick={toggleFavorite} title={$t('library.app.unfavorite')}>
+          <HeartIcon class="size-4.5 text-red-500" fill="red" />
         </button>
       {:else}
         <button
-          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleFavorite}
+          class="hidden rounded-full bg-black p-1.5 group-hover:block"
+          onclick={toggleFavorite}
           title={$t('library.app.favorite')}
         >
-          <HeartIcon class="text-gray-400 size-4.5" />
+          <HeartIcon class="size-4.5 text-gray-400" />
         </button>
       {/if}
 
       {#if $downloaderStore.hiddenApps?.includes(app.id)}
         <button
-          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden}
+          class="hidden rounded-full bg-black p-1.5 group-hover:block"
+          onclick={toggleHidden}
           title={$t('library.app.show')}
         >
-          <EyeOffIcon class="text-gray-400 size-4.5" />
+          <EyeOffIcon class="size-4.5 text-gray-400" />
         </button>
       {:else}
         <button
-          class="hidden group-hover:block bg-black rounded-full p-1.5" onclick={toggleHidden}
+          class="hidden rounded-full bg-black p-1.5 group-hover:block"
+          onclick={toggleHidden}
           title={$t('library.app.hide')}
         >
-          <EyeIcon class="text-gray-400 size-4.5" />
+          <EyeIcon class="size-4.5 text-gray-400" />
         </button>
       {/if}
     </div>
 
-    <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <h3 class="font-semibold text-white mt-6">
+    <div
+      class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    >
+      <h3 class="mt-6 font-semibold text-white">
         {app.title}
       </h3>
     </div>
   </div>
 
-  <div class="flex gap-1 p-3 grow">
+  <div class="flex grow gap-1 p-3">
     {#if app.installed && !DownloadManager.isInQueue(app.id)}
       {#if app.hasUpdate}
         {@render UpdateButton()}
       {:else if app.requiresRepair}
         {@render RepairButton()}
+      {:else if runningAppIds.has(app.id)}
+        {@render StopButton()}
       {:else}
-        {#if runningAppIds.has(app.id)}
-          {@render StopButton()}
-        {:else}
-          {@render PlayButton()}
-        {/if}
+        {@render PlayButton()}
       {/if}
 
       <DropdownMenu.Root bind:open={dropdownOpen}>
         <DropdownMenu.Trigger>
-          <Button
-            class="font-medium ml-auto"
-            size="sm"
-            variant="ghost"
-          >
-            <MoreHorizontalIcon class="size-6" />
+          <Button class="ml-auto font-medium" size="icon" variant="outline">
+            <EllipsisVertical />
           </Button>
         </DropdownMenu.Trigger>
 
@@ -236,7 +226,7 @@
 
             <DropdownMenu.Item
               disabled={isVerifying || isDeleting || runningAppIds.has(app.id) || !!DownloadManager.downloadingAppId}
-              onclick={() => uninstallDialogAppId = app.id}
+              onclick={() => (uninstallDialogAppId = app.id)}
             >
               {#if isDeleting}
                 <LoaderCircleIcon class="size-5 animate-spin" />
@@ -267,7 +257,7 @@
 
 {#snippet StopButton()}
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     disabled={isStopping}
     onclick={() => stopApp()}
     variant="destructive"
@@ -283,7 +273,7 @@
 
 {#snippet PlayButton()}
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     disabled={isLaunching || isVerifying || isDeleting}
     onclick={() => launchApp()}
   >
@@ -298,7 +288,7 @@
 
 {#snippet UpdateButton()}
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     disabled={isVerifying || isDeleting}
     onclick={installApp}
     variant="secondary"
@@ -310,7 +300,7 @@
 
 {#snippet RepairButton()}
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     disabled={isVerifying || isDeleting}
     onclick={verifyAndRepair}
     variant="secondary"
@@ -322,7 +312,7 @@
 
 {#snippet RemoveFromQueueButton()}
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     onclick={() => DownloadManager.removeFromQueue(app.id)}
     title={$t('library.app.removeFromQueue.long')}
     variant="destructive"
@@ -333,13 +323,13 @@
 {/snippet}
 
 {#snippet InstallButton(isInstalling: boolean)}
-  {@const
-    percent = isInstalling && DownloadManager.progress.percent ? `(${Math.floor(DownloadManager.progress.percent)}%)` : ''}
+  {@const percent =
+    isInstalling && DownloadManager.progress.percent ? `(${Math.floor(DownloadManager.progress.percent)}%)` : ''}
 
   <Button
-    class="flex items-center justify-center flex-1 gap-2 text-sm truncate"
+    class="flex flex-1 items-center justify-center gap-2 truncate text-sm"
     disabled={isInstalling}
-    onclick={() => installDialogAppId = app.id}
+    onclick={() => (installDialogAppId = app.id)}
     variant="outline"
   >
     {#if isInstalling}
@@ -347,6 +337,17 @@
     {:else}
       <DownloadIcon class="size-5" />
     {/if}
-    <span class="truncate">{app.hasUpdate ? $t('library.app.update') : app.requiresRepair ? $t('library.app.repair') : $t('library.app.install')} {percent}</span>
+
+    <span class="truncate">
+      {#if app.hasUpdate}
+        {$t('library.app.update')}
+      {:else if app.requiresRepair}
+        {$t('library.app.repair')}
+      {:else}
+        {$t('library.app.install')}
+      {/if}
+
+      {percent}
+    </span>
   </Button>
 {/snippet}

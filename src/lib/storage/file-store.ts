@@ -11,9 +11,8 @@ import type { ZodType } from 'zod';
 type Subscriber<T> = (value: T) => void;
 
 const logger = getChildLogger('FileStore');
-export const dataDirectory = platform() === 'android'
-  ? await dataDir()
-  : await path.join(await dataDir(), 'spitfire-launcher');
+export const dataDirectory =
+  platform() === 'android' ? await dataDir() : await path.join(await dataDir(), 'spitfire-launcher');
 
 export abstract class FileStore<T> implements Readable<T> {
   private path: string;

@@ -11,14 +11,7 @@
     showClearButton?: boolean;
   };
 
-  let {
-    title,
-    defaultPath,
-    value = $bindable(),
-    onchange,
-    showClearButton = true,
-    ...restProps
-  }: Props = $props();
+  let { title, defaultPath, value = $bindable(), onchange, showClearButton = true, ...restProps }: Props = $props();
 
   async function handleClick() {
     const folderPath = await open({
@@ -56,11 +49,7 @@
   />
 
   {#if value && showClearButton}
-    <button
-      class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-      onclick={handleClear}
-      type="button"
-    >
+    <button class="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground" onclick={handleClear} type="button">
       <XIcon class="size-5" />
     </button>
   {/if}

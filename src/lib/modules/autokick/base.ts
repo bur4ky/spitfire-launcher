@@ -19,17 +19,21 @@ export class AutoKickBase {
     if (!accounts?.length) return;
 
     const userAccounts = accountStore.get().accounts;
-    await Promise.allSettled(accounts.map(async (automationAccount) => {
-      const account = userAccounts.find((a) => a.accountId === automationAccount.accountId);
-      const isAnySettingEnabled = Object.entries(automationAccount).filter(([key]) => key !== 'accountId').some(([, value]) => value);
+    await Promise.allSettled(
+      accounts.map(async (automationAccount) => {
+        const account = userAccounts.find((a) => a.accountId === automationAccount.accountId);
+        const isAnySettingEnabled = Object.entries(automationAccount)
+          .filter(([key]) => key !== 'accountId')
+          .some(([, value]) => value);
 
-      if (!account || !isAnySettingEnabled) {
-        automationStore.set((s) => s.filter((a) => a.accountId !== automationAccount.accountId));
-        return;
-      }
+        if (!account || !isAnySettingEnabled) {
+          automationStore.set((s) => s.filter((a) => a.accountId !== automationAccount.accountId));
+          return;
+        }
 
-      await AutoKickBase.addAccount(account, automationAccount, false);
-    }));
+        await AutoKickBase.addAccount(account, automationAccount, false);
+      })
+    );
   }
 
   static async addAccount(account: AccountData, settings: AutomationAccount['settings'] = {}, writeToFile = true) {
@@ -55,10 +59,15 @@ export class AutoKickBase {
     AutoKickBase.accounts.get(accountId)?.manager?.destroy();
     AutoKickBase.accounts.delete(accountId);
 
-    automationStore.set(() => AutoKickBase.accounts.values().toArray().map((x) => ({
-      accountId: x.account.accountId,
-      ...x.settings
-    })));
+    automationStore.set(() =>
+      AutoKickBase.accounts
+        .values()
+        .toArray()
+        .map((x) => ({
+          accountId: x.account.accountId,
+          ...x.settings
+        }))
+    );
   }
 
   static updateSettings(accountId: string, settings: Partial<AutomationSetting>, writeToFile = true) {
@@ -74,10 +83,15 @@ export class AutoKickBase {
     });
 
     if (writeToFile) {
-      automationStore.set(() => AutoKickBase.accounts.values().toArray().map((x) => ({
-        accountId: x.account.accountId,
-        ...x.settings
-      })));
+      automationStore.set(() =>
+        AutoKickBase.accounts
+          .values()
+          .toArray()
+          .map((x) => ({
+            accountId: x.account.accountId,
+            ...x.settings
+          }))
+      );
     }
   }
 

@@ -1,9 +1,8 @@
 <script lang="ts" module>
-  import type { DailyQuest } from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
-  import type { LoadoutData, MissionData, MissionPlayers } from '$components/modules/lookup-players/STWDetails.svelte';
+  import type { LoadoutData } from '$components/modules/lookup-players/STWDetails.svelte';
   import { FounderEditions, gadgets, heroes, teamPerks } from '$lib/constants/stw/resources';
 
-  type FounderEdition = typeof FounderEditions[keyof typeof FounderEditions];
+  type FounderEdition = (typeof FounderEditions)[keyof typeof FounderEditions];
 
   type STWData = {
     commanderLevel: {
@@ -15,30 +14,21 @@
       boostedXp: number;
       boostAmount: number;
     };
-    claimedMissionAlertIds: Set<string>;
   };
 
   let isLoading = $state(false);
   let heroLoadoutPage = $state(1);
-  let lookupData = $state<{ accountId: string; displayName: string; }>();
+  let lookupData = $state<{ accountId: string; displayName: string }>();
   let stwData = $state<STWData>();
-  let missionPlayers = $state<MissionPlayers>([]);
-  let mission = $state<MissionData>();
   let loadoutData = $state<LoadoutData[]>([]);
-  let dailyQuests = $state<DailyQuest[]>([]);
 </script>
 
 <script lang="ts">
-  import DailyQuestAccordion from '$components/modules/lookup-players/DailyQuestAccordion.svelte';
   import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
   import { ExternalLink } from '$components/ui/external-link';
-  import AlertsSectionAccordion from '$components/modules/mission-alerts/AlertsSectionAccordion.svelte';
-  import { Matchmaking } from '$lib/modules/matchmaking';
-  import { avatarCache, worldInfoCache } from '$lib/stores';
-  import { dailyQuests as dailyQuestsResource } from '$lib/constants/stw/resources';
+  import { avatarCache } from '$lib/stores';
   import { Button } from '$components/ui/button';
   import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import { Separator } from '$components/ui/separator';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import SearchIcon from '@lucide/svelte/icons/search';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
@@ -48,29 +38,12 @@
   import { t } from '$lib/i18n';
   import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
   import { MCP } from '$lib/modules/mcp';
-  import { FounderEditionNames, RarityTypes, zoneThemes } from '$lib/constants/stw/resources';
+  import { FounderEditionNames, RarityTypes } from '$lib/constants/stw/resources';
   import { logger } from '$lib/logger';
   import { accountStore } from '$lib/storage';
   import { language } from '$lib/i18n';
 
   const activeAccount = accountStore.getActiveStore();
-  const claimedMissionAlerts = $derived.by(() => {
-    if (!$worldInfoCache.size || !stwData?.claimedMissionAlertIds?.size) {
-      return [];
-    }
-
-    const result = [];
-
-    for (const worldMissions of $worldInfoCache.values()) {
-      for (const mission of worldMissions.values()) {
-        if (mission.alert && stwData.claimedMissionAlertIds.has(mission.alert.guid)) {
-          result.push(mission);
-        }
-      }
-    }
-
-    return result;
-  });
 
   let searchQuery = $state<string>();
 
@@ -85,24 +58,14 @@
     try {
       const internalLookupData = await Lookup.fetchByNameOrId($activeAccount, searchQuery);
 
-      const [stwDataResult, matchmakingDataResult] = await Promise.allSettled([
-        getSTWData(internalLookupData.accountId),
-        getMatchmakingData(internalLookupData.accountId)
-      ]);
-
-      if (stwDataResult.status === 'rejected') {
+      try {
+        await getSTWData(internalLookupData.accountId);
+      } catch (error) {
         logger.warn('Failed to fetch STW data', {
           accountId: internalLookupData.accountId,
-          error: stwDataResult.reason
+          error
         });
         toast.error($t('lookupPlayers.stwStatsPrivate'));
-      }
-
-      if (matchmakingDataResult.status === 'rejected') {
-        logger.warn('Failed to fetch Matchmaking data', {
-          accountId: internalLookupData.accountId,
-          error: matchmakingDataResult.reason
-        });
       }
 
       lookupData = internalLookupData;
@@ -119,18 +82,13 @@
     const items = Object.entries(profile.items);
     const attributes = profile.stats.attributes;
 
-    const claimedMissionAlerts = attributes.mission_alert_redemption_record?.claimData
-      ?.sort((a, b) => new Date(b.redemptionDateUtc).getTime() - new Date(a.redemptionDateUtc).getTime())
-      .map((claimData) => claimData.missionAlertId) || [];
-
     stwData = {
       commanderLevel: {
         current: attributes.level,
         pastMaximum: attributes.rewards_claimed_post_max_level || 0
       },
       founderEdition: getFounderEdition(Object.values(profile.items)),
-      xpBoosts: getXPBoosts(Object.values(profile.items)),
-      claimedMissionAlertIds: new Set(claimedMissionAlerts)
+      xpBoosts: getXPBoosts(Object.values(profile.items))
     };
 
     loadoutData = [];
@@ -138,10 +96,6 @@
     for (const [itemGuid, itemData] of items) {
       if (itemData.attributes.loadout_index != null) {
         handleLoadoutItem(profile, itemGuid, itemData);
-      }
-
-      if (itemData.templateId.startsWith('Quest:') && itemData.attributes.quest_state === 'Active') {
-        handleQuestItem(profile, itemGuid, itemData);
       }
     }
   }
@@ -166,15 +120,22 @@
       guid: itemId,
       selected: isSelectedLoadout,
       index: itemData.attributes.loadout_index,
-      commander: heroes[heroId] ? {
-        name: heroes[heroId].name,
-        icon: `/heroes/${heroId}.png`,
-        rarity: Object.values(RarityTypes).find((rarity) => selectedCommander.templateId.toLowerCase().includes(`_${rarity}_`))!
-      } : undefined,
-      teamPerk: teamPerkId && teamPerks[teamPerkId] ? {
-        name: teamPerks[teamPerkId].name,
-        icon: `/perks/${teamPerks[teamPerkId].icon}`
-      } : undefined,
+      commander: heroes[heroId]
+        ? {
+            name: heroes[heroId].name,
+            icon: `/heroes/${heroId}.png`,
+            rarity: Object.values(RarityTypes).find((rarity) =>
+              selectedCommander.templateId.toLowerCase().includes(`_${rarity}_`)
+            )!
+          }
+        : undefined,
+      teamPerk:
+        teamPerkId && teamPerks[teamPerkId]
+          ? {
+              name: teamPerks[teamPerkId].name,
+              icon: `/perks/${teamPerks[teamPerkId].icon}`
+            }
+          : undefined,
       supportTeam: supportTeam.map((id) => {
         const heroId = id.replace('Hero:', '').split('_').slice(0, -2).join('_').toLowerCase();
         const rarity = Object.values(RarityTypes).find((rarity) => id.toLowerCase().includes(`_${rarity}_`))!;
@@ -201,49 +162,6 @@
     loadoutData = loadoutData.sort((a, b) => a.index - b.index);
   }
 
-  function handleQuestItem(profile: CampaignProfile, itemId: string, itemData: ProfileItem) {
-    const quest = dailyQuestsResource[itemData.templateId.split(':')[1].toLowerCase()];
-    if (!quest) return;
-
-    const hasFounder = Object.values(profile.items).some((item) => item.templateId === 'Token:receivemtxcurrency');
-
-    const completionKey = Object.keys(itemData.attributes).find((attr) => attr.includes('completion'))!;
-    const completionProgress = itemData.attributes[completionKey] || 0;
-
-    dailyQuests.push({
-      ...quest,
-      id: itemId,
-      completionProgress,
-      hasFounder
-    });
-  }
-
-  async function getMatchmakingData(accountId: string) {
-    const [matchmakingData] = await Matchmaking.findPlayer($activeAccount, accountId);
-    if (!matchmakingData) return;
-
-    const zoneData = matchmakingData.attributes.ZONEINSTANCEID_s && JSON.parse(matchmakingData.attributes.ZONEINSTANCEID_s);
-    if (zoneData) {
-      const theaterData = $worldInfoCache?.get(zoneData.theaterId);
-      const missionData = theaterData?.get(zoneData.theaterMissionId);
-      const isStormShield = zoneData.zoneThemeClass.includes('TheOutpost');
-
-      mission = {
-        nameId: isStormShield ? 'storm-shield' : missionData?.zone.type.id,
-        icon: isStormShield ? '/world/storm-shield.png' : missionData?.zone.type.imageUrl,
-        powerLevel: missionData?.powerLevel,
-        zone: zoneThemes[missionData?.zone.theme?.split('.')[1].toLowerCase() as never],
-        theaterId: zoneData.theaterId
-      };
-    }
-
-    const playerNames = await Lookup.fetchByIds($activeAccount, matchmakingData.publicPlayers);
-    missionPlayers = playerNames.map((player) => ({
-      accountId: player.id,
-      name: player.displayName
-    }));
-  }
-
   function getFounderEdition(items: ProfileItem[]): FounderEdition | null {
     const editions = Object.entries(FounderEditions).toReversed();
 
@@ -252,9 +170,7 @@
       if (edition) return templateId;
     }
 
-    return items.find((item) => item.templateId === 'Token:receivemtxcurrency')
-      ? FounderEditions.Standard
-      : null;
+    return items.find((item) => item.templateId === 'Token:receivemtxcurrency') ? FounderEditions.Standard : null;
   }
 
   function getXPBoosts(items: ProfileItem[]) {
@@ -266,16 +182,13 @@
   function resetData() {
     lookupData = undefined;
     stwData = undefined;
-    missionPlayers = [];
-    mission = undefined;
     loadoutData = [];
-    dailyQuests = [];
     heroLoadoutPage = 1;
   }
 </script>
 
-<div class="flex flex-col items-center justify-center min-w-full min-h-full space-y-4">
-  <form class="flex items-center gap-2 w-80" onsubmit={lookupPlayer}>
+<div class="flex min-h-full min-w-full flex-col items-center justify-center space-y-4">
+  <form class="flex w-80 items-center gap-2" onsubmit={lookupPlayer}>
     <InputWithAutocomplete
       autofocus={true}
       disabled={isLoading}
@@ -285,7 +198,7 @@
     />
 
     <Button
-      class="flex items-center justify-center size-9"
+      class="flex size-9 items-center justify-center"
       disabled={isLoading || !searchQuery || searchQuery.length < 3}
       size="sm"
       type="submit"
@@ -311,26 +224,32 @@
       },
       {
         name: $t('lookupPlayers.playerInfo.commanderLevel'),
-        value: stwData && `${stwData.commanderLevel.current} ${stwData.commanderLevel.pastMaximum ? `(+${stwData.commanderLevel.pastMaximum})` : ''}`
+        value:
+          stwData &&
+          `${stwData.commanderLevel.current} ${stwData.commanderLevel.pastMaximum ? `(+${stwData.commanderLevel.pastMaximum})` : ''}`
       },
       {
         name: $t('lookupPlayers.playerInfo.boostedXp', { count: stwData?.xpBoosts.boostedXp }),
-        value: stwData &&
+        value:
+          stwData &&
           `${stwData.xpBoosts.boostedXp.toLocaleString($language)} ${stwData.xpBoosts.boostAmount ? `(${$t('lookupPlayers.playerInfo.boostCount', { count: stwData.xpBoosts.boostAmount })})` : ''}`
       },
       {
         name: $t('lookupPlayers.playerInfo.founderEdition'),
-        value: !stwData ? null : stwData.founderEdition
-          ? $FounderEditionNames[stwData.founderEdition]
-          : $t('stw.founderEditions.none')
+        value: !stwData
+          ? null
+          : stwData.founderEdition
+            ? $FounderEditionNames[stwData.founderEdition]
+            : $t('stw.founderEditions.none')
       }
     ]}
 
-    <div class="space-y-4 text-sm relative border p-5 rounded-md min-w-72 sm:min-w-80 xs:min-w-96 bg-card">
-      <div class="flex gap-4 items-start">
+    <div class="relative min-w-72 space-y-4 rounded-md border bg-card p-5 text-sm xs:min-w-96 sm:min-w-80">
+      <div class="flex items-start gap-4">
         {#if avatarCache.has(lookupData.accountId)}
           <img
-            class="hidden xs:block size-20 rounded-md self-center" alt={lookupData.displayName}
+            class="hidden size-20 self-center rounded-md xs:block"
+            alt={lookupData.displayName}
             src={avatarCache.get(lookupData.accountId)}
           />
         {/if}
@@ -340,7 +259,7 @@
             {#if value != null}
               <div class="flex items-center gap-1">
                 {#if href}
-                  <ExternalLink class="flex items-center gap-1" href={href}>
+                  <ExternalLink class="flex items-center gap-1" {href}>
                     <span class="text-muted-foreground">{name}:</span>
                     <span>{value}</span>
                     <ExternalLinkIcon class="size-4 text-muted-foreground" />
@@ -355,27 +274,7 @@
         </div>
       </div>
 
-      <STWDetails {heroLoadoutPage} {loadoutData} {mission} {missionPlayers} />
-
-      {#if stwData && stwData?.claimedMissionAlertIds.size > 0 && claimedMissionAlerts && claimedMissionAlerts.length}
-        <Separator orientation="horizontal" />
-
-        <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.claimedAlerts.title')}</h3>
-
-        <AlertsSectionAccordion
-          claimedMissionAlerts={stwData?.claimedMissionAlertIds}
-          missions={claimedMissionAlerts}
-          showAlertClaimedBorder={false}
-        />
-      {/if}
-
-      {#if stwData && dailyQuests.length}
-        <Separator orientation="horizontal" />
-
-        <h3 class="text-lg font-semibold text-center">{$t('lookupPlayers.dailyQuests.title')}</h3>
-
-        <DailyQuestAccordion {dailyQuests} />
-      {/if}
+      <STWDetails {loadoutData} bind:heroLoadoutPage />
     </div>
   {/if}
 </div>

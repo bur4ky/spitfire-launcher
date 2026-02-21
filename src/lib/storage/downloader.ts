@@ -8,15 +8,19 @@ const downloadPath = await path.join(await homeDir(), 'Games', 'Spitfire Launche
 
 export class DownloaderStore extends FileStore<DownloaderSettings> {
   constructor() {
-    super('downloader', {
-      downloadPath,
-      noHTTPS: false,
-      autoUpdate: true,
-      sendNotifications: true,
-      favoriteApps: [],
-      hiddenApps: [],
-      perAppAutoUpdate: {},
-      queue: {}
-    }, downloaderSettingsSchema);
+    super(
+      'downloader',
+      {
+        downloadPath,
+        noHTTPS: false,
+        autoUpdate: true,
+        sendNotifications: true,
+        favoriteApps: [],
+        hiddenApps: [],
+        perAppAutoUpdate: {},
+        queue: {}
+      },
+      downloaderSettingsSchema
+    );
   }
 }

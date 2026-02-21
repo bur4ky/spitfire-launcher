@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "Veuillez vous connecter pour continuer.",
     "externalLinks": {
       "discord": "Serveur Discord",
       "repository": "Répertoire GitHub"
@@ -120,8 +121,8 @@
     "page": {
       "title": "V-Bucks"
     },
-    "getInformation": "Obtenir des informations sur les V-Bucks",
-    "loading": "Chargement des informations sur les V-Bucks",
+    "getInformation": "Obtenir des V-Bucks",
+    "loading": "Chargement des V-Bucks",
     "loginExpired": "Connexion expirée. Veuillez vous reconnecter.",
     "unknownError": "Erreur inconnue"
   },
@@ -313,10 +314,15 @@
     "page": {
       "title": "Alertes de mission SLM"
     },
+    "overview": {
+      "survivors": "Survivants",
+      "upgradeLlamas": "Lamas d'amélioration",
+      "perkup": "Décuplateur"
+    },
     "sections": {
       "survivors": "Survivants légendaires/mythiques",
-      "twinePeaks": "Pics Hardis ⚡️160",
-      "ventures": "Aventures ⚡️140",
+      "twinePeaks": "Pics Hardis",
+      "ventures": "Aventures",
       "upgradeLlamaTokens": "Jetons de mise à niveau de lama",
       "perkup": "Décuplateur légendaire"
     },
@@ -396,16 +402,25 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gestion de groupe"
+      "title": "Groupe"
     },
     "tabs": {
       "stwActions": "Actions SLM",
       "partyMembers": "Membres du groupe"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Réclamer des récompenses",
-      "transferMaterialsAfterLeaving": "Transférer des matériaux",
-      "inviteAfterLeaving": "Inviter",
+      "claimRewardsAfterLeaving": {
+        "title": "Réclamer des récompenses",
+        "description": "Réclamer les récompenses du compte après avoir quitté le groupe."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Transférer des matériaux",
+        "description": "Transférer les matériaux de construction dans le sac à dos après avoir quitté le groupe."
+      },
+      "inviteAfterLeaving": {
+        "title": "Inviter des membres",
+        "description": "Inviter de nouveau les membres dans le groupe après les avoir exclus ou être parti."
+      },
       "kickAll": "Expulser tous",
       "leaveParty": "Quitter grp",
       "claimRewards": "Réclamer",
@@ -448,12 +463,13 @@
   "settings": {
     "title": "Paramètres",
     "tabs": {
-      "appSettings": "Paramètres de l'application",
-      "customizableMenu": "Menu personnalisable",
-      "downloaderSettings": "Paramètres de l'installateur"
+      "general": "Général",
+      "customizableMenu": "Barre latérale",
+      "downloader": "Téléchargeur",
+      "advanced": "Avancé"
     },
     "invalidValue": "Tu as entré une valeur invalide.",
-    "appSettings": {
+    "general": {
       "language": "Langue",
       "gamePath": "Chemin de jeu personnalisé",
       "launchArguments": {
@@ -477,7 +493,7 @@
       "checkForUpdates": "Vérifier les mises à jour",
       "debugLogs": "Activer les journaux de débogage"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Chemin de l'installateur",
         "description": "Sélectionne le chemin où le lanceur téléchargera les jeux."
@@ -563,13 +579,13 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Gestion d'ami"
+      "title": "Amis"
     },
     "lists": {
       "friends": "Amis",
-      "incoming": "Demandes reçues",
-      "outgoing": "Demandes envoyées",
-      "blocklist": "Liste de blocage"
+      "incoming": "Entrantes",
+      "outgoing": "Sortants",
+      "blocklist": "Bloqués"
     },
     "failedToAdd": "Impossible d'ajouter un ami ou d'accepter la demande",
     "failedToRemove": "Impossible de supprimer l'ami ou de refuser la demande",

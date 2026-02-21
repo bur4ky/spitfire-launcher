@@ -76,11 +76,7 @@
 
     app.downloadSize = downloadSize;
     ownedApps.update((current) => {
-      return current.map((app) =>
-        app.id === id
-          ? { ...app, downloadSize }
-          : app
-      );
+      return current.map((app) => (app.id === id ? { ...app, downloadSize } : app));
     });
   });
 </script>
@@ -95,28 +91,28 @@
 
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-card border rounded-lg p-4">
-          <div class="flex items-center gap-2 mb-1">
+        <div class="rounded-lg border bg-card p-4">
+          <div class="mb-1 flex items-center gap-2">
             <DownloadIcon class="size-6 text-primary" />
             <span class="font-medium">{$t('library.installConfirmation.downloadSize')}</span>
           </div>
 
           {#if downloadSize === 0}
-            <div class="text-2xl text-muted-foreground skeleton-loader p-4"></div>
+            <div class="skeleton-loader p-4 text-2xl text-muted-foreground"></div>
           {:else}
             <div class="text-2xl font-bold">{bytesToSize(downloadSize)}</div>
           {/if}
           <div class="text-xs text-muted-foreground">{$t('library.installConfirmation.compressed')}</div>
         </div>
 
-        <div class="bg-card border rounded-lg p-4">
-          <div class="flex items-center gap-2 mb-1">
+        <div class="rounded-lg border bg-card p-4">
+          <div class="mb-1 flex items-center gap-2">
             <PackageIcon class="size-6 text-primary" />
             <span class="font-medium">{$t('library.installConfirmation.installSize')}</span>
           </div>
 
           {#if installSize === 0}
-            <div class="text-2xl text-muted-foreground skeleton-loader p-4"></div>
+            <div class="skeleton-loader p-4 text-2xl text-muted-foreground"></div>
           {:else}
             <div class="text-2xl font-bold">{bytesToSize(installSize)}</div>
           {/if}
@@ -124,8 +120,8 @@
         </div>
       </div>
 
-      <div class="bg-card border rounded-lg p-4">
-        <div class="flex items-center gap-2 mb-1">
+      <div class="rounded-lg border bg-card p-4">
+        <div class="mb-1 flex items-center gap-2">
           <HardDriveIcon class="size-6 text-primary" />
           <span class="font-medium">{$t('library.installConfirmation.storage.title')}</span>
         </div>
@@ -135,7 +131,7 @@
             <span class="text-muted-foreground">
               {$t('library.installConfirmation.storage.current')}:
               {#if !usedSpace || !totalSpace}
-                <span class="skeleton-loader px-5 ml-1 rounded"></span>
+                <span class="skeleton-loader ml-1 rounded px-5"></span>
               {:else}
                 {bytesToSize(usedSpace)} / {bytesToSize(totalSpace)}
               {/if}
@@ -147,8 +143,8 @@
                 afterInstallPercentage >= 100
                   ? 'text-red-500'
                   : afterInstallPercentage >= 85
-                  ? 'text-yellow-500'
-                  : 'text-muted-foreground'
+                    ? 'text-yellow-500'
+                    : 'text-muted-foreground'
               )}
             >
               {#if afterInstallPercentage >= 85}
@@ -157,7 +153,7 @@
 
               {$t('library.installConfirmation.storage.after')}:
               {#if usedSpace === 0 || totalSpace === 0 || installSize === 0}
-                <span class="skeleton-loader py-2 px-5 -ml-0.5 rounded"></span>
+                <span class="skeleton-loader -ml-0.5 rounded px-5 py-2"></span>
               {:else}
                 {bytesToSize(usedSpace + installSize)} / {bytesToSize(totalSpace)}
               {/if}
@@ -169,7 +165,7 @@
       </div>
 
       <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-        <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
+        <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
           {$t('cancel')}
         </Dialog.Close>
 

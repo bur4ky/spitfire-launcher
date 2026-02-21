@@ -8,15 +8,13 @@
 
 <script lang="ts">
   import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
-  import SkeletonDeviceAuthCard from '$components/modules/device-auth/SkeletonDeviceAuthCard.svelte';
+  import DeviceAuthCardSkeleton from '$components/modules/device-auth/DeviceAuthCardSkeleton.svelte';
   import PageContent from '$components/layout/PageContent.svelte';
-  import { Separator } from '$components/ui/separator';
-  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
   import { DeviceAuth } from '$lib/modules/device-auth';
-  import { handleError } from '$lib/utils';
+  import { cn, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
   import type { AccountData } from '$types/account';
   import { logger } from '$lib/logger';
@@ -89,20 +87,13 @@
 
 <PageContent>
   {#snippet title()}
-    <h2 class="max-xs:text-3xl text-4xl font-bold max-xs:max-w-64">
+    <h2 class="text-4xl font-bold max-xs:max-w-64 max-xs:text-3xl">
       {$t('deviceAuth.page.title')}
     </h2>
 
     <PlusIcon
-      class="ml-1 size-10 cursor-pointer {isGenerating || isFetching ? 'opacity-50 !cursor-not-allowed' : ''}"
+      class={cn('ml-1 size-10 cursor-pointer', { 'cursor-not-allowed opacity-50': isGenerating || isFetching })}
       onclick={generateDeviceAuth}
-    />
-
-    <Separator class="h-10" orientation="vertical" />
-
-    <RefreshCwIcon
-      class="ml-1.5 size-8 cursor-pointer {isFetching ? 'animate-spin opacity-50 !cursor-not-allowed' : ''}"
-      onclick={() => fetchDeviceAuths($activeAccount, true)}
     />
   {/snippet}
 
@@ -111,14 +102,14 @@
       {$t('deviceAuth.failedToFetch')}
     </p>
   {:else}
-    <div class="grid grid-cols-1 md:grid-cols-2 place-items-center gap-4">
+    <div class="grid grid-cols-1 place-items-center gap-4 lg:grid-cols-2">
       {#if !isFetching}
         {#each deviceAuths as auth (auth.deviceId)}
           <DeviceAuthCard {allDeviceAuths} {auth} />
         {/each}
       {:else}
-        <SkeletonDeviceAuthCard />
-        <SkeletonDeviceAuthCard />
+        <DeviceAuthCardSkeleton />
+        <DeviceAuthCardSkeleton />
       {/if}
     </div>
   {/if}

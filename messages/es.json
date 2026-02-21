@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "Debe iniciar sesión para acceder a esta página.",
     "externalLinks": {
       "discord": "Servidor de Discord",
       "repository": "Repositorio GitHub"
@@ -118,10 +119,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "Información de PaVos"
+      "title": "PaVos"
     },
-    "getInformation": "Obtener Información de PaVos",
-    "loading": "Cargando información de PaVos",
+    "getInformation": "Obtener PaVos",
+    "loading": "Cargando PaVos",
     "loginExpired": "Código expirado. Por favor inicia otra vez.",
     "unknownError": "Código desconocido"
   },
@@ -313,10 +314,15 @@
     "page": {
       "title": "Alertas de Misión"
     },
+    "overview": {
+      "survivors": "Supervivientes",
+      "upgradeLlamas": "Llamas de mejora",
+      "perkup": "¡PERK-UP!"
+    },
     "sections": {
       "survivors": "Supervivientes legendarios/míticos",
-      "twinePeaks": "Cumbres Leñosas ⚡160",
-      "ventures": "Aventura⚡140",
+      "twinePeaks": "Cumbres Leñosas",
+      "ventures": "Aventura",
       "upgradeLlamaTokens": "Tokens de Llamas",
       "perkup": "¡PERK Legendario!"
     },
@@ -396,16 +402,25 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Gestión de grupos"
+      "title": "Grupos"
     },
     "tabs": {
       "stwActions": "Acciones STW",
       "partyMembers": "Miembro del Grupo"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Reclamar recompensas",
-      "transferMaterialsAfterLeaving": "Transferir materiales",
-      "inviteAfterLeaving": "Invitar",
+      "claimRewardsAfterLeaving": {
+        "title": "Reclamar recompensas",
+        "description": "Reclamar las recompensas de la cuenta después de salir del grupo."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Transferir materiales",
+        "description": "Transferir los materiales de construcción a la mochila después de salir del grupo."
+      },
+      "inviteAfterLeaving": {
+        "title": "Invitar miembros",
+        "description": "Invitar nuevamente a los miembros al grupo después de expulsarlos o salir."
+      },
       "kickAll": "Expulsar todos",
       "leaveParty": "Abandonar grupo",
       "claimRewards": "Reclamar",
@@ -448,12 +463,13 @@
   "settings": {
     "title": "Ajustes",
     "tabs": {
-      "appSettings": "Ajustes de la aplicación",
-      "customizableMenu": "Menú personalizable",
-      "downloaderSettings": "Ajustes de Descarga"
+      "general": "General",
+      "customizableMenu": "Barra lateral",
+      "downloader": "Descargador",
+      "advanced": "Avanzado"
     },
     "invalidValue": "Ha introducido un valor no válido.",
-    "appSettings": {
+    "general": {
       "language": "Idioma",
       "gamePath": "Ruta de juego personalizada",
       "launchArguments": {
@@ -477,7 +493,7 @@
       "checkForUpdates": "Buscar actualizaciones",
       "debugLogs": "Habilitar registros de depuración"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Ruta de descarga",
         "description": "Seleccione la ruta donde el lanzador descargará los juegos."
@@ -563,13 +579,13 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Gestión de Amigos"
+      "title": "Amigos"
     },
     "lists": {
       "friends": "Amigos",
-      "incoming": "Solicitudes Entrantes",
-      "outgoing": "Solicitudes Salientes",
-      "blocklist": "Lista de bloqueos"
+      "incoming": "Entrantes",
+      "outgoing": "Salientes",
+      "blocklist": "Bloqueados"
     },
     "failedToAdd": "No se pudo agregar amigo o aceptar solicitud",
     "failedToRemove": "No se pudo agregar amigo o aceptar solicitud",

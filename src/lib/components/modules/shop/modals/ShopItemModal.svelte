@@ -74,20 +74,20 @@
 </script>
 
 <Dialog.Root onOpenChangeComplete={(open) => !open && (offerId = '')} bind:open={isOpen}>
-  <Dialog.Content class="!max-w-160 !min-h-96 overflow-y-auto flex flex-col gap-y-6 w-full">
-    <div class="flex flex-col xs:flex-row gap-x-6">
+  <Dialog.Content class="flex !min-h-96 w-full !max-w-160 flex-col gap-y-6 overflow-y-auto">
+    <div class="flex flex-col gap-x-6 xs:flex-row">
       <img
-        class="size-48 xs:size-64 object-cover place-self-center xs:place-self-start rounded-md"
+        class="size-48 place-self-center rounded-md object-cover xs:size-64 xs:place-self-start"
         alt={item.name}
         src={item.assets.featured || item.assets.large || item.assets.small}
       />
 
-      <div class="flex flex-col justify-between gap-y-4 mt-3 xs:mt-0">
+      <div class="mt-3 flex flex-col justify-between gap-y-4 xs:mt-0">
         <div class="space-y-4">
           <div>
-            <h2 class="font-bold text-2xl">{item.name}</h2>
+            <h2 class="text-2xl font-bold">{item.name}</h2>
             {#if item.description}
-              <p class="text-muted-foreground italic mt-1">
+              <p class="mt-1 text-muted-foreground italic">
                 {item.description}
               </p>
             {/if}
@@ -97,17 +97,14 @@
             {#if item.series?.name || item.rarity?.name}
               <Badge
                 style="background: {getItemColor()}"
-                class="text-foreground font-medium px-3 py-1 rounded-lg capitalize text-sm"
+                class="rounded-lg px-3 py-1 text-sm font-medium text-foreground capitalize"
               >
                 {(item.series?.name || item.rarity?.name)?.toLowerCase()}
               </Badge>
             {/if}
 
             {#if item.type?.name}
-              <Badge
-                class="text-foreground font-medium px-3 py-1 rounded-lg border text-sm"
-                variant="outline"
-              >
+              <Badge class="rounded-lg border px-3 py-1 text-sm font-medium text-foreground" variant="outline">
                 {item.type?.name}
               </Badge>
             {/if}
@@ -120,16 +117,12 @@
 
             {#if $discountedPrice !== item.price.final}
               <span class="mr-1">{$discountedPrice.toLocaleString($language)}</span>
-              <span class="line-through text-muted-foreground/95">{item.price.final.toLocaleString($language)}</span>
+              <span class="text-muted-foreground/95 line-through">{item.price.final.toLocaleString($language)}</span>
             {:else}
               <span>{item.price.final.toLocaleString($language)}</span>
             {/if}
 
-            <img
-              class="size-5"
-              alt="V-Bucks"
-              src="/resources/currency_mtxswap.png"
-            />
+            <img class="size-5" alt="V-Bucks" src="/resources/currency_mtxswap.png" />
           </div>
 
           <div class="flex items-center gap-1">
@@ -153,13 +146,13 @@
     {#if $accountStore.activeAccountId}
       <Separator />
 
-      <div class="flex w-full gap-3">
+      <div class="grid w-full grid-cols-2 gap-2">
         <Tooltip.Root>
-          <Tooltip.Trigger class="w-full" tabindex={-1}>
+          <Tooltip.Trigger tabindex={-1}>
             <Button
-              class="flex justify-center items-center gap-x-2 w-full"
+              class="flex w-full items-center justify-center gap-2"
               disabled={isPurchasing || ownedVbucks < $discountedPrice || isItemOwned}
-              onclick={() => isPurchaseDialogOpen = true}
+              onclick={() => (isPurchaseDialogOpen = true)}
             >
               {#if isItemOwned}
                 <CheckIcon class="size-5" />
@@ -177,10 +170,14 @@
         </Tooltip.Root>
 
         <Tooltip.Root>
-          <Tooltip.Trigger class="w-full" tabindex={-1}>
+          <Tooltip.Trigger tabindex={-1}>
             <Button
-              class="flex justify-center items-center gap-x-2 w-full"
-              disabled={isSendingGifts || remainingGifts < 1 || ownedVbucks < item.price.final || !item.giftable || !friends.length}
+              class="flex w-full items-center justify-center gap-x-2"
+              disabled={isSendingGifts ||
+                remainingGifts < 1 ||
+                ownedVbucks < item.price.final ||
+                !item.giftable ||
+                !friends.length}
               onclick={() => (isGiftDialogOpen = true)}
               variant="outline"
             >

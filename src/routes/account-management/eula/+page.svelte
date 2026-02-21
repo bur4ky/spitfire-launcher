@@ -31,37 +31,42 @@
     eulaStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
-    await Promise.allSettled(accounts.map(async (account) => {
-      const state: EULAState = { accountId: account.accountId, displayName: account.displayName, data: {} };
+    await Promise.allSettled(
+      accounts.map(async (account) => {
+        const state: EULAState = { accountId: account.accountId, displayName: account.displayName, data: {} };
 
-      try {
-        // TODO: Shortest way I could find. Might change later
-        const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
-        const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
-        const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(exchangeData.code, launcherAppClient2);
-        await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
-      } catch (error) {
-        if (
-          error instanceof EpicAPIError
-          && error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required'
-          && error.continuationUrl
-        ) {
-          state.data.acceptLink = error.continuationUrl;
-          eulaStates.push(state);
-        } else {
-          handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
-        }
-      }
-
-      const gameEULAData = await EULA.check(account).catch(() => null);
-      if (gameEULAData) {
         try {
-          await EULA.accept(account, gameEULAData.version);
+          // TODO: Shortest way I could find. Might change later
+          const accessTokenData = await Authentication.getAccessTokenUsingDeviceAuth(account);
+          const exchangeData = await Authentication.getExchangeCodeUsingAccessToken(accessTokenData.access_token);
+          const launcherAccessTokenData = await Authentication.getAccessTokenUsingExchangeCode(
+            exchangeData.code,
+            launcherAppClient2
+          );
+          await Authentication.getExchangeCodeUsingAccessToken(launcherAccessTokenData.access_token);
         } catch (error) {
-          handleError({ error, message: 'Failed to accept EULA', account, toastId: false });
+          if (
+            error instanceof EpicAPIError &&
+            error.errorCode === 'errors.com.epicgames.oauth.corrective_action_required' &&
+            error.continuationUrl
+          ) {
+            state.data.acceptLink = error.continuationUrl;
+            eulaStates.push(state);
+          } else {
+            handleError({ error, message: 'EULA acceptance check failed', account, toastId: false });
+          }
         }
-      }
-    }));
+
+        const gameEULAData = await EULA.check(account).catch(() => null);
+        if (gameEULAData) {
+          try {
+            await EULA.accept(account, gameEULAData.version);
+          } catch (error) {
+            handleError({ error, message: 'Failed to accept EULA', account, toastId: false });
+          }
+        }
+      })
+    );
 
     if (!eulaStates.length) {
       toast.info($t('eula.allAccountsAlreadyAccepted'));
@@ -73,11 +78,7 @@
 
 <PageContent center={true} title={$t('eula.page.title')}>
   <form class="flex flex-col gap-y-2" onsubmit={checkEULA}>
-    <AccountCombobox
-      disabled={isFetching}
-      type="multiple"
-      bind:value={selectedAccounts}
-    />
+    <AccountCombobox disabled={isFetching} type="multiple" bind:value={selectedAccounts} />
 
     <Button
       class="mt-2"
@@ -93,11 +94,11 @@
   {#if !isFetching && eulaStates.length}
     <div class="mt-4 space-y-4">
       {#each eulaStates as state (state.accountId)}
-        <div class="flex items-center justify-between px-3 py-2 bg-muted border rounded-lg">
-          <span class="font-semibold truncate">{state.displayName}</span>
+        <div class="flex items-center justify-between rounded-lg border bg-muted px-3 py-2">
+          <span class="truncate font-semibold">{state.displayName}</span>
 
           <ExternalLink
-            class="hover:bg-muted-foreground/10 flex size-8 items-center justify-center rounded-md"
+            class="flex size-8 items-center justify-center rounded-md hover:bg-muted-foreground/10"
             href={state.data.acceptLink!}
           >
             <ExternalLinkIcon class="size-5" />

@@ -5,31 +5,25 @@
 
   type Props = {
     title?: string;
-    description?: string;
     children: Snippet;
   };
 
-  const { title, description, children }: Props = $props();
+  const { title, children }: Props = $props();
 </script>
 
 <Dialog.Root>
   <Dialog.Trigger>
-    <HelpCircleIcon class="text-muted-foreground hover:text-foreground transition-colors size-6" />
+    <HelpCircleIcon class="size-6 text-muted-foreground transition-colors hover:text-foreground" />
   </Dialog.Trigger>
 
   <Dialog.Content>
-    {#if title || description}
+    {#if title}
       <Dialog.Header>
-        {#if title}
-          <Dialog.Title>{title}</Dialog.Title>
-        {/if}
-        {#if description}
-          <Dialog.Description>{description}</Dialog.Description>
-        {/if}
+        <Dialog.Title>{title}</Dialog.Title>
       </Dialog.Header>
     {/if}
 
-    <div class="prose dark:prose-invert prose-sm">
+    <div class="prose prose-sm dark:prose-invert">
       {@render children()}
     </div>
   </Dialog.Content>

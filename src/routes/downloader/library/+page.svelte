@@ -1,10 +1,10 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
   import AppCard from '$components/modules/downloader/AppCard.svelte';
+  import AppCardSkeleton from '$components/modules/downloader/AppCardSkeleton.svelte';
   import AppFilter from '$components/modules/downloader/AppFilter.svelte';
   import InstallDialog from '$components/modules/downloader/modals/InstallDialog.svelte';
   import UninstallDialog from '$components/modules/downloader/modals/UninstallDialog.svelte';
-  import SkeletonAppCard from '$components/modules/downloader/skeletons/SkeletonAppCard.svelte';
   import { Input } from '$components/ui/input';
   import { t } from '$lib/i18n';
   import { DownloadManager } from '$lib/modules/download.svelte';
@@ -56,11 +56,13 @@
       const inQueueA = DownloadManager.isInQueue(a.id) ? 0 : 1;
       const inQueueB = DownloadManager.isInQueue(b.id) ? 0 : 1;
 
-      return favoriteA - favoriteB
-        || installedA - installedB
-        || installingA - installingB
-        || inQueueA - inQueueB
-        || a.title.localeCompare(b.title);
+      return (
+        favoriteA - favoriteB ||
+        installedA - installedB ||
+        installingA - installingB ||
+        inQueueA - inQueueB ||
+        a.title.localeCompare(b.title)
+      );
     });
   });
 
@@ -102,7 +104,7 @@
 <PageContent title={$t('library.page.title')}>
   <div class="flex items-center gap-2">
     <Input
-      class="max-w-64 max-xs:max-w-full w-full"
+      class="w-full max-w-64 max-xs:max-w-full"
       placeholder={$t('library.searchPlaceholder')}
       type="search"
       bind:value={searchQuery}
@@ -110,19 +112,15 @@
     <AppFilter bind:value={filters} />
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
     {#if isRefreshing}
       <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
       {#each Array(8) as _, i (i)}
-        <SkeletonAppCard />
+        <AppCardSkeleton />
       {/each}
     {:else}
       {#each filteredApps as app (app.id)}
-        <AppCard
-          appId={app.id}
-          bind:installDialogAppId
-          bind:uninstallDialogAppId
-        />
+        <AppCard appId={app.id} bind:installDialogAppId bind:uninstallDialogAppId />
       {/each}
     {/if}
   </div>

@@ -34,42 +34,20 @@ export const TheaterNames = derived(language, ($language) => ({
   [Theaters.ScurvyShoals]: theaters[Theaters.ScurvyShoals].names[$language]
 }));
 
-export const WorldColors = Object.freeze({
-  Stonewood: '#34D375',
-  Plankerton: '#4DA2DD',
-  CannyValley: '#DFA12A',
-  TwinePeaks: '#9C72F7',
+export const TheaterColors = Object.freeze({
+  [Theaters.Stonewood]: '#4CAF50',
+  [Theaters.Plankerton]: '#E67E22',
+  [Theaters.CannyValley]: '#E4B169',
+  [Theaters.TwinePeaks]: '#E74C3C',
   Ventures: '#3CD8E3'
 } as const);
 
-export const WorldColorsByTheater = Object.freeze({
-  [Theaters.Stonewood]: WorldColors.Stonewood,
-  [Theaters.Plankerton]: WorldColors.Plankerton,
-  [Theaters.CannyValley]: WorldColors.CannyValley,
-  [Theaters.TwinePeaks]: WorldColors.TwinePeaks
+export const TheaterStormKingZones = Object.freeze({
+  [Theaters.CannyValley]: 'Hard_Zone5_Dudebro',
+  [Theaters.TwinePeaks]: 'Nightmare_Zone10_Dudebro'
 } as const);
 
-export const WorldLetters = Object.freeze({
-  Stonewood: 'S',
-  Plankerton: 'P',
-  CannyValley: 'C',
-  TwinePeaks: 'T',
-  Ventures: 'V'
-} as const);
-
-export const WorldLettersByTheaters = Object.freeze({
-  [Theaters.Stonewood]: WorldLetters.Stonewood,
-  [Theaters.Plankerton]: WorldLetters.Plankerton,
-  [Theaters.CannyValley]: WorldLetters.CannyValley,
-  [Theaters.TwinePeaks]: WorldLetters.TwinePeaks
-} as const);
-
-export const WorldStormKingZones = Object.freeze({
-  CannyValley: 'Hard_Zone5_Dudebro',
-  TwinePeaks: 'Nightmare_Zone10_Dudebro'
-} as const);
-
-export const WorldPowerLevels = Object.freeze({
+export const TheaterPowerLevels = Object.freeze({
   [Theaters.Stonewood]: {
     Start_Zone1: 1,
     Start_Zone2: 3,
@@ -106,7 +84,7 @@ export const WorldPowerLevels = Object.freeze({
     Endgame_Zone5: 140,
     Endgame_Zone6: 160
   },
-  ventures: {
+  Ventures: {
     Phoenix_Zone02: 3,
     Phoenix_Zone03: 5,
     Phoenix_Zone05: 15,
@@ -165,35 +143,40 @@ export const ZoneCategories = Object.freeze({
   rtd: ['RetrieveTheData', 'RtD'],
   rtl: ['LaunchTheBalloon', 'LtB', 'RideTheLightning', 'RtL'],
   rts: ['PowerTheStormShield', 'RtS'],
-  stn: ['SurviveTheNight'], 'storm-shield': ['Outpost'],
+  stn: ['SurviveTheNight'],
+  'storm-shield': ['Outpost'],
   tts: ['TrapTheStorm']
 } as const);
 
-export const ZoneNames = derived([language, t], ([$language, $t]) => ({
-  atlas: missions.fightTheStorm.names[$language],
-  'atlas-c2': missions.fightCategory2Storm.names[$language],
-  'atlas-c3': missions.fightCategory3Storm.names[$language],
-  'atlas-c4': missions.fightCategory4Storm.names[$language],
-  dtb: missions.deliverTheBomb.names[$language],
-  dte: missions.destroyTheEncampments.names[$language],
-  eac: missions.eliminateAndCollect.names[$language],
-  ets: missions.evacuateTheShelter.names[$language],
-  htm: missions.huntTheTitan.names[$language],
-  htr: missions.hitTheRoad.names[$language],
-  ptp: missions.protectThePresents.names[$language],
-  radar: missions.buildTheRadarGrid.names[$language],
-  refuel: missions.refuelTheHomebase.names[$language],
-  rescue: missions.rescueTheSurvivors.names[$language],
-  resupply: missions.resupply.names[$language],
-  rocket: missions.launchTheRocket.names[$language],
-  rtd: missions.retrieveTheData.names[$language],
-  rtl: missions.rideTheLightning.names[$language],
-  rts: missions.repairTheShelter.names[$language],
-  stn: missions.surviveTheStorm.names[$language],
-  'storm-shield': missions.homebaseStormShield.names[$language],
-  tts: missions.trapTheStorm.names[$language],
-  quest: $t('quest')
-} as Record<string, string>));
+export const ZoneNames = derived(
+  [language, t],
+  ([$language, $t]) =>
+    ({
+      atlas: missions.fightTheStorm.names[$language],
+      'atlas-c2': missions.fightCategory2Storm.names[$language],
+      'atlas-c3': missions.fightCategory3Storm.names[$language],
+      'atlas-c4': missions.fightCategory4Storm.names[$language],
+      dtb: missions.deliverTheBomb.names[$language],
+      dte: missions.destroyTheEncampments.names[$language],
+      eac: missions.eliminateAndCollect.names[$language],
+      ets: missions.evacuateTheShelter.names[$language],
+      htm: missions.huntTheTitan.names[$language],
+      htr: missions.hitTheRoad.names[$language],
+      ptp: missions.protectThePresents.names[$language],
+      radar: missions.buildTheRadarGrid.names[$language],
+      refuel: missions.refuelTheHomebase.names[$language],
+      rescue: missions.rescueTheSurvivors.names[$language],
+      resupply: missions.resupply.names[$language],
+      rocket: missions.launchTheRocket.names[$language],
+      rtd: missions.retrieveTheData.names[$language],
+      rtl: missions.rideTheLightning.names[$language],
+      rts: missions.repairTheShelter.names[$language],
+      stn: missions.surviveTheStorm.names[$language],
+      'storm-shield': missions.homebaseStormShield.names[$language],
+      tts: missions.trapTheStorm.names[$language],
+      quest: $t('quest')
+    }) as Record<string, string>
+);
 
 export const GroupZones = Object.freeze([
   'atlas',
@@ -207,7 +190,7 @@ export const GroupZones = Object.freeze([
   'rts'
 ] as Array<keyof typeof ZoneCategories>);
 
-export const WorldModifiers = Object.freeze({
+export const ZoneModifiers = Object.freeze({
   FireStorm: 'elementalzonefireenableitem',
   NatureStorm: 'elementalzonenatureenableitem',
   IceStorm: 'elementalzonewaterenableitem',

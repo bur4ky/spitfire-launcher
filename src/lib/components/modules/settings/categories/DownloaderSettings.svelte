@@ -34,9 +34,8 @@
     eventOrValue: Event | V,
     key: K
   ) {
-    const value = typeof eventOrValue === 'object' && eventOrValue
-      ? (eventOrValue.target as HTMLInputElement).value
-      : eventOrValue;
+    const value =
+      typeof eventOrValue === 'object' && eventOrValue ? (eventOrValue.target as HTMLInputElement).value : eventOrValue;
 
     const newSettings: DownloaderSettings = {
       ...$downloaderStore,
@@ -64,16 +63,15 @@
         await Legendary.login(account);
       }
 
-      toast.success(accountId
-        ? $t('settings.downloaderSettings.account.switched')
-        : $t('settings.downloaderSettings.account.loggedOut')
+      toast.success(
+        accountId ? $t('settings.downloader.account.switched') : $t('settings.downloader.account.loggedOut')
       );
     } catch (error) {
       handleError({
         error,
         message: accountId
-          ? $t('settings.downloaderSettings.account.failedToSwitch')
-          : $t('settings.downloaderSettings.account.failedToLogout')
+          ? $t('settings.downloader.account.failedToSwitch')
+          : $t('settings.downloader.account.failedToLogout')
       });
     } finally {
       switchingDownloaderAccount = false;
@@ -81,7 +79,7 @@
   }
 
   onMount(async () => {
-    downloaderAccountId = await Legendary.getAccount() || undefined;
+    downloaderAccountId = (await Legendary.getAccount()) || undefined;
     loadingAccount = false;
 
     await tick();
@@ -91,10 +89,10 @@
 
 <div class="space-y-6">
   <SettingItem
-    description={$t('settings.downloaderSettings.downloadPath.description')}
+    description={$t('settings.downloader.downloadPath.description')}
     labelFor="downloadPath"
     orientation="vertical"
-    title={$t('settings.downloaderSettings.downloadPath.title')}
+    title={$t('settings.downloader.downloadPath.title')}
   >
     <SettingsFolderPicker
       id="downloadPath"
@@ -107,10 +105,10 @@
   </SettingItem>
 
   <SettingItem
-    description={$t('settings.downloaderSettings.account.description')}
+    description={$t('settings.downloader.account.description')}
     labelFor="account"
     orientation="vertical"
-    title={$t('settings.downloaderSettings.account.title')}
+    title={$t('settings.downloader.account.title')}
   >
     <AccountCombobox
       disabled={switchingDownloaderAccount || loadingAccount || !!DownloadManager.downloadingAppId}
@@ -120,10 +118,10 @@
   </SettingItem>
 
   <SettingItem
-    description={$t('settings.downloaderSettings.noHTTPS.description')}
+    description={$t('settings.downloader.noHTTPS.description')}
     labelFor="noHTTPS"
     orientation="horizontal"
-    title={$t('settings.downloaderSettings.noHTTPS.title')}
+    title={$t('settings.downloader.noHTTPS.title')}
   >
     <Switch
       id="noHTTPS"
@@ -133,10 +131,10 @@
   </SettingItem>
 
   <SettingItem
-    description={$t('settings.downloaderSettings.autoUpdate.description')}
+    description={$t('settings.downloader.autoUpdate.description')}
     labelFor="autoUpdate"
     orientation="horizontal"
-    title={$t('settings.downloaderSettings.autoUpdate.title')}
+    title={$t('settings.downloader.autoUpdate.title')}
   >
     <Switch
       id="autoUpdate"
@@ -146,10 +144,10 @@
   </SettingItem>
 
   <SettingItem
-    description={$t('settings.downloaderSettings.sendNotifications.description')}
+    description={$t('settings.downloader.sendNotifications.description')}
     labelFor="sendNotifications"
     orientation="horizontal"
-    title={$t('settings.downloaderSettings.sendNotifications.title')}
+    title={$t('settings.downloader.sendNotifications.title')}
   >
     <Switch
       id="sendNotifications"

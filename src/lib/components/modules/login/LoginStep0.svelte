@@ -4,6 +4,7 @@
 
 <script lang="ts">
   import { t } from '$lib/i18n';
+  import type { LucideIcon } from '$types';
   import GlobeIcon from '@lucide/svelte/icons/globe';
   import KeyIcon from '@lucide/svelte/icons/key';
 
@@ -17,7 +18,7 @@
     id: LoginMethod;
     name: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     recommended?: boolean;
   }[] = $derived([
     {
@@ -46,7 +47,7 @@
       {@const Icon = method.icon}
 
       <button
-        class="flex flex-col items-center rounded-lg border bg-background p-4 hover:bg-muted/50 transition"
+        class="flex flex-col items-center rounded-lg border bg-background p-4 transition hover:bg-muted/50"
         onclick={() => selectLoginMethod(method.id)}
       >
         <span class="mb-3 rounded-full bg-muted p-3">

@@ -13,7 +13,7 @@
 <span
   {...restProps}
   bind:this={ref}
-  class={cn("flex size-9 items-center justify-center", className)}
+  class={cn('flex size-9 items-center justify-center', className)}
   aria-hidden="true"
   data-slot="pagination-ellipsis"
 >

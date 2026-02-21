@@ -58,6 +58,7 @@
     }
   },
   "sidebar": {
+    "loginRequired": "You must login to access this page.",
     "externalLinks": {
       "discord": "Discord Server",
       "repository": "GitHub Repository"
@@ -118,10 +119,10 @@
   },
   "vbucksInformation": {
     "page": {
-      "title": "V-Bucks Information"
+      "title": "V-Bucks"
     },
-    "getInformation": "Get V-Bucks Information",
-    "loading": "Loading V-Bucks information",
+    "getInformation": "Get V-Bucks",
+    "loading": "Loading V-Bucks",
     "loginExpired": "Login expired. Please login again.",
     "unknownError": "Unknown error"
   },
@@ -313,10 +314,15 @@
     "page": {
       "title": "STW Mission Alerts"
     },
+    "overview": {
+      "survivors": "Survivors",
+      "upgradeLlamas": "Upgrade Llamas",
+      "perkup": "PERK-UP!"
+    },
     "sections": {
       "survivors": "Legendary/Mythic Survivors",
-      "twinePeaks": "Twine Peaks ⚡160",
-      "ventures": "Ventures ⚡140",
+      "twinePeaks": "Twine Peaks",
+      "ventures": "Ventures",
       "upgradeLlamaTokens": "Upgrade Llama Tokens",
       "perkup": "Legendary PERK-UP!"
     },
@@ -396,16 +402,25 @@
   },
   "partyManagement": {
     "page": {
-      "title": "Party Management"
+      "title": "Party"
     },
     "tabs": {
       "stwActions": "STW Actions",
       "partyMembers": "Party Members"
     },
     "stwActions": {
-      "claimRewardsAfterLeaving": "Claim rewards",
-      "transferMaterialsAfterLeaving": "Transfer materials",
-      "inviteAfterLeaving": "Invite",
+      "claimRewardsAfterLeaving": {
+        "title": "Claim rewards",
+        "description": "Claim rewards for the account after leaving the party."
+      },
+      "transferMaterialsAfterLeaving": {
+        "title": "Transfer materials",
+        "description": "Transfer building materials to the backpack after leaving the party."
+      },
+      "inviteAfterLeaving": {
+        "title": "Invite members",
+        "description": "Invite members back to the party after kicking them or leaving."
+      },
       "kickAll": "Kick All",
       "leaveParty": "Leave Party",
       "claimRewards": "Claim Rewards",
@@ -448,12 +463,13 @@
   "settings": {
     "title": "Settings",
     "tabs": {
-      "appSettings": "App Settings",
-      "customizableMenu": "Customizable Menu",
-      "downloaderSettings": "Downloader Settings"
+      "general": "General",
+      "customizableMenu": "Sidebar",
+      "downloader": "Downloader",
+      "advanced": "Advanced"
     },
     "invalidValue": "You have entered an invalid value.",
-    "appSettings": {
+    "general": {
       "language": "Language",
       "gamePath": "Custom Game Path",
       "launchArguments": {
@@ -477,7 +493,7 @@
       "checkForUpdates": "Check for Updates",
       "debugLogs": "Enable Debug Logs"
     },
-    "downloaderSettings": {
+    "downloader": {
       "downloadPath": {
         "title": "Download Path",
         "description": "Select the path where the launcher will download games."
@@ -563,13 +579,13 @@
   },
   "friendsManagement": {
     "page": {
-      "title": "Friends Management"
+      "title": "Friends"
     },
     "lists": {
       "friends": "Friends",
-      "incoming": "Incoming Requests",
-      "outgoing": "Outgoing Requests",
-      "blocklist": "Blocklist"
+      "incoming": "Incoming",
+      "outgoing": "Outgoing",
+      "blocklist": "Blocked"
     },
     "failedToAdd": "Failed to add friend or accept request",
     "failedToRemove": "Failed to remove friend or deny request",

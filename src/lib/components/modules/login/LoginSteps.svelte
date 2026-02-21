@@ -10,16 +10,16 @@
 </script>
 
 <div class="relative mb-6">
-  <div class="absolute left-0 top-4 h-1 w-full bg-muted/25">
+  <div class="absolute top-4 left-0 h-1 w-full bg-muted/25">
     <div
-      style="width: {(currentStep / (steps.length - 1) * 100) || 20}%"
+      style="width: {(currentStep / (steps.length - 1)) * 100 || 20}%"
       class="h-full bg-muted transition-all duration-500 ease-in-out"
     ></div>
   </div>
 
   <div class="relative flex justify-between">
     {#each steps as step, index (step)}
-      <div class="relative flex flex-col items-center flex-1">
+      <div class="relative flex flex-1 flex-col items-center">
         <div
           class={cn(
             'z-10 flex size-8 items-center justify-center rounded-full border transition-all',

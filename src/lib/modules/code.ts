@@ -7,9 +7,8 @@ export class Code {
   static redeem(account: AccountData, code: string) {
     code = encodeURIComponent(code.toUpperCase().replaceAll('-', '').replaceAll('_', '').trim());
 
-    return AuthSession.ky(account, fulfillmentService).post<RedeemedCodeData>(
-      `accounts/${account.accountId}/codes/${code}`,
-      { json: {} }
-    ).json();
+    return AuthSession.ky(account, fulfillmentService)
+      .post<RedeemedCodeData>(`accounts/${account.accountId}/codes/${code}`, { json: {} })
+      .json();
   }
 }

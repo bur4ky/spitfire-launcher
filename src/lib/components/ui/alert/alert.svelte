@@ -1,11 +1,13 @@
 <script lang="ts" module>
+  import type { LucideIcon } from '$types';
+
   export type AlertColor = 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'indigo' | 'purple' | 'pink' | 'gray';
 
   export type AlertProps = {
     title: string;
     message: string;
     color: AlertColor;
-    icon?: any;
+    icon?: LucideIcon;
   };
 </script>
 
@@ -34,15 +36,10 @@
     gray: 'bg-gray-500/20 border-gray-500/50'
   };
 
-  const {
-    title,
-    message,
-    color,
-    icon: Icon
-  }: AlertProps = $props();
+  const { title, message, color, icon: Icon }: AlertProps = $props();
 </script>
 
-<div class="border rounded-lg p-3 mb-2 {backgroundcolors[color]}">
+<div class="mb-2 rounded-lg border p-3 {backgroundcolors[color]}">
   <div class="flex items-center gap-2">
     {#if Icon}
       <Icon class="size-5 {iconColors[color]}" />
@@ -51,6 +48,6 @@
   </div>
 
   {#if message}
-    <p class="text-sm mt-1">{message}</p>
+    <p class="mt-1 text-sm">{message}</p>
   {/if}
 </div>

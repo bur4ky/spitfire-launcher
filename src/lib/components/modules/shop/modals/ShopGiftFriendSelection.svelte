@@ -7,7 +7,6 @@
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountCacheStore } from '$lib/stores';
-  import { cn } from '$lib/utils';
   import type { AccountCacheData } from '$types/account';
   import type { SpitfireShopItem } from '$types/game/shop';
   import GiftIcon from '@lucide/svelte/icons/gift';
@@ -23,10 +22,9 @@
   let { item, isSendingGifts, open = $bindable(false) }: Props = $props();
 
   const activeAccount = accountStore.getActiveStore();
-  const {
-    vbucks: ownedVbucks = 0,
-    friends = []
-  } = $derived<AccountCacheData>($accountCacheStore[$activeAccount.accountId] || {});
+  const { vbucks: ownedVbucks = 0, friends = [] } = $derived<AccountCacheData>(
+    $accountCacheStore[$activeAccount.accountId] || {}
+  );
 
   let selectedFriends = $state<string[]>([]);
 
@@ -60,7 +58,11 @@
           case 'errors.com.epicgames.modules.gameplayutils.not_enough_mtx': {
             const [, errorItemPrice, errorOwnedVbucks] = error.messageVars;
 
-            toast.error($t('itemShop.needMoreVbucksToGift', { amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks) }));
+            toast.error(
+              $t('itemShop.needMoreVbucksToGift', {
+                amount: Number.parseInt(errorItemPrice) - Number.parseInt(errorOwnedVbucks)
+              })
+            );
             accountCacheStore.update((accounts) => {
               const account = accounts[$activeAccount.accountId];
               account.vbucks = Number.parseInt(errorItemPrice);
@@ -83,7 +85,9 @@
               return toast.error($t('itemShop.enableMFA'));
             }
 
-            if (error.messageVars?.[0] === 'errors.com.epicgames.modules.gamesubcatalog.receiver_will_not_accept_gifts') {
+            if (
+              error.messageVars?.[0] === 'errors.com.epicgames.modules.gamesubcatalog.receiver_will_not_accept_gifts'
+            ) {
               return toast.error($t('itemShop.friendsDoNotAcceptGifts'));
             }
           }
@@ -114,21 +118,15 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <AccountCombobox
-      customList={friends}
-      disabled={!friends?.length}
-      type="multiple"
-      bind:value={selectedFriends}
-    >
-    </AccountCombobox>
+    <AccountCombobox customList={friends} disabled={!friends?.length} type="multiple" bind:value={selectedFriends} />
 
-    <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
+    <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+      <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
         {$t('cancel')}
       </Dialog.Close>
 
       <Button
-        class="flex items-center gap-2 flex-1"
+        class="flex items-center gap-2"
         disabled={!selectedFriends.length ||
           isSendingGifts ||
           ownedVbucks < item.price.final * (selectedFriends.length || 1)}

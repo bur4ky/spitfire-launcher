@@ -32,30 +32,33 @@
   import { t } from '$lib/i18n';
   import { logger } from '$lib/logger';
   import { language } from '$lib/i18n';
+  import { Progress } from '$components/ui/progress';
 
   async function fetchDailyQuests() {
     isFetching = true;
     questStates = [];
 
     const accounts = getAccountsFromSelection(selectedAccounts);
-    await Promise.allSettled(accounts.map(async (account) => {
-      const state: QuestState = {
-        accountId: account.accountId,
-        displayName: account.displayName,
-        data: { hasFounder: false, quests: [] }
-      };
+    await Promise.allSettled(
+      accounts.map(async (account) => {
+        const state: QuestState = {
+          accountId: account.accountId,
+          displayName: account.displayName,
+          data: { hasFounder: false, quests: [] }
+        };
 
-      try {
-        const campaignProfile = await MCP.clientQuestLogin(account, 'campaign');
-        handleQueryProfile(campaignProfile, state);
+        try {
+          const campaignProfile = await MCP.clientQuestLogin(account, 'campaign');
+          handleQueryProfile(campaignProfile, state);
 
-        if (state.data.quests.length) {
-          questStates.push(state);
+          if (state.data.quests.length) {
+            questStates.push(state);
+          }
+        } catch (error) {
+          handleError({ error, message: 'Failed to fetch daily quests', account, toastId: false });
         }
-      } catch (error) {
-        handleError({ error, message: 'Failed to fetch daily quests', account, toastId: false });
-      }
-    }));
+      })
+    );
 
     isFetching = false;
   }
@@ -99,7 +102,12 @@
     }
 
     try {
-      const rerollResponse = await MCP.compose<FullQueryProfile<'campaign'>>(account, 'FortRerollDailyQuest', 'campaign', { questId });
+      const rerollResponse = await MCP.compose<FullQueryProfile<'campaign'>>(
+        account,
+        'FortRerollDailyQuest',
+        'campaign',
+        { questId }
+      );
       const state = questStates.find((x) => x.accountId === accountId);
       if (state) {
         handleQueryProfile(rerollResponse, state);
@@ -113,11 +121,7 @@
 </script>
 
 <PageContent center={true} title={$t('dailyQuests.page.title')}>
-  <AccountCombobox
-    disabled={isFetching}
-    type="multiple"
-    bind:value={selectedAccounts}
-  />
+  <AccountCombobox disabled={isFetching} type="multiple" bind:value={selectedAccounts} />
 
   <Button
     class="w-full"
@@ -133,7 +137,7 @@
   {#if !isFetching && questStates.length}
     <BulkResultAccordion states={questStates}>
       {#snippet content(state)}
-        <div class="p-3 space-y-3">
+        <div class="space-y-3 p-3">
           {#each state.data.quests as quest (quest.id)}
             {@const rewards = [
               {
@@ -153,31 +157,32 @@
               }
             ]}
 
-            <div class="border rounded-md p-3">
-              <div class="flex flex-col xs:flex-row xs:items-center justify-between gap-3 mb-4 relative {canReroll[state.accountId] && 'pr-10'}">
+            <div class="rounded-md border px-3 py-2">
+              <div class="flex items-center justify-between gap-3">
                 <h3 class="font-medium">{quest.names[$language]}</h3>
-
-                <span class="font-medium">{quest.completionProgress}/{quest.limit}</span>
+                <span class="ml-auto font-medium">{quest.completionProgress}/{quest.limit}</span>
 
                 {#if canReroll[state.accountId]}
                   <Button
-                    class="flex items-center justify-center absolute top-0 right-0 size-8"
+                    class="flex size-8 items-center justify-center"
                     disabled={!!rerollingQuestId}
                     onclick={() => rerollQuest(state.accountId, quest.id)}
                     size="sm"
                     variant="outline"
                   >
-                    <RefreshCwIcon class={rerollingQuestId === quest.id ? 'animate-spin': ''} />
+                    <RefreshCwIcon class={rerollingQuestId === quest.id ? 'animate-spin' : ''} />
                   </Button>
                 {/if}
               </div>
 
-              <div class="flex justify-around">
+              <Progress class="mt-2" value={(quest.completionProgress / quest.limit) * 100} />
+
+              <div class="mt-3 flex divide-x">
                 {#each rewards as reward (reward.name)}
                   {#if reward.amount > 0}
-                    <div class="flex items-center gap-2 bg-accent/50 p-2 rounded">
-                      <img class="size-6" alt={reward.name} src={reward.icon} />
-                      <span class="font-medium">{reward.amount.toLocaleString($language)}</span>
+                    <div class="flex items-center gap-2 p-2">
+                      <img class="size-4" alt={reward.name} src={reward.icon} />
+                      <span class="text-sm font-medium">{reward.amount.toLocaleString($language)}</span>
                     </div>
                   {/if}
                 {/each}

@@ -13,7 +13,7 @@
 
 <ComboboxPrimitive.GroupHeading
   {...restProps}
-  class={cn("text-muted-foreground px-2 py-1.5 text-xs", className)}
+  class={cn('px-2 py-1.5 text-xs text-muted-foreground', className)}
   data-slot="combobox-group-heading"
   bind:ref
 >

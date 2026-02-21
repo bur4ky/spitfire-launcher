@@ -7,7 +7,7 @@
   import { settingsStore } from '$lib/storage';
 
   function isItemEnabled(key: string) {
-    const menu = ($settingsStore.customizableMenu) as Record<string, boolean>;
+    const menu = $settingsStore.customizableMenu as Record<string, boolean>;
     return menu?.[key] !== false;
   }
 
@@ -31,7 +31,7 @@
 
       <Separator class="mb-2" orientation="horizontal" />
 
-      <div class="grid grid-cols-1 xs:grid-cols-2 gap-y-1 gap-x-3">
+      <div class="grid grid-cols-1 gap-x-3 gap-y-1 xs:grid-cols-2">
         {#each category.items as item (item.key)}
           <div class="flex items-center justify-between">
             <Label class="flex-1 text-sm font-normal" for={item.key}>

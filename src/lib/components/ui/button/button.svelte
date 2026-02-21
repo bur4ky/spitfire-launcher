@@ -4,7 +4,7 @@
   import { tv, type VariantProps } from 'tailwind-variants';
 
   export const buttonVariants = tv({
-    base: 'focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4',
+    base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
@@ -61,10 +61,9 @@
     ...restProps
   }: ButtonProps = $props();
 
-  const classes = $derived(cn(
-    buttonVariants({ variant, size }),
-    loading ? 'flex justify-center items-center gap-x-2' : null, className
-  ));
+  const classes = $derived(
+    cn(buttonVariants({ variant, size }), loading ? 'flex justify-center items-center gap-x-2' : null, className)
+  );
 </script>
 
 {#snippet Content()}
@@ -85,7 +84,7 @@
     aria-disabled={disabled}
     data-slot="button"
     href={disabled ? undefined : href}
-    role={disabled ? "link" : undefined}
+    role={disabled ? 'link' : undefined}
     tabindex={disabled ? -1 : undefined}
     bind:ref
     {...restProps}
@@ -93,14 +92,7 @@
     {@render Content()}
   </ExternalLink>
 {:else}
-  <button
-    bind:this={ref}
-    class={classes}
-    data-slot="button"
-    {disabled}
-    {type}
-    {...restProps}
-  >
+  <button bind:this={ref} class={classes} data-slot="button" {disabled} {type} {...restProps}>
     {@render Content()}
   </button>
 {/if}

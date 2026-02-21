@@ -1,17 +1,18 @@
 <script lang="ts">
   import LaunchGame from '$components/layout/header/LaunchGame.svelte';
   import SidebarBurger from '$components/layout/header/SidebarBurger.svelte';
-  import SettingsModal from '$components/modules/settings/SettingsModal.svelte';
+  import { Button } from '$components/ui/button';
+  import { useSidebar } from '$components/ui/sidebar';
   import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { settingsStore } from '$lib/storage';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import XIcon from '@lucide/svelte/icons/x';
+  import SettingsIcon from '@lucide/svelte/icons/settings';
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { platform } from '@tauri-apps/plugin-os';
 
   const appWindow = getCurrentWindow();
-  const currentPlatform = platform();
-  const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
+  const sidebar = useSidebar();
 
   async function minimizeOrHide() {
     if (settingsStore.get().app?.hideToTray) {
@@ -27,28 +28,29 @@
   }
 </script>
 
-<!-- TODO: Could use `padding-top: env(safe-area-inset-top)` but it still overlaps, same for sidebar -->
 <header
-  class="{isMobile ? 'pt-6 h-22' : 'h-16'} bg-card border-b border-border flex items-center justify-between md:justify-end px-4 select-none sticky top-0 z-10"
+  class="pt-safe sticky top-0 z-10 flex h-[calc(4rem+env(safe-area-inset-top))] items-center justify-between border-b bg-card px-4 select-none md:justify-end"
   data-tauri-drag-region
 >
   <SidebarBurger />
 
   <div class="flex items-center gap-x-2">
     <div class="flex items-center gap-x-2">
-      {#if currentPlatform === 'windows'}
+      {#if platform() === 'windows'}
         <LaunchGame />
       {/if}
 
-      <SettingsModal />
+      <Button class="rounded-md p-2! hover:bg-accent!" href="/settings" variant="ghost">
+        <SettingsIcon class="size-6" />
+      </Button>
     </div>
 
-    {#if !isMobile}
+    {#if !sidebar.isMobile}
       <div class="flex items-center space-x-2 max-sm:hidden">
-        <button class="p-2 hover:bg-accent rounded transition-colors duration-200" onclick={minimizeOrHide}>
+        <button class="rounded p-2 transition-colors duration-200 hover:bg-accent" onclick={minimizeOrHide}>
           <MinusIcon />
         </button>
-        <button class="p-2 hover:bg-red-500/80 hover:text-white rounded transition-colors duration-200" onclick={close}>
+        <button class="rounded p-2 transition-colors duration-200 hover:bg-red-500/80 hover:text-white" onclick={close}>
           <XIcon />
         </button>
       </div>

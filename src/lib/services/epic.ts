@@ -19,7 +19,7 @@ export const epicService = tauriKy.extend({
   hooks: {
     beforeError: [
       async (error) => {
-        if (!isHTTPError(error) || !(new URL(error.request.url).hostname.endsWith('epicgames.com'))) return error;
+        if (!isHTTPError(error) || !new URL(error.request.url).hostname.endsWith('epicgames.com')) return error;
 
         const data = await error.response.json();
         if (!isEpicApiError(data)) return error;

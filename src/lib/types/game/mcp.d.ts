@@ -246,7 +246,7 @@ export type CampaignProfileAttributes = {
         itemType: string;
         quantity: number;
       }[];
-    }
+    };
   }>;
   difficulty_increase_rewards_record?: {
     pendingRewards: {
@@ -376,7 +376,9 @@ type QueryProfileMapping = {
   common_core: CommonCoreProfile;
 };
 
-export type ProfileFromId<T extends EpicProfileId> = T extends keyof QueryProfileMapping ? QueryProfileMapping[T] : BaseProfile;
+export type ProfileFromId<T extends EpicProfileId> = T extends keyof QueryProfileMapping
+  ? QueryProfileMapping[T]
+  : BaseProfile;
 
 export type FullQueryProfile<T extends MCPProfileId> = {
   profileRevision: number;

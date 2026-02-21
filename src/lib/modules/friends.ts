@@ -21,7 +21,9 @@ const logger = getChildLogger('FriendsManager');
 export class Friends {
   static async getFriend(account: AccountData, friendId: string) {
     try {
-      const friendData = await AuthSession.ky(account, friendService).get<FriendData>(`${account.accountId}/friends/${friendId}`).json();
+      const friendData = await AuthSession.ky(account, friendService)
+        .get<FriendData>(`${account.accountId}/friends/${friendId}`)
+        .json();
 
       FriendsStore.set(account.accountId, 'friends', friendId, friendData);
       Friends.cacheAccountNameAndAvatar(account, friendId);
@@ -126,7 +128,9 @@ export class Friends {
   }
 
   static async getSummary(account: AccountData) {
-    const data = await AuthSession.ky(account, friendService).get<FriendsSummary>(`${account.accountId}/summary`).json();
+    const data = await AuthSession.ky(account, friendService)
+      .get<FriendsSummary>(`${account.accountId}/summary`)
+      .json();
 
     const allAccountIds = [
       ...data.friends.map((x) => x.accountId),
@@ -135,10 +139,7 @@ export class Friends {
       ...data.blocklist.map((x) => x.accountId)
     ];
 
-    await Promise.allSettled([
-      Lookup.fetchByIds(account, allAccountIds),
-      Avatar.fetchAvatars(account, allAccountIds)
-    ]);
+    await Promise.allSettled([Lookup.fetchByIds(account, allAccountIds), Avatar.fetchAvatars(account, allAccountIds)]);
 
     friendsStore.set(account.accountId, {
       friends: new SvelteMap(data.friends.map((x) => [x.accountId, x])),
@@ -157,19 +158,25 @@ export class Friends {
   }
 
   static async getIncoming(account: AccountData) {
-    const data = await AuthSession.ky(account, friendService).get<IncomingFriendRequestData[]>(`${account.accountId}/incoming`).json();
+    const data = await AuthSession.ky(account, friendService)
+      .get<IncomingFriendRequestData[]>(`${account.accountId}/incoming`)
+      .json();
     FriendsStore.replace(account.accountId, 'incoming', data);
     return data;
   }
 
   static async getOutgoing(account: AccountData) {
-    const data = await AuthSession.ky(account, friendService).get<OutgoingFriendRequestData[]>(`${account.accountId}/outgoing`).json();
+    const data = await AuthSession.ky(account, friendService)
+      .get<OutgoingFriendRequestData[]>(`${account.accountId}/outgoing`)
+      .json();
     FriendsStore.replace(account.accountId, 'outgoing', data);
     return data;
   }
 
   static async getBlocklist(account: AccountData) {
-    const data = await AuthSession.ky(account, friendService).get<BlockedAccountData[]>(`${account.accountId}/blocklist`).json();
+    const data = await AuthSession.ky(account, friendService)
+      .get<BlockedAccountData[]>(`${account.accountId}/blocklist`)
+      .json();
     FriendsStore.replace(account.accountId, 'blocklist', data);
     return data;
   }
@@ -225,15 +232,11 @@ export class Friends {
     const MAX_IDS_PER_REQUEST = 100;
     const session = AuthSession.ky(account, friendService);
 
-    const acceptedRequests = new Set(await processChunks(
-      accountIds,
-      MAX_IDS_PER_REQUEST,
-      async (ids) =>
-        session.post<string[]>(
-          `${account.accountId}/incoming/accept?targetIds=${ids.join(',')}`,
-          { json: {} }
-        ).json()
-    ));
+    const acceptedRequests = new Set(
+      await processChunks(accountIds, MAX_IDS_PER_REQUEST, async (ids) =>
+        session.post<string[]>(`${account.accountId}/incoming/accept?targetIds=${ids.join(',')}`, { json: {} }).json()
+      )
+    );
 
     for (const friendId of acceptedRequests) {
       FriendsStore.delete(account.accountId, 'incoming', friendId);
@@ -284,10 +287,11 @@ export class FriendsStore {
     return entry;
   }
 
-  static replace<
-    K extends FriendsCollectionKey,
-    T extends { accountId: string }
-  >(accountId: string, key: K, data: T[]) {
+  static replace<K extends FriendsCollectionKey, T extends { accountId: string }>(
+    accountId: string,
+    key: K,
+    data: T[]
+  ) {
     const entry = FriendsStore.getOrCreate(accountId);
     const map = entry[key];
 

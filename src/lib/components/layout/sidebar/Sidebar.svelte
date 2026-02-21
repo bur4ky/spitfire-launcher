@@ -1,29 +1,28 @@
-<script lang="ts" module>
-  import { writable } from 'svelte/store';
-
-  export const sidebarOpen = writable(false);
-</script>
-
 <script lang="ts">
   import AccountSwitcher from '$components/layout/sidebar/AccountSwitcher.svelte';
-  import { Button } from '$components/ui/button';
   import { ExternalLink } from '$components/ui/external-link';
-  import { getVersion } from '@tauri-apps/api/app';
   import { Separator } from '$components/ui/separator';
-  import { slide } from 'svelte/transition';
-  import { cubicInOut } from 'svelte/easing';
-  import { platform } from '@tauri-apps/plugin-os';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import { t } from '$lib/i18n';
-  import { cn } from '$lib/utils';
+  import { Button } from '$components/ui/button';
+  import * as Sidebar from '$components/ui/sidebar';
+  import * as Tooltip from '$components/ui/tooltip';
   import { page } from '$app/state';
   import { SidebarCategories } from '$lib/constants/sidebar';
-  import { SvelteSet } from 'svelte/reactivity';
-  import { settingsStore } from '$lib/storage';
+  import { accountStore, settingsStore } from '$lib/storage';
+  import { cn } from '$lib/utils';
+  import { t } from '$lib/i18n';
+  import { getVersion } from '@tauri-apps/api/app';
 
-  const currentPlatform = platform();
-  const isMobile = currentPlatform === 'android' || currentPlatform === 'ios';
-  const notExpandedCategories = new SvelteSet<string>();
+  const sidebar = Sidebar.useSidebar();
+  const activeAccount = accountStore.getActiveStore(true);
+
+  function isCategoryVisible(key: string) {
+    return SidebarCategories.find((c) => c.key === key)?.items.some((item) => isItemVisible(item.key));
+  }
+
+  function isItemVisible(key: string) {
+    const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
+    return menu[key] !== false;
+  }
 
   const externalLinks = $derived([
     {
@@ -37,111 +36,73 @@
       icon: '/icons/github.svg'
     }
   ]);
-
-  function toggleCategory(id: string) {
-    if (!notExpandedCategories.has(id)) {
-      notExpandedCategories.add(id);
-    } else {
-      notExpandedCategories.delete(id);
-    }
-  }
-
-  function isCategoryVisible(key: string) {
-    return SidebarCategories
-      .find((category) => category.key === key)
-      ?.items.some((item) => isItemVisible(item.key));
-  }
-
-  function isItemVisible(key: string) {
-    const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
-    return menu[key] !== false;
-  }
 </script>
 
-<div
-  class="fixed inset-0 bg-black/50 z-40 lg:hidden" class:block={$sidebarOpen} class:hidden={!$sidebarOpen}
-  onclick={() => sidebarOpen.set(false)}
-  onkeydown={(e) => e.key === 'Escape' && sidebarOpen.set(false)}
-  role="button"
-  tabindex="0"
-></div>
+<Sidebar.Root>
+  <Sidebar.Header class="flex h-[calc(4rem+env(safe-area-inset-top))] items-center justify-center border-r border-b">
+    <a class="pt-safe text-2xl font-bold select-none" href="/">Spitfire Launcher</a>
+  </Sidebar.Header>
 
-<aside
-  class={cn(
-    'w-60 sm:w-72 h-screen bg-card flex flex-col overflow-hidden select-none',
-    'fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out',
-    'lg:sticky lg:top-0 lg:translate-x-0',
-    $sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-  )}
->
-  <div
-    class="flex items-center justify-center border-b border-r {isMobile ? 'pt-6 h-22' : 'h-16'}"
-    data-tauri-drag-region
-  >
-    <a class="max-xs:text-xl text-2xl font-bold" href="/">Spitfire Launcher</a>
-  </div>
+  <Sidebar.Content class="gap-0">
+    {#each SidebarCategories as category (category.key)}
+      {#if isCategoryVisible(category.key)}
+        <Sidebar.Group>
+          <Sidebar.GroupLabel class="tracking-wider text-muted-foreground/60 uppercase">
+            {$t(`sidebar.categories.${category.key}`)}
+          </Sidebar.GroupLabel>
 
-  <nav class="flex-1 overflow-y-auto py-4 border-r">
-    <ul class="space-y-1.5 px-2">
-      {#each SidebarCategories as category (category.key)}
-        {#if isCategoryVisible(category.key)}
-          <li>
-            <Button
-              class="w-full justify-between"
-              onclick={() => toggleCategory(category.key)}
-              size="sm"
-              variant="ghost"
-            >
-              <span>{$t(`sidebar.categories.${category.key}`)}</span>
-              <ChevronDownIcon
-                class={cn(
-                  'size-4 transition-transform duration-200',
-                  !notExpandedCategories.has(category.key) && 'rotate-180'
-                )}
-              />
-            </Button>
+          <Sidebar.Menu>
+            {#each category.items as item (item.key)}
+              {#if isItemVisible(item.key)}
+                {@const isActive = page.url.pathname === item.href}
+                {@const isDisabled = item.requiresLogin && !$activeAccount}
 
-            {#if !notExpandedCategories.has(category.key)}
-              <ul
-                class="mt-1 ml-4 space-y-1 border-l border-border pl-2"
-                transition:slide|local={{ duration: 200, easing: cubicInOut }}
-              >
-                {#each category.items as item (item.key)}
-                  {#if isItemVisible(item.key)}
-                    <li>
-                      <Button
-                        class={cn(
-                          'text-sm px-3 py-1 h-7 font-normal w-full justify-start',
-                          page.url.pathname === item.href && 'bg-accent text-accent-foreground'
-                        )}
-                        href={item.href}
-                        onclick={() => sidebarOpen.set(false)}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        {$t(`${item.key}.page.title`)}
-                      </Button>
-                    </li>
-                  {/if}
-                {/each}
-              </ul>
-            {/if}
-          </li>
-        {/if}
-      {/each}
-    </ul>
-  </nav>
+                <Sidebar.MenuItem>
+                  <Sidebar.MenuButton {isActive}>
+                    {#snippet child({ props })}
+                      <Tooltip.Root>
+                        <Tooltip.Trigger class="w-full {isDisabled && 'cursor-default'}">
+                          <Button
+                            {...props}
+                            class={cn(
+                              'h-7 w-full justify-start px-3 py-1 text-sm font-normal',
+                              isActive
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-foreground/70 hover:bg-accent hover:text-foreground'
+                            )}
+                            disabled={isDisabled}
+                            href={item.href}
+                            onclick={() => sidebar.setOpenMobile(false)}
+                            size="sm"
+                            variant="ghost"
+                          >
+                            <item.icon class="size-4" />
+                            {$t(`${item.key}.page.title`)}
+                          </Button>
+                        </Tooltip.Trigger>
 
-  <div class="border-t space-y-2 p-3">
+                        {#if isDisabled}
+                          <Tooltip.Content>{$t('sidebar.loginRequired')}</Tooltip.Content>
+                        {/if}
+                      </Tooltip.Root>
+                    {/snippet}
+                  </Sidebar.MenuButton>
+                </Sidebar.MenuItem>
+              {/if}
+            {/each}
+          </Sidebar.Menu>
+        </Sidebar.Group>
+      {/if}
+    {/each}
+  </Sidebar.Content>
+
+  <Sidebar.Footer class="border-t">
     <AccountSwitcher />
 
-    <div class="flex items-center justify-center gap-4 border-t pt-2">
+    <div class="pb-safe flex items-center justify-center gap-4 border-t pt-2">
       <div class="flex items-center gap-3">
         {#each externalLinks as link (link.name)}
-          <ExternalLink
-            class="text-muted-foreground"
-            href={link.href}
-          >
+          <ExternalLink class="text-muted-foreground" href={link.href}>
             <img class="size-5" alt={link.name} src={link.icon} />
           </ExternalLink>
         {/each}
@@ -153,12 +114,12 @@
         <!-- -->
       {:then version}
         <ExternalLink
-          class="text-muted-foreground text-xs hover:underline"
+          class="text-xs text-muted-foreground hover:underline"
           href="https://github.com/bur4ky/spitfire-launcher/releases/tag/v{version}"
         >
           {$t('sidebar.version')} v{version}
         </ExternalLink>
       {/await}
     </div>
-  </div>
-</aside>
+  </Sidebar.Footer>
+</Sidebar.Root>

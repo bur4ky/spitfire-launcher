@@ -25,8 +25,8 @@ export const logger = new Logger({
   prettyLogTemplate: '{{hh}}:{{MM}}:{{ss}}.{{ms}} {{logLevelName}} {{name}}{{logMessage}} {{logObject}}',
   prettyErrorTemplate: dev
     ? '\n{{errorName}} {{errorMessage}}\n{{errorStack}}'
-    // Files and line numbers are not available in production builds
-    : '\n{{errorName}} {{errorMessage}}',
+    : // Files and line numbers are not available in production builds
+      '\n{{errorName}} {{errorMessage}}',
   prettyErrorStackTemplate: '  • {{fileName}} {{method}}\n {{filePathWithLine}}',
 
   prettyErrorParentNamesSeparator: ':',

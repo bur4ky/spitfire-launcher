@@ -17,5 +17,5 @@ export async function load() {
     locale = baseLocale;
   }
 
-  settingsStore.setLanguage(locale as typeof locales[number]);
+  settingsStore.setLanguage(locale as (typeof locales)[number]);
 }

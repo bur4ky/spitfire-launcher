@@ -143,7 +143,12 @@ export class Legendary {
   }
 
   static async launch(appId: string) {
-    const { stdout: launchData } = await Legendary.execute<LegendaryLaunchData>(['launch', appId, '--dry-run', '--json']);
+    const { stdout: launchData } = await Legendary.execute<LegendaryLaunchData>([
+      'launch',
+      appId,
+      '--dry-run',
+      '--json'
+    ]);
     return Tauri.launchApp({
       launchData: {
         ...launchData,
@@ -159,11 +164,7 @@ export class Legendary {
 
     if (requiresRepair !== requiredRepair) {
       ownedApps.update((current) => {
-        return current.map((app) =>
-          app.id === appId
-            ? { ...app, requiresRepair }
-            : app
-        );
+        return current.map((app) => (app.id === appId ? { ...app, requiresRepair } : app));
       });
     }
 
@@ -174,11 +175,7 @@ export class Legendary {
     const data = await Legendary.execute(['uninstall', appId, '-y']);
 
     ownedApps.update((current) => {
-      return current.map((app) =>
-        app.id === appId
-          ? { ...app, installed: false }
-          : app
-      );
+      return current.map((app) => (app.id === appId ? { ...app, installed: false } : app));
     });
 
     return data;
@@ -191,30 +188,32 @@ export class Legendary {
     await Legendary.syncEGL();
     const installedList = await Legendary.getInstalledList();
 
-    ownedApps.set(list.stdout
-      .filter((app) => app.metadata.entitlementType === 'EXECUTABLE')
-      .map((app) => {
-        const images = app.metadata.keyImages.reduce<Record<string, string>>((acc, image) => {
-          acc[image.type] = image.url;
-          return acc;
-        }, {});
+    ownedApps.set(
+      list.stdout
+        .filter((app) => app.metadata.entitlementType === 'EXECUTABLE')
+        .map((app) => {
+          const images = app.metadata.keyImages.reduce<Record<string, string>>((acc, image) => {
+            acc[image.type] = image.url;
+            return acc;
+          }, {});
 
-        const installed = installedList.stdout.find((installed) => installed.app_name === app.app_name);
+          const installed = installedList.stdout.find((installed) => installed.app_name === app.app_name);
 
-        return {
-          id: app.app_name,
-          title: app.app_title,
-          images: {
-            tall: images.DieselGameBoxTall || app.metadata.keyImages[0]?.url,
-            wide: images.DieselGameBox || images.Featured || app.metadata.keyImages[0]?.url
-          },
-          requiresRepair: installed && installed.needs_verification,
-          hasUpdate: installed ? installed.version !== app.asset_infos.Windows.build_version : false,
-          installSize: installed?.install_size || 0,
-          installed: !!installed,
-          canRunOffline: installed?.can_run_offline || false
-        };
-      }));
+          return {
+            id: app.app_name,
+            title: app.app_title,
+            images: {
+              tall: images.DieselGameBoxTall || app.metadata.keyImages[0]?.url,
+              wide: images.DieselGameBox || images.Featured || app.metadata.keyImages[0]?.url
+            },
+            requiresRepair: installed && installed.needs_verification,
+            hasUpdate: installed ? installed.version !== app.asset_infos.Windows.build_version : false,
+            installSize: installed?.install_size || 0,
+            installed: !!installed,
+            canRunOffline: installed?.can_run_offline || false
+          };
+        })
+    );
 
     Legendary.cachedApps = true;
   }

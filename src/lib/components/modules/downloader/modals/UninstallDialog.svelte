@@ -46,16 +46,11 @@
     </Dialog.Header>
 
     <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), "flex-1")}>
+      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
         {$t('cancel')}
       </Dialog.Close>
 
-      <Button
-        class="flex items-center gap-2 flex-1"
-        disabled={isDeleting}
-        loading={isDeleting}
-        onclick={uninstallApp}
-      >
+      <Button class="flex flex-1 items-center gap-2" disabled={isDeleting} loading={isDeleting} onclick={uninstallApp}>
         {$t('confirm')}
       </Button>
     </Dialog.Footer>
