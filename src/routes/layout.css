@@ -131,6 +131,7 @@
 
 @theme {
   --breakpoint-xs: 32rem;
+  --breakpoint-xl-plus: 80.0625rem;
 }
 
 @layer base {

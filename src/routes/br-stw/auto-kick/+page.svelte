@@ -4,6 +4,7 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
+  import { Label } from '$components/ui/label';
   import { Switch } from '$components/ui/switch';
   import { t } from '$lib/i18n';
   import { AutoKickBase } from '$lib/modules/autokick/base';
@@ -53,7 +54,6 @@
 </script>
 
 <PageContent
-  class="@container"
   description={$t('autoKick.page.description')}
   docsComponent={AutoKickTutorial}
   title={$t('autoKick.page.title')}
@@ -92,13 +92,13 @@
   />
 
   {#if AutoKickBase.accounts.size}
-    <div class="grid grid-cols-1 place-items-center gap-4 @md:grid-cols-2 @lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl-plus:grid-cols-4 2xl:grid-cols-5">
       {#each AutoKickBase.accounts as [accountId, automationAccount] (accountId)}
         {@const isLoading = automationAccount.status === 'LOADING'}
 
-        <div class="w-56 overflow-hidden rounded-lg border shadow-sm">
-          <div class="flex h-12 items-center justify-between bg-muted p-4">
-            <div class="flex items-center gap-2">
+        <div class="size-full rounded-md border bg-card">
+          <div class="flex items-center justify-between bg-secondary px-4 py-2">
+            <div class="flex min-w-0 items-center gap-2">
               <div
                 class={cn(
                   'size-2 rounded-full',
@@ -107,8 +107,9 @@
                   automationAccount.status === 'INVALID_CREDENTIALS' && 'bg-red-500'
                 )}
               ></div>
-              <span class="font-medium">
-                {allAccounts.find((x) => x.accountId === accountId)?.displayName || accountId}
+
+              <span class="truncate font-medium">
+                {allAccounts.find((x) => x.accountId === accountId)?.displayName}
               </span>
             </div>
 
@@ -120,27 +121,24 @@
               variant="ghost"
             >
               {#if isLoading}
-                <RefreshCwIcon class="size-4 animate-spin !cursor-not-allowed opacity-50" />
+                <RefreshCwIcon class="size-4 animate-spin cursor-not-allowed! opacity-50" />
               {:else}
                 <Trash2Icon class="size-4" />
               {/if}
             </Button>
           </div>
 
-          <div class="space-y-1 px-4 py-2">
+          <div class="divide-y px-4">
             {#each settings as setting (setting.id)}
-              <div class="flex items-center justify-between py-1.5">
-                <span class="mr-5 text-sm">{setting.label}</span>
+              <div class="flex items-center justify-between space-x-8 py-2.5">
+                <Label class="text-sm font-normal" for={setting.id}>{setting.label}</Label>
                 <Switch
+                  id={setting.id}
                   checked={automationAccount.settings[setting.id]}
                   disabled={isLoading || (setting.id === 'autoInvite' && !automationAccount.settings.autoKick)}
                   onCheckedChange={(checked) => AutoKickBase.updateSettings(accountId, { [setting.id]: checked })}
                 />
               </div>
-
-              {#if setting !== settings[settings.length - 1]}
-                <div class="border-t"></div>
-              {/if}
             {/each}
           </div>
         </div>

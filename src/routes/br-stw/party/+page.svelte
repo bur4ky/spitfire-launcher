@@ -450,36 +450,34 @@
 {/snippet}
 
 {#snippet PartyMembers()}
-  {#if partyMembers}
-    <div class="grid grid-cols-1 place-items-center gap-2 lg:grid-cols-2 xl:grid-cols-3">
-      {#each partyMembers as member (member.accountId)}
-        {@const isRegisteredAccount = allAccounts.some((account) => account.accountId === member.accountId)}
-        {@const canLeave = isRegisteredAccount && !member.isLeader}
-        {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
-        {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
-        {@const accountFriends = friendsStore.get($activeAccount.accountId)}
-        {@const canAddFriend =
-          !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
+  <div class="grid grid-cols-1 place-items-center gap-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    {#each partyMembers as member (member.accountId)}
+      {@const isRegisteredAccount = allAccounts.some((account) => account.accountId === member.accountId)}
+      {@const canLeave = isRegisteredAccount && !member.isLeader}
+      {@const canKick = partyLeaderAccount ? partyLeaderAccount.accountId !== member.accountId : false}
+      {@const canBePromoted = partyLeaderAccount ? !member.isLeader : false}
+      {@const accountFriends = friendsStore.get($activeAccount.accountId)}
+      {@const canAddFriend =
+        !accountFriends?.friends?.has(member.accountId) && !accountFriends?.outgoing?.has(member.accountId)}
 
-        <!-- Maybe this wasn't a good idea -->
-        <MemberCard
-          {canAddFriend}
-          {canBePromoted}
-          {canKick}
-          {canLeave}
-          {isAddingFriend}
-          {isLeaving}
-          {isRemovingFriend}
-          {kickMember}
-          {kickingMemberIds}
-          {leaveParty}
-          {member}
-          {promote}
-          {promotingMemberId}
-          {removeFriend}
-          {sendFriendRequest}
-        />
-      {/each}
-    </div>
-  {/if}
+      <!-- Maybe this wasn't a good idea -->
+      <MemberCard
+        {canAddFriend}
+        {canBePromoted}
+        {canKick}
+        {canLeave}
+        {isAddingFriend}
+        {isLeaving}
+        {isRemovingFriend}
+        {kickMember}
+        {kickingMemberIds}
+        {leaveParty}
+        {member}
+        {promote}
+        {promotingMemberId}
+        {removeFriend}
+        {sendFriendRequest}
+      />
+    {/each}
+  </div>
 {/snippet}
