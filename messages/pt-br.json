@@ -491,11 +491,15 @@
       "discordStatus": "Status do Discord",
       "hideToTray": "Ocultar para System Tray",
       "checkForUpdates": "Procurar por Atualizações",
-      "debugLogs": "Ativar logs de depuração"
+      "debugLogs": "Ativar Logs de Depuração",
+      "openSettingsFolder": {
+        "title": "Abrir Pasta de Configurações",
+        "button": "Abrir Pasta"
+      }
     },
     "downloader": {
       "downloadPath": {
-        "title": "Local do download",
+        "title": "Local do Download",
         "description": "Selecionar local onde o launcher baixará jogos."
       },
       "noHTTPS": {

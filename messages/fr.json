@@ -471,31 +471,35 @@
     "invalidValue": "Tu as entré une valeur invalide.",
     "general": {
       "language": "Langue",
-      "gamePath": "Chemin de jeu personnalisé",
+      "gamePath": "Chemin de Jeu Personnalisé",
       "launchArguments": {
-        "title": "Arguments de lancement",
+        "title": "Arguments de Lancement",
         "description": "Arguments en ligne de commande à utiliser pour lancer Fortnite."
       },
       "missionCheckInterval": {
-        "title": "Intervalle de vérification de mission",
+        "title": "Intervalle de Vérification de Mission",
         "description": "Intervalle en secondes pour vérifier si tu es en mission SLM. Utilisé avec la fonction Auto-Kick."
       },
       "claimRewardsDelay": {
-        "title": "Retard de réclamation des récompenses",
+        "title": "Retard de Réclamation des Récompenses",
         "description": "Délai en secondes avant de récupérer les récompenses après avoir quitté une mission SLM. Utilisé avec la fonction d'expulsion automatique."
       },
       "startingPage": {
-        "title": "Page de démarrage",
+        "title": "Page de Démarrage",
         "description": "Sélectionne la page à afficher au démarrage du lanceur."
       },
       "discordStatus": "Statut Discord",
-      "hideToTray": "Masquer dans la barre d'état système",
-      "checkForUpdates": "Vérifier les mises à jour",
-      "debugLogs": "Activer les journaux de débogage"
+      "hideToTray": "Masquer dans la Barre d'État Système",
+      "checkForUpdates": "Vérifier les Mises à Jour",
+      "debugLogs": "Activer les Journaux de Débogage",
+      "openSettingsFolder": {
+        "title": "Ouvrir le Dossier des Paramètres",
+        "button": "Ouvrir le Dossier"
+      }
     },
     "downloader": {
       "downloadPath": {
-        "title": "Chemin de l'installateur",
+        "title": "Chemin de Téléchargement",
         "description": "Sélectionne le chemin où le lanceur téléchargera les jeux."
       },
       "noHTTPS": {
@@ -503,11 +507,11 @@
         "description": "Télécharger les jeux sans HTTPS."
       },
       "autoUpdate": {
-        "title": "Mise à jour automatique",
+        "title": "Mise à Jour Automatique",
         "description": "Mettre à jour automatiquement les jeux lorsqu'une nouvelle version est disponible."
       },
       "sendNotifications": {
-        "title": "Envoyer des notifications",
+        "title": "Envoyer des Notifications",
         "description": "Envoyer des notifications lorsqu'un jeu est mis à jour ou téléchargé."
       },
       "account": {

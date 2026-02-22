@@ -32,6 +32,14 @@
 					"sidecar": true
 				}
 			]
-		}
+		},
+  {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "$DATA/spitfire-launcher"
+        }
+      ]
+    }
 	]
 }

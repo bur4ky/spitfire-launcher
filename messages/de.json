@@ -491,7 +491,11 @@
       "discordStatus": "Discord-Status",
       "hideToTray": "In Systemleiste Ausblenden",
       "checkForUpdates": "Auf Updates Prüfen",
-      "debugLogs": "Debug-Protokolle aktivieren"
+      "debugLogs": "Debug-Protokolle aktivieren",
+      "openSettingsFolder": {
+        "title": "Einstellungsordner Öffnen",
+        "button": "Ordner Öffnen"
+      }
     },
     "downloader": {
       "downloadPath": {

@@ -6,6 +6,13 @@
   import { settingsStore } from '$lib/storage';
   import { type } from '@tauri-apps/plugin-os';
   import { handleSettingChange } from '$components/modules/settings/categories/GeneralSettings.svelte';
+  import { openPath } from '@tauri-apps/plugin-opener';
+  import { dataDirectory } from '$lib/storage/file-store';
+  import { Button } from '$components/ui/button';
+
+  function openSettingsFolder() {
+    openPath(dataDirectory);
+  }
 
   function convertToNumber(event: Event) {
     return Number.parseFloat((event.target as HTMLInputElement).value);
@@ -67,4 +74,12 @@
       onCheckedChange={(checked) => handleSettingChange(checked, 'debugLogs')}
     />
   </SettingItem>
+
+  {#if type() !== 'android' && type() !== 'ios'}
+    <SettingItem orientation="horizontal" title={$t('settings.general.openSettingsFolder.title')}>
+      <Button onclick={openSettingsFolder} size="sm">
+        {$t('settings.general.openSettingsFolder.button')}
+      </Button>
+    </SettingItem>
+  {/if}
 </div>

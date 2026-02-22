@@ -471,31 +471,35 @@
     "invalidValue": "Ha introducido un valor no válido.",
     "general": {
       "language": "Idioma",
-      "gamePath": "Ruta de juego personalizada",
+      "gamePath": "Ruta de Juego Personalizada",
       "launchArguments": {
-        "title": "Argumentos de lanzamiento",
+        "title": "Argumentos de Lanzamiento",
         "description": "Argumentos de línea de comandos para usar al iniciar Fortnite."
       },
       "missionCheckInterval": {
-        "title": "Intervalo de verificación de misión",
+        "title": "Intervalo de Verificación de Misión",
         "description": "Intervalo en segundos para comprobar si estás en una misión de STW. Utilizado con la función de auto-expulso."
       },
       "claimRewardsDelay": {
-        "title": "Retraso de recompensas de reclamo",
+        "title": "Retraso de Recompensas de Reclamo",
         "description": "Retraso en segundos antes de reclamar recompensas después de dejar una misión de STW. Utilizado con la función de auto-expulso."
       },
       "startingPage": {
-        "title": "Página de inicio",
+        "title": "Página de Inicio",
         "description": "Seleccione la página a mostrar cuando comience el lanzador."
       },
       "discordStatus": "Estado de Discord",
-      "hideToTray": "Ocultar en la bandeja del sistema",
-      "checkForUpdates": "Buscar actualizaciones",
-      "debugLogs": "Habilitar registros de depuración"
+      "hideToTray": "Ocultar en la Bandeja del Sistema",
+      "checkForUpdates": "Buscar Actualizaciones",
+      "debugLogs": "Habilitar Registros de Depuración",
+      "openSettingsFolder": {
+        "title": "Abrir Carpeta de Ajustes",
+        "button": "Abrir Carpeta"
+      }
     },
     "downloader": {
       "downloadPath": {
-        "title": "Ruta de descarga",
+        "title": "Ruta de Descarga",
         "description": "Seleccione la ruta donde el lanzador descargará los juegos."
       },
       "noHTTPS": {
@@ -503,11 +507,11 @@
         "description": "Descargar juegos sin HTTPS."
       },
       "autoUpdate": {
-        "title": "Actualización automática",
+        "title": "Actualización Automática",
         "description": "Actualizar automáticamente los juegos cuando una nueva versión esté disponible."
       },
       "sendNotifications": {
-        "title": "Enviar notificaciones",
+        "title": "Enviar Notificaciones",
         "description": "Enviar notificaciones cuando un juego es actualizado o descargado."
       },
       "account": {

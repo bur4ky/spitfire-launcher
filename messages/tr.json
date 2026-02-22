@@ -491,7 +491,11 @@
       "discordStatus": "Discord Durumu",
       "hideToTray": "Sistem Tepsisine Gizle",
       "checkForUpdates": "Güncellemeleri Kontrol Et",
-      "debugLogs": "Hata ayıklama günlüklerini etkinleştir"
+      "debugLogs": "Hata Ayıklama Günlüklerini Etkinleştir",
+      "openSettingsFolder": {
+        "title": "Ayarlar Klasörünü Aç",
+        "button": "Klasörü Aç"
+      }
     },
     "downloader": {
       "downloadPath": {

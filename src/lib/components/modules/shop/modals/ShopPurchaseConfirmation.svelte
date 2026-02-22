@@ -99,7 +99,7 @@
         {$t('itemShop.purchaseConfirmation.title')}
       </Dialog.Title>
 
-      <Dialog.Description class="flex flex-wrap items-center gap-1 break-words whitespace-normal">
+      <Dialog.Description class="flex flex-wrap items-center gap-1 wrap-break-word whitespace-normal">
         {@html $t('itemShop.purchaseConfirmation.description', {
           name: `<span class="font-semibold">${item.name}</span>`,
           price: `<span class="font-semibold">${$discountedPrice.toLocaleString($language)}</span>`,

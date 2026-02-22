@@ -491,7 +491,11 @@
       "discordStatus": "Discord Status",
       "hideToTray": "Hide to System Tray",
       "checkForUpdates": "Check for Updates",
-      "debugLogs": "Enable Debug Logs"
+      "debugLogs": "Enable Debug Logs",
+      "openSettingsFolder": {
+        "title": "Open Settings Folder",
+        "button": "Open Folder"
+      }
     },
     "downloader": {
       "downloadPath": {

@@ -5,7 +5,7 @@
   type Props = {
     title: string;
     description?: string;
-    labelFor: string;
+    labelFor?: string;
     orientation: 'horizontal' | 'vertical';
     children: Snippet;
   };
