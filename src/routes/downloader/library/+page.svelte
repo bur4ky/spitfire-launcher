@@ -112,7 +112,7 @@
     <AppFilter bind:value={filters} />
   </div>
 
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
     {#if isRefreshing}
       <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
       {#each Array(8) as _, i (i)}

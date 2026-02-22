@@ -158,10 +158,19 @@ class DownloadManagerC {
     try {
       await this.startInstallation(app, {
         onProgress: (progress: Partial<DownloadProgress>) => {
-          this.progress = {
+          const next = {
             ...this.progress,
             ...progress
           };
+
+          // The progress percent from Legendary seems to be very inaccurate
+          // So we calculate it ourselves
+          next.percent =
+            next.actualDownloadSize && next.downloaded && next.actualDownloadSize > 0
+              ? (next.downloaded / next.actualDownloadSize) * 100
+              : 0;
+
+          this.progress = next;
         },
         onComplete: async (success) => {
           const downloaderSettings = downloaderStore.get();
@@ -260,11 +269,6 @@ class DownloadManagerC {
 
   async resumeDownload() {
     await this.processQueue(true);
-  }
-
-  async clearCompleted() {
-    this.queue = this.queue.filter(({ status }) => status !== 'completed' && status !== 'failed');
-    await this.saveQueueToFile();
   }
 
   private async handleDownloadError(item: QueueItem, type: DownloadType, error?: unknown) {

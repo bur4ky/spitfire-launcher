@@ -63,7 +63,6 @@
 
   onMount(async () => {
     const appInfo = appInfoCache.get(app.id) || (await Legendary.getAppInfo(app.id).then((x) => x.stdout))!;
-
     const diskSpace = await Tauri.getDiskSpace({ dir: downloaderStore.get().downloadPath! });
 
     appInfoCache.set(app.id, appInfo);
@@ -164,13 +163,12 @@
         </div>
       </div>
 
-      <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-        <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
+      <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+        <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
           {$t('cancel')}
         </Dialog.Close>
 
         <Button
-          class="flex-1"
           disabled={!afterInstallPercentage || afterInstallPercentage >= 100 || isStartingDownload}
           loading={isStartingDownload}
           onclick={installApp}

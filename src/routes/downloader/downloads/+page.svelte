@@ -66,97 +66,90 @@
 </script>
 
 <PageContent title={$t('downloads.page.title')}>
-  <div class="relative h-36 w-full rounded-md border p-3 {!currentDownload && 'bg-card'}">
+  <div class="rounded-md border bg-card p-3">
     {#if currentDownload}
-      <img
-        class="pointer-events-none absolute inset-0 size-full rounded-md object-cover opacity-10"
-        alt="Background"
-        src={currentDownload.item.images.wide}
-      />
+      <div class="flex gap-4">
+        <img
+          class="w-16 rounded object-cover"
+          alt={currentDownload.item.title}
+          src={currentDownload.item.images.tall}
+        />
 
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold">{currentDownload.item.title}</h3>
-          <div class="flex items-center gap-2">
-            <Button
-              class="p-2"
-              disabled={isCancelling || isTogglingPause}
-              onclick={togglePause}
-              size="sm"
-              variant="outline"
-            >
-              {#if isTogglingPause}
-                <LoaderCircleIcon class="size-4 animate-spin" />
-              {:else if currentDownload.status === 'paused'}
-                <PlayIcon class="size-4" />
-              {:else}
-                <PauseIcon class="size-4" />
-              {/if}
-            </Button>
-            <Button
-              class="p-2"
-              disabled={isCancelling || isTogglingPause}
-              onclick={() => (showCancelDialog = true)}
-              size="sm"
-              variant="outline"
-            >
-              {#if isCancelling}
-                <LoaderCircleIcon class="size-4 animate-spin" />
-              {:else}
-                <XIcon class="size-4" />
-              {/if}
-            </Button>
-          </div>
-        </div>
+        <div class="flex flex-1 flex-col gap-4">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="font-semibold text-foreground">{currentDownload.item.title}</h2>
+            <div class="flex gap-2">
+              <Button disabled={isCancelling || isTogglingPause} onclick={togglePause} size="icon-sm" variant="outline">
+                {#if isTogglingPause}
+                  <LoaderCircleIcon class="animate-spin" />
+                {:else if currentDownload.status === 'paused'}
+                  <PlayIcon />
+                {:else}
+                  <PauseIcon />
+                {/if}
+              </Button>
 
-        <div class="space-y-3">
-          <div class="flex items-center justify-end space-x-2 text-sm">
-            <span>{bytesToSize(progress.downloaded)} / {bytesToSize(progress.actualDownloadSize)}</span>
-            <span class="text-muted-foreground">/</span>
-            <span>{(progress.percent || 0).toFixed(2)}%</span>
+              <Button
+                disabled={isCancelling || isTogglingPause}
+                onclick={() => (showCancelDialog = true)}
+                size="icon-sm"
+                variant="outline"
+              >
+                {#if isCancelling}
+                  <LoaderCircleIcon class="animate-spin" />
+                {:else}
+                  <XIcon />
+                {/if}
+              </Button>
+            </div>
           </div>
 
-          <Progress class="bg-accent" value={progress.percent || 0} />
+          <div class="mt-auto flex flex-col gap-2">
+            <Progress
+              indicatorClass={currentDownload.status === 'paused' ? 'bg-yellow-500' : ''}
+              value={progress.percent}
+            />
 
-          <div class="flex items-center justify-between text-sm text-muted-foreground">
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-x-4 text-xs text-muted-foreground">
               <span class="flex items-center gap-1">
                 <DownloadIcon class="size-4" />
-                {bytesToSize(progress.downloadSpeed, 1)}ps
+                {bytesToSize(progress.downloadSpeed || 0, 1)}ps
               </span>
-              <span class="flex items-center gap-1 border-l pl-2">
-                <HardDriveIcon class="size-4" />
-                {bytesToSize(progress.diskWriteSpeed, 1)}ps
-              </span>
-            </div>
 
-            <span class="flex items-center gap-1">
-              {#if currentDownload.status === 'paused'}
-                Paused
-              {:else}
+              <span class="flex items-center gap-1">
+                <HardDriveIcon class="size-4" />
+                {bytesToSize(progress.diskWriteSpeed || 0, 1)}ps
+              </span>
+
+              <span class="flex items-center gap-1">
                 <ClockIcon class="size-4" />
                 {formatRemainingDuration(progress.etaMs)}
-              {/if}
-            </span>
+              </span>
+
+              <span class="ml-auto flex items-center gap-1">
+                <span>{bytesToSize(progress.downloaded || 0)} / {bytesToSize(progress.actualDownloadSize || 0)}</span>
+                <span>({(progress.percent || 0).toFixed(2)}%)</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
     {:else}
-      <div class="flex h-full items-center justify-center">
-        <p class="text-muted-foreground">
-          {$t('downloads.noDownloads')}
-        </p>
+      <div class="py-10 text-center text-muted-foreground">
+        {$t('downloads.noDownloads')}
       </div>
     {/if}
   </div>
 
   {#if queue.length}
-    <div class="mt-2 w-full rounded-md border p-4">
-      <h3 class="mb-4 text-2xl font-semibold">{$t('downloads.queued')}</h3>
+    <div class="w-full rounded-md">
+      <h3 class="mb-2 text-sm font-medium tracking-wider text-muted-foreground/60 uppercase">
+        {$t('downloads.queued')}
+      </h3>
       <div class="space-y-4">
         {#each queue as { item }, index (item.id)}
           <div class="flex items-center gap-4 rounded-lg border bg-card p-3">
-            <img class="h-16 w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
+            <img class="w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
 
             <div class="flex-1">
               <h4 class="font-medium">{item.title}</h4>
@@ -165,27 +158,25 @@
 
             <div class="flex items-center gap-2">
               <Button
-                class="p-2"
                 disabled={index === 0}
                 onclick={() => DownloadManager.moveQueueItem(item.id, 'up')}
-                size="sm"
+                size="icon-sm"
                 variant="outline"
               >
-                <ChevronUpIcon class="size-4" />
+                <ChevronUpIcon />
               </Button>
 
               <Button
-                class="p-2"
                 disabled={index === queue.length - 1}
                 onclick={() => DownloadManager.moveQueueItem(item.id, 'down')}
-                size="sm"
+                size="icon-sm"
                 variant="outline"
               >
-                <ChevronDownIcon class="size-4" />
+                <ChevronDownIcon />
               </Button>
 
-              <Button class="p-2" onclick={() => DownloadManager.removeFromQueue(item.id)} size="sm" variant="outline">
-                <XIcon class="size-4" />
+              <Button onclick={() => DownloadManager.removeFromQueue(item.id)} size="icon-sm" variant="outline">
+                <XIcon />
               </Button>
             </div>
           </div>
@@ -195,17 +186,14 @@
   {/if}
 
   {#if completed.length}
-    <div class="mt-2 w-full rounded-md border p-4">
-      <div class="mb-4 flex items-center gap-2">
-        <h3 class="text-2xl font-semibold">{$t('downloads.completed')}</h3>
-        <Button onclick={() => DownloadManager.clearCompleted()} size="sm" variant="outline">
-          {$t('downloads.clearAll')}
-        </Button>
-      </div>
+    <div class="w-full rounded-md">
+      <h3 class="mb-2 text-sm font-medium tracking-wider text-muted-foreground/60 uppercase">
+        {$t('downloads.completed')}
+      </h3>
       <div class="space-y-4">
         {#each completed as { status, item, completedAt } (item.id)}
           <div class="flex items-center gap-4 rounded-lg border bg-card p-3">
-            <img class="h-16 w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
+            <img class="w-12 rounded object-cover" alt={item.title} src={item.images.tall} />
 
             <div class="flex-1">
               <div class="flex items-center gap-2">
@@ -226,8 +214,8 @@
             </div>
 
             <div class="flex items-center gap-2">
-              <Button onclick={() => DownloadManager.removeFromQueue(item.id)} variant="outline">
-                <XIcon class="size-4" />
+              <Button onclick={() => DownloadManager.removeFromQueue(item.id)} size="icon-sm" variant="outline">
+                <XIcon />
               </Button>
             </div>
           </div>

@@ -2,7 +2,6 @@
   import { Button, buttonVariants } from '$components/ui/button';
   import * as Dialog from '$components/ui/dialog';
   import { t } from '$lib/i18n';
-  import { cn } from '$lib/utils';
 
   type Props = {
     open: boolean;
@@ -26,13 +25,12 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
+    <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+      <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
         {$t('cancel')}
       </Dialog.Close>
 
       <Button
-        class="flex flex-1 items-center gap-2"
         disabled={isCancelling}
         loading={isCancelling}
         onclick={() => {

@@ -4,7 +4,7 @@
   import { t } from '$lib/i18n';
   import { Legendary } from '$lib/modules/legendary';
   import { ownedApps } from '$lib/stores';
-  import { cn, handleError } from '$lib/utils';
+  import { handleError } from '$lib/utils';
   import { toast } from 'svelte-sonner';
 
   type Props = {
@@ -45,12 +45,12 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <Dialog.Footer class="flex w-full items-center justify-center gap-2">
-      <Dialog.Close class={cn(buttonVariants({ variant: 'secondary' }), 'flex-1')}>
+    <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
+      <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>
         {$t('cancel')}
       </Dialog.Close>
 
-      <Button class="flex flex-1 items-center gap-2" disabled={isDeleting} loading={isDeleting} onclick={uninstallApp}>
+      <Button disabled={isDeleting} loading={isDeleting} onclick={uninstallApp}>
         {$t('confirm')}
       </Button>
     </Dialog.Footer>
