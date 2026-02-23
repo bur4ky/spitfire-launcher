@@ -10,6 +10,16 @@ publish = false
 name = "spitfire_launcher_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+[profile.dev]
+incremental = true
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
