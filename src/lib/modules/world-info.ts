@@ -130,16 +130,17 @@ export class WorldInfo {
     alert?: WorldInfoMissionAlert['availableMissionAlerts'][number]
   ): WorldParsedMission {
     const zoneInfo = WorldInfo.parseZone(mission.missionGenerator);
+    const isGroup =
+      theater.uniqueId === Theaters.Stonewood && zoneInfo.id === 'ets'
+        ? false
+        : mission.missionGenerator.toLowerCase().includes('group');
 
     const powerLevel =
       TheaterPowerLevels[theater.uniqueId as keyof typeof TheaterPowerLevels]?.[zone as never] ??
       TheaterPowerLevels.Ventures?.[zone as never] ??
       -1;
 
-    const rewardIds: string[] = [];
     const missionRewards = WorldInfo.mergeItems(mission.missionRewards.items).map((item) => {
-      rewardIds.push(item.itemType);
-
       const parsed = WorldInfo.parseResource(item.itemType, item.quantity);
       const isHard =
         parsed.itemType.includes('reagent_c_t0') &&
@@ -159,8 +160,6 @@ export class WorldInfo {
     const alertRewards =
       alert &&
       WorldInfo.mergeItems(alert.missionAlertRewards.items).map((item) => {
-        rewardIds.push(item.itemType);
-
         const parsed = WorldInfo.parseResource(item.itemType, item.quantity);
         return {
           imageUrl: parsed.imageUrl,
@@ -177,10 +176,10 @@ export class WorldInfo {
       guid: mission.missionGuid,
       generator: mission.missionGenerator,
       tileIndex: mission.tileIndex,
-      rewardIds,
       rewards: missionRewards,
       modifiers,
       powerLevel,
+      isGroup,
       zone: {
         theme: theater.tiles[mission.tileIndex].zoneTheme,
         type: zoneInfo

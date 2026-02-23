@@ -42,6 +42,14 @@ export const TheaterColors = Object.freeze({
   Ventures: '#3CD8E3'
 } as const);
 
+export const TheaterLetters = Object.freeze({
+  [Theaters.Stonewood]: 'S',
+  [Theaters.Plankerton]: 'P',
+  [Theaters.CannyValley]: 'C',
+  [Theaters.TwinePeaks]: 'T',
+  Ventures: 'V'
+} as const);
+
 export const TheaterStormKingZones = Object.freeze({
   [Theaters.CannyValley]: 'Hard_Zone5_Dudebro',
   [Theaters.TwinePeaks]: 'Nightmare_Zone10_Dudebro'

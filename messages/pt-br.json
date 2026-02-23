@@ -319,6 +319,10 @@
       "upgradeLlamas": "Lhamas de aprimoramento",
       "perkup": "PERK-UP!"
     },
+    "tabs": {
+      "overview": "Visão Geral",
+      "all": "Todos Os Alertas"
+    },
     "sections": {
       "survivors": "Sobreviventes Lendários/Míticos",
       "twinePeaks": "Twine Peaks",
@@ -328,7 +332,16 @@
     },
     "noMissions": "Sem missões disponíveis",
     "rewards": "Recompensas",
-    "alertRewards": "Recompensas de Alerta"
+    "alertRewards": "Recompensas de Alerta",
+    "filters": {
+      "title": "Filtros",
+      "zone": "Zona",
+      "missionType": "Tipo de Missão",
+      "group": "Grupo",
+      "rarity": "Raridade",
+      "rewards": "Recompensas",
+      "reset": "Redefinir Filtros"
+    }
   },
   "lookupPlayers": {
     "page": {

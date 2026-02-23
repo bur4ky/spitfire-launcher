@@ -3,118 +3,201 @@
   import AlertsOverviewItem from '$components/modules/mission-alerts/AlertsOverviewItem.svelte';
   import AlertsSection from '$components/modules/mission-alerts/AlertsSection.svelte';
   import AlertsSectionSkeleton from '$components/modules/mission-alerts/skeletons/AlertsSectionSkeleton.svelte';
+  import * as Tabs from '$components/ui/tabs';
   import { MCP } from '$lib/modules/mcp';
   import type { WorldParsedMission } from '$types/game/stw/world-info';
   import { claimedMissionAlerts, worldInfoCache } from '$lib/stores';
-  import { TheaterPowerLevels, Theaters } from '$lib/constants/stw/world-info';
-  import { isLegendaryOrMythicSurvivor } from '$lib/utils';
-  import { t } from '$lib/i18n';
+  import { TheaterPowerLevels, Theaters, ZoneCategories } from '$lib/constants/stw/world-info';
+  import { language, t } from '$lib/i18n';
   import { WorldInfo } from '$lib/modules/world-info';
   import { onMount } from 'svelte';
   import { accountStore } from '$lib/storage';
   import { SvelteSet } from 'svelte/reactivity';
+  import { Button } from '$components/ui/button';
+  import FunnelIcon from '@lucide/svelte/icons/funnel';
+  import FilterSheet, { filters } from '$components/modules/mission-alerts/FilterSheet.svelte';
+  import { theaters } from '$lib/constants/stw/resources';
 
   const activeAccount = accountStore.getActiveStore(true);
+
+  let showFilters = $state(false);
 
   const filteredMissions = $derived.by(() => {
     if (!$worldInfoCache?.size) return null;
 
-    const vbucks: WorldParsedMission[] = [];
-    const survivors: WorldParsedMission[] = [];
+    const stonewood: WorldParsedMission[] = [];
+    const plankerton: WorldParsedMission[] = [];
+    const cannyValley: WorldParsedMission[] = [];
     const twinePeaks: WorldParsedMission[] = [];
     const ventures: WorldParsedMission[] = [];
+
+    const vbucks: WorldParsedMission[] = [];
+    const survivors: WorldParsedMission[] = [];
+    const twinePeaks160: WorldParsedMission[] = [];
+    const ventures140: WorldParsedMission[] = [];
     const upgradeLlamaTokens: WorldParsedMission[] = [];
     const perkUp: WorldParsedMission[] = [];
 
+    let totalVbucks = 0;
+    let totalSurvivors = 0;
+    let totalUpgradeLlamas = 0;
+    let totalPerkUp = 0;
+
+    const f = $filters;
+
     for (const [theaterId, worldMissions] of $worldInfoCache.entries()) {
+      if (!matchesZoneFilter(theaterId, f.zones)) continue;
+
       for (const mission of worldMissions.values()) {
-        let hasVbucks = false;
-        let hasSurvivor = false;
-        let hasUpgradeToken = false;
-        let hasPerkUp = false;
+        if (f.group && !mission.isGroup) continue;
 
-        for (const id of mission.rewardIds) {
-          if (!hasVbucks && id.includes('currency_mtxswap')) {
-            hasVbucks = true;
-            vbucks.push(mission);
-          }
+        if (f.missionTypes.size) {
+          const match = f.missionTypes.values().some((missionType) => {
+            const keys = ZoneCategories[missionType as keyof typeof ZoneCategories];
+            return keys?.some((key) => mission.generator.includes(key));
+          });
 
-          if (!hasSurvivor && isLegendaryOrMythicSurvivor(id)) {
-            hasSurvivor = true;
-            survivors.push(mission);
-          }
+          if (!match) continue;
+        }
 
-          if (!hasUpgradeToken && id.includes('voucher_cardpack_bronze')) {
-            hasUpgradeToken = true;
-            upgradeLlamaTokens.push(mission);
-          }
+        const alertRewards = mission.alert?.rewards ?? [];
+        const allRewards = [...alertRewards, ...mission.rewards];
+        if (f.rarities.size) {
+          const match = allRewards.some((reward) => {
+            if (!('rarity' in reward)) return false;
 
-          if (!hasPerkUp && id.includes('alteration_upgrade_sr')) {
-            hasPerkUp = true;
-            perkUp.push(mission);
-          }
+            const { itemId } = reward;
+            return (
+              f.rarities.has(reward.rarity) &&
+              (itemId.includes('currency_mtxswap') ||
+                itemId.includes('Worker') ||
+                itemId.includes('Hero') ||
+                itemId.includes('Defender') ||
+                itemId.includes('Schematic'))
+            );
+          });
+
+          if (!match) continue;
+        }
+
+        if (f.rewards.size) {
+          if (!matchesRewardFilter(allRewards, f.rewards)) continue;
+        }
+
+        const vbucksReward = alertRewards.find((x) => x.itemId.includes('currency_mtxswap'));
+        if (vbucksReward || mission.rewards.some((x) => x.itemId.includes('currency_mtxswap'))) {
+          if (vbucksReward) totalVbucks += vbucksReward.quantity;
+          vbucks.push(mission);
+        }
+
+        const upgradeLlamaReward = alertRewards.find((x) => x.itemId.includes('voucher_cardpack_bronze'));
+        if (upgradeLlamaReward || mission.rewards.some((x) => x.itemId.includes('voucher_cardpack_bronze'))) {
+          if (upgradeLlamaReward) totalUpgradeLlamas += upgradeLlamaReward.quantity;
+          upgradeLlamaTokens.push(mission);
+        }
+
+        const survivorReward = alertRewards.find((x) => isLegendaryOrMythicSurvivor(x.itemId));
+        if (survivorReward || mission.rewards.some((x) => isLegendaryOrMythicSurvivor(x.itemId))) {
+          if (survivorReward) totalSurvivors += survivorReward.quantity;
+          survivors.push(mission);
+        }
+
+        const perkUpReward = alertRewards.find((x) => x.itemId.includes('alteration_upgrade_sr'));
+        if (perkUpReward || mission.rewards.some((x) => x.itemId.includes('alteration_upgrade_sr'))) {
+          if (perkUpReward) totalPerkUp += perkUpReward.quantity;
+          perkUp.push(mission);
         }
 
         if (
           theaterId === Theaters.TwinePeaks &&
           mission.powerLevel === TheaterPowerLevels[Theaters.TwinePeaks].Endgame_Zone6
         ) {
-          twinePeaks.push(mission);
+          twinePeaks160.push(mission);
         }
 
-        if (
-          theaterId !== Theaters.Stonewood &&
-          theaterId !== Theaters.Plankerton &&
-          theaterId !== Theaters.CannyValley &&
-          theaterId !== Theaters.TwinePeaks &&
-          mission.powerLevel === TheaterPowerLevels.Ventures.Phoenix_Zone25
-        ) {
-          ventures.push(mission);
+        if (isVentureTheater(theaterId) && mission.powerLevel === TheaterPowerLevels.Ventures.Phoenix_Zone25) {
+          ventures140.push(mission);
+        }
+
+        if (mission.alert) {
+          if (theaterId === Theaters.Stonewood) {
+            stonewood.push(mission);
+          } else if (theaterId === Theaters.Plankerton) {
+            plankerton.push(mission);
+          } else if (theaterId === Theaters.CannyValley) {
+            cannyValley.push(mission);
+          } else if (theaterId === Theaters.TwinePeaks) {
+            twinePeaks.push(mission);
+          } else {
+            ventures.push(mission);
+          }
         }
       }
     }
 
     return {
-      vbucks,
-      survivors,
+      stonewood,
+      plankerton,
+      cannyValley,
       twinePeaks,
       ventures,
+      vbucks,
+      survivors,
+      twinePeaks160,
+      ventures140,
       upgradeLlamaTokens,
-      perkUp
+      perkUp,
+      totalVbucks,
+      totalSurvivors,
+      totalUpgradeLlamas,
+      totalPerkUp
     };
   });
+
+  function isLegendaryOrMythicSurvivor(itemId: string) {
+    return itemId.includes('workerbasic_sr') || (itemId.startsWith('Worker:manager') && itemId.includes('_sr_'));
+  }
+
+  function isVentureTheater(theaterId: string) {
+    return (
+      theaterId !== Theaters.Stonewood &&
+      theaterId !== Theaters.Plankerton &&
+      theaterId !== Theaters.CannyValley &&
+      theaterId !== Theaters.TwinePeaks
+    );
+  }
+
+  function matchesZoneFilter(theaterId: string, zones: Set<string>) {
+    if (!zones.size) return true;
+
+    const isVenture = isVentureTheater(theaterId);
+    return zones.has('ventures') ? isVenture || zones.has(theaterId) : zones.has(theaterId);
+  }
+
+  function matchesRewardFilter(allRewards: { itemId: string }[], rewards: Set<string>) {
+    return rewards.values().some((key) => {
+      const isManager = key === 'Manager';
+      const isCommand = key === 'Defender' || key === 'Hero' || key === 'Worker' || key === 'Manager';
+      const isArsenal = key === 'Melee' || key === 'Ranged' || key === 'Trap';
+
+      return allRewards.some(({ itemId }) => {
+        if (isManager) return itemId.startsWith('Worker:manager');
+        if (isCommand) return itemId.startsWith(key);
+        if (isArsenal) return itemId.includes(key);
+
+        return itemId.toLowerCase().includes(key.toLowerCase());
+      });
+    });
+  }
 
   function refreshWorldInfo() {
     worldInfoCache.set(new Map());
     WorldInfo.setCache();
   }
 
-  function countMissionReward(
-    missions: WorldParsedMission[] | undefined,
-    idOrValidator: string | ((id: string) => boolean)
-  ) {
-    return (missions || []).reduce((acc, crr) => {
-      const alertReward = crr.alert?.rewards.find((reward) =>
-        typeof idOrValidator === 'function' ? idOrValidator(reward.itemId) : reward.itemId.includes(idOrValidator)
-      );
-
-      const missionReward = crr.rewards.find((reward) =>
-        typeof idOrValidator === 'function' ? idOrValidator(reward.itemId) : reward.itemId.includes(idOrValidator)
-      );
-
-      acc += (alertReward?.quantity || 0) + (missionReward?.quantity || 0);
-
-      return acc;
-    }, 0);
-  }
-
   function getResetDate() {
     const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = now.getUTCMonth();
-    const day = now.getUTCDate();
-
-    return new Date(Date.UTC(year, month, day + 1));
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
   }
 
   $effect(() => {
@@ -131,10 +214,7 @@
 
   onMount(() => {
     const timeUntilReset = getResetDate().getTime() - Date.now();
-    const timeout = setTimeout(() => {
-      refreshWorldInfo();
-    }, timeUntilReset + 5000);
-
+    const timeout = setTimeout(refreshWorldInfo, timeUntilReset + 5000);
     return () => clearTimeout(timeout);
   });
 </script>
@@ -152,40 +232,82 @@
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
     <AlertsOverviewItem
       name={$t('vbucks')}
-      amount={countMissionReward(filteredMissions?.vbucks, 'currency_mtxswap')}
+      amount={filteredMissions?.totalVbucks ?? 0}
       icon="/resources/currency_mtxswap.png"
     />
     <AlertsOverviewItem
       name={$t('stwMissionAlerts.overview.survivors')}
-      amount={countMissionReward(filteredMissions?.survivors, isLegendaryOrMythicSurvivor)}
+      amount={filteredMissions?.totalSurvivors ?? 0}
       icon="/resources/voucher_generic_worker_sr.png"
     />
     <AlertsOverviewItem
       name={$t('stwMissionAlerts.overview.upgradeLlamas')}
-      amount={countMissionReward(filteredMissions?.upgradeLlamaTokens, 'voucher_cardpack_bronze')}
+      amount={filteredMissions?.totalUpgradeLlamas ?? 0}
       icon="/resources/voucher_cardpack_bronze.png"
     />
     <AlertsOverviewItem
       name={$t('stwMissionAlerts.overview.perkup')}
-      amount={countMissionReward(filteredMissions?.perkUp, 'alteration_upgrade_sr')}
+      amount={filteredMissions?.totalPerkUp ?? 0}
       icon="/resources/reagent_alteration_upgrade_sr.png"
     />
   </div>
 
-  <div class="space-y-4">
-    {#if $worldInfoCache?.size}
-      <AlertsSection missions={filteredMissions?.vbucks || []} title={$t('vbucks')} />
-      <AlertsSection missions={filteredMissions?.survivors || []} title={$t('stwMissionAlerts.sections.survivors')} />
-      <AlertsSection missions={filteredMissions?.twinePeaks || []} title={$t('stwMissionAlerts.sections.twinePeaks')} />
-      <AlertsSection missions={filteredMissions?.ventures || []} title={$t('stwMissionAlerts.sections.ventures')} />
+  <Tabs.Root value="overview">
+    <Tabs.List>
+      <Tabs.Trigger value="overview">{$t('stwMissionAlerts.tabs.overview')}</Tabs.Trigger>
+      <Tabs.Trigger disabled={!$worldInfoCache?.size} value="all">
+        {$t('stwMissionAlerts.tabs.all')}
+      </Tabs.Trigger>
+
+      <Button class="ml-auto" onclick={() => (showFilters = true)} size="sm" variant="secondary">
+        <FunnelIcon />
+        {$t('stwMissionAlerts.filters.title')}
+      </Button>
+    </Tabs.List>
+
+    <Tabs.Content class="space-y-4" value="overview">
+      {#if $worldInfoCache?.size}
+        <AlertsSection missions={filteredMissions?.vbucks || []} title={$t('vbucks')} />
+        <AlertsSection missions={filteredMissions?.survivors || []} title={$t('stwMissionAlerts.sections.survivors')} />
+        <AlertsSection
+          missions={filteredMissions?.twinePeaks160 || []}
+          title={$t('stwMissionAlerts.sections.twinePeaks')}
+        />
+        <AlertsSection
+          missions={filteredMissions?.ventures140 || []}
+          title={$t('stwMissionAlerts.sections.ventures')}
+        />
+        <AlertsSection
+          missions={filteredMissions?.upgradeLlamaTokens || []}
+          title={$t('stwMissionAlerts.sections.upgradeLlamaTokens')}
+        />
+        <AlertsSection missions={filteredMissions?.perkUp || []} title={$t('stwMissionAlerts.sections.perkup')} />
+      {:else}
+        <AlertsSectionSkeleton />
+        <AlertsSectionSkeleton />
+      {/if}
+    </Tabs.Content>
+
+    <Tabs.Content class="space-y-4" value="all">
       <AlertsSection
-        missions={filteredMissions?.upgradeLlamaTokens || []}
-        title={$t('stwMissionAlerts.sections.upgradeLlamaTokens')}
+        missions={filteredMissions?.stonewood || []}
+        title={theaters[Theaters.Stonewood].names[$language]}
       />
-      <AlertsSection missions={filteredMissions?.perkUp || []} title={$t('stwMissionAlerts.sections.perkup')} />
-    {:else}
-      <AlertsSectionSkeleton />
-      <AlertsSectionSkeleton />
-    {/if}
-  </div>
+      <AlertsSection
+        missions={filteredMissions?.plankerton || []}
+        title={theaters[Theaters.Plankerton].names[$language]}
+      />
+      <AlertsSection
+        missions={filteredMissions?.cannyValley || []}
+        title={theaters[Theaters.CannyValley].names[$language]}
+      />
+      <AlertsSection
+        missions={filteredMissions?.twinePeaks || []}
+        title={theaters[Theaters.TwinePeaks].names[$language]}
+      />
+      <AlertsSection missions={filteredMissions?.ventures || []} title={$t('stwMissionAlerts.sections.ventures')} />
+    </Tabs.Content>
+  </Tabs.Root>
+
+  <FilterSheet bind:open={showFilters} />
 </PageContent>

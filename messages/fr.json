@@ -319,6 +319,10 @@
       "upgradeLlamas": "Lamas d'amélioration",
       "perkup": "Décuplateur"
     },
+    "tabs": {
+      "overview": "Aperçu",
+      "all": "Toutes Les Alertes"
+    },
     "sections": {
       "survivors": "Survivants légendaires/mythiques",
       "twinePeaks": "Pics Hardis",
@@ -328,7 +332,16 @@
     },
     "noMissions": "Aucune mission disponible",
     "rewards": "Récompenses",
-    "alertRewards": "Récompenses d'alerte"
+    "alertRewards": "Récompenses d'alerte",
+    "filters": {
+      "title": "Filtres",
+      "zone": "Zone",
+      "missionType": "Type de Mission",
+      "group": "Groupe",
+      "rarity": "Rareté",
+      "rewards": "Récompenses",
+      "reset": "Réinitialiser Les Filtres"
+    }
   },
   "lookupPlayers": {
     "page": {

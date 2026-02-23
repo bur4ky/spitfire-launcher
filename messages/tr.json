@@ -319,6 +319,10 @@
       "upgradeLlamas": "Geliştirme Lamaları",
       "perkup": "YÜKSELTİCİ!"
     },
+    "tabs": {
+      "overview": "Genel Bakış",
+      "all": "Tüm Uyarılar"
+    },
     "sections": {
       "survivors": "Efsanevi/Eşsiz Felaketzedeler",
       "twinePeaks": "Dikiz Tepeler",
@@ -328,7 +332,16 @@
     },
     "noMissions": "Hiç görev yok",
     "rewards": "Ödüller",
-    "alertRewards": "Görev Uyarısı Ödülleri"
+    "alertRewards": "Görev Uyarısı Ödülleri",
+    "filters": {
+      "title": "Filtreler",
+      "zone": "Bölge",
+      "missionType": "Görev Türü",
+      "group": "Grup",
+      "rarity": "Nadirlik",
+      "rewards": "Ödüller",
+      "reset": "Filtreleri Sıfırla"
+    }
   },
   "lookupPlayers": {
     "page": {

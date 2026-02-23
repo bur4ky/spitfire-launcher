@@ -319,6 +319,10 @@
       "upgradeLlamas": "Llamas de mejora",
       "perkup": "¡PERK-UP!"
     },
+    "tabs": {
+      "overview": "Resumen",
+      "all": "Todas Las Alertas"
+    },
     "sections": {
       "survivors": "Supervivientes legendarios/míticos",
       "twinePeaks": "Cumbres Leñosas",
@@ -328,7 +332,16 @@
     },
     "noMissions": "No hay misiones disponibles",
     "rewards": "Recompensas",
-    "alertRewards": "Recompensas de alerta"
+    "alertRewards": "Recompensas de alerta",
+    "filters": {
+      "title": "Filtros",
+      "zone": "Zona",
+      "missionType": "Tipo de Misión",
+      "group": "Grupo",
+      "rarity": "Rareza",
+      "rewards": "Recompensas",
+      "reset": "Restablecer Filtros"
+    }
   },
   "lookupPlayers": {
     "page": {

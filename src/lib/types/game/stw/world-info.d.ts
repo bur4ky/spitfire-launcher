@@ -96,10 +96,10 @@ type Tile = {
 
 export type WorldParsedMission = {
   theaterId: string;
-  rewardIds: string[];
   guid: string;
   generator: string;
   tileIndex: number;
+  isGroup: boolean;
   modifiers: Array<{
     id: string;
     imageUrl: string;

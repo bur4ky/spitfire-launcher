@@ -319,6 +319,10 @@
       "upgradeLlamas": "Upgrade-Lamas",
       "perkup": "Vorteil-Plus!"
     },
+    "tabs": {
+      "overview": "Übersicht",
+      "all": "Alle Warnungen"
+    },
     "sections": {
       "survivors": "Legendäre/Mystische Überlebende",
       "twinePeaks": "Twine Peaks",
@@ -328,7 +332,16 @@
     },
     "noMissions": "Keine Missionen verfügbar",
     "rewards": "Belohnungen",
-    "alertRewards": "Alarmbelohnungen"
+    "alertRewards": "Alarmbelohnungen",
+    "filters": {
+      "title": "Filter",
+      "zone": "Zone",
+      "missionType": "Missionstyp",
+      "group": "Gruppe",
+      "rarity": "Seltenheit",
+      "rewards": "Belohnungen",
+      "reset": "Filter Zurücksetzen"
+    }
   },
   "lookupPlayers": {
     "page": {

@@ -319,6 +319,10 @@
       "upgradeLlamas": "Upgrade Llamas",
       "perkup": "PERK-UP!"
     },
+    "tabs": {
+      "overview": "Overview",
+      "all": "All Alerts"
+    },
     "sections": {
       "survivors": "Legendary/Mythic Survivors",
       "twinePeaks": "Twine Peaks",
@@ -328,7 +332,16 @@
     },
     "noMissions": "No available missions",
     "rewards": "Rewards",
-    "alertRewards": "Alert Rewards"
+    "alertRewards": "Alert Rewards",
+    "filters": {
+      "title": "Filters",
+      "zone": "Zone",
+      "missionType": "Mission Type",
+      "group": "Group",
+      "rarity": "Rarity",
+      "rewards": "Rewards",
+      "reset": "Reset Filters"
+    }
   },
   "lookupPlayers": {
     "page": {

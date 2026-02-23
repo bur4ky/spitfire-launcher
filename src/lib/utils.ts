@@ -60,10 +60,6 @@ export function handleError({ error, message, toastId, account } = {} as HandleE
   }
 }
 
-export function isLegendaryOrMythicSurvivor(itemId: string) {
-  return itemId.includes('workerbasic_sr') || (itemId.startsWith('Worker:manager') && itemId.includes('_sr_'));
-}
-
 export function calculateDiscountedShopPrice(accountId: string, item: SpitfireShopItem) {
   const isBundle = item.contents.some((item) => item.alreadyOwnedPriceReduction != null);
   const ownedItems = get(ownedItemsStore)[accountId];
