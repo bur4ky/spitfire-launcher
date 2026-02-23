@@ -18,9 +18,11 @@
 </script>
 
 <Select.Root allowDeselect={true} type="multiple" bind:value>
-  <Select.Trigger class="min-w-40">
+  <Select.Trigger class="sm:min-w-40">
     <FilterIcon class="size-5" />
-    {filters.find((x) => x.value === value?.at(-1))?.label || $t('library.filters.select')}
+    <span class="not-sm:hidden">
+      {filters.find((x) => x.value === value?.at(-1))?.label || $t('library.filters.select')}
+    </span>
   </Select.Trigger>
 
   <Select.Content>

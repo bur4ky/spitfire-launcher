@@ -204,7 +204,7 @@
     : undefined}
   title={$t('itemShop.page.title')}
 >
-  <div class="flex items-center gap-2 max-xs:flex-col">
+  <div class="flex items-center gap-2">
     <Input
       class="w-full max-w-64 max-xs:max-w-full"
       placeholder={$t('itemShop.searchPlaceholder')}
