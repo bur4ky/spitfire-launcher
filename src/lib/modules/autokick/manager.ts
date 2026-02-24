@@ -8,6 +8,7 @@ import { MCP } from '$lib/modules/mcp';
 import { Party } from '$lib/modules/party';
 import { XMPPManager } from '$lib/modules/xmpp';
 import { accountStore, settingsStore } from '$lib/storage';
+import { accountPartiesStore } from '$lib/stores';
 import { sleep } from '$lib/utils';
 import type { AccountData } from '$types/account';
 import type { PartyData } from '$types/game/party';
@@ -99,10 +100,9 @@ export class AutoKickManager {
 
         // On lobby return after a kick, the game automatically creates a party and fires EpicEvents.MemberJoined
         // So, we delay the mission checker to avoid false mission detection
-        if (!manager.lastKick || Date.now() - manager.lastKick.getTime() > 20_000) {
-          const delay = 20_000;
-          logger.debug('Scheduling mission checker after party join', { delay });
-          manager.scheduleMissionChecker(delay);
+        if (!manager.lastKick || Date.now() - manager.lastKick.getTime() > 30_000) {
+          logger.debug('Scheduling mission checker after party join');
+          manager.scheduleMissionChecker(30_000);
         }
       },
       { signal }
@@ -185,9 +185,7 @@ export class AutoKickManager {
   }
 
   private async checkMissionState(): Promise<State> {
-    const partyData = await Party.get(this.account);
-    const party = partyData.current[0];
-
+    const party = accountPartiesStore.get(this.account.accountId) || (await Party.get(this.account)).current[0];
     const raw = party.meta['Default:CampaignInfo_j'];
     let matchmakingState: string | undefined;
     try {
