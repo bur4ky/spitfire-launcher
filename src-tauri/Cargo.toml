@@ -1,6 +1,6 @@
 [package]
 name = "spitfire-launcher"
-version = "1.8.0"
+version = "1.8.1"
 description = "A cross-platform launcher for Fortnite Battle Royale and Save the World"
 authors = ["bur4ky"]
 edition = "2021"
