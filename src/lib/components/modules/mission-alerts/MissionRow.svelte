@@ -55,7 +55,9 @@
         {#if mission.alert?.rewards?.length}
           {@render InlineRewards(mission.alert!.rewards, true)}
         {:else}
-          {@render InlineRewards(mission.rewards)}
+          <div class="hidden not-xl:contents">
+            {@render InlineRewards(mission.rewards)}
+          </div>
         {/if}
       </div>
 
