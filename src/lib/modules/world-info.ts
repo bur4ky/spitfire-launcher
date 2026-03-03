@@ -9,7 +9,7 @@ import {
   ZoneCategories
 } from '$lib/constants/stw/world-info';
 import { Authentication } from '$lib/modules/authentication';
-import { baseGameService } from '$lib/services/epic';
+import { baseGameService } from '$lib/http';
 import { worldInfoCache } from '$lib/stores';
 import type { ParsedModifierData, ParsedRarityData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
 import type {

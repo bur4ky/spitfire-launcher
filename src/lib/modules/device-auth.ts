@@ -1,6 +1,6 @@
 import { fortnitePCGameClient } from '$lib/constants/clients';
 import { AuthSession } from '$lib/modules/auth-session';
-import { publicAccountService } from '$lib/services/epic';
+import { publicAccountService } from '$lib/http';
 import type { AccountData } from '$types/account';
 import type { EpicDeviceAuthData } from '$types/game/authorizations';
 

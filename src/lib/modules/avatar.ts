@@ -1,5 +1,5 @@
 import { AuthSession } from '$lib/modules/auth-session';
-import { avatarService } from '$lib/services/epic';
+import { avatarService } from '$lib/http';
 import { avatarCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';
@@ -11,7 +11,7 @@ export class Avatar {
     const MAX_IDS_PER_REQUEST = 100;
 
     const avatarData = await processChunks(friendIds, MAX_IDS_PER_REQUEST, async (ids) => {
-      return session.get<AvatarData[]>(`?accountIds=${ids.join(',')}`).json();
+      return session.get<AvatarData[]>(`ids/?accountIds=${ids.join(',')}`).json();
     });
 
     for (const avatar of avatarData) {

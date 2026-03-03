@@ -6,7 +6,7 @@
   import { t } from '$lib/i18n';
   import { Authentication } from '$lib/modules/authentication';
   import { DeviceAuth } from '$lib/modules/device-auth';
-  import { oauthService } from '$lib/services/epic';
+  import { oauthService } from '$lib/http';
   import { accountStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
   import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';

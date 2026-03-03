@@ -1,11 +1,38 @@
 import { defaultClient } from '$lib/constants/clients';
 import { EpicAPIError, isEpicAPIError } from '$lib/exceptions/EpicAPIError';
 import { Manifest } from '$lib/modules/manifest';
-import { tauriKy } from '$lib/services/tauri-ky';
 import { settingsStore } from '$lib/storage';
 import { getVersion } from '@tauri-apps/api/app';
 import { arch, platform } from '@tauri-apps/plugin-os';
-import { isHTTPError } from 'ky';
+import { fetch } from '@tauri-apps/plugin-http';
+import ky, { isHTTPError } from 'ky';
+
+// Used to avoid CORS issues
+export const tauriKy = ky.create({
+  timeout: 30_000,
+  retry: 0,
+  fetch: async (input, init = {}) => {
+    const headers = new Headers(init.headers);
+    if (input instanceof Request) {
+      for (const [key, value] of input.headers.entries()) {
+        if (!headers.has(key)) {
+          headers.set(key, value);
+        }
+      }
+    }
+
+    // The browser drops the User-Agent header
+    // As a workaround we pass it as X-User-Agent and put it back in Tauri's own fetch implementation
+    const uaOverride = headers.get('X-User-Agent');
+    if (uaOverride) {
+      headers.set('User-Agent', uaOverride);
+      headers.delete('X-User-Agent');
+    }
+
+    init.headers = headers;
+    return fetch(input, init);
+  }
+});
 
 const manifest = await Manifest.getFortniteManifest().catch(() => null);
 const defaultUserAgent = manifest?.appVersionString
@@ -34,7 +61,7 @@ export const epicService = tauriKy.extend({
         const data = await error.response.json();
         if (!isEpicAPIError(data)) return error;
 
-        return new EpicAPIError(data, error.request, error.response, error.options);
+        throw new EpicAPIError(data);
       }
     ]
   }
@@ -54,10 +81,6 @@ export const fulfillmentService = epicService.extend({
 
 export const lightswitchService = epicService.extend({
   prefixUrl: 'https://lightswitch-public-service-prod.ol.epicgames.com/lightswitch/api/service'
-});
-
-export const matchmakingService = epicService.extend({
-  prefixUrl: 'https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api/matchmaking/session'
 });
 
 export const oauthService = epicService.extend({
@@ -92,7 +115,7 @@ export const userSearchService = epicService.extend({
 });
 
 export const avatarService = epicService.extend({
-  prefixUrl: 'https://avatar-service-prod.identity.live.on.epicgames.com/v1/avatar/fortnite/ids'
+  prefixUrl: 'https://avatar-service-prod.identity.live.on.epicgames.com/v1/avatar/fortnite'
 });
 
 export const spitfireService = tauriKy.extend({

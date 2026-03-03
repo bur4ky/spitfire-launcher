@@ -1,4 +1,4 @@
-import { spitfireService } from '$lib/services/epic';
+import { spitfireService } from '$lib/http';
 import type { SpitfireShop, SpitfireShopItem, SpitfireShopSection } from '$types/game/shop';
 
 export class Shop {

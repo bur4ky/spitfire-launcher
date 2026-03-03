@@ -52,7 +52,7 @@ export class AuthSession {
             const data = await response.clone().json();
             if (!isEpicAPIError(data)) return;
 
-            const error = new EpicAPIError(data, request, response, options);
+            const error = new EpicAPIError(data);
             const shouldRetry = this.handleError(error);
             if (!shouldRetry) return;
 
