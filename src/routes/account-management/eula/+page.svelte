@@ -7,15 +7,7 @@
 
   let selectedAccounts = $state<string[]>([]);
   let isFetching = $state(false);
-  let eulaStates = $state<EULAState[]>([
-    {
-      accountId: '05006cb489c347beaad83551a1b9544e',
-      displayName: 'BurakYhs',
-      data: {
-        acceptLink: 'https://www.epicgames.com/id/accept-eula?accountId=123'
-      }
-    }
-  ]);
+  let eulaStates = $state<EULAState[]>([]);
 </script>
 
 <script lang="ts">
