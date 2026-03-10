@@ -153,7 +153,8 @@ export const SidebarCategories = Object.freeze(
         {
           key: 'lookupPlayers',
           href: '/br-stw/lookup-players',
-          icon: SearchIcon
+          icon: SearchIcon,
+          requiresLogin: true
         }
       ]
     },
