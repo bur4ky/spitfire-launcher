@@ -26,6 +26,7 @@
     app,
     verifyAndRepair,
     isVerifying = $bindable(),
+    // eslint-disable-next-line no-useless-assignment
     uninstallDialogAppId = $bindable()
   }: Props = $props();
 

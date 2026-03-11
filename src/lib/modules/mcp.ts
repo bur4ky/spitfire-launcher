@@ -2,13 +2,19 @@ import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
 import { AuthSession } from '$lib/modules/auth-session';
 import { baseGameService } from '$lib/http';
 import type { AccountData } from '$types/account';
-import type { FullQueryProfile, MCPOperation, MCPProfileId } from '$types/game/mcp';
+import type { FullQueryProfile, MCPOperation, MCPProfileId, MCPRoute } from '$types/game/mcp';
 
 export class MCP {
-  static compose<T>(account: AccountData, operation: MCPOperation, profile: MCPProfileId, data: Record<string, any>) {
-    const route = operation === 'QueryPublicProfile' ? 'public' : 'client';
+  static compose<T>(
+    account: AccountData,
+    operation: MCPOperation,
+    profile: MCPProfileId,
+    data: Record<string, any>,
+    route?: MCPRoute
+  ) {
+    const r = route || (operation === 'QueryPublicProfile' ? 'public' : 'client');
     return AuthSession.ky(account, baseGameService)
-      .post<T>(`profile/${account.accountId}/${route}/${operation}?profileId=${profile}&rvn=-1`, { json: data })
+      .post<T>(`profile/${account.accountId}/${r}/${operation}?profileId=${profile}&rvn=-1`, { json: data })
       .json();
   }
 

@@ -726,6 +726,31 @@
       "description": "Bist du sicher, dass du den Download abbrechen möchtest? Heruntergeladene Dateien werden beibehalten."
     }
   },
+  "mcp": {
+    "page": {
+      "title": "MCP",
+      "description": "MCP-Operationen ausführen. Dies ist eine erweiterte Funktion."
+    },
+    "operation": {
+      "label": "Operation",
+      "placeholder": "Operation Eingeben"
+    },
+    "profileId": {
+      "label": "Profil-ID",
+      "placeholder": "Profil-ID Auswählen"
+    },
+    "route": {
+      "label": "Route",
+      "placeholder": "Route Auswählen"
+    },
+    "body": {
+      "label": "Body"
+    },
+    "execute": "Ausführen",
+    "format": "Format",
+    "invalidBody": "Ungültiger JSON-Body",
+    "failedToExecute": "MCP-Anfrage konnte nicht ausgeführt werden"
+  },
   "docs": {
     "howToUse": "Verwendung",
     "importantNotes": "Wichtige Hinweise",

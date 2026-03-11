@@ -19,6 +19,7 @@ import ServerIcon from '@lucide/svelte/icons/server';
 import TrendingUpIcon from '@lucide/svelte/icons/trending-up';
 import ListChecksIcon from '@lucide/svelte/icons/list-checks';
 import SearchIcon from '@lucide/svelte/icons/search';
+import CodeIcon from '@lucide/svelte/icons/code';
 import type { LucideIcon } from '$types';
 
 type Category = {
@@ -154,6 +155,12 @@ export const SidebarCategories = Object.freeze(
           key: 'lookupPlayers',
           href: '/br-stw/lookup-players',
           icon: SearchIcon,
+          requiresLogin: true
+        },
+        {
+          key: 'mcp',
+          href: '/br-stw/mcp',
+          icon: CodeIcon,
           requiresLogin: true
         }
       ]

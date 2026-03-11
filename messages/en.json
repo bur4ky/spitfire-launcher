@@ -726,6 +726,31 @@
       "description": "Are you sure you want to cancel the download? Downloaded files will be kept."
     }
   },
+  "mcp": {
+    "page": {
+      "title": "MCP",
+      "description": "Execute MCP operations. This is an advanced feature."
+    },
+    "operation": {
+      "label": "Operation",
+      "placeholder": "Enter An Operation"
+    },
+    "profileId": {
+      "label": "Profile ID",
+      "placeholder": "Select Profile ID"
+    },
+    "route": {
+      "label": "Route",
+      "placeholder": "Select Route"
+    },
+    "body": {
+      "label": "Body"
+    },
+    "execute": "Execute",
+    "format": "Format",
+    "invalidBody": "Invalid JSON body",
+    "failedToExecute": "Failed to execute MCP request"
+  },
   "docs": {
     "howToUse": "How to Use",
     "importantNotes": "Important Notes",
