@@ -726,6 +726,31 @@
       "description": "Êtes-vous sûr de vouloir annuler le téléchargement ? Les fichiers téléchargés seront conservés."
     }
   },
+  "mcp": {
+    "page": {
+      "title": "MCP",
+      "description": "Exécuter des opérations MCP. Ceci est une fonctionnalité avancée."
+    },
+    "operation": {
+      "label": "Opération",
+      "placeholder": "Entrer Une Opération"
+    },
+    "profileId": {
+      "label": "ID Profil",
+      "placeholder": "Sélectionner l'ID Profil"
+    },
+    "route": {
+      "label": "Route",
+      "placeholder": "Sélectionner la Route"
+    },
+    "body": {
+      "label": "Body"
+    },
+    "execute": "Exécuter",
+    "format": "Format",
+    "invalidBody": "Corps JSON invalide",
+    "failedToExecute": "Échec de l'exécution de la requête MCP"
+  },
   "docs": {
     "howToUse": "Comment utiliser",
     "importantNotes": "Notes importantes",

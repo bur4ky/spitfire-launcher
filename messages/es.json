@@ -726,6 +726,31 @@
       "description": "¿Estás seguro de que quieres cancelar la descarga? Los archivos descargados se conservarán."
     }
   },
+  "mcp": {
+    "page": {
+      "title": "MCP",
+      "description": "Ejecutar operaciones MCP. Esta es una función avanzada."
+    },
+    "operation": {
+      "label": "Operación",
+      "placeholder": "Ingresar Una Operación"
+    },
+    "profileId": {
+      "label": "ID de Perfil",
+      "placeholder": "Seleccionar ID de Perfil"
+    },
+    "route": {
+      "label": "Ruta",
+      "placeholder": "Seleccionar Ruta"
+    },
+    "body": {
+      "label": "Body"
+    },
+    "execute": "Ejecutar",
+    "format": "Formato",
+    "invalidBody": "Cuerpo JSON inválido",
+    "failedToExecute": "No se pudo ejecutar la solicitud MCP"
+  },
   "docs": {
     "howToUse": "Cómo se usa",
     "importantNotes": "Notas Importantes",

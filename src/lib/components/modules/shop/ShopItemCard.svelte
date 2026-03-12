@@ -14,6 +14,7 @@
   };
 
   const activeAccount = accountStore.getActiveStore(true);
+  // eslint-disable-next-line no-useless-assignment
   let { item, modalOfferId = $bindable() }: ItemCardProps = $props();
 
   const isItemOwned = $derived($ownedItemsStore[$activeAccount?.accountId || '']?.has(item.id?.toLowerCase()));
@@ -56,7 +57,7 @@
     />
   {/if}
 
-  <div class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-2.5">
+  <div class="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/80 to-transparent p-2.5">
     <h3 style="text-shadow: 0 2px 4px #000000" class="mb-2 text-left text-lg leading-none font-bold text-white">
       {item.name}
     </h3>

@@ -27,6 +27,7 @@
     uninstallDialogAppId?: string;
   };
 
+  // eslint-disable-next-line no-useless-assignment
   let { appId, installDialogAppId = $bindable(), uninstallDialogAppId = $bindable() }: Props = $props();
 
   const app = $derived($ownedApps.find((x) => x.id === appId)!);

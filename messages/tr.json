@@ -726,6 +726,31 @@
       "description": "İndirmeyi iptal etmek istediğinizden emin misiniz? İndirilen dosyalar silinmeyecektir."
     }
   },
+  "mcp": {
+    "page": {
+      "title": "MCP",
+      "description": "MCP işlemlerini yürütün. Bu gelişmiş bir özelliktir."
+    },
+    "operation": {
+      "label": "Operasyon",
+      "placeholder": "Bir Operasyon Girin"
+    },
+    "profileId": {
+      "label": "Profil ID",
+      "placeholder": "Profil ID Seçin"
+    },
+    "route": {
+      "label": "Rota",
+      "placeholder": "Rota Seçin"
+    },
+    "body": {
+      "label": "Body"
+    },
+    "execute": "Çalıştır",
+    "format": "Format",
+    "invalidBody": "Geçersiz JSON body",
+    "failedToExecute": "MCP isteği çalıştırılamadı"
+  },
   "docs": {
     "howToUse": "Nasıl Kullanılır",
     "importantNotes": "Önemli Notlar",
