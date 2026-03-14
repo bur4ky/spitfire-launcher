@@ -479,7 +479,8 @@
       "general": "General",
       "customizableMenu": "Sidebar",
       "downloader": "Downloader",
-      "advanced": "Advanced"
+      "advanced": "Advanced",
+      "accountOrder": "Accounts"
     },
     "invalidValue": "You have entered an invalid value.",
     "general": {
@@ -524,6 +525,14 @@
         "title": "Open Settings Folder",
         "button": "Open Folder"
       }
+    },
+    "accountOrder": {
+      "title": "Account Order",
+      "description": "Drag to rearrange the order in which accounts appear throughout the launcher.",
+      "noAccounts": "No accounts added yet.",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "hint": "Changes are saved automatically."
     },
     "downloader": {
       "downloadPath": {

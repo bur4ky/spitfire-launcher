@@ -3,12 +3,14 @@
   import CustomizableMenu from '$components/modules/settings/categories/CustomizableMenu.svelte';
   import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
   import AdvancedSettings from '$components/modules/settings/categories/AdvancedSettings.svelte';
+  import AccountOrderSettings from '$components/modules/settings/categories/AccountOrderSettings.svelte';
   import * as Tabs from '$components/ui/tabs';
   import type { LucideIcon } from '$types';
   import DownloadIcon from '@lucide/svelte/icons/download';
   import SettingsIcon from '@lucide/svelte/icons/settings';
   import CodeXmlIcon from '@lucide/svelte/icons/code-xml';
   import SlidersVertical from '@lucide/svelte/icons/sliders-vertical';
+  import UsersIcon from '@lucide/svelte/icons/users';
   import { platform } from '@tauri-apps/plugin-os';
   import type { Component } from 'svelte';
   import { Separator } from '$components/ui/separator';
@@ -29,6 +31,12 @@
         name: $t('settings.tabs.general'),
         icon: SettingsIcon,
         component: GeneralSettings
+      },
+      {
+        id: 'accountOrder',
+        name: $t('settings.tabs.accountOrder'),
+        icon: UsersIcon,
+        component: AccountOrderSettings
       },
       {
         id: 'customizableMenu',

@@ -41,6 +41,14 @@ export class AccountStore extends FileStore<AccountDataFile> {
     }
   }
 
+  reorder(orderedIds: string[]) {
+    this.set((state) => {
+      const accountMap = new Map(state.accounts.map((a) => [a.accountId, a]));
+      state.accounts = orderedIds.map((id) => accountMap.get(id)).filter((a) => a !== undefined);
+      return state;
+    });
+  }
+
   getAccount(id: string) {
     return this.get().accounts.find((x) => x.accountId === id) || null;
   }
