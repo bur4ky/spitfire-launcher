@@ -479,7 +479,8 @@
       "general": "Genel",
       "customizableMenu": "Kenar Çubuğu",
       "downloader": "İndirici",
-      "advanced": "Gelişmiş"
+      "advanced": "Gelişmiş",
+      "accounts": "Hesaplar"
     },
     "invalidValue": "Geçersiz bir değer girdiniz.",
     "general": {
@@ -523,6 +524,14 @@
       "openSettingsFolder": {
         "title": "Ayarlar Klasörünü Aç",
         "button": "Klasörü Aç"
+      }
+    },
+    "accounts": {
+      "accountOrder": {
+        "title": "Hesap Sıralaması",
+        "description": "Hesapların başlatıcıda görüntülenme sırasını değiştirmek için sürükleyin.",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı"
       }
     },
     "downloader": {

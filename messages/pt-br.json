@@ -479,7 +479,8 @@
       "general": "Geral",
       "customizableMenu": "Barra lateral",
       "downloader": "Baixador",
-      "advanced": "Avançado"
+      "advanced": "Avançado",
+      "accounts": "Contas"
     },
     "invalidValue": "Valor invalido.",
     "general": {
@@ -523,6 +524,14 @@
       "openSettingsFolder": {
         "title": "Abrir Pasta de Configurações",
         "button": "Abrir Pasta"
+      }
+    },
+    "accounts": {
+      "accountOrder": {
+        "title": "Ordem das contas",
+        "description": "Arraste para reorganizar a ordem em que as contas aparecem no launcher.",
+        "moveUp": "Mover para cima",
+        "moveDown": "Mover para baixo"
       }
     },
     "downloader": {

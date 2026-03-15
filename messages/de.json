@@ -479,7 +479,8 @@
       "general": "Allgemein",
       "customizableMenu": "Seitenleiste",
       "downloader": "Downloader",
-      "advanced": "Erweitert"
+      "advanced": "Erweitert",
+      "accounts": "Konten"
     },
     "invalidValue": "Du hast einen ungültigen Wert eingegeben.",
     "general": {
@@ -523,6 +524,14 @@
       "openSettingsFolder": {
         "title": "Einstellungsordner Öffnen",
         "button": "Ordner Öffnen"
+      }
+    },
+    "accounts": {
+      "accountOrder": {
+        "title": "Kontoreihenfolge",
+        "description": "Ziehen Sie, um die Reihenfolge der Konten im Launcher neu anzuordnen.",
+        "moveUp": "Nach oben",
+        "moveDown": "Nach unten"
       }
     },
     "downloader": {
