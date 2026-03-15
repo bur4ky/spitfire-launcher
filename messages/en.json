@@ -480,7 +480,7 @@
       "customizableMenu": "Sidebar",
       "downloader": "Downloader",
       "advanced": "Advanced",
-      "accountOrder": "Accounts"
+      "accounts": "Accounts"
     },
     "invalidValue": "You have entered an invalid value.",
     "general": {
@@ -526,13 +526,13 @@
         "button": "Open Folder"
       }
     },
-    "accountOrder": {
-      "title": "Account Order",
-      "description": "Drag to rearrange the order in which accounts appear throughout the launcher.",
-      "noAccounts": "No accounts added yet.",
-      "moveUp": "Move up",
-      "moveDown": "Move down",
-      "hint": "Changes are saved automatically."
+    "accounts": {
+      "accountOrder": {
+        "title": "Account Order",
+        "description": "Drag to rearrange the order in which accounts appear throughout the launcher.",
+        "moveUp": "Move up",
+        "moveDown": "Move down"
+      }
     },
     "downloader": {
       "downloadPath": {
