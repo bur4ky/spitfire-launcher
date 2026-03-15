@@ -479,7 +479,8 @@
       "general": "Général",
       "customizableMenu": "Barre latérale",
       "downloader": "Téléchargeur",
-      "advanced": "Avancé"
+      "advanced": "Avancé",
+      "accounts": "Comptes"
     },
     "invalidValue": "Tu as entré une valeur invalide.",
     "general": {
@@ -523,6 +524,14 @@
       "openSettingsFolder": {
         "title": "Ouvrir le Dossier des Paramètres",
         "button": "Ouvrir le Dossier"
+      }
+    },
+    "accounts": {
+      "accountOrder": {
+        "title": "Ordre des comptes",
+        "description": "Faites glisser pour réorganiser l'ordre dans lequel les comptes apparaissent dans le launcher.",
+        "moveUp": "Monter",
+        "moveDown": "Descendre"
       }
     },
     "downloader": {

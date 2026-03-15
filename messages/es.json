@@ -479,7 +479,8 @@
       "general": "General",
       "customizableMenu": "Barra lateral",
       "downloader": "Descargador",
-      "advanced": "Avanzado"
+      "advanced": "Avanzado",
+      "accounts": "Cuentas"
     },
     "invalidValue": "Ha introducido un valor no válido.",
     "general": {
@@ -523,6 +524,14 @@
       "openSettingsFolder": {
         "title": "Abrir Carpeta de Ajustes",
         "button": "Abrir Carpeta"
+      }
+    },
+    "accounts": {
+      "accountOrder": {
+        "title": "Orden de cuentas",
+        "description": "Arrastra para reorganizar el orden en que las cuentas aparecen en el launcher.",
+        "moveUp": "Subir",
+        "moveDown": "Bajar"
       }
     },
     "downloader": {
