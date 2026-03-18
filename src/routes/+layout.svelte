@@ -227,8 +227,8 @@
 <SidebarProvider style="--sidebar-width: 18rem;" class="flex h-dvh">
   <Tooltip.Provider>
     <Toaster
-      position="bottom-center"
       pauseWhenPageIsHidden={true}
+      position="bottom-center"
       toastOptions={{
         duration: 3000,
         unstyled: true,

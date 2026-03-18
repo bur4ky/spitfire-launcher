@@ -23,7 +23,6 @@
 
   type DragState = {
     fromIndex: number;
-    ghostTop: number;
     ghostLeft: number;
     ghostWidth: number;
     ghostHeight: number;
@@ -63,6 +62,18 @@
     items = next;
   }
 
+  function findScrollParent(el: HTMLElement): HTMLElement {
+    let node: HTMLElement | null = el.parentElement;
+    while (node && node !== document.body) {
+      if (node.scrollHeight > node.clientHeight + 1) return node;
+      node = node.parentElement;
+    }
+
+    return document.documentElement.scrollHeight > document.documentElement.clientHeight
+      ? document.documentElement
+      : document.body;
+  }
+
   function startDrag(e: PointerEvent, index: number) {
     e.preventDefault();
 
@@ -91,7 +102,6 @@
 
     drag = {
       fromIndex: index,
-      ghostTop: rect.top,
       ghostLeft: rect.left,
       ghostWidth: rect.width,
       ghostHeight: rect.height,
@@ -103,11 +113,42 @@
     dropIndex = initial.index;
     indicatorY = initial.y;
 
+    // This "auto scroll" implementation isn't very good and can be improved later
+    const scrollParent = listEl ? findScrollParent(listEl) : document.documentElement;
+
+    const SCROLL_ZONE = 100;
+    const MAX_SPEED = 30;
+
+    let lastPointerY = e.clientY;
+    let rafId: number;
+
+    function scrollLoop() {
+      const vh = window.innerHeight;
+      let speed = 0;
+
+      if (lastPointerY < SCROLL_ZONE) {
+        speed = -MAX_SPEED * Math.min(1, (SCROLL_ZONE - lastPointerY) / SCROLL_ZONE);
+      } else if (lastPointerY > vh - SCROLL_ZONE) {
+        speed = MAX_SPEED * Math.min(1, (lastPointerY - (vh - SCROLL_ZONE)) / SCROLL_ZONE);
+      }
+
+      if (speed !== 0) {
+        scrollParent.scrollTop += speed;
+        const result = computeDrop(lastPointerY);
+        dropIndex = result.index;
+        indicatorY = result.y;
+      }
+
+      rafId = requestAnimationFrame(scrollLoop);
+    }
+
+    rafId = requestAnimationFrame(scrollLoop);
+
     const offMove = on(window, 'pointermove', (ev) => {
       if (!drag) return;
 
-      const newTop = ev.clientY - drag.cursorOffsetY;
-      drag.clonedEl.style.top = `${newTop}px`;
+      lastPointerY = ev.clientY;
+      drag.clonedEl.style.top = `${ev.clientY - drag.cursorOffsetY}px`;
 
       const result = computeDrop(ev.clientY);
       dropIndex = result.index;
@@ -119,6 +160,7 @@
         reorder(drag.fromIndex, dropIndex);
       }
 
+      cancelAnimationFrame(rafId);
       drag?.clonedEl.remove();
       drag = undefined;
       dropIndex = undefined;
