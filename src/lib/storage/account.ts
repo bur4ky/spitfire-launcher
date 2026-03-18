@@ -11,6 +11,18 @@ export class AccountStore extends FileStore<AccountDataFile> {
     super('accounts', { accounts: [] }, accountDataFileSchema);
   }
 
+  async init() {
+    await super.init();
+
+    const { accounts, activeAccountId } = this.get();
+    if (!accounts.some((x) => x.accountId === activeAccountId)) {
+      this.set((state) => {
+        state.activeAccountId = accounts[0]?.accountId ?? null;
+        return state;
+      });
+    }
+  }
+
   add(account: AccountData, setActive = true) {
     this.set((state) => {
       state.accounts.push(account);
