@@ -41,7 +41,7 @@ tauri = { version = "2", features = ["tray-icon", "devtools"] }
 tauri-plugin-single-instance = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
-sysinfo = "0.37"
+sysinfo = "0.38"
 tokio = "1"
 fs2 = "0.4"
 shlex = "1"

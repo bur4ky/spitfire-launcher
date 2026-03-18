@@ -228,6 +228,7 @@
   <Tooltip.Provider>
     <Toaster
       position="bottom-center"
+      pauseWhenPageIsHidden={true}
       toastOptions={{
         duration: 3000,
         unstyled: true,
