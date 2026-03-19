@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { downloaderSettingsSchema } from '$lib/schemas/settings';
 import { FileStore } from '$lib/storage/file-store';
 import type { DownloaderSettings } from '$types/settings';
@@ -13,7 +14,7 @@ export class DownloaderStore extends FileStore<DownloaderSettings> {
       {
         downloadPath,
         noHTTPS: false,
-        autoUpdate: true,
+        autoUpdate: !dev,
         sendNotifications: true,
         favoriteApps: [],
         hiddenApps: [],

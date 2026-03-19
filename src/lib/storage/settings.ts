@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import type { Locale } from '$lib/paraglide/runtime';
 import { allSettingsSchema } from '$lib/schemas/settings';
 import { FileStore } from '$lib/storage/file-store';
@@ -9,14 +10,14 @@ export class SettingsStore extends FileStore<AllSettings> {
       'settings',
       {
         app: {
-          language: null,
+          language: dev ? 'en' : null,
           claimRewardsDelay: 1.5,
           missionCheckInterval: 5,
           startingPage: 'stwMissionAlerts',
-          discordStatus: true,
+          discordStatus: !dev,
           hideToTray: false,
-          checkForUpdates: true,
-          debugLogs: false
+          checkForUpdates: !dev,
+          debugLogs: dev
         }
       },
       allSettingsSchema
