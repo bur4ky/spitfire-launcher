@@ -56,10 +56,10 @@
   const startingPageOptions = $derived(
     SidebarCategories.map((category) => category.items)
       .flat()
-      .filter((item) => startingPageValues.includes(item.key))
+      .filter((item) => startingPageValues.includes(item.id))
       .map((item) => ({
-        label: $t(`${item.key}.page.title`),
-        value: item.key
+        label: $t(`${item.id}.page.title`),
+        value: item.id
       }))
   );
 </script>

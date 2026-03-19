@@ -6,7 +6,7 @@
   import * as Sidebar from '$components/ui/sidebar';
   import * as Tooltip from '$components/ui/tooltip';
   import { page } from '$app/state';
-  import { SidebarCategories } from '$lib/constants/sidebar';
+  import { SidebarCategories, type SidebarCategory, type SidebarItem } from '$lib/constants/sidebar';
   import { accountStore, settingsStore } from '$lib/storage';
   import { cn } from '$lib/utils';
   import { t } from '$lib/i18n';
@@ -15,13 +15,12 @@
   const sidebar = Sidebar.useSidebar();
   const activeAccount = accountStore.getActiveStore(true);
 
-  function isCategoryVisible(key: string) {
-    return SidebarCategories.find((c) => c.key === key)?.items.some((item) => isItemVisible(item.key));
+  function isCategoryVisible(id: SidebarCategory['id']) {
+    return SidebarCategories.find((c) => c.id === id)?.items.some((item) => isItemVisible(item.id));
   }
 
-  function isItemVisible(key: string) {
-    const menu = ($settingsStore.customizableMenu || {}) as Record<string, boolean>;
-    return menu[key] !== false;
+  function isItemVisible(id: SidebarItem['id']) {
+    return $settingsStore.customizableMenu?.[id] !== false;
   }
 
   const externalLinks = $derived([
@@ -44,16 +43,16 @@
   </Sidebar.Header>
 
   <Sidebar.Content class="gap-0">
-    {#each SidebarCategories as category (category.key)}
-      {#if isCategoryVisible(category.key)}
+    {#each SidebarCategories as category (category.id)}
+      {#if isCategoryVisible(category.id) && !category.hidden}
         <Sidebar.Group>
           <Sidebar.GroupLabel class="tracking-wider text-muted-foreground/60 uppercase">
-            {$t(`sidebar.categories.${category.key}`)}
+            {$t(`sidebar.categories.${category.id}`)}
           </Sidebar.GroupLabel>
 
           <Sidebar.Menu>
-            {#each category.items as item (item.key)}
-              {#if isItemVisible(item.key)}
+            {#each category.items as item (item.id)}
+              {#if isItemVisible(item.id)}
                 {@const isActive = page.url.pathname === item.href}
                 {@const isDisabled = item.requiresLogin && !$activeAccount}
 
@@ -77,7 +76,7 @@
                             variant="ghost"
                           >
                             <item.icon class="size-4" />
-                            {$t(`${item.key}.page.title`)}
+                            {$t(`${item.id}.page.title`)}
                           </Button>
                         </Tooltip.Trigger>
 

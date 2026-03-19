@@ -17,7 +17,7 @@ export class AccountStore extends FileStore<AccountDataFile> {
     const { accounts, activeAccountId } = this.get();
     if (!accounts.some((x) => x.accountId === activeAccountId)) {
       this.set((state) => {
-        state.activeAccountId = accounts[0]?.accountId ?? null;
+        state.activeAccountId = accounts[0]?.accountId || undefined;
         return state;
       });
     }

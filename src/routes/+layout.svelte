@@ -29,8 +29,9 @@
   import { onMount } from 'svelte';
   import { toast, Toaster } from 'svelte-sonner';
   import { on } from 'svelte/events';
-  import { afterNavigate } from '$app/navigation';
+  import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
   import { getCurrentWindow } from '@tauri-apps/api/window';
+  import { SidebarItems } from '$lib/constants/sidebar';
 
   const { children } = $props();
 
@@ -174,6 +175,18 @@
         });
     }
   }
+
+  beforeNavigate(async (nav) => {
+    // Checks auth for pages that require login
+    // Could have used +page.ts files but this is easier
+    const path = nav.to?.url.pathname;
+    const sidebarItem = SidebarItems.find((item) => item.href === path);
+    if (!sidebarItem?.requiresLogin || accountStore.getActive()) return;
+
+    nav.cancel();
+    await goto('/br-stw/stw-mission-alerts');
+    toast.error($t('errors.notLoggedIn'));
+  });
 
   afterNavigate(() => {
     mainEl?.scrollTo({ top: 0, behavior: 'instant' });

@@ -3,7 +3,7 @@ import {
   appSettingsSchema,
   automationSettingSchema,
   automationSettingsSchema,
-  customizableMenuSettingsSchema,
+  customizableMenuSchema,
   deviceAuthsSettingsSchema,
   downloaderSettingsSchema,
   taxiSettingSchema,
@@ -12,7 +12,7 @@ import {
 import { z } from 'zod';
 
 export type AppSettings = z.infer<typeof appSettingsSchema>;
-export type CustomizableMenuSettings = z.infer<typeof customizableMenuSettingsSchema>;
+export type CustomizableMenuSettings = z.infer<typeof customizableMenuSchema>;
 export type AllSettings = z.infer<typeof allSettingsSchema>;
 export type AutomationSetting = z.infer<typeof automationSettingSchema>;
 export type AutomationSettings = z.infer<typeof automationSettingsSchema>;

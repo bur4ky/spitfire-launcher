@@ -1,8 +1,6 @@
-import { SidebarItemKeys } from '$lib/constants/sidebar';
+import { SidebarItems, type SidebarItem } from '$lib/constants/sidebar';
 import { locales } from '$lib/paraglide/runtime';
 import { z } from 'zod';
-
-type SidebarItem = (typeof SidebarItemKeys)[number];
 
 export const appSettingsSchema = z
   .object({
@@ -18,7 +16,7 @@ export const appSettingsSchema = z
       'taxiService',
       'dailyQuests',
       'library'
-    ] satisfies SidebarItem[]),
+    ] satisfies SidebarItem['id'][]),
     userAgent: z.string(),
     discordStatus: z.boolean(),
     hideToTray: z.boolean(),
@@ -27,22 +25,18 @@ export const appSettingsSchema = z
   })
   .partial();
 
-export const customizableMenuSettingsSchema = z
+export const customizableMenuSchema = z
   .object(
-    SidebarItemKeys.reduce(
-      (acc, item) => {
-        acc[item] = z.boolean().optional();
-        return acc;
-      },
-      {} as Record<SidebarItem, z.ZodOptional<z.ZodBoolean>>
-    )
+    Object.fromEntries(SidebarItems.map((x) => [x.id, z.boolean().optional()])) as {
+      [K in SidebarItem['id']]: z.ZodOptional<z.ZodBoolean>;
+    }
   )
-  .partial();
+  .optional();
 
 export const allSettingsSchema = z
   .object({
     app: appSettingsSchema,
-    customizableMenu: customizableMenuSettingsSchema
+    customizableMenu: customizableMenuSchema
   })
   .partial();
 

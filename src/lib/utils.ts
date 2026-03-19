@@ -1,4 +1,3 @@
-import { goto } from '$app/navigation';
 import { t } from '$lib/i18n';
 import { logger } from '$lib/logger';
 import { accountStore } from '$lib/storage';
@@ -19,15 +18,6 @@ export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
 export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'children'> : T;
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
-
-export async function checkLogin() {
-  const hasAccount = accountStore.getActive();
-  if (hasAccount) return true;
-
-  await goto('/br-stw/stw-mission-alerts');
-  toast.error(get(t)('errors.notLoggedIn'));
-  return false;
-}
 
 export function calculateVbucks(queryProfile: FullQueryProfile<'common_core'>) {
   const profile = queryProfile.profileChanges[0].profile;
