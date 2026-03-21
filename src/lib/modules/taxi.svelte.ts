@@ -54,7 +54,6 @@ export class TaxiManager {
   public autoAcceptFriendRequests = $state(false);
   private xmpp?: XMPPManager;
   private abortController?: AbortController;
-  private partyTimeoutId?: number;
 
   constructor(private account: AccountData) {}
 
@@ -99,9 +98,6 @@ export class TaxiManager {
   async stop() {
     this.isStopping = true;
 
-    window.clearTimeout(this.partyTimeoutId);
-    this.partyTimeoutId = undefined;
-
     this.abortController?.abort();
     this.abortController = undefined;
 
@@ -112,6 +108,12 @@ export class TaxiManager {
     this.active = false;
 
     TaxiManager.taxiAccountIds.delete(this.account.accountId);
+
+    const currentParty = accountPartiesStore.get(this.account.accountId);
+    if (currentParty) {
+      void (await Party.leave(this.account, currentParty.id));
+      accountPartiesStore.delete(this.account.accountId);
+    }
   }
 
   async handleFriendRequests() {
@@ -170,16 +172,6 @@ export class TaxiManager {
     await Party.get(this.account);
 
     this.setIsAvailable(false);
-
-    window.clearTimeout(this.partyTimeoutId);
-    this.partyTimeoutId = window.setTimeout(async () => {
-      const currentParty = accountPartiesStore.get(this.account.accountId);
-      if (currentParty) {
-        await Party.leave(this.account, currentParty.id);
-        accountPartiesStore.delete(this.account.accountId);
-        this.setIsAvailable(true);
-      }
-    }, 180_000);
   }
 
   private async handlePartyStateChange(
@@ -208,15 +200,7 @@ export class TaxiManager {
 
     const currentParty = accountPartiesStore.get(this.account.accountId);
     const isInParty = (currentParty?.members.length || 0) > 1;
-
-    if (isInParty) {
-      this.setIsAvailable(false);
-    } else {
-      this.setIsAvailable(true);
-
-      window.clearTimeout(this.partyTimeoutId);
-      this.partyTimeoutId = undefined;
-    }
+    this.setIsAvailable(!isInParty);
   }
 
   private async handleNewCaptain(data: EpicEventMemberNewCaptain) {
@@ -247,7 +231,9 @@ export class TaxiManager {
         }, {})
       }),
       'Default:CampaignCommanderLoadoutRating_d': `${this.level}.00000`,
-      'Default:CampaignBackpackRating_d': `${this.level}.00000`
+      'Default:CampaignBackpackRating_d': `${this.level}.00000`,
+      'Default:PackedState_j':
+        '{"PackedState":{"subGame":"Campaign","location":"PreLobby","gameMode":"None","voiceChatStatus":"Enabled","hasCompletedSTWTutorial":true,"hasPurchasedSTW":true,"platformSupportsSTW":true,"bDownloadOnDemandActive":false,"bIsPartyLFG":false,"bRecVoice":true,"bRecText":true,"bIsInAllSelectExperiment":false,"bAllowEmoteBeatSyncing":true,"bUploadLogs":false}}'
     };
   }
 }
