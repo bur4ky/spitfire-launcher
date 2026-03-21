@@ -231,7 +231,9 @@ export class TaxiManager {
         }, {})
       }),
       'Default:CampaignCommanderLoadoutRating_d': `${this.level}.00000`,
-      'Default:CampaignBackpackRating_d': `${this.level}.00000`
+      'Default:CampaignBackpackRating_d': `${this.level}.00000`,
+      'Default:PackedState_j':
+        '{"PackedState":{"subGame":"Campaign","location":"PreLobby","gameMode":"None","voiceChatStatus":"Enabled","hasCompletedSTWTutorial":true,"hasPurchasedSTW":true,"platformSupportsSTW":true,"bDownloadOnDemandActive":false,"bIsPartyLFG":false,"bRecVoice":true,"bRecText":true,"bIsInAllSelectExperiment":false,"bAllowEmoteBeatSyncing":true,"bUploadLogs":false}}'
     };
   }
 }
