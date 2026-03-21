@@ -710,6 +710,11 @@
         "current": "Actuel",
         "after": "Après"
       },
+      "sdl": {
+        "title": "Sélectionner les composants optionnels à installer",
+        "selected": "{count} sélectionné(s)",
+        "required": "Requis"
+      },
       "notEnoughSpace": "Pas assez d'espace libre",
       "download": "Télécharger"
     },

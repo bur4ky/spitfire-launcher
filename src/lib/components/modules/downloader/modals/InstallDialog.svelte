@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { LegendaryAppInfo } from '$types/legendary';
+  import type { LegendaryAppInfo, LegendarySDLResponse } from '$types/legendary';
 
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const appInfoCache = new Map<string, LegendaryAppInfo>();
@@ -24,6 +24,8 @@
   import { Button, buttonVariants } from '$components/ui/button';
   import { downloaderStore } from '$lib/storage';
   import { Tauri } from '$lib/tauri';
+  import * as Select from '$components/ui/select';
+  import BoxesIcon from '@lucide/svelte/icons/boxes';
 
   type Props = {
     id: string;
@@ -35,6 +37,8 @@
 
   let isOpen = $state(true);
   let isStartingDownload = $state(false);
+  let sdlList = $state<LegendarySDLResponse | null>(null);
+  let selectedSDLCategories = $state<string[]>([]);
 
   let downloadSize = $state(0);
   let installSize = $state(0);
@@ -49,7 +53,12 @@
     isStartingDownload = true;
 
     try {
-      await DownloadManager.addToQueue(app);
+      const installTags = selectedSDLCategories.flatMap((category) => sdlList?.[category]?.tags || []);
+      if (sdlList?.['__required']?.tags) {
+        installTags.push(...sdlList['__required'].tags);
+      }
+
+      await DownloadManager.addToQueue(app, installTags.filter(Boolean));
       if (DownloadManager.downloadingAppId === app.id) {
         toast.info(DownloadStartedToast);
       }
@@ -62,9 +71,15 @@
   }
 
   onMount(async () => {
-    const appInfo = appInfoCache.get(app.id) || (await Legendary.getAppInfo(app.id).then((x) => x.stdout))!;
-    const diskSpace = await Tauri.getDiskSpace({ dir: downloaderStore.get().downloadPath! });
+    const [appInfo, diskSpace, sdlData] = await Promise.all([
+      appInfoCache.get(app.id)
+        ? Promise.resolve(appInfoCache.get(app.id)!)
+        : Legendary.getAppInfo(app.id).then((x) => x.stdout),
+      Tauri.getDiskSpace({ dir: downloaderStore.get().downloadPath! }),
+      Legendary.getSDLList(app.id).catch(() => null)
+    ]);
 
+    sdlList = sdlData;
     appInfoCache.set(app.id, appInfo);
 
     totalSpace = diskSpace.total;
@@ -74,9 +89,7 @@
     installSize = appInfo.manifest.disk_size;
 
     app.downloadSize = downloadSize;
-    ownedApps.update((current) => {
-      return current.map((app) => (app.id === id ? { ...app, downloadSize } : app));
-    });
+    ownedApps.update((current) => current.map((app) => (app.id === id ? { ...app, downloadSize } : app)));
   });
 </script>
 
@@ -110,7 +123,7 @@
             <span class="font-medium">{$t('library.installConfirmation.installSize')}</span>
           </div>
 
-          {#if installSize === 0}
+          {#if !installSize}
             <div class="skeleton-loader p-4 text-2xl text-muted-foreground"></div>
           {:else}
             <div class="text-2xl font-bold">{bytesToSize(installSize)}</div>
@@ -162,6 +175,28 @@
           <Progress class="bg-accent" value={usedPercentage} />
         </div>
       </div>
+
+      {#if sdlList}
+        <Select.Root allowDeselect={true} type="multiple" bind:value={selectedSDLCategories}>
+          <Select.Trigger class="w-full">
+            <BoxesIcon class="size-5" />
+            {selectedSDLCategories.length
+              ? $t('library.installConfirmation.sdl.selected', { count: selectedSDLCategories.length })
+              : $t('library.installConfirmation.sdl.title')}
+          </Select.Trigger>
+
+          <Select.Content>
+            {#each Object.entries(sdlList) as [category, sdl] (category)}
+              <Select.Item disabled={category === '__required'} value={category}>
+                {sdl.name}
+                {#if category === '__required'}
+                  ({$t('library.installConfirmation.sdl.required')})
+                {/if}
+              </Select.Item>
+            {/each}
+          </Select.Content>
+        </Select.Root>
+      {/if}
 
       <Dialog.Footer class="grid w-full grid-cols-2 gap-2">
         <Dialog.Close class={buttonVariants({ variant: 'secondary' })}>

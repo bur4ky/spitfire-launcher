@@ -1,5 +1,6 @@
 import { dev } from '$app/environment';
 import { LegendaryError } from '$lib/exceptions/LegendaryError';
+import { legendaryService } from '$lib/http';
 import { getChildLogger } from '$lib/logger';
 import { AuthSession } from '$lib/modules/auth-session';
 import { Authentication } from '$lib/modules/authentication';
@@ -13,6 +14,7 @@ import type {
   LegendaryInstalledList,
   LegendaryLaunchData,
   LegendaryList,
+  LegendarySDLResponse,
   LegendaryStatus
 } from '$types/legendary';
 import { path } from '@tauri-apps/api';
@@ -65,20 +67,18 @@ export class Legendary {
   }
 
   static async login(account: AccountData) {
-    const accessToken = await AuthSession.new(account).getAccessToken(true);
+    const accessToken = await AuthSession.new(account).getAccessToken();
     const { code: exchange } = await Authentication.getExchangeCodeUsingAccessToken(accessToken);
 
     const data = await Legendary.execute<string>(['auth', '--token', exchange]);
     Legendary.accountId = account.accountId;
-
-    await Legendary.cacheApps();
     return data;
   }
 
   static async logout() {
     const data = await Legendary.execute<string>(['auth', '--delete']);
     Legendary.accountId = undefined;
-
+    ownedApps.set([]);
     return data;
   }
 
@@ -196,5 +196,14 @@ export class Legendary {
           };
         })
     );
+  }
+
+  static async getSDLList(appName: string) {
+    const response = await legendaryService.get(`v1/sdl/${appName}.json`);
+    if (!response.headers.get('Content-Type')?.includes('application/json')) {
+      throw new LegendaryError('App not found');
+    }
+
+    return await response.json<LegendarySDLResponse>();
   }
 }

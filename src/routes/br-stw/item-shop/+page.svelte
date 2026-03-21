@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import type { SpitfireShopFilter } from '$types/game/shop';
+  import type { SpitfireShopFilter, SpitfireShopItem } from '$types/game/shop';
 
   let searchQuery = $state<string>('');
   let selectedFilters = $state<SpitfireShopFilter[]>([]);
@@ -15,7 +15,7 @@
   import { Friends } from '$lib/modules/friends';
   import { Lookup } from '$lib/modules/lookup';
   import { MCP } from '$lib/modules/mcp';
-  import { Shop } from '$lib/modules/shop';
+  import { SpitfireAPI } from '$lib/modules/spitfire';
   import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
   import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
   import { t } from '$lib/i18n';
@@ -80,11 +80,11 @@
 
     try {
       if (!$brShopStore || forceRefresh) {
-        const response = await Shop.fetch();
+        const response = await SpitfireAPI.fetchShop();
         brShopStore.set(response);
       }
 
-      shopSections = Shop.groupBySections($brShopStore.offers).map((section) => ({
+      shopSections = groupBySections($brShopStore.offers).map((section) => ({
         ...section,
         items: section.items.sort((a, b) => b.sortPriority - a.sortPriority)
       }));
@@ -92,6 +92,25 @@
       logger.error('Failed to fetch BR shop data', { error });
       errorOccurred = true;
     }
+  }
+
+  function groupBySections(offers: SpitfireShopItem[]) {
+    return offers.reduce<SpitfireShopSection[]>((acc, item) => {
+      const sectionName = item.section.name || 'Other';
+      const section = acc.find((section) => section.name === sectionName);
+
+      if (section) {
+        section.items.push(item);
+      } else {
+        acc.push({
+          name: sectionName,
+          id: item.section.id,
+          items: [item]
+        });
+      }
+
+      return acc;
+    }, []);
   }
 
   async function fetchAccountData() {

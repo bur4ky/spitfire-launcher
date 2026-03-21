@@ -710,6 +710,11 @@
         "current": "Aktuell",
         "after": "Danach"
       },
+      "sdl": {
+        "title": "Optionale Komponenten zur Installation auswählen",
+        "selected": "{count} ausgewählt",
+        "required": "Erforderlich"
+      },
       "notEnoughSpace": "Nicht genügend Speicherplatz verfügbar",
       "download": "Herunterladen"
     },

@@ -118,9 +118,18 @@ export const avatarService = epicService.extend({
   prefixUrl: 'https://avatar-service-prod.identity.live.on.epicgames.com/v1/avatar/fortnite'
 });
 
+const launcherUA = `SpitfireLauncher/${await getVersion()} (${platform()}; ${arch()})`;
+
 export const spitfireService = tauriKy.extend({
   prefixUrl: 'https://api.rookie-spitfire.xyz',
   headers: {
-    'X-User-Agent': `SpitfireLauncher/${await getVersion()} (${platform()}; ${arch()})`
+    'X-User-Agent': launcherUA
+  }
+});
+
+export const legendaryService = tauriKy.extend({
+  prefixUrl: 'https://api.legendary.gl',
+  headers: {
+    'X-User-Agent': launcherUA
   }
 });

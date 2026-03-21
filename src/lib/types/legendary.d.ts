@@ -67,8 +67,8 @@ export type LegendaryAppInfo = {
     cloud_save_folder_mac: string | null;
     is_dlc: boolean;
     external_activation: string | null;
-    launch_options: Array<string>;
-    owned_dlc: Array<string>;
+    launch_options: string[];
+    owned_dlc: string[];
   };
   install: {
     platform: string;
@@ -77,9 +77,9 @@ export type LegendaryAppInfo = {
     install_path: string;
     save_path: string | null;
     synced_egl_guid: string;
-    install_tags: Array<string>;
+    install_tags: string[];
     requires_ovt: number;
-    installed_dlc: Array<string>;
+    installed_dlc: string[];
   } | null;
   manifest: {
     size: number;
@@ -96,7 +96,7 @@ export type LegendaryAppInfo = {
       path: string;
       args: string;
     };
-    install_tags: Array<string>;
+    install_tags: string[];
     num_files: number;
     num_chunks: number;
     disk_size: number;
@@ -119,12 +119,12 @@ export type LegendaryInstalledList = Array<{
   install_path: string;
   title: string;
   version: string;
-  base_urls: Array<string>;
+  base_urls: string[];
   can_run_offline: boolean;
   egl_guid: string;
   executable: string;
   install_size: number;
-  install_tags: Array<string>;
+  install_tags: string[];
   is_dlc: boolean;
   launch_parameters: string;
   manifest_path: string;
@@ -142,14 +142,22 @@ export type LegendaryInstalledList = Array<{
 export type ParsedApp = z.infer<typeof parsedAppSchema>;
 
 export type LegendaryLaunchData = {
-  game_parameters: Array<string>;
+  game_parameters: string[];
   game_executable: string;
   game_directory: string;
-  egl_parameters: Array<string>;
-  launch_command: Array<string>;
+  egl_parameters: string[];
+  launch_command: string[];
   working_directory: string;
-  user_parameters: Array<string>;
+  user_parameters: string[];
   environment: Record<string, string>;
   pre_launch_command: string;
   pre_launch_wait: boolean;
 };
+
+export type LegendarySDL = {
+  description: string;
+  name: string;
+  tags: string[];
+};
+
+export type LegendarySDLResponse = Record<string, LegendarySDL>;

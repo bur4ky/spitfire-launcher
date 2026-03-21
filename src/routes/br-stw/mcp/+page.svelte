@@ -185,7 +185,8 @@
       <div class="grid max-h-48 overflow-auto rounded-md border bg-card">
         <pre
           class="pointer-events-none col-start-1 row-start-1 m-0 overflow-hidden p-3 wrap-break-word whitespace-pre-wrap"
-          aria-hidden="true"><code class="language-json">{@html highlighted}</code></pre>
+          aria-hidden="true"
+><code class="language-json">{@html highlighted}</code></pre>
         <textarea
           id="body"
           style="field-sizing: content;"

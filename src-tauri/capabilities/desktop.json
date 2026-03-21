@@ -14,6 +14,14 @@
 		"core:app:allow-default-window-icon",
 		"dialog:default",
 		{
+			"identifier": "http:default",
+			"allow": [
+				{
+				  "url": "https://api.legendary.gl/v1/sdl/*"
+				}
+			]
+		},
+		{
 			"identifier": "fs:allow-app-read-recursive",
 			"allow": [
 				{

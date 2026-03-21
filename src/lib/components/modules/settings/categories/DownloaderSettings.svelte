@@ -4,6 +4,7 @@
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Switch } from '$components/ui/switch';
   import { t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
   import { DownloadManager } from '$lib/modules/download.svelte.js';
   import { Legendary } from '$lib/modules/legendary';
   import { downloaderSettingsSchema } from '$lib/schemas/settings';
@@ -15,14 +16,14 @@
 
   let loadingAccount = $state(true);
   let downloaderAccountId = $state<string>();
-  let switchingDownloaderAccount = $state(false);
+  let switching = $state(false);
   let mounted = false;
 
   $effect(() => {
     const accountId = downloaderAccountId;
     if (mounted) {
       untrack(() => {
-        switchDownloaderAccount(accountId);
+        switchOrDeleteAccount(accountId);
       });
     }
   });
@@ -49,18 +50,18 @@
     downloaderStore.set(() => newSettings);
   }
 
-  async function switchDownloaderAccount(accountId?: string) {
-    switchingDownloaderAccount = true;
+  async function switchOrDeleteAccount(accountId?: string) {
+    switching = true;
 
     try {
-      const { account: currentAccount } = await Legendary.getStatus();
-      if (currentAccount) {
-        await Legendary.logout();
-      }
+      await Legendary.logout();
 
       if (accountId) {
         const account = accountStore.getAccount(accountId)!;
         await Legendary.login(account);
+        Legendary.cacheApps().catch((error) => {
+          logger.error('Failed to cache apps after switching downloader account', { error });
+        });
       }
 
       toast.success(
@@ -74,7 +75,7 @@
           : $t('settings.downloader.account.failedToLogout')
       });
     } finally {
-      switchingDownloaderAccount = false;
+      switching = false;
     }
   }
 
@@ -111,7 +112,7 @@
     title={$t('settings.downloader.account.title')}
   >
     <AccountCombobox
-      disabled={switchingDownloaderAccount || loadingAccount || !!DownloadManager.downloadingAppId}
+      disabled={switching || loadingAccount || !!DownloadManager.downloadingAppId}
       type="single"
       bind:value={downloaderAccountId}
     />

@@ -64,7 +64,7 @@ class DownloadManagerC {
     await this.processQueue(true);
   }
 
-  async addToQueue(app: ParsedApp) {
+  async addToQueue(app: ParsedApp, installTags: string[] = []) {
     const existingItem = this.queue.find(({ item }) => item.id === app.id);
 
     if (existingItem && ['queued', 'downloading', 'paused'].includes(existingItem.status)) {
@@ -77,6 +77,7 @@ class DownloadManagerC {
       {
         status: 'queued',
         item: app,
+        installTags,
         addedAt: Date.now()
       }
     ];
@@ -156,7 +157,7 @@ class DownloadManagerC {
     await this.setItemStatus(item, 'downloading');
 
     try {
-      await this.startInstallation(app, {
+      await this.start(app, type, item.installTags, {
         onProgress: (progress: Partial<DownloadProgress>) => {
           const next = {
             ...this.progress,
@@ -267,14 +268,14 @@ class DownloadManagerC {
     }
   }
 
-  async resumeDownload() {
-    await this.processQueue(true);
+  resumeDownload() {
+    return this.processQueue(true);
   }
 
   private async handleDownloadError(item: QueueItem, type: DownloadType, error?: unknown) {
-    if (error) logger.error('Download error', { error });
-
     const app = item.item;
+
+    if (error) logger.error('Download error', { id: app.id, error });
     const errorMessage = get(t)(
       type === 'repair'
         ? 'library.app.failedToRepair'
@@ -290,18 +291,27 @@ class DownloadManagerC {
     await this.setItemStatus(item, 'failed');
   }
 
-  private async startInstallation(app: ParsedApp, callbacks: DownloadCallbacks = {}) {
+  private async start(
+    app: ParsedApp,
+    type: DownloadType,
+    installTags: string[] = [],
+    callbacks: DownloadCallbacks = {}
+  ) {
     const settings = downloaderStore.get();
-    const streamId = `install_${app.id}_${Date.now()}`;
-    const args = [
-      app.requiresRepair ? 'repair' : 'install',
-      app.id,
-      '-y',
-      '--skip-sdl',
-      '--skip-dlcs',
-      '--base-path',
-      settings.downloadPath!
-    ];
+    const streamId = `${type}_${app.id}`;
+    const args = [type, app.id, '-y', '--base-path', settings.downloadPath!];
+
+    if (type === 'install') {
+      args.push('--skip-dlcs');
+    }
+
+    if (installTags?.length) {
+      for (const tag of installTags) {
+        args.push('--install-tag', tag);
+      }
+    } else {
+      args.push('--skip-sdl');
+    }
 
     if (settings.noHTTPS) {
       args.push('--no-https');

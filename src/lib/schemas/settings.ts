@@ -83,6 +83,7 @@ export const parsedAppSchema = z.object({
 export const queueItemSchema = z.object({
   status: z.enum(['queued', 'downloading', 'completed', 'failed', 'paused']),
   item: parsedAppSchema,
+  installTags: z.array(z.string()).optional(),
   addedAt: z.number(),
   startedAt: z.number().optional(),
   completedAt: z.number().optional()

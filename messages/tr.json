@@ -710,6 +710,11 @@
         "current": "Şu Anki",
         "after": "Sonraki"
       },
+      "sdl": {
+        "title": "Yüklenecek isteğe bağlı bileşenleri seçin",
+        "selected": "{count} seçildi",
+        "required": "Gerekli"
+      },
       "notEnoughSpace": "Yeterli depolama alanı yok",
       "download": "İndir"
     },

@@ -74,6 +74,7 @@
 
       try {
         await Legendary.login(accountStore.getActive()!);
+        await Legendary.cacheApps();
         toast.success($t('library.loggedIn'), { id: toastId, duration: 3000 });
       } catch (error) {
         handleError({ error, message: $t('library.failedToLogin'), toastId });
