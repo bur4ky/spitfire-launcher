@@ -291,9 +291,19 @@ export class WorldInfo {
 
     if (newKey.startsWith('Worker:')) {
       const isManager = newKey.includes('manager');
+      const newRarityMap: Partial<Record<RarityType, RarityType>> = {
+        [Rarities.Common]: Rarities.Uncommon,
+        [Rarities.Uncommon]: Rarities.Rare,
+        [Rarities.Rare]: Rarities.Epic,
+        [Rarities.Epic]: Rarities.Legendary
+      };
+      const newRarity = isManager ? (newRarityMap[rarity.rarity] ?? rarity.rarity) : rarity.rarity;
+      const newRarityName = get(RarityNames)[newRarity];
 
-      data.imageUrl = `/resources/voucher_generic_${isManager ? 'manager' : 'worker'}_${rarity.rarity}.png`;
-      data.name = `${rarityName} Survivor`;
+      data.imageUrl = `/resources/voucher_generic_${isManager ? 'manager' : 'worker'}_${newRarity}.png`;
+      data.name = `${newRarityName}${isManager ? ' Lead' : ''} Survivor`;
+      data.rarity = newRarity;
+      data.itemType = key.replace(`_${rarity.rarity}_`, `_${newRarity}_`);
       data.type = 'worker';
 
       return data;
@@ -301,7 +311,6 @@ export class WorldInfo {
 
     if (newKey.startsWith('Hero:')) {
       data.imageUrl = `/resources/voucher_generic_hero_${rarity.rarity}.png`;
-
       data.name = `${rarityName} Hero`;
       data.type = 'hero';
 
@@ -310,7 +319,6 @@ export class WorldInfo {
 
     if (newKey.startsWith('Defender:')) {
       data.imageUrl = `/resources/voucher_generic_defender_${rarity.rarity}.png`;
-
       data.name = `${rarityName} Defender`;
       data.type = 'defender';
 

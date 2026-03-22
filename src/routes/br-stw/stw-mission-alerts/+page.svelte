@@ -16,6 +16,7 @@
   import { Button } from '$components/ui/button';
   import FunnelIcon from '@lucide/svelte/icons/funnel';
   import FilterSheet, { filters } from '$components/modules/mission-alerts/FilterSheet.svelte';
+  import type { RarityType } from '$types/game/stw/resources';
 
   const activeAccount = accountStore.getActiveStore(true);
 
@@ -49,62 +50,30 @@
 
       for (const mission of worldMissions.values()) {
         if (f.group && !mission.isGroup) continue;
-
-        if (f.missionTypes.size) {
-          const match = f.missionTypes.values().some((missionType) => {
-            const keys = ZoneCategories[missionType as keyof typeof ZoneCategories];
-            return keys?.some((key) => mission.generator.includes(key));
-          });
-
-          if (!match) continue;
-        }
+        if (!matchesMissionTypeFilter(mission.generator, f.missionTypes)) continue;
 
         const alertRewards = mission.alert?.rewards ?? [];
         const allRewards = [...alertRewards, ...mission.rewards];
-        if (f.rarities.size) {
-          const match = allRewards.some((reward) => {
-            if (!('rarity' in reward)) return false;
 
-            const { itemId } = reward;
-            return (
-              f.rarities.has(reward.rarity) &&
-              (itemId.includes('currency_mtxswap') ||
-                itemId.includes('Worker') ||
-                itemId.includes('Hero') ||
-                itemId.includes('Defender') ||
-                itemId.includes('Schematic'))
-            );
-          });
+        if (!matchesRarityFilter(allRewards, f.rarities)) continue;
+        if (!matchesRewardFilter(allRewards, f.rewards)) continue;
 
-          if (!match) continue;
-        }
+        const collectById = (id: string, list: WorldParsedMission[], add: (q: number) => void) => {
+          const alertMatch = alertRewards.find((x) => x.itemId.includes(id));
+          if (alertMatch || mission.rewards.some((x) => x.itemId.includes(id))) {
+            if (alertMatch) add(alertMatch.quantity);
+            list.push(mission);
+          }
+        };
 
-        if (f.rewards.size) {
-          if (!matchesRewardFilter(allRewards, f.rewards)) continue;
-        }
+        collectById('currency_mtxswap', vbucks, (q) => (totalVbucks += q));
+        collectById('voucher_cardpack_bronze', upgradeLlamaTokens, (q) => (totalUpgradeLlamas += q));
+        collectById('alteration_upgrade_sr', perkUp, (q) => (totalPerkUp += q));
 
-        const vbucksReward = alertRewards.find((x) => x.itemId.includes('currency_mtxswap'));
-        if (vbucksReward || mission.rewards.some((x) => x.itemId.includes('currency_mtxswap'))) {
-          if (vbucksReward) totalVbucks += vbucksReward.quantity;
-          vbucks.push(mission);
-        }
-
-        const upgradeLlamaReward = alertRewards.find((x) => x.itemId.includes('voucher_cardpack_bronze'));
-        if (upgradeLlamaReward || mission.rewards.some((x) => x.itemId.includes('voucher_cardpack_bronze'))) {
-          if (upgradeLlamaReward) totalUpgradeLlamas += upgradeLlamaReward.quantity;
-          upgradeLlamaTokens.push(mission);
-        }
-
-        const survivorReward = alertRewards.find((x) => isLegendaryOrMythicSurvivor(x.itemId));
-        if (survivorReward || mission.rewards.some((x) => isLegendaryOrMythicSurvivor(x.itemId))) {
-          if (survivorReward) totalSurvivors += survivorReward.quantity;
+        const alertSurvivorMatches = alertRewards.filter((x) => isLegendaryOrMythicSurvivor(x.itemId, x.rarity));
+        if (alertSurvivorMatches.length) {
+          totalSurvivors += alertSurvivorMatches.reduce((sum, x) => sum + x.quantity, 0);
           survivors.push(mission);
-        }
-
-        const perkUpReward = alertRewards.find((x) => x.itemId.includes('alteration_upgrade_sr'));
-        if (perkUpReward || mission.rewards.some((x) => x.itemId.includes('alteration_upgrade_sr'))) {
-          if (perkUpReward) totalPerkUp += perkUpReward.quantity;
-          perkUp.push(mission);
         }
 
         if (
@@ -119,33 +88,27 @@
         }
 
         if (mission.alert) {
-          if (theaterId === Theaters.Stonewood) {
-            stonewood.push(mission);
-          } else if (theaterId === Theaters.Plankerton) {
-            plankerton.push(mission);
-          } else if (theaterId === Theaters.CannyValley) {
-            cannyValley.push(mission);
-          } else if (theaterId === Theaters.TwinePeaks) {
-            twinePeaks.push(mission);
-          } else {
-            ventures.push(mission);
-          }
+          if (theaterId === Theaters.Stonewood) stonewood.push(mission);
+          else if (theaterId === Theaters.Plankerton) plankerton.push(mission);
+          else if (theaterId === Theaters.CannyValley) cannyValley.push(mission);
+          else if (theaterId === Theaters.TwinePeaks) twinePeaks.push(mission);
+          else ventures.push(mission);
         }
       }
     }
 
     return {
-      stonewood,
-      plankerton,
-      cannyValley,
-      twinePeaks,
-      ventures,
-      vbucks,
-      survivors,
+      stonewood: sortMissions(stonewood),
+      plankerton: sortMissions(plankerton),
+      cannyValley: sortMissions(cannyValley),
+      twinePeaks: sortMissions(twinePeaks),
+      ventures: sortMissions(ventures),
+      vbucks: sortMissions(vbucks),
+      survivors: sortMissions(survivors),
       twinePeaks160,
       ventures140,
-      upgradeLlamaTokens,
-      perkUp,
+      upgradeLlamaTokens: sortMissions(upgradeLlamaTokens),
+      perkUp: sortMissions(perkUp),
       totalVbucks,
       totalSurvivors,
       totalUpgradeLlamas,
@@ -153,8 +116,25 @@
     };
   });
 
-  function isLegendaryOrMythicSurvivor(itemId: string) {
-    return itemId.includes('workerbasic_sr') || (itemId.startsWith('Worker:manager') && itemId.includes('_sr_'));
+  function sortMissions(arr: WorldParsedMission[]) {
+    const order: Record<string, number> = {
+      [Theaters.Stonewood]: 4,
+      [Theaters.Plankerton]: 3,
+      [Theaters.CannyValley]: 2,
+      [Theaters.TwinePeaks]: 1,
+      Ventures: 0
+    };
+
+    return arr.sort((a, b) => {
+      const theaterA = order[a.theaterId] || order.Ventures;
+      const theaterB = order[b.theaterId] || order.Ventures;
+      return theaterA !== theaterB ? theaterA - theaterB : b.powerLevel - a.powerLevel;
+    });
+  }
+
+  function isLegendaryOrMythicSurvivor(itemId: string, rarity?: string) {
+    const isWorker = itemId.includes('workerbasic') || itemId.startsWith('Worker:manager');
+    return isWorker && (rarity === 'sr' || rarity === 'ur');
   }
 
   function isVentureTheater(theaterId: string) {
@@ -173,7 +153,18 @@
     return zones.has('ventures') ? isVenture || zones.has(theaterId) : zones.has(theaterId);
   }
 
+  function matchesMissionTypeFilter(generator: string, missionTypes: Set<string>) {
+    if (!missionTypes.size) return true;
+
+    return missionTypes.values().some((missionType) => {
+      const keys = ZoneCategories[missionType as keyof typeof ZoneCategories];
+      return keys?.some((key) => generator.includes(key));
+    });
+  }
+
   function matchesRewardFilter(allRewards: { itemId: string }[], rewards: Set<string>) {
+    if (!rewards.size) return true;
+
     return rewards.values().some((key) => {
       const isManager = key === 'Manager';
       const isCommand = key === 'Defender' || key === 'Hero' || key === 'Worker' || key === 'Manager';
@@ -186,6 +177,18 @@
 
         return itemId.toLowerCase().includes(key.toLowerCase());
       });
+    });
+  }
+
+  function matchesRarityFilter(allRewards: { itemId: string; rarity?: RarityType }[], rarities: Set<string>) {
+    if (!rarities.size) return true;
+
+    const keys = ['currency_mtxswap', 'Worker', 'Hero', 'Defender', 'Schematic'];
+    return allRewards.some((reward) => {
+      if (!reward.rarity) return false;
+
+      const { itemId, rarity } = reward;
+      return rarities.has(rarity) && keys.some((key) => itemId.includes(key));
     });
   }
 

@@ -39,7 +39,8 @@
 
     <span
       class="truncate text-xs font-medium text-foreground xl:w-36"
-      class:text-green-500={$activeAccount && claimedMissionAlerts.get($activeAccount.accountId)?.has(mission.guid)}
+      class:text-green-500={$activeAccount &&
+        claimedMissionAlerts.get($activeAccount.accountId)?.has(mission.alert?.guid || '')}
     >
       {zoneName}
     </span>
