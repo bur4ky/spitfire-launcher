@@ -4,7 +4,7 @@
   export type AlertColor = 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'indigo' | 'purple' | 'pink' | 'gray';
 
   export type AlertProps = {
-    title: string;
+    title?: string;
     message: string;
     color: AlertColor;
     icon?: LucideIcon;
@@ -39,15 +39,20 @@
   const { title, message, color, icon: Icon }: AlertProps = $props();
 </script>
 
-<div class="mb-2 rounded-lg border p-3 {backgroundcolors[color]}">
-  <div class="flex items-center gap-2">
-    {#if Icon}
-      <Icon class="size-5 {iconColors[color]}" />
-    {/if}
-    <span class="font-medium">{title}</span>
-  </div>
+<div class={['rounded-md border p-3', backgroundcolors[color], !title && Icon ? 'flex items-center gap-2' : '']}>
+  {#if title}
+    <div class="mb-1 flex items-center gap-2">
+      {#if Icon}
+        <Icon class="size-5 shrink-0 {iconColors[color]}" />
+      {/if}
+
+      <span class="font-medium">{title}</span>
+    </div>
+  {:else if Icon}
+    <Icon class="size-5 shrink-0 {iconColors[color]}" />
+  {/if}
 
   {#if message}
-    <p class="mt-1 text-sm">{message}</p>
+    <p class="text-sm">{message}</p>
   {/if}
 </div>

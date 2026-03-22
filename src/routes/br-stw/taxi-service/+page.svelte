@@ -16,7 +16,7 @@
   import { Separator } from '$components/ui/separator';
   import { Switch } from '$components/ui/switch';
   import { Input } from '$components/ui/input';
-  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
+  import InfoIcon from '@lucide/svelte/icons/info';
   import XIcon from '@lucide/svelte/icons/x';
   import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
   import TaxiServiceTutorial from '$components/modules/docs/tutorials/TaxiService.svelte';
@@ -120,12 +120,7 @@
   docsComponent={TaxiServiceTutorial}
   title={$t('taxiService.page.title')}
 >
-  <Alert
-    color="yellow"
-    icon={AlertTriangleIcon}
-    message={$t('taxiService.alert.message')}
-    title={$t('taxiService.alert.title')}
-  />
+  <Alert color="blue" icon={InfoIcon} message={$t('taxiService.alert.message')} />
 
   <div class="space-y-4">
     <div class="flex flex-col gap-2">
