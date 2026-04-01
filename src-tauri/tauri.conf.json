@@ -27,7 +27,7 @@
       "csp": {
         "default-src": "'self'",
         "connect-src": "http://ipc.localhost http://tauri.localhost https://*.epicgames.com wss://xmpp-service-prod.ol.epicgames.com https://api.rookie-spitfire.xyz https://api.github.com/repos/bur4ky/spitfire-launcher/releases/latest",
-        "img-src": "'self' https://*.epicgames.com https://fortnite-api.com https://cdn.fortnite-api.com https://media.fortniteapi.io",
+        "img-src": "'self' https://*.epicgames.com https://fortnite-api.com https://cdn.fortnite-api.com",
         "style-src": "'self' 'unsafe-inline'",
         "frame-src": "'self' https://www.youtube-nocookie.com"
       }
