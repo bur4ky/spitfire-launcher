@@ -195,7 +195,6 @@
   function refreshWorldInfo() {
     worldInfoCache.set(new Map());
     WorldInfo.setCache();
-    claimedMissionAlerts.clear();
   }
 
   function getResetDate() {
