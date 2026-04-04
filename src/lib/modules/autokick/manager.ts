@@ -23,7 +23,6 @@ export class AutoKickManager {
   private checkerInterval?: number;
 
   private currentState: State = 'lobby';
-  private lastKick?: Date;
   private matchesPlayed?: number;
 
   private constructor(
@@ -35,10 +34,12 @@ export class AutoKickManager {
     const accountId = account.accountId;
     AutoKickBase.updateStatus(accountId, 'LOADING');
 
-    const xmpp = await XMPPManager.new(account, 'autoKick').catch(() => null);
-    if (!xmpp) {
+    let xmpp: XMPPManager;
+    try {
+      xmpp = await XMPPManager.new(account, 'autoKick');
+    } catch (error) {
       AutoKickBase.updateStatus(accountId, 'INVALID_CREDENTIALS');
-      throw new Error('Invalid XMPP credentials');
+      throw error;
     }
 
     const manager = new AutoKickManager(account, xmpp);
@@ -49,8 +50,9 @@ export class AutoKickManager {
       async () => {
         AutoKickBase.updateStatus(accountId, 'ACTIVE');
 
-        const state = await manager.checkMissionState();
+        const state = await manager.checkState();
         manager.currentState = state;
+        logger.debug('Initial mission state polled', { accountId, state });
 
         if (state === 'mission') {
           manager.startMissionChecker();
@@ -96,14 +98,8 @@ export class AutoKickManager {
       (data) => {
         if (data.account_id !== accountId) return;
 
-        AutoKickBase.updateStatus(accountId, 'ACTIVE');
-
-        // On lobby return after a kick, the game automatically creates a party and fires EpicEvents.MemberJoined
-        // So, we delay the mission checker to avoid false mission detection
-        if (!manager.lastKick || Date.now() - manager.lastKick.getTime() > 30_000) {
-          logger.debug('Joined a party');
-          manager.scheduleMissionChecker(30_000);
-        }
+        logger.debug('Member joined detected', { accountId });
+        manager.scheduleMissionChecker(30_000);
       },
       { signal }
     );
@@ -113,9 +109,8 @@ export class AutoKickManager {
       async (data) => {
         const partyState = data.party_state_updated?.['Default:PartyState_s'];
         if (partyState === 'PostMatchmaking' && manager.currentState === 'lobby') {
-          const delay = 60_000;
           logger.debug('PostMatchmaking detected');
-          manager.scheduleMissionChecker(delay);
+          manager.scheduleMissionChecker(60_000);
         }
       },
       { signal }
@@ -148,7 +143,7 @@ export class AutoKickManager {
     clearInterval(this.checkerInterval);
     this.checkerInterval = window.setInterval(async () => {
       const accountId = this.account.accountId;
-      const state = await this.checkMissionState();
+      const state = await this.checkState();
       const previousState = this.currentState;
       this.currentState = state;
 
@@ -174,8 +169,11 @@ export class AutoKickManager {
   resetState() {
     this.currentState = 'lobby';
     this.matchesPlayed = undefined;
+
     clearInterval(this.checkerInterval);
+    this.checkerInterval = undefined;
     clearTimeout(this.scheduleTimeout);
+    this.scheduleTimeout = undefined;
   }
 
   destroy() {
@@ -184,7 +182,7 @@ export class AutoKickManager {
     this.xmpp?.removePurpose('autoKick');
   }
 
-  private async checkMissionState(): Promise<State> {
+  private async checkState(): Promise<State> {
     const party = accountPartiesStore.get(this.account.accountId) || (await Party.get(this.account)).current[0];
     const partyState = party?.meta['Default:PartyState_s'];
     if (!party || partyState !== 'PostMatchmaking') {
@@ -216,8 +214,6 @@ export class AutoKickManager {
     const partyData = await Party.get(this.account);
     const party = partyData.current[0] as PartyData | undefined;
 
-    this.lastKick = new Date();
-
     let kickPromise: Promise<unknown> = Promise.resolve();
     if (settings.autoKick && party) {
       logger.debug('Running auto-kick', { accountId, partyId: party.id });
@@ -230,8 +226,8 @@ export class AutoKickManager {
     if (settings.autoClaim) {
       logger.debug('Running auto-claim rewards', { accountId });
 
-      claimRewards(this.account).catch(() => {
-        logger.error('Auto-claim rewards failed', { accountId });
+      claimRewards(this.account).catch((error) => {
+        logger.error('Auto-claim rewards failed', { accountId, error });
       });
     }
 
@@ -239,19 +235,13 @@ export class AutoKickManager {
       logger.debug('Running auto-transfer building materials', { accountId });
 
       kickPromise.finally(() => {
-        transferBuildingMaterials(this.account).catch(() => {
-          logger.error('Auto-transfer building materials failed', { accountId });
+        transferBuildingMaterials(this.account).catch((error) => {
+          logger.error('Auto-transfer building materials failed', { accountId, error });
         });
       });
     }
 
-    if (
-      party &&
-      settings.autoKick &&
-      settings.autoInvite &&
-      party.members.find((x) => x.account_id === this.account.accountId)?.role === 'CAPTAIN' &&
-      party.members.some((x) => x.account_id !== this.account.accountId)
-    ) {
+    if (party && settings.autoKick && settings.autoInvite && party.members.length > 1) {
       logger.debug('Running auto-invite', { accountId });
 
       kickPromise.finally(() => {
@@ -286,7 +276,7 @@ export class AutoKickManager {
     return Promise.allSettled(leaveAccounts.map((x) => Party.leave(x, party.id)));
   }
 
-  private async invite(members: PartyData['members']): Promise<PromiseSettledResult<unknown>[]> {
+  private async invite(members: PartyData['members']) {
     await this.xmpp.waitForEvent(EpicEvents.MemberJoined, (x) => x.account_id === this.account.accountId, 20_000);
     await sleep(10_000);
 
