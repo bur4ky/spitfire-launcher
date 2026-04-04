@@ -4082,7 +4082,7 @@ dependencies = [
 
 [[package]]
 name = "spitfire-launcher"
-version = "1.8.3"
+version = "1.8.5"
 dependencies = [
  "discord-rich-presence",
  "fs2",
