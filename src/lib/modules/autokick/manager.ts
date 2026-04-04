@@ -186,32 +186,25 @@ export class AutoKickManager {
 
   private async checkMissionState(): Promise<State> {
     const party = accountPartiesStore.get(this.account.accountId) || (await Party.get(this.account)).current[0];
-    if (!party) {
+    const partyState = party?.meta['Default:PartyState_s'];
+    if (!party || partyState !== 'PostMatchmaking') {
       return 'lobby';
     }
 
-    const raw = party.meta['Default:CampaignInfo_j'];
-    let matchmakingState: string | undefined;
-    try {
-      matchmakingState = JSON.parse(raw)?.CampaignInfo?.matchmakingState;
-    } catch {
-      matchmakingState = undefined;
-    }
+    const queryProfile = await MCP.queryProfile(this.account, 'campaign');
+    const newMatchesPlayed = queryProfile.profileChanges[0].profile.stats.attributes.matches_played;
 
-    if (matchmakingState === 'JoiningExistingSession') {
-      const queryProfile = await MCP.queryProfile(this.account, 'campaign');
-      const newMatchesPlayed = queryProfile.profileChanges[0].profile.stats.attributes.matches_played;
-      if (this.matchesPlayed == null) {
-        this.matchesPlayed = newMatchesPlayed;
-      } else if (newMatchesPlayed > this.matchesPlayed) {
-        this.matchesPlayed = newMatchesPlayed;
-        return 'endgame';
-      }
-
+    if (this.matchesPlayed == null) {
+      this.matchesPlayed = newMatchesPlayed;
       return 'mission';
     }
 
-    return 'lobby';
+    if (newMatchesPlayed > this.matchesPlayed) {
+      this.matchesPlayed = newMatchesPlayed;
+      return 'endgame';
+    }
+
+    return 'mission';
   }
 
   private async postMissionActions() {
