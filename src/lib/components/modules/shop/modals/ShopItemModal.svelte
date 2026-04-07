@@ -9,13 +9,10 @@
   import { ItemColors } from '$lib/constants/item-colors';
   import { language, t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
-  import { accountCacheStore, brShopStore, ownedItemsStore } from '$lib/stores';
-  import { calculateDiscountedShopPrice } from '$lib/utils';
-  import type { AccountCacheData } from '$types/account';
+  import { accountCacheStore, brShopStore, createDiscountedStore, createIsOwnedStore } from '$lib/stores';
   import CheckIcon from '@lucide/svelte/icons/check';
   import GiftIcon from '@lucide/svelte/icons/gift';
   import ShoppingCartIcon from '@lucide/svelte/icons/shopping-cart';
-  import { derived as jsDerived } from 'svelte/store';
 
   type Props = {
     offerId: string;
@@ -23,6 +20,7 @@
 
   let { offerId = $bindable() }: Props = $props();
 
+  const activeAccount = accountStore.getActiveStore(true);
   const item = $brShopStore.offers.find((x) => x.offerId === offerId)!;
   let isOpen = $state(true);
 
@@ -30,16 +28,11 @@
     vbucks: ownedVbucks = 0,
     friends = [],
     remainingGifts = 5
-  } = $derived<AccountCacheData>($accountCacheStore[$accountStore.activeAccountId!] || {});
+  } = $derived($accountCacheStore[$activeAccount?.accountId || ''] || {});
 
   const colors: Record<string, string> = { ...ItemColors.rarities, ...ItemColors.series };
-  const ownedItems = $derived($ownedItemsStore[$accountStore.activeAccountId!]);
-  const isItemOwned = $derived(ownedItems?.has(item.id?.toLowerCase()));
-  const discountedPrice = jsDerived(
-    [accountStore, ownedItemsStore],
-    ([$accountStore]) => calculateDiscountedShopPrice($accountStore.activeAccountId!, item),
-    0
-  );
+  const isItemOwned = $derived(createIsOwnedStore($activeAccount?.accountId, item));
+  const discountedPrice = $derived(createDiscountedStore($activeAccount?.accountId, item));
 
   let isPurchasing = $state(false);
   let isPurchaseDialogOpen = $state(false);
@@ -143,7 +136,7 @@
       </div>
     </div>
 
-    {#if $accountStore.activeAccountId}
+    {#if $activeAccount?.accountId}
       <Separator />
 
       <div class="grid w-full grid-cols-2 gap-2">
@@ -151,10 +144,10 @@
           <Tooltip.Trigger tabindex={-1}>
             <Button
               class="flex w-full items-center justify-center gap-2"
-              disabled={isPurchasing || ownedVbucks < $discountedPrice || isItemOwned}
+              disabled={isPurchasing || ownedVbucks < $discountedPrice || $isItemOwned}
               onclick={() => (isPurchaseDialogOpen = true)}
             >
-              {#if isItemOwned}
+              {#if $isItemOwned}
                 <CheckIcon class="size-5" />
                 {$t('itemShop.owned')}
               {:else}
@@ -198,7 +191,7 @@
   </Dialog.Content>
 </Dialog.Root>
 
-{#if $accountStore.activeAccountId}
+{#if $activeAccount?.accountId}
   <ShopPurchaseConfirmation {isPurchasing} {item} bind:open={isPurchaseDialogOpen} />
   <ShopGiftFriendSelection {isSendingGifts} {item} bind:open={isGiftDialogOpen} />
 {/if}

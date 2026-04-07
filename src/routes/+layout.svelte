@@ -36,8 +36,7 @@
   const { children } = $props();
 
   let mainEl: HTMLElement;
-  let hasNewVersion = $state(false);
-  let newVersionData = $state<{ tag: string; downloadUrl: string }>();
+  let newVersion = $state<{ tag: string; downloadUrl: string } | undefined>();
 
   async function checkForUpdates() {
     if (!$settingsStore.app?.checkForUpdates) return;
@@ -48,8 +47,7 @@
       .json();
 
     if (latestVersion.tag_name.replace('v', '') !== currentVersion) {
-      hasNewVersion = true;
-      newVersionData = {
+      newVersion = {
         tag: latestVersion.tag_name.replace('v', ''),
         downloadUrl: latestVersion.html_url
       };
@@ -271,7 +269,7 @@
   </Tooltip.Provider>
 </SidebarProvider>
 
-<Dialog.Root bind:open={hasNewVersion}>
+<Dialog.Root bind:open={() => !!newVersion, (open) => !open && (newVersion = undefined)}>
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title>
@@ -279,11 +277,11 @@
       </Dialog.Title>
 
       <Dialog.Description>
-        {$t('newVersionAvailable.description', { version: newVersionData?.tag })}
+        {$t('newVersionAvailable.description', { version: newVersion?.tag })}
       </Dialog.Description>
     </Dialog.Header>
 
-    <Button class="flex w-fit items-center justify-center gap-2" href={newVersionData?.downloadUrl}>
+    <Button class="flex w-fit items-center justify-center gap-2" href={newVersion?.downloadUrl}>
       <ExternalLinkIcon class="size-5" />
       {$t('newVersionAvailable.download')}
     </Button>

@@ -129,8 +129,7 @@
 
     if (athena.status === 'fulfilled') {
       const profile = athena.value.profileChanges[0].profile;
-      const items = Object.values(profile.items);
-      const ownedItems = items
+      const ownedItems = Object.values(profile.items)
         .filter((item) => item.attributes.item_seen != null)
         .map((item) => item.templateId.split(':')[1].toLowerCase());
 

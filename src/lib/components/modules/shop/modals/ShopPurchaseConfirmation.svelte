@@ -5,12 +5,10 @@
   import { language, t } from '$lib/i18n';
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
-  import { accountCacheStore, ownedItemsStore } from '$lib/stores';
-  import { calculateDiscountedShopPrice } from '$lib/utils';
+  import { accountCacheStore, createDiscountedStore, ownedItemsStore } from '$lib/stores';
   import type { SpitfireShopItem } from '$types/game/shop';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
-  import { derived as jsDerived } from 'svelte/store';
 
   type Props = {
     item: SpitfireShopItem;
@@ -21,11 +19,7 @@
   let { item, isPurchasing, open = $bindable(false) }: Props = $props();
 
   const activeAccount = accountStore.getActiveStore();
-  const discountedPrice = jsDerived(
-    [activeAccount, ownedItemsStore],
-    ([$activeAccount]) => calculateDiscountedShopPrice($activeAccount.accountId, item),
-    0
-  );
+  const discountedPrice = $derived(createDiscountedStore($activeAccount?.accountId, item));
 
   async function purchaseItem() {
     isPurchasing = true;

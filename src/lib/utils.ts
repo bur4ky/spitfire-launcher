@@ -50,19 +50,6 @@ export function handleError({ error, message, toastId, account } = {} as HandleE
   }
 }
 
-export function calculateDiscountedShopPrice(accountId: string, item: SpitfireShopItem) {
-  const isBundle = item.contents.some((item) => item.alreadyOwnedPriceReduction != null);
-  const ownedItems = get(ownedItemsStore)[accountId];
-  if (!ownedItems?.size || !isBundle) return item.price.final;
-
-  return item.contents.reduce((acc, content) => {
-    const isOwned = ownedItems.has(content.id?.toLowerCase());
-    const reduction = isOwned ? content.alreadyOwnedPriceReduction || 0 : 0;
-
-    return Math.max(acc - reduction, item.price.floor);
-  }, item.price.final);
-}
-
 export function formatRemainingDuration(ms: number) {
   const translate = get(t);
   const days = Math.floor(ms / 86400000);
