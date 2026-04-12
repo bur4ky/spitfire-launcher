@@ -1,19 +1,19 @@
 <script lang="ts">
+  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
+  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
+  import Trash2Icon from '@lucide/svelte/icons/trash-2';
+  import { platform } from '@tauri-apps/plugin-os';
+  import { t } from '$lib/i18n';
+  import { AutoKickBase } from '$lib/modules/autokick/base';
+  import { accountStore } from '$lib/storage';
+  import { cn } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
   import { Label } from '$components/ui/label';
   import { Switch } from '$components/ui/switch';
-  import { t } from '$lib/i18n';
-  import { AutoKickBase } from '$lib/modules/autokick/base';
-  import { accountStore } from '$lib/storage';
-  import { cn } from '$lib/utils';
   import type { AutomationSetting as AutomationSettingWithId } from '$types/settings';
-  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
-  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import Trash2Icon from '@lucide/svelte/icons/trash-2';
-  import { platform } from '@tauri-apps/plugin-os';
 
   type AutomationSetting = keyof Omit<AutomationSettingWithId, 'accountId'>;
 

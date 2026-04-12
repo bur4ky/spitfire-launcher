@@ -1,11 +1,5 @@
 <script lang="ts">
-  import type { Friend, ListType } from '$components/modules/friends/FriendsList.svelte';
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import { t } from '$lib/i18n';
-  import { Friends } from '$lib/modules/friends';
-  import { XMPPManager, type FriendPresence } from '$lib/modules/xmpp';
-  import { accountStore } from '$lib/storage';
-  import { handleError } from '$lib/utils';
+  import { onMount } from 'svelte';
   import BanIcon from '@lucide/svelte/icons/ban';
   import CopyIcon from '@lucide/svelte/icons/copy';
   import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
@@ -14,7 +8,13 @@
   import UserMinusIcon from '@lucide/svelte/icons/user-minus';
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import { onMount } from 'svelte';
+  import { t } from '$lib/i18n';
+  import { Friends } from '$lib/modules/friends';
+  import { XMPPManager, type FriendPresence } from '$lib/modules/xmpp';
+  import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import type { Friend, ListType } from '$components/modules/friends/FriendsList.svelte';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
 
   type Props = {
     listType: ListType;

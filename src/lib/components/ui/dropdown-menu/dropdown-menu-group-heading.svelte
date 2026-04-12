@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { cn } from '$lib/utils';
-  import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
   import type { ComponentProps } from 'svelte';
+  import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
+  import { cn } from '$lib/utils';
 
   let {
     ref = $bindable(null),

@@ -1,4 +1,11 @@
 <script lang="ts">
+  import CheckIcon from '@lucide/svelte/icons/check';
+  import GiftIcon from '@lucide/svelte/icons/gift';
+  import ShoppingCartIcon from '@lucide/svelte/icons/shopping-cart';
+  import { ItemColors } from '$lib/constants/item-colors';
+  import { language, t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
+  import { accountDataCache, brShopCache, createDiscountedStore, createIsOwnedStore } from '$lib/stores';
   import ShopGiftFriendSelection from '$components/modules/shop/modals/ShopGiftFriendSelection.svelte';
   import ShopPurchaseConfirmation from '$components/modules/shop/modals/ShopPurchaseConfirmation.svelte';
   import { Badge } from '$components/ui/badge';
@@ -6,13 +13,6 @@
   import * as Dialog from '$components/ui/dialog';
   import { Separator } from '$components/ui/separator';
   import * as Tooltip from '$components/ui/tooltip';
-  import { ItemColors } from '$lib/constants/item-colors';
-  import { language, t } from '$lib/i18n';
-  import { accountStore } from '$lib/storage';
-  import { accountDataCache, brShopCache, createDiscountedStore, createIsOwnedStore } from '$lib/stores';
-  import CheckIcon from '@lucide/svelte/icons/check';
-  import GiftIcon from '@lucide/svelte/icons/gift';
-  import ShoppingCartIcon from '@lucide/svelte/icons/shopping-cart';
 
   type Props = {
     offerId: string;

@@ -1,5 +1,5 @@
-import { t } from '$lib/i18n';
 import { derived } from 'svelte/store';
+import { t } from '$lib/i18n';
 
 export const Rarities = Object.freeze({
   Common: 'c',

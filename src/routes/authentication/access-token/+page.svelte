@@ -3,23 +3,23 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/layout/PageContent.svelte';
-  import { Button } from '$components/ui/button';
-  import { Authentication } from '$lib/modules/authentication';
   import { toast } from 'svelte-sonner';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import * as Select from '$components/ui/select';
   import KeyRound from '@lucide/svelte/icons/key-round';
   import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone';
+  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   import {
     defaultClient,
     fortniteAndroidGameClient,
     fortnitePCGameClient,
     launcherAppClient2
   } from '$lib/constants/clients';
+  import { t } from '$lib/i18n';
+  import { Authentication } from '$lib/modules/authentication';
   import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Select from '$components/ui/select';
   import type { EpicTokenType } from '$types/game/authorizations';
 
   let selectedTokenType = $state<EpicTokenType>();

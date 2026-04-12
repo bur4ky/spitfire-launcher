@@ -4,23 +4,23 @@
 </script>
 
 <script lang="ts">
+  import { untrack } from 'svelte';
+  import { toast } from 'svelte-sonner';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
+  import { t } from '$lib/i18n';
+  import { Friends } from '$lib/modules/friends';
+  import { Lookup } from '$lib/modules/lookup';
+  import { XMPPManager } from '$lib/modules/xmpp';
+  import { accountStore } from '$lib/storage';
+  import { friendsCache } from '$lib/stores';
+  import { handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import FriendsList, { type ListType } from '$components/modules/friends/FriendsList.svelte';
   import FriendsListSkeleton from '$components/modules/friends/skeletons/FriendsListSkeleton.svelte';
   import { Button } from '$components/ui/button';
-  import * as Tabs from '$components/ui/tabs';
-  import { Friends } from '$lib/modules/friends';
-  import { Lookup } from '$lib/modules/lookup';
-  import { XMPPManager } from '$lib/modules/xmpp';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import UserPlusIcon from '@lucide/svelte/icons/user-plus';
-  import { friendsCache } from '$lib/stores';
   import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { toast } from 'svelte-sonner';
-  import { untrack } from 'svelte';
-  import { accountStore } from '$lib/storage';
+  import * as Tabs from '$components/ui/tabs';
 
   const activeAccount = accountStore.getActiveStore();
 

@@ -1,16 +1,16 @@
 <script lang="ts">
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { Button, buttonVariants } from '$components/ui/button';
-  import * as Dialog from '$components/ui/dialog';
+  import { toast } from 'svelte-sonner';
+  import GiftIcon from '@lucide/svelte/icons/gift';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { language, t } from '$lib/i18n';
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountDataCache } from '$lib/stores';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Button, buttonVariants } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
   import type { SpitfireShopItem } from '$types/game/shop';
-  import GiftIcon from '@lucide/svelte/icons/gift';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { toast } from 'svelte-sonner';
 
   type Props = {
     item: SpitfireShopItem;

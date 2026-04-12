@@ -1,6 +1,6 @@
-import type { SpitfireShop } from '$types/game/shop';
 import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
+import type { SpitfireShop } from '$types/game/shop';
 
 export type AccountDataCache = Partial<{
   vbucks: number;

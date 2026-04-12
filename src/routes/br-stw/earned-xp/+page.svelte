@@ -13,15 +13,14 @@
 </script>
 
 <script lang="ts">
+  import { language, t } from '$lib/i18n';
+  import { MCP } from '$lib/modules/mcp';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { Button } from '$components/ui/button';
   import { Progress } from '$components/ui/progress';
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { getAccountsFromSelection, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { MCP } from '$lib/modules/mcp';
-  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { language } from '$lib/i18n';
 
   async function fetchXPData() {
     isFetching = true;

@@ -1,18 +1,18 @@
 <script lang="ts">
-  import LoginModal from '$components/modules/login/LoginModal.svelte';
-  import { Button } from '$components/ui/button';
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import { toast } from 'svelte-sonner';
+  import CheckIcon from '@lucide/svelte/icons/check';
+  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+  import LogOutIcon from '@lucide/svelte/icons/log-out';
+  import PlusIcon from '@lucide/svelte/icons/plus';
   import { IsMobile } from '$lib/hooks/is-mobile.svelte';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
   import { avatarCache } from '$lib/stores';
   import { cn, handleError } from '$lib/utils';
+  import LoginModal from '$components/modules/login/LoginModal.svelte';
+  import { Button } from '$components/ui/button';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
   import type { AccountData } from '$types/account';
-  import CheckIcon from '@lucide/svelte/icons/check';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-  import LogOutIcon from '@lucide/svelte/icons/log-out';
-  import PlusIcon from '@lucide/svelte/icons/plus';
-  import { toast } from 'svelte-sonner';
 
   const allAccounts = $derived($accountStore.accounts);
   const activeAccount = accountStore.getActiveStore(true);

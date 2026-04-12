@@ -12,16 +12,16 @@
 
 <script lang="ts">
   import BanIcon from '@lucide/svelte/icons/ban';
-  import { avatarCache, displayNameCache, friendsCache } from '$lib/stores';
   import { t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
+  import { avatarCache, displayNameCache, friendsCache } from '$lib/stores';
+  import FriendCard from '$components/modules/friends/FriendCard.svelte';
   import type {
     BlockedAccountData,
     FriendData,
     IncomingFriendRequestData,
     OutgoingFriendRequestData
   } from '$types/game/friends';
-  import FriendCard from '$components/modules/friends/FriendCard.svelte';
-  import { accountStore } from '$lib/storage';
 
   type Props = {
     listType: ListType;

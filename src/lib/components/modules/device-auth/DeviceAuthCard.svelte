@@ -1,21 +1,21 @@
 <script lang="ts">
+  import { toast } from 'svelte-sonner';
   import { goto } from '$app/navigation';
-  import { Button } from '$components/ui/button';
-  import * as Tooltip from '$components/ui/tooltip';
+  import CalendarIcon from '@lucide/svelte/icons/calendar';
+  import ClockIcon from '@lucide/svelte/icons/clock';
+  import FingerprintIcon from '@lucide/svelte/icons/fingerprint';
+  import GlobeIcon from '@lucide/svelte/icons/globe';
+  import KeyRoundIcon from '@lucide/svelte/icons/key-round';
+  import MapPinIcon from '@lucide/svelte/icons/map-pin';
+  import MonitorIcon from '@lucide/svelte/icons/monitor';
+  import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import { language, t } from '$lib/i18n';
   import { DeviceAuth } from '$lib/modules/device-auth';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
+  import { Button } from '$components/ui/button';
+  import * as Tooltip from '$components/ui/tooltip';
   import type { EpicDeviceAuthData } from '$types/game/authorizations';
-  import Trash2Icon from '@lucide/svelte/icons/trash-2';
-  import MonitorIcon from '@lucide/svelte/icons/monitor';
-  import KeyRoundIcon from '@lucide/svelte/icons/key-round';
-  import FingerprintIcon from '@lucide/svelte/icons/fingerprint';
-  import MapPinIcon from '@lucide/svelte/icons/map-pin';
-  import GlobeIcon from '@lucide/svelte/icons/globe';
-  import CalendarIcon from '@lucide/svelte/icons/calendar';
-  import ClockIcon from '@lucide/svelte/icons/clock';
-  import { toast } from 'svelte-sonner';
 
   type Props = {
     auth: EpicDeviceAuthData;

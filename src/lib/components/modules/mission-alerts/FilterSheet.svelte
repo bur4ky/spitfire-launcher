@@ -21,15 +21,15 @@
 </script>
 
 <script lang="ts">
-  import * as Sheet from '$components/ui/sheet';
-  import { Button } from '$components/ui/button';
-  import { Toggle } from '$components/ui/toggle';
   import { writable } from 'svelte/store';
-  import { TheaterColors, TheaterLetters, Theaters } from '$lib/constants/stw/world-info';
   import { Rarities } from '$lib/constants/stw/resources';
-  import { Label } from '$components/ui/label';
-  import { Switch } from '$components/ui/switch';
+  import { TheaterColors, TheaterLetters, Theaters } from '$lib/constants/stw/world-info';
   import { t } from '$lib/i18n';
+  import { Button } from '$components/ui/button';
+  import { Label } from '$components/ui/label';
+  import * as Sheet from '$components/ui/sheet';
+  import { Switch } from '$components/ui/switch';
+  import { Toggle } from '$components/ui/toggle';
 
   type Props = {
     open?: boolean;

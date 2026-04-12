@@ -1,9 +1,9 @@
 import defaultPartyMemberMeta from '$lib/data/default-party-member-meta.json';
 import defaultPartyMeta from '$lib/data/default-party-meta.json';
 import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-import { AuthSession } from '$lib/modules/auth-session';
 import { partyService } from '$lib/http';
-import { partyCache, avatarCache, displayNameCache } from '$lib/stores';
+import { AuthSession } from '$lib/modules/auth-session';
+import { avatarCache, displayNameCache, partyCache } from '$lib/stores';
 import type { AccountData } from '$types/account';
 import type { FetchPartyResponse, InviterPartyResponse } from '$types/game/party';
 

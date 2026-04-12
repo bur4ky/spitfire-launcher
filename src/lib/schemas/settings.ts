@@ -1,6 +1,6 @@
+import { z } from 'zod';
 import { SidebarItems, type SidebarItem } from '$lib/constants/sidebar';
 import { locales } from '$lib/paraglide/runtime';
-import { z } from 'zod';
 
 export const appSettingsSchema = z
   .object({

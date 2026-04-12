@@ -1,13 +1,4 @@
 <script lang="ts">
-  import PageContent from '$components/layout/PageContent.svelte';
-  import CancelDownloadDialog from '$components/modules/downloader/modals/CancelDownloadDialog.svelte';
-  import { Button } from '$components/ui/button';
-  import { Progress } from '$components/ui/progress';
-  import * as Tooltip from '$components/ui/tooltip';
-  import { language, t } from '$lib/i18n';
-  import { logger } from '$lib/logger';
-  import { DownloadManager, type DownloadProgress } from '$lib/modules/download.svelte';
-  import { bytesToSize, formatRemainingDuration } from '$lib/utils';
   import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
   import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
   import ClockIcon from '@lucide/svelte/icons/clock';
@@ -18,6 +9,15 @@
   import PlayIcon from '@lucide/svelte/icons/play';
   import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
   import XIcon from '@lucide/svelte/icons/x';
+  import { language, t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
+  import { DownloadManager, type DownloadProgress } from '$lib/modules/download.svelte';
+  import { bytesToSize, formatRemainingDuration } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import CancelDownloadDialog from '$components/modules/downloader/modals/CancelDownloadDialog.svelte';
+  import { Button } from '$components/ui/button';
+  import { Progress } from '$components/ui/progress';
+  import * as Tooltip from '$components/ui/tooltip';
 
   let showCancelDialog = $state(false);
   let isCancelling = $state(false);

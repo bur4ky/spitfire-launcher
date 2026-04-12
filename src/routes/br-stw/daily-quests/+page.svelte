@@ -20,19 +20,18 @@
 </script>
 
 <script lang="ts">
+  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
+  import { dailyQuests } from '$lib/data';
+  import { language, t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
+  import { MCP } from '$lib/modules/mcp';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { Button } from '$components/ui/button';
-  import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import { MCP } from '$lib/modules/mcp';
-  import { dailyQuests } from '$lib/data';
-  import type { FullQueryProfile } from '$types/game/mcp';
   import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { logger } from '$lib/logger';
-  import { language } from '$lib/i18n';
+  import { Button } from '$components/ui/button';
   import { Progress } from '$components/ui/progress';
+  import type { FullQueryProfile } from '$types/game/mcp';
 
   async function fetchDailyQuests() {
     isFetching = true;

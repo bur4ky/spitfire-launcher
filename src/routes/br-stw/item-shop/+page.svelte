@@ -6,24 +6,24 @@
 </script>
 
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import Fuse from 'fuse.js';
+  import { t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
+  import { Friends } from '$lib/modules/friends';
+  import { Lookup } from '$lib/modules/lookup';
+  import { MCP } from '$lib/modules/mcp';
+  import { SpitfireAPI } from '$lib/modules/spitfire';
+  import { accountStore } from '$lib/storage';
+  import { accountDataCache, brShopCache, ownedItemsCache, type AccountDataCache } from '$lib/stores';
+  import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import ShopItemModal from '$components/modules/shop/modals/ShopItemModal.svelte';
   import ShopFilter from '$components/modules/shop/ShopFilter.svelte';
   import ShopSection from '$components/modules/shop/ShopSection.svelte';
   import ShopSectionSkeleton from '$components/modules/shop/skeletons/ShopSectionSkeleton.svelte';
   import { Input } from '$components/ui/input';
-  import { Friends } from '$lib/modules/friends';
-  import { Lookup } from '$lib/modules/lookup';
-  import { MCP } from '$lib/modules/mcp';
-  import { SpitfireAPI } from '$lib/modules/spitfire';
-  import { accountDataCache, brShopCache, ownedItemsCache, type AccountDataCache } from '$lib/stores';
-  import { calculateVbucks, formatRemainingDuration, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
   import type { SpitfireShopSection } from '$types/game/shop';
-  import Fuse from 'fuse.js';
-  import { onMount } from 'svelte';
-  import { logger } from '$lib/logger';
-  import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore(true);
 

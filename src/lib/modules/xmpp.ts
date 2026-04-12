@@ -1,3 +1,5 @@
+import { SvelteMap } from 'svelte/reactivity';
+import { createClient, type Agent } from 'stanza';
 import { AsyncLock } from '$lib/async-lock';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import { EventEmitter } from '$lib/event-emitter';
@@ -6,7 +8,7 @@ import { AuthSession } from '$lib/modules/auth-session';
 import { Friends, getOrInsertEntry } from '$lib/modules/friends';
 import { Party } from '$lib/modules/party';
 import { accountStore } from '$lib/storage';
-import { partyCache, friendsCache } from '$lib/stores';
+import { partyCache } from '$lib/stores';
 import type { AccountData } from '$types/account';
 import type {
   EpicEventFriendRemoved,
@@ -24,8 +26,6 @@ import type {
   EpicEventPartyUpdated
 } from '$types/game/events';
 import type { PartyMember } from '$types/game/party';
-import { type Agent, createClient } from 'stanza';
-import { SvelteMap } from 'svelte/reactivity';
 
 type EventMap = {
   [EpicEvents.MemberConnected]: EpicEventMemberConnected;

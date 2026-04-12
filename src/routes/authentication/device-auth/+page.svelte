@@ -7,18 +7,18 @@
 </script>
 
 <script lang="ts">
-  import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
-  import DeviceAuthCardSkeleton from '$components/modules/device-auth/DeviceAuthCardSkeleton.svelte';
-  import PageContent from '$components/layout/PageContent.svelte';
-  import PlusIcon from '@lucide/svelte/icons/plus';
   import { untrack } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import { DeviceAuth } from '$lib/modules/device-auth';
-  import { cn, handleError } from '$lib/utils';
+  import PlusIcon from '@lucide/svelte/icons/plus';
   import { t } from '$lib/i18n';
-  import type { AccountData } from '$types/account';
   import { logger } from '$lib/logger';
+  import { DeviceAuth } from '$lib/modules/device-auth';
   import { accountStore, deviceAuthsStore } from '$lib/storage';
+  import { cn, handleError } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import DeviceAuthCard from '$components/modules/device-auth/DeviceAuthCard.svelte';
+  import DeviceAuthCardSkeleton from '$components/modules/device-auth/DeviceAuthCardSkeleton.svelte';
+  import type { AccountData } from '$types/account';
 
   const activeAccount = accountStore.getActiveStore();
   const deviceAuths = $derived(allDeviceAuths[$activeAccount.accountId] || []);

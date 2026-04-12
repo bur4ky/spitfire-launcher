@@ -1,3 +1,5 @@
+import { SvelteSet } from 'svelte/reactivity';
+import { get } from 'svelte/store';
 import { ConnectionEvents, EpicEvents } from '$lib/constants/events';
 import homebaseRatingMapping from '$lib/data/homebase-rating-mapping.json';
 import { t } from '$lib/i18n';
@@ -17,8 +19,6 @@ import type {
   EpicEventPartyPing,
   EpicEventPartyUpdated
 } from '$types/game/events';
-import { SvelteSet } from 'svelte/reactivity';
-import { get } from 'svelte/store';
 
 const FORT_STATS_KEY = 'Default:FORTStats_j';
 const FORT_STATS_KEYS = [

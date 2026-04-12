@@ -1,25 +1,25 @@
 <script lang="ts" module>
-  import { TaxiManager } from '$lib/modules/taxi.svelte.js';
   import { SvelteMap } from 'svelte/reactivity';
+  import { TaxiManager } from '$lib/modules/taxi.svelte.js';
 
   const taxiManagers = new SvelteMap<string, TaxiManager>();
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/layout/PageContent.svelte';
-  import { Alert } from '$components/ui/alert';
-  import { Label } from '$components/ui/label';
-  import { partyCache } from '$lib/stores';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { Button } from '$components/ui/button';
-  import { Separator } from '$components/ui/separator';
-  import { Switch } from '$components/ui/switch';
-  import { Input } from '$components/ui/input';
+  import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
   import InfoIcon from '@lucide/svelte/icons/info';
   import XIcon from '@lucide/svelte/icons/x';
-  import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
+  import { t } from '$lib/i18n';
   import { accountStore, taxiStore } from '$lib/storage';
+  import { partyCache } from '$lib/stores';
+  import { handleError } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Alert } from '$components/ui/alert';
+  import { Button } from '$components/ui/button';
+  import { Input } from '$components/ui/input';
+  import { Label } from '$components/ui/label';
+  import { Separator } from '$components/ui/separator';
+  import { Switch } from '$components/ui/switch';
 
   const MIN_POWER_LEVEL = 1;
   const MAX_POWER_LEVEL = 145;

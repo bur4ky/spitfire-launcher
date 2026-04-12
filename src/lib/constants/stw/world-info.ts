@@ -1,6 +1,6 @@
+import { derived } from 'svelte/store';
 import { missions, theaters } from '$lib/data';
 import { language, t } from '$lib/i18n';
-import { derived } from 'svelte/store';
 
 export const Theaters = Object.freeze({
   Stonewood: '33A2311D4AE64B361CCE27BC9F313C8B',

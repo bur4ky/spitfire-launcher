@@ -1,5 +1,5 @@
-import { AuthSession } from '$lib/modules/auth-session';
 import { eulaService } from '$lib/http';
+import { AuthSession } from '$lib/modules/auth-session';
 import type { AccountData } from '$types/account';
 import type { EULACheckData } from '$types/game/eula';
 

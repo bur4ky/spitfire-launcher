@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
-  import type { Snippet } from 'svelte';
 
   type Props = {
     type: 'single' | 'multiple';

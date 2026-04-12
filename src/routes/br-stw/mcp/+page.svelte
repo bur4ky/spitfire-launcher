@@ -1,25 +1,25 @@
 <script lang="ts">
+  import Prism from 'prismjs';
+  import { t } from '$lib/i18n';
   import PageContent from '$components/layout/PageContent.svelte';
   import OperationCombobox from '$components/modules/mcp/OperationCombobox.svelte';
   import { Button } from '$components/ui/button';
   import * as Select from '$components/ui/select';
-  import { t } from '$lib/i18n';
   import type { MCPOperation, MCPProfileId, MCPRoute } from '$types/game/mcp';
-  import Prism from 'prismjs';
   import 'prismjs/components/prism-json';
   import 'prismjs/components/prism-json5';
-  import { Label } from '$components/ui/label';
+  import { toast } from 'svelte-sonner';
+  import JSON5 from 'json5';
+  import CheckIcon from '@lucide/svelte/icons/check';
+  import CopyIcon from '@lucide/svelte/icons/copy';
+  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   import { platform } from '@tauri-apps/plugin-os';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
-  import { toast } from 'svelte-sonner';
-  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { handleError } from '$lib/utils';
-  import CopyIcon from '@lucide/svelte/icons/copy';
-  import CheckIcon from '@lucide/svelte/icons/check';
   import JsonNode from '$components/modules/mcp/JsonNode.svelte';
-  import JSON5 from 'json5';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+  import { Label } from '$components/ui/label';
 
   const activeAccount = accountStore.getActiveStore();
 

@@ -11,19 +11,19 @@
 </script>
 
 <script lang="ts">
+  import { toast } from 'svelte-sonner';
+  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
+  import { launcherAppClient2 } from '$lib/constants/clients';
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+  import { t } from '$lib/i18n';
+  import { Authentication } from '$lib/modules/authentication';
+  import { EULA } from '$lib/modules/eula';
+  import { avatarCache } from '$lib/stores';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
   import { ExternalLink } from '$components/ui/external-link';
-  import { launcherAppClient2 } from '$lib/constants/clients';
-  import { EULA } from '$lib/modules/eula';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import { toast } from 'svelte-sonner';
-  import { Authentication } from '$lib/modules/authentication';
-  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-  import { getAccountsFromSelection, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { avatarCache } from '$lib/stores';
 
   async function checkEULA(event: SubmitEvent) {
     event.preventDefault();

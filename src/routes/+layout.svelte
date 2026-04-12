@@ -1,11 +1,17 @@
 <script lang="ts">
   import './layout.css';
-  import Header from '$components/layout/header/Header.svelte';
-  import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
-  import { SidebarProvider } from '$components/ui/sidebar';
-  import { Button } from '$components/ui/button';
-  import * as Dialog from '$components/ui/dialog';
-  import * as Tooltip from '$components/ui/tooltip';
+  import { onMount } from 'svelte';
+  import { toast, Toaster } from 'svelte-sonner';
+  import { on } from 'svelte/events';
+  import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+  import ky from 'ky';
+  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { getVersion } from '@tauri-apps/api/app';
+  import { listen } from '@tauri-apps/api/event';
+  import { getCurrentWindow } from '@tauri-apps/api/window';
+  import { platform } from '@tauri-apps/plugin-os';
+  import { SidebarItems } from '$lib/constants/sidebar';
   import { language, t } from '$lib/i18n';
   import { logger, setLogLevel } from '$lib/logger';
   import { AutoKickBase } from '$lib/modules/autokick/base';
@@ -19,19 +25,13 @@
   import { ownedAppsCache, runningAppIds } from '$lib/stores';
   import { Tauri } from '$lib/tauri';
   import { handleError } from '$lib/utils';
+  import Header from '$components/layout/header/Header.svelte';
+  import Sidebar from '$components/layout/sidebar/Sidebar.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
+  import { SidebarProvider } from '$components/ui/sidebar';
+  import * as Tooltip from '$components/ui/tooltip';
   import type { GitHubRelease } from '$types/github';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { getVersion } from '@tauri-apps/api/app';
-  import { listen } from '@tauri-apps/api/event';
-  import { platform } from '@tauri-apps/plugin-os';
-  import ky from 'ky';
-  import { onMount } from 'svelte';
-  import { toast, Toaster } from 'svelte-sonner';
-  import { on } from 'svelte/events';
-  import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-  import { getCurrentWindow } from '@tauri-apps/api/window';
-  import { SidebarItems } from '$lib/constants/sidebar';
 
   const { children } = $props();
 

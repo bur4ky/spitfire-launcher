@@ -1,10 +1,10 @@
 <script lang="ts">
+  import CheckIcon from '@lucide/svelte/icons/check';
   import { ItemColors } from '$lib/constants/item-colors';
   import { language, t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
   import { createDiscountedStore, createIsOwnedStore } from '$lib/stores';
   import type { SpitfireShopItem } from '$types/game/shop';
-  import CheckIcon from '@lucide/svelte/icons/check';
 
   type ItemCardProps = {
     item: SpitfireShopItem;

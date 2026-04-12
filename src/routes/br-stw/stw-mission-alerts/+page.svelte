@@ -1,22 +1,22 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
+  import FunnelIcon from '@lucide/svelte/icons/funnel';
+  import { TheaterNames, TheaterPowerLevels, Theaters, ZoneCategories } from '$lib/constants/stw/world-info';
+  import { t } from '$lib/i18n';
+  import { MCP } from '$lib/modules/mcp';
+  import { WorldInfo } from '$lib/modules/world-info';
+  import { accountStore } from '$lib/storage';
+  import { claimedAlerts, worldInfoCache } from '$lib/stores';
   import PageContent from '$components/layout/PageContent.svelte';
   import AlertsOverviewItem from '$components/modules/mission-alerts/AlertsOverviewItem.svelte';
   import AlertsSection from '$components/modules/mission-alerts/AlertsSection.svelte';
-  import AlertsSectionSkeleton from '$components/modules/mission-alerts/skeletons/AlertsSectionSkeleton.svelte';
-  import * as Tabs from '$components/ui/tabs';
-  import { MCP } from '$lib/modules/mcp';
-  import type { WorldParsedMission } from '$types/game/stw/world-info';
-  import { claimedAlerts, worldInfoCache } from '$lib/stores';
-  import { TheaterNames, TheaterPowerLevels, Theaters, ZoneCategories } from '$lib/constants/stw/world-info';
-  import { t } from '$lib/i18n';
-  import { WorldInfo } from '$lib/modules/world-info';
-  import { onMount } from 'svelte';
-  import { accountStore } from '$lib/storage';
-  import { SvelteSet } from 'svelte/reactivity';
-  import { Button } from '$components/ui/button';
-  import FunnelIcon from '@lucide/svelte/icons/funnel';
   import FilterSheet, { filters } from '$components/modules/mission-alerts/FilterSheet.svelte';
+  import AlertsSectionSkeleton from '$components/modules/mission-alerts/skeletons/AlertsSectionSkeleton.svelte';
+  import { Button } from '$components/ui/button';
+  import * as Tabs from '$components/ui/tabs';
   import type { RarityType } from '$types/game/stw/resources';
+  import type { WorldParsedMission } from '$types/game/stw/world-info';
 
   const activeAccount = accountStore.getActiveStore(true);
 

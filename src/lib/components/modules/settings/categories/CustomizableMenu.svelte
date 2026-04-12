@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { Label } from '$components/ui/label';
-  import { Separator } from '$components/ui/separator';
-  import { Switch } from '$components/ui/switch';
   import { SidebarCategories, type SidebarItem } from '$lib/constants/sidebar';
   import { t } from '$lib/i18n';
   import { settingsStore } from '$lib/storage';
+  import { Label } from '$components/ui/label';
+  import { Separator } from '$components/ui/separator';
+  import { Switch } from '$components/ui/switch';
 
   const categories = SidebarCategories.filter((x) => !x.hidden);
 

@@ -10,18 +10,18 @@
 </script>
 
 <script lang="ts">
-  import PageContent from '$components/layout/PageContent.svelte';
+  import { toast } from 'svelte-sonner';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import MoonIcon from '@lucide/svelte/icons/moon';
+  import XIcon from '@lucide/svelte/icons/x';
+  import { t } from '$lib/i18n';
   import { TaxiManager } from '$lib/modules/taxi.svelte.js';
+  import { XMPPManager } from '$lib/modules/xmpp';
+  import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
-  import { toast } from 'svelte-sonner';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { XMPPManager } from '$lib/modules/xmpp';
-  import MoonIcon from '@lucide/svelte/icons/moon';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import XIcon from '@lucide/svelte/icons/x';
-  import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();
   const isCustomStatusInUse = $derived(TaxiManager.taxiAccountIds.has($activeAccount.accountId));

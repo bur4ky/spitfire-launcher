@@ -1,8 +1,6 @@
 <script lang="ts">
-  import SettingItem from '$components/modules/settings/SettingItem.svelte';
-  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
-  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
-  import { Switch } from '$components/ui/switch';
+  import { onMount, tick, untrack } from 'svelte';
+  import { toast } from 'svelte-sonner';
   import { t } from '$lib/i18n';
   import { logger } from '$lib/logger';
   import { DownloadManager } from '$lib/modules/download.svelte.js';
@@ -10,9 +8,11 @@
   import { downloaderSettingsSchema } from '$lib/schemas/settings';
   import { accountStore, downloaderStore } from '$lib/storage';
   import { handleError } from '$lib/utils';
+  import SettingItem from '$components/modules/settings/SettingItem.svelte';
+  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
+  import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import { Switch } from '$components/ui/switch';
   import type { DownloaderSettings } from '$types/settings';
-  import { onMount, tick, untrack } from 'svelte';
-  import { toast } from 'svelte-sonner';
 
   let loadingAccount = $state(true);
   let downloaderAccountId = $state<string>();

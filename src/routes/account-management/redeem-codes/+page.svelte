@@ -15,15 +15,15 @@
 </script>
 
 <script lang="ts">
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+  import { t } from '$lib/i18n';
+  import { Code } from '$lib/modules/code';
+  import { getAccountsFromSelection, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
+  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
   import { Button } from '$components/ui/button';
   import { TagInput } from '$components/ui/tag-input';
-  import { Code } from '$lib/modules/code';
-  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-  import BulkResultAccordion from '$components/ui/BulkResultAccordion.svelte';
-  import { getAccountsFromSelection, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
 
   const humanizedErrors = $derived<Record<string, string>>({
     'errors.com.epicgames.coderedemption.code_not_found': $t('redeemCodes.redeemErrors.notFound'),

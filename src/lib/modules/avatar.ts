@@ -1,5 +1,5 @@
-import { AuthSession } from '$lib/modules/auth-session';
 import { avatarService } from '$lib/http';
+import { AuthSession } from '$lib/modules/auth-session';
 import { avatarCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';

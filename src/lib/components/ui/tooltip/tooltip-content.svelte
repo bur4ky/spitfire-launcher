@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { ComponentProps } from 'svelte';
+  import { Tooltip as TooltipPrimitive } from 'bits-ui';
   import type { WithoutChildrenOrChild } from '$lib/utils';
   import { cn } from '$lib/utils';
-  import { Tooltip as TooltipPrimitive } from 'bits-ui';
-  import type { ComponentProps } from 'svelte';
   import TooltipPortal from './tooltip-portal.svelte';
 
   let {

@@ -1,6 +1,6 @@
 import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-import { AuthSession } from '$lib/modules/auth-session';
 import { publicAccountService, userSearchService } from '$lib/http';
+import { AuthSession } from '$lib/modules/auth-session';
 import { displayNameCache } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';

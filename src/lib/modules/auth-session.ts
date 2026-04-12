@@ -1,3 +1,6 @@
+import { toast } from 'svelte-sonner';
+import { get } from 'svelte/store';
+import { isForceRetryError, type KyInstance } from 'ky';
 import { AsyncLock } from '$lib/async-lock';
 import { defaultClient, type ClientCredentials } from '$lib/constants/clients';
 import { isEpicAPIError } from '$lib/exceptions/EpicAPIError';
@@ -6,9 +9,6 @@ import { getChildLogger } from '$lib/logger';
 import { Authentication } from '$lib/modules/authentication';
 import { accountStore } from '$lib/storage';
 import type { AccountData } from '$types/account';
-import { isForceRetryError, type KyInstance } from 'ky';
-import { toast } from 'svelte-sonner';
-import { get } from 'svelte/store';
 
 const logger = getChildLogger('AuthSession');
 

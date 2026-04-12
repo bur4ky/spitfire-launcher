@@ -1,11 +1,11 @@
 <script lang="ts">
+  import ArrowDownIcon from '@lucide/svelte/icons/arrow-down';
+  import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
+  import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
+  import { t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
   import SettingItem from '$components/modules/settings/SettingItem.svelte';
   import { Sortable } from '$components/ui/sortable';
-  import { accountStore } from '$lib/storage';
-  import { t } from '$lib/i18n';
-  import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
-  import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
-  import ArrowDownIcon from '@lucide/svelte/icons/arrow-down';
 
   const accounts = $derived($accountStore.accounts);
 

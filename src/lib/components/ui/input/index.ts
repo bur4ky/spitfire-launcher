@@ -1,4 +1,4 @@
-import Root, { type InputProps, type InputType, type InputVariant, inputVariants } from './input.svelte';
+import Root, { inputVariants, type InputProps, type InputType, type InputVariant } from './input.svelte';
 
 export {
   Root,

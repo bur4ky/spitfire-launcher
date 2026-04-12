@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import type { LoadoutData } from '$components/modules/lookup-players/STWDetails.svelte';
-  import { gadgets, heroes, teamPerks } from '$lib/data';
   import { FounderEditions } from '$lib/constants/stw/resources';
+  import { gadgets, heroes, teamPerks } from '$lib/data';
+  import type { LoadoutData } from '$components/modules/lookup-players/STWDetails.svelte';
 
   type FounderEdition = (typeof FounderEditions)[keyof typeof FounderEditions];
   type STWData = {
@@ -24,24 +24,23 @@
 </script>
 
 <script lang="ts">
-  import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
-  import { ExternalLink } from '$components/ui/external-link';
-  import { avatarCache } from '$lib/stores';
-  import { Button } from '$components/ui/button';
-  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
-  import SearchIcon from '@lucide/svelte/icons/search';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { Lookup } from '$lib/modules/lookup';
   import { toast } from 'svelte-sonner';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
-  import { MCP } from '$lib/modules/mcp';
+  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import SearchIcon from '@lucide/svelte/icons/search';
   import { FounderEditionNames, Rarities } from '$lib/constants/stw/resources';
+  import { language, t } from '$lib/i18n';
   import { logger } from '$lib/logger';
+  import { Lookup } from '$lib/modules/lookup';
+  import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
+  import { avatarCache } from '$lib/stores';
+  import { handleError } from '$lib/utils';
+  import STWDetails from '$components/modules/lookup-players/STWDetails.svelte';
+  import { Button } from '$components/ui/button';
+  import { ExternalLink } from '$components/ui/external-link';
+  import InputWithAutocomplete from '$components/ui/InputWithAutocomplete.svelte';
+  import type { CampaignProfile, ProfileItem } from '$types/game/mcp';
 
   const activeAccount = accountStore.getActiveStore();
 

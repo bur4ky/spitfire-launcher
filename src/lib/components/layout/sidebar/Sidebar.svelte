@@ -1,16 +1,16 @@
 <script lang="ts">
-  import AccountSwitcher from '$components/layout/sidebar/AccountSwitcher.svelte';
-  import { ExternalLink } from '$components/ui/external-link';
-  import { Separator } from '$components/ui/separator';
-  import { Button } from '$components/ui/button';
-  import * as Sidebar from '$components/ui/sidebar';
-  import * as Tooltip from '$components/ui/tooltip';
   import { page } from '$app/state';
+  import { getVersion } from '@tauri-apps/api/app';
   import { SidebarCategories, type SidebarCategory, type SidebarItem } from '$lib/constants/sidebar';
+  import { t } from '$lib/i18n';
   import { accountStore, settingsStore } from '$lib/storage';
   import { cn } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { getVersion } from '@tauri-apps/api/app';
+  import AccountSwitcher from '$components/layout/sidebar/AccountSwitcher.svelte';
+  import { Button } from '$components/ui/button';
+  import { ExternalLink } from '$components/ui/external-link';
+  import { Separator } from '$components/ui/separator';
+  import * as Sidebar from '$components/ui/sidebar';
+  import * as Tooltip from '$components/ui/tooltip';
 
   const sidebar = Sidebar.useSidebar();
   const activeAccount = accountStore.getActiveStore(true);

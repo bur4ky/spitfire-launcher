@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Button } from '$components/ui/button';
+  import { toast } from 'svelte-sonner';
+  import { path } from '@tauri-apps/api';
   import { launcherAppClient2 } from '$lib/constants/clients';
   import { t } from '$lib/i18n';
   import { AuthSession } from '$lib/modules/auth-session';
@@ -7,10 +8,9 @@
   import { Manifest } from '$lib/modules/manifest';
   import { accountStore, settingsStore } from '$lib/storage';
   import { runningAppIds } from '$lib/stores';
-  import { type LaunchAppOptions, Tauri } from '$lib/tauri';
+  import { Tauri, type LaunchAppOptions } from '$lib/tauri';
   import { handleError, sleep } from '$lib/utils';
-  import { path } from '@tauri-apps/api';
-  import { toast } from 'svelte-sonner';
+  import { Button } from '$components/ui/button';
 
   const activeAccount = accountStore.getActiveStore(true);
   const fortniteAppId = 'Fortnite';
@@ -111,7 +111,12 @@
       await Tauri.stopApp({ appId: fortniteAppId });
       toast.success($t('launchGame.stopped'), { id: toastId });
     } catch (error) {
-      handleError({ error, message: $t('launchGame.failedToStop'), toastId, account: $activeAccount || undefined });
+      handleError({
+        error,
+        message: $t('launchGame.failedToStop'),
+        toastId,
+        account: $activeAccount || undefined
+      });
     } finally {
       // A delay to ensure the app was killed properly
       await sleep(2000);

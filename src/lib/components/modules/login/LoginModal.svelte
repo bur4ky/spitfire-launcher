@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { t } from '$lib/i18n';
   import LoginStep0, { type LoginMethod } from '$components/modules/login/LoginStep0.svelte';
   import LoginStep1 from '$components/modules/login/LoginStep1.svelte';
   import LoginStep2 from '$components/modules/login/LoginStep2.svelte';
   import LoginSteps from '$components/modules/login/LoginSteps.svelte';
   import * as Dialog from '$components/ui/dialog';
-  import { t } from '$lib/i18n';
 
   type Props = {
     open: boolean;

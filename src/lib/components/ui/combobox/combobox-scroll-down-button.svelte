@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
-  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
   import { Combobox as ComboboxPrimitive } from 'bits-ui';
+  import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
 
   let {
     ref = $bindable(null),

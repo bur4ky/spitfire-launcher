@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as Select from '$components/ui/select';
-  import { t } from '$lib/i18n';
-  import type { SpitfireShopFilter } from '$types/game/shop';
   import FilterIcon from '@lucide/svelte/icons/filter';
+  import { t } from '$lib/i18n';
+  import * as Select from '$components/ui/select';
+  import type { SpitfireShopFilter } from '$types/game/shop';
 
   const filters: { label: string; value: SpitfireShopFilter }[] = $derived([
     { label: $t('itemShop.filters.new'), value: 'new' },

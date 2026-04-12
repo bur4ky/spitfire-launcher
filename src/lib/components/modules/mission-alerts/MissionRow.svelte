@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TheaterNames, TheaterColors, ZoneNames, TheaterLetters } from '$lib/constants/stw/world-info';
+  import { TheaterColors, TheaterLetters, TheaterNames, ZoneNames } from '$lib/constants/stw/world-info';
   import { language } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
   import { claimedAlerts } from '$lib/stores';

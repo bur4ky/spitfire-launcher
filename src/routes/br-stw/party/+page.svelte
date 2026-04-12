@@ -20,26 +20,26 @@
 </script>
 
 <script lang="ts">
+  import { toast } from 'svelte-sonner';
+  import { EpicEvents } from '$lib/constants/events';
+  import { t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
+  import { AutoKickBase } from '$lib/modules/autokick/base';
+  import { claimRewards } from '$lib/modules/autokick/claim-rewards';
+  import { transferBuildingMaterials } from '$lib/modules/autokick/transfer-building-materials';
+  import { Friends } from '$lib/modules/friends';
+  import { Party } from '$lib/modules/party';
+  import { XMPPManager } from '$lib/modules/xmpp';
+  import { accountStore } from '$lib/storage';
+  import { friendsCache, partyCache } from '$lib/stores';
+  import { handleError, sleep } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import MemberCard, { type PartyMember } from '$components/modules/party/MemberCard.svelte';
   import PartyAccountSelection from '$components/modules/party/PartyAccountSelection.svelte';
+  import SettingSwitch from '$components/modules/party/SettingSwitch.svelte';
   import * as Tabs from '$components/ui/tabs';
-  import { Friends } from '$lib/modules/friends';
-  import { XMPPManager } from '$lib/modules/xmpp';
-  import { Party } from '$lib/modules/party';
-  import { AutoKickBase } from '$lib/modules/autokick/base';
-  import { partyCache, friendsCache } from '$lib/stores';
-  import { transferBuildingMaterials } from '$lib/modules/autokick/transfer-building-materials';
-  import { claimRewards } from '$lib/modules/autokick/claim-rewards';
-  import { handleError, sleep } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { toast } from 'svelte-sonner';
   import type { AccountData } from '$types/account';
   import type { PartyData } from '$types/game/party';
-  import { EpicEvents } from '$lib/constants/events';
-  import { logger } from '$lib/logger';
-  import { accountStore } from '$lib/storage';
-  import SettingSwitch from '$components/modules/party/SettingSwitch.svelte';
 
   const allAccounts = $derived($accountStore.accounts);
   const activeAccount = accountStore.getActiveStore();

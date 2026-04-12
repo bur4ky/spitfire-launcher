@@ -1,21 +1,21 @@
 <script lang="ts">
-  import type { LoginMethod } from '$components/modules/login/LoginStep0.svelte';
-  import { Button } from '$components/ui/button';
-  import { Input } from '$components/ui/input';
-  import { defaultClient, fortniteNewSwitchGameClient } from '$lib/constants/clients';
-  import { t } from '$lib/i18n';
-  import { Authentication } from '$lib/modules/authentication';
-  import { DeviceAuth } from '$lib/modules/device-auth';
-  import { oauthService } from '$lib/http';
-  import { accountStore } from '$lib/storage';
-  import { handleError } from '$lib/utils';
-  import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';
+  import { tick } from 'svelte';
+  import { toast } from 'svelte-sonner';
   import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { readText } from '@tauri-apps/plugin-clipboard-manager';
   import { openUrl } from '@tauri-apps/plugin-opener';
-  import { tick } from 'svelte';
-  import { toast } from 'svelte-sonner';
+  import { defaultClient, fortniteNewSwitchGameClient } from '$lib/constants/clients';
+  import { oauthService } from '$lib/http';
+  import { t } from '$lib/i18n';
+  import { Authentication } from '$lib/modules/authentication';
+  import { DeviceAuth } from '$lib/modules/device-auth';
+  import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
+  import type { LoginMethod } from '$components/modules/login/LoginStep0.svelte';
+  import { Button } from '$components/ui/button';
+  import { Input } from '$components/ui/input';
+  import type { DeviceCodeLoginData, EpicOAuthData } from '$types/game/authorizations';
 
   type Props = {
     selectedMethod: LoginMethod;

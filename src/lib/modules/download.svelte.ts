@@ -1,16 +1,16 @@
+import { toast } from 'svelte-sonner';
+import { get } from 'svelte/store';
+import type { z } from 'zod';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { t } from '$lib/i18n';
 import { getChildLogger } from '$lib/logger';
-import { Legendary, configPath } from '$lib/modules/legendary';
+import { configPath, Legendary } from '$lib/modules/legendary';
 import { Notification } from '$lib/modules/notification';
 import type { queueItemSchema } from '$lib/schemas/settings';
 import { downloaderStore } from '$lib/storage';
 import { ownedAppsCache } from '$lib/stores';
-import { type LegendaryStreamEvent, Tauri } from '$lib/tauri';
+import { Tauri, type LegendaryStreamEvent } from '$lib/tauri';
 import type { ParsedApp } from '$types/legendary';
-import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { toast } from 'svelte-sonner';
-import { get } from 'svelte/store';
-import type { z } from 'zod';
 
 const logger = getChildLogger('DownloadManager');
 

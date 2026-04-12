@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { ComponentProps } from 'svelte';
+  import { Combobox as ComboboxPrimitive } from 'bits-ui';
   import type { WithoutChildrenOrChild } from '$lib/utils';
   import { cn, type WithoutChild } from '$lib/utils';
-  import { Combobox as ComboboxPrimitive } from 'bits-ui';
-  import type { ComponentProps } from 'svelte';
   import ComboboxPortal from './combobox-portal.svelte';
   import ComboboxScrollDownButton from './combobox-scroll-down-button.svelte';
   import ComboboxScrollUpButton from './combobox-scroll-up-button.svelte';

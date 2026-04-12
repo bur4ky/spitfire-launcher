@@ -1,12 +1,12 @@
 <script lang="ts">
-  import * as Combobox from '$components/ui/combobox';
-  import { Input } from '$components/ui/input';
-  import { t } from '$lib/i18n';
-  import { accountStore } from '$lib/storage';
+  import { onMount } from 'svelte';
+  import type { ComboboxRootProps } from 'bits-ui';
   import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
   import UserIcon from '@lucide/svelte/icons/user';
-  import type { ComboboxRootProps } from 'bits-ui';
-  import { onMount } from 'svelte';
+  import { t } from '$lib/i18n';
+  import { accountStore } from '$lib/storage';
+  import * as Combobox from '$components/ui/combobox';
+  import { Input } from '$components/ui/input';
 
   type Props = {
     autoSelect?: boolean;

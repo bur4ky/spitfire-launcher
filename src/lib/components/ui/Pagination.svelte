@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as Pagination from '$lib/components/ui/pagination';
+  import type { PaginationRootProps } from 'bits-ui';
   import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
   import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-  import type { PaginationRootProps } from 'bits-ui';
+  import * as Pagination from '$lib/components/ui/pagination';
 
   let { page = $bindable(), ...restProps }: PaginationRootProps = $props();
 </script>

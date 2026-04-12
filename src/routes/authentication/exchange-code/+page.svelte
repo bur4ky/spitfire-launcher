@@ -3,15 +3,15 @@
 </script>
 
 <script lang="ts">
+  import { toast } from 'svelte-sonner';
+  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+  import { t } from '$lib/i18n';
+  import { AuthSession } from '$lib/modules/auth-session';
+  import { Authentication } from '$lib/modules/authentication';
+  import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import { Authentication } from '$lib/modules/authentication';
-  import { AuthSession } from '$lib/modules/auth-session';
-  import { toast } from 'svelte-sonner';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import { accountStore } from '$lib/storage';
 
   async function openEpicGamesWebsite() {
     generatingExchangeCode = true;

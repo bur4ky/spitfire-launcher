@@ -1,9 +1,10 @@
+import { SvelteMap } from 'svelte/reactivity';
 import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+import { friendService } from '$lib/http';
 import { getChildLogger } from '$lib/logger';
 import { AuthSession } from '$lib/modules/auth-session';
 import { Avatar } from '$lib/modules/avatar';
 import { Lookup } from '$lib/modules/lookup';
-import { friendService } from '$lib/http';
 import { avatarCache, displayNameCache, friendsCache, type AccountFriends } from '$lib/stores';
 import { processChunks } from '$lib/utils';
 import type { AccountData } from '$types/account';
@@ -14,7 +15,6 @@ import type {
   IncomingFriendRequestData,
   OutgoingFriendRequestData
 } from '$types/game/friends';
-import { SvelteMap } from 'svelte/reactivity';
 
 const logger = getChildLogger('FriendsManager');
 

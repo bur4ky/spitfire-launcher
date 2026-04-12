@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  import { cn, type WithElementRef } from '$lib/utils';
   import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
   import { tv, type VariantProps } from 'tailwind-variants';
+  import { cn, type WithElementRef } from '$lib/utils';
 
   export const inputVariants = tv({
     base: [

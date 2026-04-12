@@ -1,5 +1,5 @@
-import type { parsedAppSchema } from '$lib/schemas/settings';
 import { z } from 'zod';
+import type { parsedAppSchema } from '$lib/schemas/settings';
 
 export type AppFilterValue = 'hidden' | 'installed' | 'updatesAvailable';
 

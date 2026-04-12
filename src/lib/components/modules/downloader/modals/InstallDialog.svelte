@@ -6,26 +6,26 @@
 </script>
 
 <script lang="ts">
-  import * as Dialog from '$components/ui/dialog';
-  import { ownedAppsCache } from '$lib/stores';
-  import { Legendary } from '$lib/modules/legendary';
-  import { DownloadManager } from '$lib/modules/download.svelte.js';
-  import { bytesToSize, cn } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { Progress } from '$components/ui/progress';
-  import PackageIcon from '@lucide/svelte/icons/package';
-  import DownloadIcon from '@lucide/svelte/icons/download';
-  import HardDriveIcon from '@lucide/svelte/icons/hard-drive';
-  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import DownloadStartedToast from '$components/modules/downloader/DownloadStartedToast.svelte';
-  import { logger } from '$lib/logger';
-  import { Button, buttonVariants } from '$components/ui/button';
-  import { downloaderStore } from '$lib/storage';
-  import { Tauri } from '$lib/tauri';
-  import * as Select from '$components/ui/select';
+  import AlertTriangleIcon from '@lucide/svelte/icons/alert-triangle';
   import BoxesIcon from '@lucide/svelte/icons/boxes';
+  import DownloadIcon from '@lucide/svelte/icons/download';
+  import HardDriveIcon from '@lucide/svelte/icons/hard-drive';
+  import PackageIcon from '@lucide/svelte/icons/package';
+  import { t } from '$lib/i18n';
+  import { logger } from '$lib/logger';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
+  import { Legendary } from '$lib/modules/legendary';
+  import { downloaderStore } from '$lib/storage';
+  import { ownedAppsCache } from '$lib/stores';
+  import { Tauri } from '$lib/tauri';
+  import { bytesToSize, cn } from '$lib/utils';
+  import DownloadStartedToast from '$components/modules/downloader/DownloadStartedToast.svelte';
+  import { Button, buttonVariants } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
+  import { Progress } from '$components/ui/progress';
+  import * as Select from '$components/ui/select';
 
   type Props = {
     id: string;

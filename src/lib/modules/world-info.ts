@@ -1,15 +1,16 @@
-import { ingredients, resources, survivors, survivorsMythicLeads, traps } from '$lib/data';
-import { RarityNames, Rarities } from '$lib/constants/stw/resources';
+import { get } from 'svelte/store';
+import { Rarities, RarityNames } from '$lib/constants/stw/resources';
 import {
   GroupZones,
-  Theaters,
-  ZoneModifiers,
   TheaterPowerLevels,
+  Theaters,
   TheaterStormKingZones,
-  ZoneCategories
+  ZoneCategories,
+  ZoneModifiers
 } from '$lib/constants/stw/world-info';
-import { Authentication } from '$lib/modules/authentication';
+import { ingredients, resources, survivors, survivorsMythicLeads, traps } from '$lib/data';
 import { baseGameService } from '$lib/http';
+import { Authentication } from '$lib/modules/authentication';
 import { worldInfoCache } from '$lib/stores';
 import type { ParsedModifierData, ParsedRarityData, ParsedResourceData, RarityType } from '$types/game/stw/resources';
 import type {
@@ -20,7 +21,6 @@ import type {
   WorldInfoTheater,
   WorldParsedMission
 } from '$types/game/stw/world-info';
-import { get } from 'svelte/store';
 
 type Theaters = keyof typeof Theaters;
 

@@ -1,22 +1,22 @@
 <script lang="ts">
-  import GeneralSettings from '$components/modules/settings/categories/GeneralSettings.svelte';
-  import CustomizableMenu from '$components/modules/settings/categories/CustomizableMenu.svelte';
-  import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
-  import AdvancedSettings from '$components/modules/settings/categories/AdvancedSettings.svelte';
-  import AccountSettings from '$components/modules/settings/categories/AccountSettings.svelte';
-  import * as Tabs from '$components/ui/tabs';
+  import type { Component } from 'svelte';
   import type { LucideIcon } from '$types';
+  import CodeXmlIcon from '@lucide/svelte/icons/code-xml';
   import DownloadIcon from '@lucide/svelte/icons/download';
   import SettingsIcon from '@lucide/svelte/icons/settings';
-  import CodeXmlIcon from '@lucide/svelte/icons/code-xml';
   import SlidersVertical from '@lucide/svelte/icons/sliders-vertical';
   import UsersIcon from '@lucide/svelte/icons/users';
   import { platform } from '@tauri-apps/plugin-os';
-  import type { Component } from 'svelte';
-  import { Separator } from '$components/ui/separator';
-  import PageContent from '$components/layout/PageContent.svelte';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import AccountSettings from '$components/modules/settings/categories/AccountSettings.svelte';
+  import AdvancedSettings from '$components/modules/settings/categories/AdvancedSettings.svelte';
+  import CustomizableMenu from '$components/modules/settings/categories/CustomizableMenu.svelte';
+  import DownloaderSettings from '$components/modules/settings/categories/DownloaderSettings.svelte';
+  import GeneralSettings from '$components/modules/settings/categories/GeneralSettings.svelte';
+  import { Separator } from '$components/ui/separator';
+  import * as Tabs from '$components/ui/tabs';
 
   type Category = {
     id: string;

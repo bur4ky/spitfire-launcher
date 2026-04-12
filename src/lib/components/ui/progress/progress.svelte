@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
-  import { Progress as ProgressPrimitive } from 'bits-ui';
   import type { ClassValue } from 'svelte/elements';
+  import { Progress as ProgressPrimitive } from 'bits-ui';
+  import { cn, type WithoutChildrenOrChild } from '$lib/utils';
 
   type Props = WithoutChildrenOrChild<ProgressPrimitive.RootProps> & {
     indicatorClass?: ClassValue;

@@ -1,5 +1,5 @@
-import { AuthSession } from '$lib/modules/auth-session';
 import { fulfillmentService } from '$lib/http';
+import { AuthSession } from '$lib/modules/auth-session';
 import type { AccountData } from '$types/account';
 import type { RedeemedCodeData } from '$types/game/fulfillment';
 

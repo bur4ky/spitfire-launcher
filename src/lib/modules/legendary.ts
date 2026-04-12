@@ -1,4 +1,7 @@
+import { get } from 'svelte/store';
 import { dev } from '$app/environment';
+import { path } from '@tauri-apps/api';
+import { readTextFile } from '@tauri-apps/plugin-fs';
 import { LegendaryError } from '$lib/exceptions/LegendaryError';
 import { legendaryService } from '$lib/http';
 import { getChildLogger } from '$lib/logger';
@@ -17,9 +20,6 @@ import type {
   LegendarySDLResponse,
   LegendaryStatus
 } from '$types/legendary';
-import { path } from '@tauri-apps/api';
-import { readTextFile } from '@tauri-apps/plugin-fs';
-import { get } from 'svelte/store';
 
 const logger = getChildLogger('Legendary');
 export const configPath = await path.join(dataDirectory, dev ? 'legendary-dev' : 'legendary');

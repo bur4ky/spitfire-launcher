@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { useSidebar } from '$components/ui/sidebar';
   import MenuIcon from '@lucide/svelte/icons/menu';
+  import { useSidebar } from '$components/ui/sidebar';
 
   const sidebar = useSidebar();
 </script>

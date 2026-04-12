@@ -1,8 +1,8 @@
 <script generics="T" lang="ts">
-  import * as Accordion from '$components/ui/accordion';
-  import { avatarCache } from '$lib/stores';
-  import type { BulkState } from '$types/account';
   import type { Snippet } from 'svelte';
+  import { avatarCache } from '$lib/stores';
+  import * as Accordion from '$components/ui/accordion';
+  import type { BulkState } from '$types/account';
 
   type Props = {
     states: BulkState<T>[];

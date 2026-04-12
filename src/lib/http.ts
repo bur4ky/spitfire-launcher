@@ -1,11 +1,11 @@
+import ky, { isHTTPError } from 'ky';
+import { getVersion } from '@tauri-apps/api/app';
+import { fetch } from '@tauri-apps/plugin-http';
+import { arch, platform } from '@tauri-apps/plugin-os';
 import { defaultClient } from '$lib/constants/clients';
 import { EpicAPIError, isEpicAPIError } from '$lib/exceptions/EpicAPIError';
 import { Manifest } from '$lib/modules/manifest';
 import { settingsStore } from '$lib/storage';
-import { getVersion } from '@tauri-apps/api/app';
-import { arch, platform } from '@tauri-apps/plugin-os';
-import { fetch } from '@tauri-apps/plugin-http';
-import ky, { isHTTPError } from 'ky';
 
 // Used to avoid CORS issues
 export const tauriKy = ky.create({

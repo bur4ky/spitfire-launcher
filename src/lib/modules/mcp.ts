@@ -1,6 +1,6 @@
 import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-import { AuthSession } from '$lib/modules/auth-session';
 import { baseGameService } from '$lib/http';
+import { AuthSession } from '$lib/modules/auth-session';
 import type { AccountData } from '$types/account';
 import type { FullQueryProfile, MCPOperation, MCPProfileId, MCPRoute } from '$types/game/mcp';
 

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import * as Combobox from '$components/ui/combobox';
-  import { inputVariants } from '$components/ui/input';
+  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
   import { MCPOperations } from '$lib/constants/mcp';
   import { t } from '$lib/i18n';
   import { cn } from '$lib/utils';
-  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+  import * as Combobox from '$components/ui/combobox';
+  import { inputVariants } from '$components/ui/input';
 
   type Props = {
     open?: boolean;

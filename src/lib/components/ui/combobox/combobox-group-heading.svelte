@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { cn } from '$lib/utils';
-  import { Combobox as ComboboxPrimitive } from 'bits-ui';
   import type { ComponentProps } from 'svelte';
+  import { Combobox as ComboboxPrimitive } from 'bits-ui';
+  import { cn } from '$lib/utils';
 
   let {
     ref = $bindable(null),

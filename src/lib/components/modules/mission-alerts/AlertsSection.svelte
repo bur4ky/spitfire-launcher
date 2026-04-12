@@ -1,6 +1,6 @@
 <script lang="ts">
-  import MissionRow from '$components/modules/mission-alerts/MissionRow.svelte';
   import { t } from '$lib/i18n';
+  import MissionRow from '$components/modules/mission-alerts/MissionRow.svelte';
   import type { WorldParsedMission } from '$types/game/stw/world-info';
 
   type Props = {

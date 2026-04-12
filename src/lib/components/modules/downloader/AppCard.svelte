@@ -1,13 +1,5 @@
 <script lang="ts">
-  import { Button } from '$components/ui/button';
-  import AppDropdown from '$components/modules/downloader/AppDropdown.svelte';
-  import { t } from '$lib/i18n';
-  import { DownloadManager } from '$lib/modules/download.svelte.js';
-  import { Legendary } from '$lib/modules/legendary';
-  import { downloaderStore } from '$lib/storage';
-  import { ownedAppsCache, runningAppIds } from '$lib/stores';
-  import { Tauri } from '$lib/tauri';
-  import { bytesToSize, handleError, sleep } from '$lib/utils';
+  import { toast } from 'svelte-sonner';
   import CircleMinusIcon from '@lucide/svelte/icons/circle-minus';
   import DownloadIcon from '@lucide/svelte/icons/download';
   import EyeIcon from '@lucide/svelte/icons/eye';
@@ -19,7 +11,15 @@
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import WrenchIcon from '@lucide/svelte/icons/wrench';
   import XIcon from '@lucide/svelte/icons/x';
-  import { toast } from 'svelte-sonner';
+  import { t } from '$lib/i18n';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
+  import { Legendary } from '$lib/modules/legendary';
+  import { downloaderStore } from '$lib/storage';
+  import { ownedAppsCache, runningAppIds } from '$lib/stores';
+  import { Tauri } from '$lib/tauri';
+  import { bytesToSize, handleError, sleep } from '$lib/utils';
+  import AppDropdown from '$components/modules/downloader/AppDropdown.svelte';
+  import { Button } from '$components/ui/button';
 
   type Props = {
     appId: string;

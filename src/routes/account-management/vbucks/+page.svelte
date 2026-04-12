@@ -12,14 +12,14 @@
 </script>
 
 <script lang="ts">
+  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
+  import { language, t } from '$lib/i18n';
+  import { MCP } from '$lib/modules/mcp';
+  import { avatarCache } from '$lib/stores';
+  import { calculateVbucks, getAccountsFromSelection, handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Button } from '$components/ui/button';
-  import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
-  import { MCP } from '$lib/modules/mcp';
-  import { calculateVbucks, getAccountsFromSelection, handleError } from '$lib/utils';
-  import { language, t } from '$lib/i18n';
-  import { avatarCache } from '$lib/stores';
 
   async function fetchVbucksData(event: SubmitEvent) {
     event.preventDefault();

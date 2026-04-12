@@ -4,18 +4,18 @@
 </script>
 
 <script lang="ts">
+  import { toast } from 'svelte-sonner';
+  import CopyIcon from '@lucide/svelte/icons/copy';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+  import { openUrl } from '@tauri-apps/plugin-opener';
+  import { t } from '$lib/i18n';
+  import { AuthSession } from '$lib/modules/auth-session';
+  import { Authentication } from '$lib/modules/authentication';
+  import { accountStore } from '$lib/storage';
+  import { handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import { Button } from '$components/ui/button';
-  import { Authentication } from '$lib/modules/authentication';
-  import { AuthSession } from '$lib/modules/auth-session';
-  import { openUrl } from '@tauri-apps/plugin-opener';
-  import { toast } from 'svelte-sonner';
-  import { handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import CopyIcon from '@lucide/svelte/icons/copy';
-  import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { accountStore } from '$lib/storage';
 
   const activeAccount = accountStore.getActiveStore();
 

@@ -1,8 +1,8 @@
+import { derived, type Readable } from 'svelte/store';
 import { getChildLogger } from '$lib/logger';
 import { accountDataFileSchema } from '$lib/schemas/account';
 import { FileStore } from '$lib/storage/file-store';
 import type { AccountData, AccountDataFile } from '$types/account';
-import { derived, type Readable } from 'svelte/store';
 
 const logger = getChildLogger('AccountStore');
 

@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { Button } from '$components/ui/button';
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import { downloaderStore } from '$lib/storage';
-  import { DownloadManager } from '$lib/modules/download.svelte.js';
-  import { t } from '$lib/i18n';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import EllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
   import RefreshCwOffIcon from '@lucide/svelte/icons/refresh-cw-off';
   import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import WrenchIcon from '@lucide/svelte/icons/wrench';
-  import type { ParsedApp } from '$types/legendary';
+  import { t } from '$lib/i18n';
+  import { DownloadManager } from '$lib/modules/download.svelte.js';
+  import { downloaderStore } from '$lib/storage';
   import { runningAppIds } from '$lib/stores';
+  import { Button } from '$components/ui/button';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import type { ParsedApp } from '$types/legendary';
 
   type Props = {
     open?: boolean;

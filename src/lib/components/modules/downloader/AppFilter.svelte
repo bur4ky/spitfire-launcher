@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as Select from '$components/ui/select';
-  import { t } from '$lib/i18n';
-  import type { AppFilterValue } from '$types/legendary';
   import FilterIcon from '@lucide/svelte/icons/filter';
+  import { t } from '$lib/i18n';
+  import * as Select from '$components/ui/select';
+  import type { AppFilterValue } from '$types/legendary';
 
   const filters: { label: string; value: AppFilterValue }[] = $derived([
     { label: $t('library.filters.showHidden'), value: 'hidden' },

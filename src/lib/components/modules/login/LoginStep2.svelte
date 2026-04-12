@@ -1,7 +1,7 @@
 <script lang="ts">
+  import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
   import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
-  import CheckCircleIcon from '@lucide/svelte/icons/check-circle';
 
   const activeAccount = accountStore.getActiveStore();
 </script>

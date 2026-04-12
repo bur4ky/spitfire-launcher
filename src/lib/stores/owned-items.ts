@@ -1,6 +1,6 @@
+import { derived, writable } from 'svelte/store';
 import type { SpitfireShopItem } from '$types/game/shop';
 import type { ParsedApp } from '$types/legendary';
-import { derived, writable } from 'svelte/store';
 
 export const ownedItemsCache = writable<Record<string, Set<string>>>({});
 export const ownedAppsCache = writable<ParsedApp[]>([]);

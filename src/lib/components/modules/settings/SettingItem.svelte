@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Label } from '$components/ui/label';
   import type { Snippet } from 'svelte';
+  import { Label } from '$components/ui/label';
 
   type Props = {
     title: string;

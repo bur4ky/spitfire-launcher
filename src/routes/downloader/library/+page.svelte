@@ -1,4 +1,13 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { toast } from 'svelte-sonner';
+  import Fuse from 'fuse.js';
+  import { t } from '$lib/i18n';
+  import { DownloadManager } from '$lib/modules/download.svelte';
+  import { Legendary } from '$lib/modules/legendary';
+  import { accountStore, downloaderStore } from '$lib/storage';
+  import { ownedAppsCache } from '$lib/stores';
+  import { handleError } from '$lib/utils';
   import PageContent from '$components/layout/PageContent.svelte';
   import AppCard from '$components/modules/downloader/AppCard.svelte';
   import AppCardSkeleton from '$components/modules/downloader/AppCardSkeleton.svelte';
@@ -6,16 +15,7 @@
   import InstallDialog from '$components/modules/downloader/modals/InstallDialog.svelte';
   import UninstallDialog from '$components/modules/downloader/modals/UninstallDialog.svelte';
   import { Input } from '$components/ui/input';
-  import { t } from '$lib/i18n';
-  import { DownloadManager } from '$lib/modules/download.svelte';
-  import { Legendary } from '$lib/modules/legendary';
-  import { accountStore, downloaderStore } from '$lib/storage';
-  import { ownedAppsCache } from '$lib/stores';
-  import { handleError } from '$lib/utils';
   import type { AppFilterValue } from '$types/legendary';
-  import Fuse from 'fuse.js';
-  import { onMount } from 'svelte';
-  import { toast } from 'svelte-sonner';
 
   // ownedAppsCache is set in autoUpdateApps in +layout.svelte
   const isRefreshing = $derived(!$ownedAppsCache?.length);

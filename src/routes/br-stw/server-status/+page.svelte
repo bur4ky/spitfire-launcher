@@ -19,24 +19,23 @@
 </script>
 
 <script lang="ts">
-  import { ExternalLink } from '$components/ui/external-link';
-  import { Switch } from '$components/ui/switch';
-  import * as Tooltip from '$components/ui/tooltip';
-  import { Notification } from '$lib/modules/notification';
-  import { ServerStatus } from '$lib/modules/server-status';
-  import type { LightswitchData } from '$types/game/server-status';
-  import { Separator } from '$components/ui/separator';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import { onMount } from 'svelte';
-  import PageContent from '$components/layout/PageContent.svelte';
-  import { Button } from '$components/ui/button';
+  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
-  import { formatRemainingDuration, handleError } from '$lib/utils';
-  import { t } from '$lib/i18n';
-  import { Alert, type AlertColor } from '$components/ui/alert';
+  import { language, t } from '$lib/i18n';
+  import { Notification } from '$lib/modules/notification';
+  import { ServerStatus } from '$lib/modules/server-status';
   import { accountStore } from '$lib/storage';
-  import { language } from '$lib/i18n';
+  import { formatRemainingDuration, handleError } from '$lib/utils';
+  import PageContent from '$components/layout/PageContent.svelte';
+  import { Alert, type AlertColor } from '$components/ui/alert';
+  import { Button } from '$components/ui/button';
+  import { ExternalLink } from '$components/ui/external-link';
+  import { Separator } from '$components/ui/separator';
+  import { Switch } from '$components/ui/switch';
+  import * as Tooltip from '$components/ui/tooltip';
+  import type { LightswitchData } from '$types/game/server-status';
 
   $effect(() => {
     if (notifyUser) {

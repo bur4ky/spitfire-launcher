@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Input, type InputProps } from '$components/ui/input';
   import XIcon from '@lucide/svelte/icons/x';
   import { open } from '@tauri-apps/plugin-dialog';
+  import { Input, type InputProps } from '$components/ui/input';
 
   type Props = Omit<InputProps, 'onchange' | 'value' | 'files'> & {
     title?: string;

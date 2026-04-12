@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Button, buttonVariants } from '$components/ui/button';
-  import * as Dialog from '$components/ui/dialog';
+  import { toast } from 'svelte-sonner';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
   import { EpicAPIError } from '$lib/exceptions/EpicAPIError';
   import { language, t } from '$lib/i18n';
   import { MCP } from '$lib/modules/mcp';
   import { accountStore } from '$lib/storage';
   import { accountDataCache, createDiscountedStore, ownedItemsCache } from '$lib/stores';
+  import { Button, buttonVariants } from '$components/ui/button';
+  import * as Dialog from '$components/ui/dialog';
   import type { SpitfireShopItem } from '$types/game/shop';
-  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-  import { toast } from 'svelte-sonner';
 
   type Props = {
     item: SpitfireShopItem;

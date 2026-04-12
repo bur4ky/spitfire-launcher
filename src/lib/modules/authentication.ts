@@ -1,4 +1,4 @@
-import { type ClientCredentials, defaultClient } from '$lib/constants/clients';
+import { defaultClient, type ClientCredentials } from '$lib/constants/clients';
 import { oauthService } from '$lib/http';
 import type {
   DeviceAuthData,

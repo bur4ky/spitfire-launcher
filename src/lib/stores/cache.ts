@@ -1,13 +1,13 @@
+import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+import { writable } from 'svelte/store';
 import type {
   BlockedAccountData,
   FriendData,
   IncomingFriendRequestData,
   OutgoingFriendRequestData
 } from '$types/game/friends';
-import type { ParsedWorldInfo } from '$types/game/stw/world-info';
 import type { PartyData } from '$types/game/party';
-import { SvelteMap, SvelteSet } from 'svelte/reactivity';
-import { writable } from 'svelte/store';
+import type { ParsedWorldInfo } from '$types/game/stw/world-info';
 
 export const displayNameCache = new SvelteMap<string, string>();
 export const avatarCache = new SvelteMap<string, string>();

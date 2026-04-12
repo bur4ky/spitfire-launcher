@@ -1,6 +1,6 @@
 <script lang="ts" module>
-  import { settingsStore } from '$lib/storage';
   import { t } from '$lib/i18n';
+  import { settingsStore } from '$lib/storage';
 
   type SettingKey = keyof NonNullable<AllSettings['app']>;
   type SettingValue = string | number | boolean | undefined;
@@ -28,18 +28,18 @@
 </script>
 
 <script lang="ts">
-  import SettingItem from '$components/modules/settings/SettingItem.svelte';
-  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
-  import * as Select from '$components/ui/select';
-  import { Switch } from '$components/ui/switch';
+  import { toast } from 'svelte-sonner';
+  import { get } from 'svelte/store';
+  import { type } from '@tauri-apps/plugin-os';
   import { SidebarCategories } from '$lib/constants/sidebar';
   import { language } from '$lib/i18n';
   import type { Locale } from '$lib/paraglide/runtime';
   import { allSettingsSchema, appSettingsSchema } from '$lib/schemas/settings';
+  import SettingItem from '$components/modules/settings/SettingItem.svelte';
+  import SettingsFolderPicker from '$components/modules/settings/SettingsFolderPicker.svelte';
+  import * as Select from '$components/ui/select';
+  import { Switch } from '$components/ui/switch';
   import type { AllSettings } from '$types/settings';
-  import { type } from '@tauri-apps/plugin-os';
-  import { toast } from 'svelte-sonner';
-  import { get } from 'svelte/store';
 
   const isDesktop = ['windows', 'macos', 'linux'].includes(type());
 

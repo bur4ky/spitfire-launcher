@@ -18,10 +18,7 @@
 </script>
 
 <script lang="ts">
-  import * as DropdownMenu from '$components/ui/dropdown-menu';
-  import { ExternalLink } from '$components/ui/external-link';
-  import { partyCache } from '$lib/stores';
-  import { t } from '$lib/i18n';
+  import type { SvelteSet } from 'svelte/reactivity';
   import CrownIcon from '@lucide/svelte/icons/crown';
   import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
   import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
@@ -30,8 +27,11 @@
   import UserMinusIcon from '@lucide/svelte/icons/user-minus';
   import UserPlusIcon from '@lucide/svelte/icons/user-plus';
   import UserXIcon from '@lucide/svelte/icons/user-x';
-  import type { SvelteSet } from 'svelte/reactivity';
+  import { t } from '$lib/i18n';
   import { accountStore } from '$lib/storage';
+  import { partyCache } from '$lib/stores';
+  import * as DropdownMenu from '$components/ui/dropdown-menu';
+  import { ExternalLink } from '$components/ui/external-link';
 
   const activeAccount = accountStore.getActiveStore();
   const currentAccountParty = $derived(partyCache.get($activeAccount.accountId));

@@ -27,10 +27,10 @@
 </script>
 
 <script lang="ts">
-  import Pagination from '$components/ui/Pagination.svelte';
   import { RarityColors } from '$lib/constants/stw/resources';
-  import { Separator } from '$components/ui/separator';
   import { t } from '$lib/i18n';
+  import Pagination from '$components/ui/Pagination.svelte';
+  import { Separator } from '$components/ui/separator';
 
   type Props = {
     loadoutData?: LoadoutData[];
