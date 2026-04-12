@@ -4,8 +4,20 @@
   "workspaces": {
     "": {
       "name": "spitfire-launcher",
-      "dependencies": {
+      "devDependencies": {
+        "@eslint/compat": "^2.0.5",
+        "@eslint/js": "^10.0.1",
+        "@inlang/cli": "^3.1.9",
+        "@inlang/paraglide-js": "^2.15.3",
+        "@internationalized/date": "^3.12.0",
+        "@lucide/svelte": "^1.8.0",
+        "@stylistic/eslint-plugin": "^5.10.0",
+        "@sveltejs/adapter-static": "^3.0.10",
+        "@sveltejs/kit": "^2.57.1",
+        "@sveltejs/vite-plugin-svelte": "^7.0.0",
+        "@tailwindcss/vite": "^4.2.2",
         "@tauri-apps/api": "^2.10.1",
+        "@tauri-apps/cli": "^2.10.1",
         "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
         "@tauri-apps/plugin-dialog": "^2.7.0",
         "@tauri-apps/plugin-fs": "^2.5.0",
@@ -15,38 +27,23 @@
         "@tauri-apps/plugin-os": "^2.3.2",
         "@tauri-apps/plugin-shell": "^2.3.5",
         "@tauri-apps/plugin-websocket": "^2.4.2",
-      },
-      "devDependencies": {
-        "@eslint/compat": "^2.0.4",
-        "@eslint/js": "^10.0.1",
-        "@inlang/cli": "^3.1.9",
-        "@inlang/paraglide-js": "^2.15.2",
-        "@internationalized/date": "^3.12.0",
-        "@lucide/svelte": "^1.7.0",
-        "@stylistic/eslint-plugin": "^5.10.0",
-        "@sveltejs/adapter-static": "^3.0.10",
-        "@sveltejs/kit": "^2.56.1",
-        "@sveltejs/vite-plugin-svelte": "^7.0.0",
-        "@tailwindcss/typography": "^0.5.19",
-        "@tailwindcss/vite": "^4.2.2",
-        "@tauri-apps/cli": "^2.10.1",
         "@types/prismjs": "^1.26.6",
-        "bits-ui": "^2.17.2",
+        "bits-ui": "^2.17.3",
         "clsx": "^2.1.1",
         "eslint": "^10.2.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-svelte": "^3.17.0",
         "eventemitter3": "^5.0.4",
         "fuse.js": "^7.3.0",
-        "globals": "^17.4.0",
+        "globals": "^17.5.0",
         "json5": "^2.2.3",
         "ky": "^2.0.0",
-        "prettier": "^3.8.1",
+        "prettier": "^3.8.2",
         "prettier-plugin-svelte": "^3.5.1",
         "prettier-plugin-tailwindcss": "^0.7.2",
         "prismjs": "^1.30.0",
         "stanza": "12.21.1",
-        "svelte": "^5.55.1",
+        "svelte": "^5.55.3",
         "svelte-check": "^4.4.6",
         "svelte-sonner": "1.1.0",
         "tailwind-merge": "^3.5.0",
@@ -55,8 +52,8 @@
         "tslog": "^4.10.2",
         "tw-animate-css": "^1.4.0",
         "typescript": "^6.0.2",
-        "typescript-eslint": "^8.58.0",
-        "vite": "^8.0.7",
+        "typescript-eslint": "^8.58.1",
+        "vite": "^8.0.8",
         "vite-plugin-devtools-json": "^1.0.0",
         "zod": "^4.3.6",
       },
@@ -214,8 +211,6 @@
     "@tailwindcss/oxide-win32-arm64-msvc": ["@tailwindcss/oxide-win32-arm64-msvc@4.2.2", "", { "os": "win32", "cpu": "arm64" }, "sha512-qPmaQM4iKu5mxpsrWZMOZRgZv1tOZpUm+zdhhQP0VhJfyGGO3aUKdbh3gDZc/dPLQwW4eSqWGrrcWNBZWUWaXQ=="],
 
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.2.2", "", { "os": "win32", "cpu": "x64" }, "sha512-1T/37VvI7WyH66b+vqHj/cLwnCxt7Qt3WFu5Q8hk65aOvlwAhs7rAp1VkulBJw/N4tMirXjVnylTR72uI0HGcA=="],
-
-    "@tailwindcss/typography": ["@tailwindcss/typography@0.5.19", "", { "dependencies": { "postcss-selector-parser": "6.0.10" }, "peerDependencies": { "tailwindcss": ">=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1" } }, "sha512-w31dd8HOx3k9vPtcQh5QHP9GwKcgbMp87j58qi6xgiBnFFtKEAgCWnDw4qUT8aHwkCp8bKvb/KGKWWHedP0AAg=="],
 
     "@tailwindcss/vite": ["@tailwindcss/vite@4.2.2", "", { "dependencies": { "@tailwindcss/node": "4.2.2", "@tailwindcss/oxide": "4.2.2", "tailwindcss": "4.2.2" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7 || ^8" } }, "sha512-mEiF5HO1QqCLXoNEfXVA1Tzo+cYsrqV7w9Juj2wdUFyW07JRenqMG225MvPwr3ZD9N1bFQj46X7r33iHxLUW0w=="],
 
@@ -521,7 +516,7 @@
 
     "postcss-scss": ["postcss-scss@4.0.9", "", { "peerDependencies": { "postcss": "^8.4.29" } }, "sha512-AjKOeiwAitL/MXxQW2DliT28EKukvvbEWx3LBmJIRN8KfBGZbRTxNYW0kSqi1COiTZ57nZ9NW06S6ux//N1c9A=="],
 
-    "postcss-selector-parser": ["postcss-selector-parser@6.0.10", "", { "dependencies": { "cssesc": "^3.0.0", "util-deprecate": "^1.0.2" } }, "sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w=="],
+    "postcss-selector-parser": ["postcss-selector-parser@7.1.1", "", { "dependencies": { "cssesc": "^3.0.0", "util-deprecate": "^1.0.2" } }, "sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg=="],
 
     "prelude-ls": ["prelude-ls@1.2.1", "", {}, "sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g=="],
 
@@ -684,8 +679,6 @@
     "eslint-plugin-svelte/globals": ["globals@16.5.0", "", {}, "sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ=="],
 
     "svelte-eslint-parser/eslint-scope": ["eslint-scope@8.4.0", "", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^5.2.0" } }, "sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg=="],
-
-    "svelte-eslint-parser/postcss-selector-parser": ["postcss-selector-parser@7.1.1", "", { "dependencies": { "cssesc": "^3.0.0", "util-deprecate": "^1.0.2" } }, "sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg=="],
 
     "svelte-sonner/runed": ["runed@0.28.0", "", { "dependencies": { "esm-env": "^1.0.0" }, "peerDependencies": { "svelte": "^5.7.0" } }, "sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ=="],
 

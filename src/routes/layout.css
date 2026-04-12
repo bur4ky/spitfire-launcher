@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@plugin '@tailwindcss/typography';
-
 :root {
   --background: oklch(0.1749 0.0082 285.5205);
   --foreground: oklch(1 0 0);

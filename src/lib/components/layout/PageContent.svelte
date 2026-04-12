@@ -1,6 +1,6 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
-  import type { Component, Snippet } from 'svelte';
+  import type { Snippet } from 'svelte';
   import type { ClassValue } from 'svelte/elements';
 
   type Props = {
@@ -9,12 +9,9 @@
     class?: ClassValue;
     center?: boolean;
     children: Snippet;
-    docsComponent?: Component;
   };
 
-  const { title, description, class: className, center = false, children, docsComponent }: Props = $props();
-
-  const DocsComponent = $derived(docsComponent as Snippet | undefined);
+  const { title, description, class: className, center = false, children }: Props = $props();
 </script>
 
 <div class={center ? 'mx-auto flex min-h-full max-w-lg flex-col items-center justify-center' : ''}>
@@ -27,8 +24,6 @@
           {:else}
             {@render title()}
           {/if}
-
-          {@render DocsComponent?.()}
         </div>
       {/if}
 

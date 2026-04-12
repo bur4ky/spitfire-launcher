@@ -764,34 +764,5 @@
     "format": "Formato",
     "invalidBody": "Corpo JSON inválido",
     "failedToExecute": "Falha ao executar a solicitação MCP"
-  },
-  "docs": {
-    "howToUse": "Como Utilizar",
-    "importantNotes": "Notas importantes",
-    "faq": "Perguntas Frequentes (FAQ)",
-    "autoKick": {
-      "description": "Auto-Expusar é um sistema que expulsa automaticamente os jogadores de uma missão assim que o completarem. Também pode reivindicar quaisquer recompensas e transferir materiais do armazenamento para a mochila.",
-      "importantNotes": {
-        "0": "Várias contas jogando a mesma missão, não serão precisas de adicionar todas ao sistema de Auto-Expulsar. O sistema expulsará automaticamente.",
-        "1": "Se reivindicar recompensas não funcionar ou houver um bug, ajustar o \"Tempo de Reivindicar Recompensas\" nas configurações (encontrado no canto superior direito)."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Faz login numa conta que se deseja transformar em táxi. Esta conta não deve ser a principal!",
-        "1": "Inicia o serviço de taxi clicando no botão.",
-        "2": "Convida o táxi para o grupo.",
-        "3": "Finalmente, definir o preenchimento do grupo para \"Não Preencher\" e iniciar a missão."
-      },
-      "importantNotes": {
-        "0": "A opção de preenchimento de grupo deve ser definida para \"Não Preencher\".",
-        "1": "O taxi bot permite que você acesse missões de nível de poder alto, no entanto você não pode levar a mundos como Twine Peaks até que você complete sua defesa do Escudo da Tempestade.",
-        "2": "O táxi funciona tanto para missões normais quanto para aventuras. Não é necessária uma configuração adicional."
-      }
-    },
-    "customStatus": {
-      "description": "Isso permite que definir um status personalizado no jogo, como o nome sugere.",
-      "status": "Status personalizado aqui"
-    }
   }
 }

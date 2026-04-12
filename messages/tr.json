@@ -764,34 +764,5 @@
     "format": "Format",
     "invalidBody": "Geçersiz JSON body",
     "failedToExecute": "MCP isteği çalıştırılamadı"
-  },
-  "docs": {
-    "howToUse": "Nasıl Kullanılır",
-    "importantNotes": "Önemli Notlar",
-    "faq": "Sıkça Sorulan Sorular",
-    "autoKick": {
-      "description": "Auto-Kick sistemi, bir görev tamamlandığında oyuncuları otomatik olarak görevden atar. Ayrıca ödülleri alabilir ve depodaki malzemeleri sırt çantanıza aktarabilir.",
-      "importantNotes": {
-        "0": "Aynı görevi oynayan birden fazla hesabınız varsa, hepsini Auto-Kick sistemine eklemenize gerek yok. Sistem onları otomatik olarak atar.",
-        "1": "Ödülleri alma çalışmazsa veya bir hata olursa, ayarlardaki (sağ üst köşede bulunan) \"Ödülleri Alma Gecikmesi\" ayarını değiştirin."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Taksiye dönüştürmek istediğiniz hesaba giriş yapın. Bu hesap ana hesabınız olmamalı!",
-        "1": "Taksi hizmetini başlatmak için düğmeye tıklayın.",
-        "2": "Taksiyi partinize davet edin.",
-        "3": "Son olarak, Takım Doldurma'yı \"Doldurma Yok\" olarak ayarlayın ve görevi başlatın."
-      },
-      "importantNotes": {
-        "0": "Takım Doldurma seçeneği \"Doldurma Yok\" olarak ayarlanmalı.",
-        "1": "Taksi botu sizi yüksek güç seviyeli görevlere götürebilir, ancak Ana Üs Savunmalarınızı tamamlamadan Dikiz Tepeler gibi dünyalara gidemezsiniz.",
-        "2": "Taksi hem normal görevlerde hem de macera görevlerinde çalışır. Ek bir ayar gerekmez."
-      }
-    },
-    "customStatus": {
-      "description": "Oyunda özel durum ayarlamanızı sağlar, adından da anlaşıldığı gibi.",
-      "status": "Özel durumunuz buraya"
-    }
   }
 }

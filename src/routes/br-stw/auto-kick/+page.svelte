@@ -1,6 +1,5 @@
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import AutoKickTutorial from '$components/modules/docs/tutorials/AutoKick.svelte';
   import AccountCombobox from '$components/ui/AccountCombobox.svelte';
   import { Alert } from '$components/ui/alert';
   import { Button } from '$components/ui/button';
@@ -53,11 +52,7 @@
   ]);
 </script>
 
-<PageContent
-  description={$t('autoKick.page.description')}
-  docsComponent={AutoKickTutorial}
-  title={$t('autoKick.page.title')}
->
+<PageContent description={$t('autoKick.page.description')} title={$t('autoKick.page.title')}>
   {#if platform() === 'android' || platform() === 'ios'}
     <Alert
       color="yellow"

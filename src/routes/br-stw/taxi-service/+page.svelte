@@ -19,7 +19,6 @@
   import InfoIcon from '@lucide/svelte/icons/info';
   import XIcon from '@lucide/svelte/icons/x';
   import CarTaxiFrontIcon from '@lucide/svelte/icons/car-taxi-front';
-  import TaxiServiceTutorial from '$components/modules/docs/tutorials/TaxiService.svelte';
   import { accountStore, taxiStore } from '$lib/storage';
 
   const MIN_POWER_LEVEL = 1;
@@ -115,11 +114,7 @@
   }
 </script>
 
-<PageContent
-  description={$t('taxiService.page.description')}
-  docsComponent={TaxiServiceTutorial}
-  title={$t('taxiService.page.title')}
->
+<PageContent description={$t('taxiService.page.description')} title={$t('taxiService.page.title')}>
   <Alert color="blue" icon={InfoIcon} message={$t('taxiService.alert.message')} />
 
   <div class="space-y-4">

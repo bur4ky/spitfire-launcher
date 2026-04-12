@@ -764,34 +764,5 @@
     "format": "Format",
     "invalidBody": "Invalid JSON body",
     "failedToExecute": "Failed to execute MCP request"
-  },
-  "docs": {
-    "howToUse": "How to Use",
-    "importantNotes": "Important Notes",
-    "faq": "Frequently Asked Questions",
-    "autoKick": {
-      "description": "Auto-Kick is a system that automatically kicks players from a mission once they complete it. It can also claim any rewards and transfers materials from your storage to your backpack.",
-      "importantNotes": {
-        "0": "If you have multiple accounts playing the same mission, you don't need to add all of them to the Auto-Kick system. The system will automatically kick them.",
-        "1": "If claiming rewards doesn't work or there is a bug, adjust the \"Claiming Rewards Delay\" in the settings (found in the top right corner)."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Login to an account that you want to turn into a taxi. This account shouldn't be your main!",
-        "1": "Start the taxi service by clicking the button.",
-        "2": "Invite the taxi to your party.",
-        "3": "Finally, set Team Fill to \"No Fill\" and start the mission."
-      },
-      "importantNotes": {
-        "0": "Team Fill option must be set to \"No Fill\".",
-        "1": "The taxi bot lets you access high power level missions, however it can't take you to worlds like Twine Peaks until you complete your Storm Shield Defenses.",
-        "2": "The taxi works for both normal missions and ventures. No additional configuration is needed."
-      }
-    },
-    "customStatus": {
-      "description": "It allows you to set a custom status in the game, as the name suggests.",
-      "status": "Your custom status here"
-    }
   }
 }

@@ -764,34 +764,5 @@
     "format": "Format",
     "invalidBody": "Corps JSON invalide",
     "failedToExecute": "Échec de l'exécution de la requête MCP"
-  },
-  "docs": {
-    "howToUse": "Comment utiliser",
-    "importantNotes": "Notes importantes",
-    "faq": "Questions fréquemment posées",
-    "autoKick": {
-      "description": "L'Auto-Kick est un système qui renvoie automatiquement les joueurs d'une mission une fois qu'ils l'ont terminée. Il peut également réclamer des récompenses et transférer des matériaux de ta réserve à ton sac à dos.",
-      "importantNotes": {
-        "0": "Si tu as plusieurs comptes jouant la même mission, tu n'as pas besoin de les ajouter tous au système d'exclusion automatique. Le système les expulsera automatiquement.",
-        "1": "Si la réclamation de récompenses ne fonctionne pas ou s'il y a un bug, règle le \"délai de réclamation de récompenses\" dans les paramètres (situés dans le coin supérieur droit)."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Connecte-toi à un compte que tu souhaites transformer en taxi. Ce compte ne doit pas être ton compte principal !",
-        "1": "Démarre le service de taxi en cliquant sur le bouton.",
-        "2": "Invite le taxi à ton groupe",
-        "3": "Enfin, règle le remplissage de l'équipe sur \"Pas Comblé\" et démarre la mission."
-      },
-      "importantNotes": {
-        "0": "L'option Remplissage d'équipe doit être réglée sur \"Pas Comblé\".",
-        "1": "Le taxi-bot te permet d'accéder à des missions de haut niveau, mais il ne peut pas t'emmener dans des mondes comme Pics Hardis tant que tu n'as pas complété tes défenses de bouclier anti-tempête.",
-        "2": "Le taxi fonctionne aussi bien pour les missions normales que pour les aventures. Aucune configuration supplémentaire n'est nécessaire."
-      }
-    },
-    "customStatus": {
-      "description": "Comme son nom l'indique, il te permet de définir un statut personnalisé dans le jeu.",
-      "status": "Ton statut personnalisé ici"
-    }
   }
 }

@@ -764,34 +764,5 @@
     "format": "Formato",
     "invalidBody": "Cuerpo JSON inválido",
     "failedToExecute": "No se pudo ejecutar la solicitud MCP"
-  },
-  "docs": {
-    "howToUse": "Cómo se usa",
-    "importantNotes": "Notas Importantes",
-    "faq": "Preguntas frecuentes",
-    "autoKick": {
-      "description": "Auto-Expulsar es un sistema que automáticamente expulsa a los jugadores de una misión una vez que la completan. También puede reclamar cualquier recompensa y transferir materiales de tu almacenamiento a tu mochila.",
-      "importantNotes": {
-        "0": "Si tiene varias cuentas jugando la misma misión, no necesita añadirlas todas al sistema Auto-Expulsar. El sistema los expulsará automáticamente.",
-        "1": "Si reclamar recompensas no funciona o hay un error, ajusta el \"Retraso de Recompensas de Reclamación\" en la configuración (encontrado en la esquina superior derecha)."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Inicia sesión en una cuenta que quieres convertir en un lobby bot. ¡Esta cuenta no debería tener ningún historial de partidas!",
-        "1": "Comienza el bot haciendo clic en el botón.",
-        "2": "Invita al bot a tu grupo.",
-        "3": "Por último, establece que el equipo llene a \"Sin completar\" y comience la misión."
-      },
-      "importantNotes": {
-        "0": "La opción de relleno del equipo debe establecerse en \"Sin completar\".",
-        "1": "El robot de taxi te permite acceder a misiones de alto nivel de potencia, Sin embargo, no puede llevarle a mundos como Cumbres Leñosas hasta que complete sus defensas con Escudo Tormenta.",
-        "2": "El taxi funciona tanto para misiones normales como para aventura. No se necesita ninguna configuración adicional."
-      }
-    },
-    "customStatus": {
-      "description": "Te permite establecer un estado personalizado en el juego, como sugiere el nombre.",
-      "status": "Su estado personalizado aquí"
-    }
   }
 }

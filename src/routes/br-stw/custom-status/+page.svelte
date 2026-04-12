@@ -11,7 +11,6 @@
 
 <script lang="ts">
   import PageContent from '$components/layout/PageContent.svelte';
-  import CustomStatusTutorial from '$components/modules/docs/tutorials/CustomStatus.svelte';
   import { TaxiManager } from '$lib/modules/taxi.svelte.js';
   import { Button } from '$components/ui/button';
   import { Input } from '$components/ui/input';
@@ -68,12 +67,7 @@
   }
 </script>
 
-<PageContent
-  center={true}
-  description={$t('customStatus.page.description')}
-  docsComponent={CustomStatusTutorial}
-  title={$t('customStatus.page.title')}
->
+<PageContent center={true} description={$t('customStatus.page.description')} title={$t('customStatus.page.title')}>
   <form class="flex flex-col gap-y-4" onsubmit={setCustomStatus}>
     <div class="relative">
       <Input

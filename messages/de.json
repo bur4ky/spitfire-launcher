@@ -764,34 +764,5 @@
     "format": "Format",
     "invalidBody": "Ungültiger JSON-Body",
     "failedToExecute": "MCP-Anfrage konnte nicht ausgeführt werden"
-  },
-  "docs": {
-    "howToUse": "Verwendung",
-    "importantNotes": "Wichtige Hinweise",
-    "faq": "Häufig Gestellte Fragen",
-    "autoKick": {
-      "description": "Auto-Kick ist ein System, das Spieler automatisch aus einer Mission kickt, sobald sie diese abgeschlossen haben. Es kann auch alle Belohnungen beanspruchen und Materialien von deinem Lager in deinen Rucksack übertragen.",
-      "importantNotes": {
-        "0": "Wenn du mehrere Konten in derselben Mission spielst, musst du nicht alle zum Auto-Kick-System hinzufügen. Das System wird sie automatisch kicken.",
-        "1": "Wenn das Beanspruchen von Belohnungen nicht funktioniert oder es einen Fehler gibt, passe die \"Belohnungen Beanspruchen Verzögerung\" in den Einstellungen an (zu finden in der oberen rechten Ecke)."
-      }
-    },
-    "taxiService": {
-      "howToUse": {
-        "0": "Melde dich bei einem Konto an, das du in ein Taxi verwandeln möchtest. Das sollte nicht dein Hauptkonto sein!",
-        "1": "Starte den Taxi-Service durch Klicken der button.",
-        "2": "Lade das Taxi in deine Gruppe ein.",
-        "3": "Setze schließlich Team-Auffüllung auf \"Kein Auffüllen\" und starte die Mission."
-      },
-      "importantNotes": {
-        "0": "Die Team-Auffüllung-Option muss auf \"Kein Auffüllen\" gesetzt werden.",
-        "1": "Der Taxi-Bot ermöglicht dir den Zugang zu hohen Powerlevel-Missionen, kann dich jedoch nicht in Welten wie Twine Peaks bringen, bis du deine Sturmschild-Verteidigungen abgeschlossen hast.",
-        "2": "Das Taxi funktioniert sowohl für normale Missionen als auch für Ventures. Keine zusätzliche Konfiguration erforderlich."
-      }
-    },
-    "customStatus": {
-      "description": "Es ermöglicht dir, einen benutzerdefinierten Status im Spiel zu setzen, wie der Name schon sagt.",
-      "status": "Dein benutzerdefinierter Status hier"
-    }
   }
 }
